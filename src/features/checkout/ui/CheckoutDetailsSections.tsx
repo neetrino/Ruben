@@ -109,18 +109,6 @@ export function CheckoutDetailsSections({
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
-              {labels.email}
-              <input
-                name="contactEmail"
-                type="email"
-                required
-                defaultValue={defaultEmail}
-                disabled={pending}
-                className={FIELD_CLASS}
-                autoComplete="email"
-              />
-            </label>
-            <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.phone}
               <input
                 name="contactPhone"
@@ -131,6 +119,18 @@ export function CheckoutDetailsSections({
                 disabled={pending}
                 className={FIELD_CLASS}
                 autoComplete="tel"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+              {labels.email}
+              <input
+                name="contactEmail"
+                type="email"
+                required
+                defaultValue={defaultEmail}
+                disabled={pending}
+                className={FIELD_CLASS}
+                autoComplete="email"
               />
             </label>
           </div>
