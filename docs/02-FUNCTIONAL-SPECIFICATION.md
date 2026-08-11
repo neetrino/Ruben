@@ -23,7 +23,7 @@
 
 | ID | Պահանջ / acceptance criteria |
 |---|---|
-| NAV-001 | Header-ը ցույց է տալիս Home, Products, About, Contact, Blog, locale, currency, wishlist, cart count և account control։ |
+| NAV-001 | Header-ը ցույց է տալիս Home, Products, About, Contact, Blog, locale, currency, compare, wishlist, cart count և account control։ |
 | NAV-002 | Guest account click-ը տանում է login; Customer menu-ն ունի Profile/Logout; Admin menu-ն՝ Admin/Profile/Logout։ |
 | NAV-003 | Locale switch-ը պահպանում է համարժեք route-ը և թույլատրելի query params-ը; fallback-ը locale home-ն է։ |
 | NAV-004 | Currency switch-ը փոխում է display preference-ը, ոչ base price-ը։ |
@@ -58,9 +58,9 @@
 | CAT-004 | Active filter chips-ը յուրաքանչյուր filter-ի removal control ունեն։ |
 | CAT-005 | Pagination-ը server-side է, stable sort/tie-breaker-ով; page size-ը allowlist-ից է։ |
 | CAT-006 | Grid-ը wide desktop-ում 4, laptop-ում 3, mobile-ում 2 readable card է, առանց horizontal overflow-ի։ |
-| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, short specs summary (description), price, compare-at, computed discount %, wishlist և stock state։ |
+| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, short specs summary (description), price, compare-at, computed discount %, wishlist, compare և stock state։ |
 | CAT-008 | Transparent PNG/WebP asset-ի container-ը theme-aware/transparent է և պարտադիր սպիտակ background չի ավելացնում։ |
-| CAT-009 | Card click-ը տանում է `/{locale}/products/{slug}`; wishlist interaction-ը չի trigger անում card navigation-ը։ |
+| CAT-009 | Card click-ը տանում է `/{locale}/products/{slug}`; wishlist/compare interaction-ը չի trigger անում card navigation-ը։ |
 | CAT-010 | Unpublished/archived product-ը public catalog-ում չի ցուցադրվում։ |
 
 ### 4.2 Product detail
@@ -73,10 +73,20 @@
 | PDP-004 | Add to Cart-ը server-side վերահաստատում է product status/stock/price և վերադարձնում է actionable conflict error։ |
 | PDP-005 | Related products-ը նույն category-ից active products են, current product-ը բացառված է։ |
 | PDP-006 | Metadata/JSON-LD-ը համապատասխանում է locale-specific canonical product data-ին։ |
+| PDP-007 | Compare toggle-ը wishlist-ի նման է՝ signed-in user-ի համար durable `compare_items` entry է ավելացնում/հեռացնում։ |
 
 ### 4.3 Reviews
 
 Reviews feature-ը հանված է՝ storefront UI, server actions, և `reviews` table/enum։
+
+### 4.4 Compare
+
+| ID | Պահանջ / acceptance criteria |
+|---|---|
+| CMP-001 | `/{locale}/compare` page-ը ցույց է տալիս signed-in user-ի compare list-ը side-by-side table-ով։ |
+| CMP-002 | Համեմատության rows՝ image/title, price, compare-at, discount, SKU, availability, categories, description։ |
+| CMP-003 | Max compare size-ը application constant է (default 4)՝ limit-ի դեպքում clear error։ |
+| CMP-004 | Guest-ը redirect է լինում login; remove/clear actions-ը server-side են։ |
 
 ## 5. Authentication
 
@@ -202,7 +212,10 @@ Reviews feature-ը հանված է՝ storefront UI, server actions, և `reviews`
 
 ### Analytics
 
-- Revenue/orders over time, AOV, available conversion metrics, top products/categories, new/returning customers, coupon usage, status breakdown։
+- Period presets՝ today / this week / this month (+ custom bounded range)։
+- Sales analytics՝ best sales day/week/month, best customer (revenue), customer with most purchases (order count)։
+- Product analytics՝ most sold products, most purchased categories։
+- Summary metrics + orders-by-day trend/CSV export։
 - Date range-ը validated/bounded է; CSV export-ը permission-protected և formula-injection safe է։
 - Expensive aggregates-ը indexed/query-optimized և ըստ անհրաժեշտության Redis-cached են։
 

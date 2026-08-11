@@ -99,7 +99,7 @@ export async function queryTopSellingProducts(input: {
   }));
 }
 
-/** Top categories by line revenue in the analytics window. */
+/** Top categories by units purchased in the analytics window. */
 export async function queryTopCategories(input: {
   start: Date;
   end: Date;
@@ -136,7 +136,7 @@ export async function queryTopCategories(input: {
       ),
     )
     .groupBy(categories.id, categories.translations)
-    .orderBy(desc(sql`sum(${orderItems.lineTotalAmount})`))
+    .orderBy(desc(sql`sum(${orderItems.quantity})`))
     .limit(limit);
 
   return rows.map((row) => ({

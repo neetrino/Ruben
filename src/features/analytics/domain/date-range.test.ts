@@ -7,20 +7,21 @@ import {
 } from "@/features/analytics/domain/date-range";
 
 describe("rangeForAnalyticsPeriod", () => {
-  it("returns an inclusive last-7-days window", () => {
-    const range = rangeForAnalyticsPeriod("last_7_days");
-    const start = new Date(`${range.from}T00:00:00.000Z`);
-    const end = new Date(`${range.to}T00:00:00.000Z`);
-    const days =
-      Math.floor((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+  it("returns a single-day window for today", () => {
+    const range = rangeForAnalyticsPeriod("today");
+    expect(range.from).toBe(range.to);
+  });
 
-    expect(days).toBe(7);
+  it("returns an inclusive this-week window starting on Monday", () => {
+    const range = rangeForAnalyticsPeriod("this_week");
+    const start = new Date(`${range.from}T00:00:00.000Z`);
+    expect(start.getUTCDay()).toBe(1);
     expect(range.from <= range.to).toBe(true);
   });
 
   it("matches preset detection for generated ranges", () => {
-    const range = rangeForAnalyticsPeriod("last_30_days");
-    expect(matchAnalyticsPeriodPreset(range)).toBe("last_30_days");
+    const range = rangeForAnalyticsPeriod("this_month");
+    expect(matchAnalyticsPeriodPreset(range)).toBe("this_month");
   });
 });
 

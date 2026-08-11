@@ -23,6 +23,7 @@ export {
 export {
   cartItems,
   carts,
+  compareItems,
   wishlistItems,
 } from "@/db/schema/commerce";
 export {

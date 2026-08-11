@@ -7,6 +7,7 @@ import enCart from "@/locales/en/cart.json";
 import enCatalog from "@/locales/en/catalog.json";
 import enCheckout from "@/locales/en/checkout.json";
 import enCommon from "@/locales/en/common.json";
+import enCompare from "@/locales/en/compare.json";
 import enContact from "@/locales/en/contact.json";
 import enHome from "@/locales/en/home.json";
 import enLegal from "@/locales/en/legal.json";
@@ -21,6 +22,7 @@ import hyCart from "@/locales/hy/cart.json";
 import hyCatalog from "@/locales/hy/catalog.json";
 import hyCheckout from "@/locales/hy/checkout.json";
 import hyCommon from "@/locales/hy/common.json";
+import hyCompare from "@/locales/hy/compare.json";
 import hyContact from "@/locales/hy/contact.json";
 import hyHome from "@/locales/hy/home.json";
 import hyLegal from "@/locales/hy/legal.json";
@@ -35,6 +37,7 @@ import ruCart from "@/locales/ru/cart.json";
 import ruCatalog from "@/locales/ru/catalog.json";
 import ruCheckout from "@/locales/ru/checkout.json";
 import ruCommon from "@/locales/ru/common.json";
+import ruCompare from "@/locales/ru/compare.json";
 import ruContact from "@/locales/ru/contact.json";
 import ruHome from "@/locales/ru/home.json";
 import ruLegal from "@/locales/ru/legal.json";
@@ -55,6 +58,7 @@ type LocaleNamespaces = {
   blog: typeof hyBlog;
   catalog: typeof hyCatalog;
   wishlist: typeof hyWishlist;
+  compare: typeof hyCompare;
   legal: typeof hyLegal;
 };
 
@@ -75,6 +79,7 @@ function buildDictionary(namespaces: LocaleNamespaces) {
     blog: namespaces.blog,
     catalog: namespaces.catalog,
     wishlist: namespaces.wishlist,
+    compare: namespaces.compare,
     legal: namespaces.legal,
   } as const;
 }
@@ -93,6 +98,7 @@ const dictionaries = {
     blog: hyBlog,
     catalog: hyCatalog,
     wishlist: hyWishlist,
+    compare: hyCompare,
     legal: hyLegal,
   }),
   en: buildDictionary({
@@ -108,6 +114,7 @@ const dictionaries = {
     blog: enBlog,
     catalog: enCatalog,
     wishlist: enWishlist,
+    compare: enCompare,
     legal: enLegal,
   }),
   ru: buildDictionary({
@@ -123,6 +130,7 @@ const dictionaries = {
     blog: ruBlog,
     catalog: ruCatalog,
     wishlist: ruWishlist,
+    compare: ruCompare,
     legal: ruLegal,
   }),
 } as const;

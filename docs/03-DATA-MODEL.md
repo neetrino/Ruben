@@ -2,8 +2,8 @@
 
 **Database.** PostgreSQL (Neon)
 **ORM/migrations.** Drizzle ORM / Drizzle Kit
-**Կարգավիճակ.** Canonical 24-table schema migrated; idempotent seed available (`pnpm db:seed`)
-**Canonical table count.** 24
+**Կարգավիճակ.** Canonical 25-table schema migrated; idempotent seed available (`pnpm db:seed`)
+**Canonical table count.** 25
 **Վերջին թարմացում.** 2026-08-11
 
 ## 1. Սխեմայի նպատակը
@@ -29,7 +29,7 @@
 - Financial, stock և audit records-ը hard delete չեն ընդունում։
 - Flexible JSONB-ը միշտ Zod schema/version ունի և business-critical relational կապերը չի փոխարինում։
 
-## 3. Canonical 24-table inventory
+## 3. Canonical 25-table inventory
 
 | # | Table | Domain | Նշանակություն |
 |---:|---|---|---|
@@ -47,16 +47,17 @@
 | 12 | `carts` | Commerce | Guest/customer cart identity/lifecycle |
 | 13 | `cart_items` | Commerce | Cart product quantities |
 | 14 | `wishlist_items` | Commerce | Customer wishlist entries |
-| 15 | `promotions` | Pricing | Coupons և automatic discounts մեկ rule model-ում |
-| 16 | `promotion_users` | Pricing | User-restricted promotion allowlist |
-| 17 | `delivery_rules` | Fulfillment | Location-based delivery pricing |
-| 18 | `orders` | Orders | Order, address/money/promotion snapshots, idempotency |
-| 19 | `order_items` | Orders | Immutable purchased-item snapshots |
-| 20 | `order_events` | Orders | Status, notes և payment provider events |
-| 21 | `payments` | Payments | Payment attempts/current provider state |
-| 22 | `contact_messages` | Support | Contact inbox |
-| 23 | `audit_logs` | Security | Immutable admin/security audit |
-| 24 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
+| 15 | `compare_items` | Commerce | Customer product comparison entries |
+| 16 | `promotions` | Pricing | Coupons և automatic discounts մեկ rule model-ում |
+| 17 | `promotion_users` | Pricing | User-restricted promotion allowlist |
+| 18 | `delivery_rules` | Fulfillment | Location-based delivery pricing |
+| 19 | `orders` | Orders | Order, address/money/promotion snapshots, idempotency |
+| 20 | `order_items` | Orders | Immutable purchased-item snapshots |
+| 21 | `order_events` | Orders | Status, notes և payment provider events |
+| 22 | `payments` | Payments | Payment attempts/current provider state |
+| 23 | `contact_messages` | Support | Contact inbox |
+| 24 | `audit_logs` | Security | Immutable admin/security audit |
+| 25 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
 
 ### Count assumptions
 
@@ -193,6 +194,10 @@ Cart/product, quantity > 0, timestamps և unique `(cart_id, product_id)`։ Cart-
 
 Direct `(user_id, product_id)` unique relation և timestamps։ Առանձին `wishlists` container table պետք չէ։ Guest wishlist-ը կարող է local preference լինել մինչև login merge policy հաստատելը։
 
+### 8.4 `compare_items`
+
+Direct `(user_id, product_id)` unique relation և timestamps՝ wishlist-ի նույն pattern-ով։ Application layer-ը սահմանափակում է մեկ օգտատիրոջ compare ցանկը (default max 4)։ Guest compare-ը կարող է local preference լինել մինչև login merge policy հաստատելը։
+
 ## 9. Unified promotions և delivery
 
 ### 9.1 `promotions`
@@ -314,6 +319,7 @@ Redis loss-ը չի կորցնում order/cart/product/user durable source of tr
 - Products stock/low-stock և stock movements product/time/order։
 - Carts active owner/token և cart items composite unique։
 - Wishlist user/product unique։
+- Compare user/product unique; user/created lookup index։
 - Promotions normalized code unique, active/date/target indexes; promotion users composite unique։
 - Delivery active country/region/city/priority։
 - Orders order number, user/date, status/date, payment status/date, promotion/user/status և durable idempotency composite unique։

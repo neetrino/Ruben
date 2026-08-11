@@ -12,6 +12,7 @@ type PromoProduct = {
   imageUrl: string | null;
   inStock: boolean;
   inWishlist?: boolean;
+  inCompare?: boolean;
 };
 
 type OfferCard = {
@@ -29,6 +30,8 @@ type HomePromotionsProps = {
   emptyLabel: string;
   globalDiscountLabel: string | null;
   wishlistLabel: string;
+  compareLabel: string;
+  compareLimitLabel: string;
   addToCartLabel: string;
   isSignedIn: boolean;
   products: readonly PromoProduct[];
@@ -44,6 +47,8 @@ export function HomePromotions({
   emptyLabel,
   globalDiscountLabel,
   wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   addToCartLabel,
   isSignedIn,
   products,
@@ -110,8 +115,11 @@ export function HomePromotions({
                 locale={locale}
                 productId={product.id}
                 inWishlist={product.inWishlist ?? false}
+                inCompare={product.inCompare ?? false}
                 isSignedIn={isSignedIn}
                 wishlistLabel={wishlistLabel}
+                compareLabel={compareLabel}
+                compareLimitLabel={compareLimitLabel}
                 addToCartLabel={addToCartLabel}
               />
             ))}

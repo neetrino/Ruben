@@ -4,6 +4,7 @@ import { Minus, Plus } from "lucide-react";
 import { useState, useTransition } from "react";
 
 import { addToCart } from "@/features/cart/cart";
+import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -12,8 +13,11 @@ type ProductPurchaseControlsProps = {
   productId: string;
   stockOnHand: number;
   inWishlist: boolean;
+  inCompare: boolean;
   isSignedIn: boolean;
   wishlistLabel: string;
+  compareLabel: string;
+  compareLimitLabel: string;
   labels: {
     quantity: string;
     decreaseQuantity: string;
@@ -31,8 +35,11 @@ export function ProductPurchaseControls({
   productId,
   stockOnHand,
   inWishlist,
+  inCompare,
   isSignedIn,
   wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   labels,
 }: ProductPurchaseControlsProps) {
   const maxQty = Math.max(stockOnHand, 0);
@@ -112,6 +119,15 @@ export function ProductPurchaseControls({
           initialInWishlist={inWishlist}
           isSignedIn={isSignedIn}
           label={wishlistLabel}
+          className="h-11 w-11 border border-gray-200 bg-white hover:bg-gray-50"
+        />
+        <CompareButton
+          locale={locale}
+          productId={productId}
+          initialInCompare={inCompare}
+          isSignedIn={isSignedIn}
+          label={compareLabel}
+          limitReachedLabel={compareLimitLabel}
           className="h-11 w-11 border border-gray-200 bg-white hover:bg-gray-50"
         />
       </div>

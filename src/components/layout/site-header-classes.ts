@@ -1,10 +1,10 @@
 /**
  * Shared rail for top-bar currency control + main-nav action icons
- * (profile, wishlist, cart) so they share the same right-edge column.
- * Width = 2×w-11 + cart (w-11 + px-1×2) + 2×gap-2.
+ * (profile, compare, wishlist, cart) so they share the same right-edge column.
+ * Width = 3×w-11 + cart (w-11 + px-1×2) + 3×gap-2.
  */
 export const SITE_HEADER_ACTIONS_RAIL =
-  "flex w-[calc(2.75rem*2+3.25rem+0.5rem*2)] shrink-0 items-center";
+  "flex w-[calc(2.75rem*3+3.25rem+0.5rem*3)] shrink-0 items-center";
 
 /** Match horizontal padding between top bar and main header. */
 export const SITE_HEADER_INNER =

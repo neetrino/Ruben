@@ -97,3 +97,25 @@ export const wishlistItems = pgTable(
     ),
   ],
 );
+
+/** Signed-in product comparison list (max size enforced in application layer). */
+export const compareItems = pgTable(
+  "compare_items",
+  {
+    id: idColumn(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "restrict" }),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "restrict" }),
+    createdAt: createdAtColumn(),
+  },
+  (table) => [
+    uniqueIndex("compare_items_user_product_uidx").on(
+      table.userId,
+      table.productId,
+    ),
+    index("compare_items_user_created_idx").on(table.userId, table.createdAt),
+  ],
+);

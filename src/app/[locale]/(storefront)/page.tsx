@@ -12,6 +12,7 @@ import {
   getOnSaleProducts,
 } from "@/features/products/queries";
 import { getStoreGlobalDiscount } from "@/features/settings/application/queries";
+import { getCompareProductIds } from "@/features/compare/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -35,6 +36,7 @@ type PricedCard = {
   imageUrl: string | null;
   inStock: boolean;
   inWishlist: boolean;
+  inCompare: boolean;
 };
 
 export default async function HomePage({ params }: HomePageProps) {
@@ -69,8 +71,9 @@ export default async function HomePage({ params }: HomePageProps) {
     ]),
   ];
 
-  const [wishlistIds, formatPrice] = await Promise.all([
+  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
     getWishlistProductIds(productIds),
+    getCompareProductIds(productIds),
     createDisplayPriceFormatter(locale, currency),
   ]);
 
@@ -93,6 +96,7 @@ export default async function HomePage({ params }: HomePageProps) {
       imageUrl: product.imageUrl,
       inStock: product.stockOnHand > 0,
       inWishlist: wishlistIds.has(product.id),
+      inCompare: compareIds.has(product.id),
     };
   }
 
@@ -124,6 +128,8 @@ export default async function HomePage({ params }: HomePageProps) {
         viewAllHref={productsHref}
         emptyLabel={dictionary.home.emptyFeatured}
         wishlistLabel={dictionary.nav.wishlist}
+        compareLabel={dictionary.nav.compare}
+        compareLimitLabel={dictionary.compare.limitReached}
         addToCartLabel={dictionary.product.addToCart}
         isSignedIn={Boolean(user)}
         products={featuredCards}
@@ -138,6 +144,8 @@ export default async function HomePage({ params }: HomePageProps) {
         emptyLabel={dictionary.home.emptyPromotions}
         globalDiscountLabel={globalDiscountLabel}
         wishlistLabel={dictionary.nav.wishlist}
+        compareLabel={dictionary.nav.compare}
+        compareLimitLabel={dictionary.compare.limitReached}
         addToCartLabel={dictionary.product.addToCart}
         isSignedIn={Boolean(user)}
         products={promoCards}

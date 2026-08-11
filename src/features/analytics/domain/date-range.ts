@@ -3,9 +3,8 @@ import { z } from "zod";
 const MAX_RANGE_DAYS = 366;
 
 export const ANALYTICS_PERIOD_PRESETS = [
-  "last_7_days",
-  "last_30_days",
-  "last_90_days",
+  "today",
+  "this_week",
   "this_month",
   "custom",
 ] as const;
@@ -37,9 +36,8 @@ export const analyticsDateRangeSchema = z
 export type AnalyticsDateRange = z.infer<typeof analyticsDateRangeSchema>;
 
 const PRESET_LABELS: Record<AnalyticsPeriodPreset, string> = {
-  last_7_days: "Last 7 Days",
-  last_30_days: "Last 30 Days",
-  last_90_days: "Last 90 Days",
+  today: "Today",
+  this_week: "This Week",
   this_month: "This Month",
   custom: "Custom Range",
 };
@@ -67,34 +65,31 @@ export function rangeForAnalyticsPeriod(
   const toDate = utcToday();
   const fromDate = new Date(toDate);
 
-  if (preset === "last_7_days") {
-    fromDate.setUTCDate(fromDate.getUTCDate() - 6);
-  } else if (preset === "last_30_days") {
-    fromDate.setUTCDate(fromDate.getUTCDate() - 29);
-  } else if (preset === "last_90_days") {
-    fromDate.setUTCDate(fromDate.getUTCDate() - 89);
-  } else {
-    fromDate.setUTCDate(1);
+  if (preset === "today") {
+    return { from: toIsoDate(fromDate), to: toIsoDate(toDate) };
   }
 
+  if (preset === "this_week") {
+    const day = fromDate.getUTCDay();
+    const daysFromMonday = day === 0 ? 6 : day - 1;
+    fromDate.setUTCDate(fromDate.getUTCDate() - daysFromMonday);
+    return { from: toIsoDate(fromDate), to: toIsoDate(toDate) };
+  }
+
+  fromDate.setUTCDate(1);
   return { from: toIsoDate(fromDate), to: toIsoDate(toDate) };
 }
 
-/** Default inclusive last-30-days range in UTC ISO dates. */
+/** Default inclusive this-month range in UTC ISO dates. */
 export function defaultAnalyticsDateRange(): AnalyticsDateRange {
-  return rangeForAnalyticsPeriod("last_30_days");
+  return rangeForAnalyticsPeriod("this_month");
 }
 
 /** Detects which preset matches an inclusive from/to range. */
 export function matchAnalyticsPeriodPreset(
   range: AnalyticsDateRange,
 ): AnalyticsPeriodPreset {
-  for (const preset of [
-    "last_7_days",
-    "last_30_days",
-    "last_90_days",
-    "this_month",
-  ] as const) {
+  for (const preset of ["today", "this_week", "this_month"] as const) {
     const expected = rangeForAnalyticsPeriod(preset);
     if (expected.from === range.from && expected.to === range.to) {
       return preset;

@@ -13,6 +13,7 @@ import { CatalogActiveFilters } from "@/features/products/ui/CatalogActiveFilter
 import { CatalogFilters } from "@/features/products/ui/CatalogFilters";
 import { CatalogSortSelect } from "@/features/products/ui/CatalogSortSelect";
 import { ProductCard } from "@/features/products/ui/ProductCard";
+import { getCompareProductIds } from "@/features/compare/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getCheckoutRateSnapshot } from "@/lib/fx/service";
@@ -82,8 +83,9 @@ export default async function ProductsPage({
   }
 
   const { products, categories } = catalog;
-  const [wishlistIds, formatPrice] = await Promise.all([
+  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
     getWishlistProductIds(products.map((p) => p.id)),
+    getCompareProductIds(products.map((p) => p.id)),
     createDisplayPriceFormatter(rawLocale, currency),
   ]);
 
@@ -196,8 +198,11 @@ export default async function ProductsPage({
                   locale={rawLocale}
                   productId={product.id}
                   inWishlist={wishlistIds.has(product.id)}
+                  inCompare={compareIds.has(product.id)}
                   isSignedIn={Boolean(user)}
                   wishlistLabel={dictionary.nav.wishlist}
+                  compareLabel={dictionary.nav.compare}
+                  compareLimitLabel={dictionary.compare.limitReached}
                   addToCartLabel={dictionary.product.addToCart}
                   outOfStockLabel={dictionary.catalog.outOfStock}
                 />

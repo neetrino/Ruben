@@ -17,6 +17,8 @@ describe("getDictionary", () => {
     expect(dictionary.checkout.title).toBe("Checkout");
     expect(dictionary.catalog.sortPopular).toBe("Popular");
     expect(dictionary.catalog.clearFilters).toBe("Clear filters");
+    expect(dictionary.compare.empty).toBe("Your compare list is empty.");
+    expect(dictionary.nav.compare).toBe("Compare");
     expect(dictionary.legal.privacy.title).toBe("Privacy Policy");
     expect(dictionary.legal.terms.title).toBe("Terms & Conditions");
     expect(dictionary.legal.refund.title).toBe("Refund Policy");

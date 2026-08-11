@@ -1,5 +1,6 @@
 import { ProductCard } from "@/features/products/ui/ProductCard";
 import { getRelatedProducts } from "@/features/products/queries";
+import { getCompareProductIds } from "@/features/compare/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
@@ -27,8 +28,10 @@ export async function ProductRelatedSection({
     return null;
   }
 
-  const [wishlistIds, formatPrice] = await Promise.all([
-    getWishlistProductIds(related.map((item) => item.id)),
+  const relatedIds = related.map((item) => item.id);
+  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
+    getWishlistProductIds(relatedIds),
+    getCompareProductIds(relatedIds),
     createDisplayPriceFormatter(locale, currency),
   ]);
 
@@ -58,8 +61,11 @@ export async function ProductRelatedSection({
               locale={locale}
               productId={item.id}
               inWishlist={wishlistIds.has(item.id)}
+              inCompare={compareIds.has(item.id)}
               isSignedIn={isSignedIn}
               wishlistLabel={dictionary.nav.wishlist}
+              compareLabel={dictionary.nav.compare}
+              compareLimitLabel={dictionary.compare.limitReached}
               addToCartLabel={labels.addToCart}
             />
           );

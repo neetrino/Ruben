@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
+import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -23,8 +24,11 @@ type ProductCardProps = {
   locale?: Locale;
   productId?: string;
   inWishlist?: boolean;
+  inCompare?: boolean;
   isSignedIn?: boolean;
   wishlistLabel?: string;
+  compareLabel?: string;
+  compareLimitLabel?: string;
   addToCartLabel?: string;
   outOfStockLabel?: string;
 };
@@ -44,14 +48,19 @@ export function ProductCard({
   locale,
   productId,
   inWishlist = false,
+  inCompare = false,
   isSignedIn = false,
   wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   addToCartLabel,
   outOfStockLabel = "Out of stock",
 }: ProductCardProps) {
   const onSale = Boolean(compareAtFormatted);
   const showWishlist =
     locale != null && productId != null && wishlistLabel != null;
+  const showCompare =
+    locale != null && productId != null && compareLabel != null;
   const showAddToCart = productId != null && addToCartLabel != null;
 
   return (
@@ -78,16 +87,32 @@ export function ProductCard({
           )}
         </AppLink>
 
-        {showWishlist ? (
-          <WishlistButton
-            locale={locale}
-            productId={productId}
-            initialInWishlist={inWishlist}
-            isSignedIn={isSignedIn}
-            label={wishlistLabel}
-            size="sm"
-            className="absolute top-3 left-3 z-10 h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
-          />
+        {showWishlist || showCompare ? (
+          <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
+            {showWishlist ? (
+              <WishlistButton
+                locale={locale}
+                productId={productId}
+                initialInWishlist={inWishlist}
+                isSignedIn={isSignedIn}
+                label={wishlistLabel}
+                size="sm"
+                className="h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
+              />
+            ) : null}
+            {showCompare ? (
+              <CompareButton
+                locale={locale}
+                productId={productId}
+                initialInCompare={inCompare}
+                isSignedIn={isSignedIn}
+                label={compareLabel}
+                limitReachedLabel={compareLimitLabel}
+                size="sm"
+                className="h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
+              />
+            ) : null}
+          </div>
         ) : null}
 
         {badgeLabel ? (

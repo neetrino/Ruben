@@ -9,7 +9,7 @@
 |---:|---|---|---|
 | 0 | Approval | Done | Kickoff defaults |
 | 1 | Foundation | Done | Next.js, i18n, providers |
-| 2 | Database foundation | Done | 24 tables + seed |
+| 2 | Database foundation | Done | 25 tables + seed |
 | 3 | Identity and authorization | Done | DB sessions, login/register/logout |
 | 4 | Catalog admin and media | Done (minimal) | Admin products/categories; R2 adapter when credentials set |
 | 5 | Storefront catalog | Done | URL filter/sort/page + card fields (CAT-001–010; brand/attributes deferred — no schema) |
@@ -31,7 +31,7 @@
 ### Phase 9
 - Hero CMS + contact spam/rate-limit + messages inbox
 - Blog CMS/public routes + HTML sanitizer + BlogPosting JSON-LD
-- Analytics dashboard + Redis cache + CSV export (formula-safe)
+- Analytics dashboard + Redis cache + CSV export (formula-safe); day/week/month sales + product insights
 - Store settings (identity, branding, social, stacking, revenue, maintenance)
 - Maintenance gate for non-admin storefront users
 
@@ -60,3 +60,4 @@
 ### 2026-08-11
 - Reviews feature removed: PDP UI, server actions, `reviews` table + `review_moderation_status` enum
 - Checkout payments: cash (COD), card (ArCa), FastShift; online cart clear after capture
+- Admin analytics aligned to day/week/month: best sales periods, best/top-buyer customers, most sold products/categories

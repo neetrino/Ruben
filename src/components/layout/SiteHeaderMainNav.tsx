@@ -7,6 +7,7 @@ import {
 } from "@/components/layout/site-header-classes";
 import { AppLink } from "@/components/ui/AppLink";
 import { CartDrawer } from "@/features/cart/ui/CartDrawer";
+import { CompareHeaderLink } from "@/features/compare/ui/CompareHeaderLink";
 import { WishlistHeaderLink } from "@/features/wishlist/ui/WishlistHeaderLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
@@ -26,6 +27,7 @@ type SiteHeaderMainNavProps = {
   navItems: readonly NavItem[];
   cartItemCount: number;
   wishlistCount: number;
+  compareCount: number;
 };
 
 function navLinkClassName(): string {
@@ -40,6 +42,7 @@ export function SiteHeaderMainNav({
   navItems,
   cartItemCount,
   wishlistCount,
+  compareCount,
 }: SiteHeaderMainNavProps) {
   return (
     <header className="relative z-40 border-b border-gray-200/80 bg-gradient-to-b from-gray-50 to-white shadow-sm backdrop-blur-sm">
@@ -95,6 +98,11 @@ export function SiteHeaderMainNav({
               profileLabel={dictionary.header.profile}
               adminLabel={dictionary.header.admin}
               user={user}
+            />
+            <CompareHeaderLink
+              locale={locale}
+              label={dictionary.nav.compare}
+              count={compareCount}
             />
             <WishlistHeaderLink
               locale={locale}

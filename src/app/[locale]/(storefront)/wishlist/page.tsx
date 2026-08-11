@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { getCompareProductIds } from "@/features/compare/queries";
 import { ProductCard } from "@/features/products/ui/ProductCard";
 import { listWishlistProducts } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -48,7 +49,11 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
     );
   }
 
-  const formatPrice = await createDisplayPriceFormatter(rawLocale, currency);
+  const [compareIds, formatPrice] = await Promise.all([
+    getCompareProductIds(products.map((product) => product.id)),
+    createDisplayPriceFormatter(rawLocale, currency),
+  ]);
+
   const priced = products.map((product) => {
     const price = formatPrice(product.priceAmount);
     const compareAt =
@@ -88,8 +93,11 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
                 locale={rawLocale}
                 productId={product.id}
                 inWishlist
+                inCompare={compareIds.has(product.id)}
                 isSignedIn
                 wishlistLabel={dictionary.nav.wishlist}
+                compareLabel={dictionary.nav.compare}
+                compareLimitLabel={dictionary.compare.limitReached}
                 addToCartLabel={dictionary.product.addToCart}
               />
             ),

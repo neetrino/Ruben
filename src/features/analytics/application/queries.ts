@@ -14,6 +14,13 @@ import { getProviders } from "@/config/providers";
 import { getDb } from "@/db/client";
 import { orders, users } from "@/db/schema";
 import {
+  queryBestCustomersByRevenue,
+  queryBestSalesPeriods,
+  queryTopCustomersByOrderCount,
+  type AnalyticsSalesBucket,
+  type AnalyticsTopCustomer,
+} from "@/features/analytics/application/sales-insights";
+import {
   queryTopCategories,
   queryTopSellingProducts,
   type AnalyticsTopCategory,
@@ -28,10 +35,15 @@ export type {
   AnalyticsTopCategory,
   AnalyticsTopProduct,
 } from "@/features/analytics/application/top-rankings";
+export type {
+  AnalyticsSalesBucket,
+  AnalyticsTopCustomer,
+} from "@/features/analytics/application/sales-insights";
 export type { AnalyticsCsvRow } from "@/features/analytics/domain/csv";
 export { buildAnalyticsCsv, guardCsvCell } from "@/features/analytics/domain/csv";
 
 const CACHE_TTL_SECONDS = 300;
+const CACHE_VERSION = "v2";
 const cacheKeys = new Set<string>();
 
 export type AnalyticsSummary = {
@@ -47,6 +59,11 @@ export type AnalyticsSummary = {
   previousRevenueAmount: number;
   previousAverageOrderValue: number;
   dailyRows: AnalyticsCsvRow[];
+  bestDay: AnalyticsSalesBucket | null;
+  bestWeek: AnalyticsSalesBucket | null;
+  bestMonth: AnalyticsSalesBucket | null;
+  bestCustomers: AnalyticsTopCustomer[];
+  topBuyers: AnalyticsTopCustomer[];
   topProducts: AnalyticsTopProduct[];
   topCategories: AnalyticsTopCategory[];
 };
@@ -86,7 +103,7 @@ function averageOrderValue(revenue: number, orderCount: number): number {
 }
 
 function cacheKey(from: string, to: string, locale: Locale): string {
-  return `analytics:${locale}:${from}:${to}`;
+  return `analytics:${CACHE_VERSION}:${locale}:${from}:${to}`;
 }
 
 async function queryPeriodMetrics(input: {
@@ -163,37 +180,45 @@ async function computeAnalyticsSummary(input: {
   const revenue = await getStoreRevenue();
   const revenueStatuses = revenue.statuses as OrderStatus[];
   const bounds = periodBounds(input.from, input.to);
+  const window = {
+    start: bounds.start,
+    end: bounds.end,
+    revenueStatuses,
+  };
 
-  const [current, previous, dailyRows, [usersRow], topProducts, topCategories] =
-    await Promise.all([
-      queryPeriodMetrics({
-        start: bounds.start,
-        end: bounds.end,
-        revenueStatuses,
-      }),
-      queryPeriodMetrics({
-        start: bounds.previousStart,
-        end: bounds.previousEnd,
-        revenueStatuses,
-      }),
-      queryDailyRows({
-        from: input.from,
-        to: input.to,
-        revenueStatuses,
-      }),
-      getDb().select({ value: count() }).from(users),
-      queryTopSellingProducts({
-        start: bounds.start,
-        end: bounds.end,
-        revenueStatuses,
-      }),
-      queryTopCategories({
-        start: bounds.start,
-        end: bounds.end,
-        revenueStatuses,
-        locale: input.locale,
-      }),
-    ]);
+  const [
+    current,
+    previous,
+    dailyRows,
+    [usersRow],
+    bestPeriods,
+    bestCustomers,
+    topBuyers,
+    topProducts,
+    topCategories,
+  ] = await Promise.all([
+    queryPeriodMetrics({
+      start: bounds.start,
+      end: bounds.end,
+      revenueStatuses,
+    }),
+    queryPeriodMetrics({
+      start: bounds.previousStart,
+      end: bounds.previousEnd,
+      revenueStatuses,
+    }),
+    queryDailyRows({
+      from: input.from,
+      to: input.to,
+      revenueStatuses,
+    }),
+    getDb().select({ value: count() }).from(users),
+    queryBestSalesPeriods(window),
+    queryBestCustomersByRevenue(window),
+    queryTopCustomersByOrderCount(window),
+    queryTopSellingProducts(window),
+    queryTopCategories({ ...window, locale: input.locale }),
+  ]);
 
   return {
     from: input.from,
@@ -214,6 +239,11 @@ async function computeAnalyticsSummary(input: {
       previous.orderCount,
     ),
     dailyRows,
+    bestDay: bestPeriods.bestDay,
+    bestWeek: bestPeriods.bestWeek,
+    bestMonth: bestPeriods.bestMonth,
+    bestCustomers,
+    topBuyers,
     topProducts,
     topCategories,
   };
