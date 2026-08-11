@@ -26,10 +26,11 @@
   "footer": {
     "shop": "Shop",
     "description": "Professional e-commerce storefront for everyday shopping.",
-    "quickLinks": "Quick Links",
     "legal": "Legal",
     "privacyPolicy": "Privacy Policy",
-    "terms": "Terms",
+    "terms": "Terms & Conditions",
+    "refundPolicy": "Refund Policy",
+    "deliveryPolicy": "Delivery Policy",
     "contactInfo": "Contact Information",
     "social": "Social",
     "map": "Map",

@@ -1,0 +1,155 @@
+{
+  "privacy": {
+    "title": "Privacy Policy",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "11 August 2026",
+    "intro": "This Privacy Policy explains how White-Shop collects, uses, stores, and protects personal data when you visit our storefront, create an account, place an order, or contact us.",
+    "sections": [
+      {
+        "heading": "1. Data we collect",
+        "paragraphs": [
+          "Account and contact details such as name, email address, phone number, and delivery address.",
+          "Order and payment-related information needed to process purchases, including order history and delivery preferences. Card details are processed by our payment providers and are not stored on our servers.",
+          "Technical and usage data such as browser type, device information, and basic analytics needed to operate and improve the storefront."
+        ]
+      },
+      {
+        "heading": "2. How we use your data",
+        "paragraphs": [
+          "To process orders, arrange delivery or store pickup, and provide customer support.",
+          "To create and manage your account, send order updates, and respond to messages you send us.",
+          "To improve website performance, prevent fraud, and meet legal, accounting, and security obligations."
+        ]
+      },
+      {
+        "heading": "3. Sharing and retention",
+        "paragraphs": [
+          "We share personal data only with trusted service providers required to operate the store, such as payment processors, delivery partners, and hosting providers, and only to the extent needed for their services.",
+          "We retain personal data for as long as needed to fulfill orders, provide support, and comply with legal and accounting requirements. When account deletion is requested, personal contact details are anonymized where possible while order records needed for legal purposes may be retained."
+        ]
+      },
+      {
+        "heading": "4. Your rights and contact",
+        "paragraphs": [
+          "Depending on applicable law, you may request access to, correction of, or deletion of your personal data, and you may update account details from your profile.",
+          "For privacy questions or requests, contact us using the details on our Contact page."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms & Conditions",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "11 August 2026",
+    "intro": "These Terms & Conditions govern your use of the White-Shop website and the purchase of products through our online store. By placing an order or creating an account, you agree to these terms.",
+    "sections": [
+      {
+        "heading": "1. Eligibility and accounts",
+        "paragraphs": [
+          "You must provide accurate and complete information when registering or checking out as a guest.",
+          "You are responsible for keeping your account credentials confidential and for activity that occurs under your account."
+        ]
+      },
+      {
+        "heading": "2. Orders and pricing",
+        "paragraphs": [
+          "Product availability, prices, discounts, taxes, and delivery fees are confirmed at checkout before you place an order.",
+          "We may refuse or cancel an order in cases such as pricing errors, stock unavailability, suspected fraud, or payment failure. If payment has already been captured for a cancelled order, we will arrange a refund according to our Refund Policy."
+        ]
+      },
+      {
+        "heading": "3. Payment and delivery",
+        "paragraphs": [
+          "Accepted payment methods are shown at checkout and may include cash on delivery and supported online payment options.",
+          "Delivery timelines and fees depend on the selected shipping method and location. Store pickup is available where offered."
+        ]
+      },
+      {
+        "heading": "4. Acceptable use",
+        "paragraphs": [
+          "You agree not to misuse the website, attempt unauthorized access, interfere with store operations, or use the service for unlawful purposes.",
+          "Product descriptions and images are provided for informational purposes. We aim for accuracy but minor differences may occur."
+        ]
+      },
+      {
+        "heading": "5. Changes and contact",
+        "paragraphs": [
+          "We may update these Terms & Conditions from time to time. The latest version will be published on this page with an updated date.",
+          "If you have questions about these terms, contact us through the Contact page."
+        ]
+      }
+    ]
+  },
+  "refund": {
+    "title": "Refund Policy",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "11 August 2026",
+    "intro": "This Refund Policy describes when refunds and returns are available for orders placed on White-Shop.",
+    "sections": [
+      {
+        "heading": "1. Eligibility",
+        "paragraphs": [
+          "You may request a return or refund if an item arrives damaged, defective, incorrect, or significantly different from the product description.",
+          "Requests should be submitted as soon as possible after delivery, and no later than 14 days from the delivery date, unless a longer period is required by applicable law."
+        ]
+      },
+      {
+        "heading": "2. Non-returnable items",
+        "paragraphs": [
+          "Certain products may be non-returnable for hygiene, safety, or personalization reasons. Any such exceptions will be indicated on the product page where possible.",
+          "Items that have been used beyond reasonable inspection, damaged by the customer, or returned without original packaging or proof of purchase may be declined."
+        ]
+      },
+      {
+        "heading": "3. Refund process",
+        "paragraphs": [
+          "Approved refunds are processed to the original payment method where possible. Cash-on-delivery refunds may be arranged by bank transfer or another agreed method.",
+          "Refund timing depends on the payment provider and bank processing times. We will confirm once the refund has been initiated."
+        ]
+      },
+      {
+        "heading": "4. How to request a refund",
+        "paragraphs": [
+          "Contact us with your order number, a short description of the issue, and photos if the item is damaged or incorrect.",
+          "Our support team will review the request and provide return or resolution instructions."
+        ]
+      }
+    ]
+  },
+  "delivery": {
+    "title": "Delivery Policy",
+    "lastUpdatedLabel": "Last updated",
+    "lastUpdated": "11 August 2026",
+    "intro": "This Delivery Policy explains how White-Shop ships orders, which options are available, and what to expect after checkout.",
+    "sections": [
+      {
+        "heading": "1. Delivery options",
+        "paragraphs": [
+          "At checkout you can choose store pickup or delivery to an address, depending on availability for your location.",
+          "Delivery fees and estimated timing are calculated from our delivery rules and are shown before you place the order."
+        ]
+      },
+      {
+        "heading": "2. Coverage and timing",
+        "paragraphs": [
+          "We currently prioritize delivery within Armenia. Available cities and locations are listed at checkout.",
+          "Orders are prepared after payment confirmation or successful order placement. Delivery times may vary by location, order volume, and courier schedules."
+        ]
+      },
+      {
+        "heading": "3. Receiving your order",
+        "paragraphs": [
+          "Please ensure your contact phone number and address details are accurate so the courier or store team can reach you.",
+          "If you are unavailable at the delivery attempt, the courier or our support team may contact you to arrange another attempt or store pickup where applicable."
+        ]
+      },
+      {
+        "heading": "4. Delays and issues",
+        "paragraphs": [
+          "If your order is delayed or arrives incomplete or damaged, contact us promptly with your order number so we can investigate and help resolve the issue.",
+          "Force majeure events, courier disruptions, or incorrect address details may affect delivery timing. We will work with you to find a practical resolution."
+        ]
+      }
+    ]
+  }
+}

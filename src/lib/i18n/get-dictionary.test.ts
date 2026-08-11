@@ -17,10 +17,20 @@ describe("getDictionary", () => {
     expect(dictionary.checkout.title).toBe("Checkout");
     expect(dictionary.catalog.sortPopular).toBe("Popular");
     expect(dictionary.catalog.clearFilters).toBe("Clear filters");
+    expect(dictionary.legal.privacy.title).toBe("Privacy Policy");
+    expect(dictionary.legal.terms.title).toBe("Terms & Conditions");
+    expect(dictionary.legal.refund.title).toBe("Refund Policy");
+    expect(dictionary.legal.delivery.title).toBe("Delivery Policy");
+    expect(dictionary.footer.refundPolicy).toBe("Refund Policy");
+    expect(dictionary.footer.deliveryPolicy).toBe("Delivery Policy");
   });
 
   it("loads Armenian and Russian namespaces", () => {
     expect(getDictionary("hy").nav.home).toBe("Գլխավոր");
+    expect(getDictionary("hy").legal.privacy.title).toBe(
+      "Գաղտնիության քաղաքականություն",
+    );
     expect(getDictionary("ru").nav.home).toBe("Главная");
+    expect(getDictionary("ru").legal.refund.title).toBe("Политика возврата");
   });
 });

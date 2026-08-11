@@ -65,45 +65,9 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
 
           <div>
             <h4 className="mb-4 text-sm font-semibold text-white">
-              {dictionary.footer.quickLinks}
+              {dictionary.footer.legal}
             </h4>
             <ul className="space-y-2">
-              <li>
-                <AppLink
-                  href={`/${locale}/products`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.nav.products}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/blog`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.nav.blog}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/about`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.nav.about}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/contact`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.nav.contact}
-                </AppLink>
-              </li>
               <li>
                 <AppLink
                   href={`/${locale}/legal/privacy`}
@@ -120,6 +84,24 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
                   className="text-sm text-gray-300 transition-colors hover:text-white"
                 >
                   {dictionary.footer.terms}
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  href={`/${locale}/legal/refund`}
+                  prefetchPolicy="intent"
+                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                >
+                  {dictionary.footer.refundPolicy}
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  href={`/${locale}/legal/delivery`}
+                  prefetchPolicy="intent"
+                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                >
+                  {dictionary.footer.deliveryPolicy}
                 </AppLink>
               </li>
             </ul>
