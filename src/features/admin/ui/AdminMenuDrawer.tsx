@@ -10,6 +10,7 @@ import {
   isAdminTabActive,
   type AdminMenuItem,
 } from "@/features/admin/ui/admin-menu.config";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { useAdminProductsSubnavExpanded } from "@/features/admin/ui/useAdminProductsSubnavExpanded";
 
 type AdminMenuDrawerProps = {
@@ -30,7 +31,8 @@ function isNestedVisible(
 
 export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
   const [open, setOpen] = useState(false);
-  const tabs = getAdminMenuItems(locale);
+  const t = adminCopy(locale);
+  const tabs = getAdminMenuItems(locale, t.nav);
   const [productsNestedExpanded, toggleProductsNested] =
     useAdminProductsSubnavExpanded(pathname, locale);
 
@@ -41,6 +43,7 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
         aria-expanded={open}
         aria-controls="admin-menu-drawer-panel"
         onClick={() => setOpen((prev) => !prev)}
+        aria-label={t.nav.menuAria}
         className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-wide text-gray-800 shadow-sm"
       >
         <svg
@@ -56,13 +59,13 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
             d="M4 6H20M4 12H16M4 18H12"
           />
         </svg>
-        Menu
+        {t.nav.menu}
       </button>
 
       <SideSheet
         open={open}
         onClose={() => setOpen(false)}
-        ariaLabel="Admin menu"
+        ariaLabel={t.nav.menu}
         side="left"
         panelClassName="w-1/2 min-w-[16rem] max-w-full"
       >
@@ -76,7 +79,7 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
                 className="text-sm font-semibold text-gray-900"
                 onClick={() => setOpen(false)}
               >
-                White Shop
+                {t.nav.brand}
               </Link>
             </div>
 
@@ -116,7 +119,7 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
                       <button
                         type="button"
                         aria-expanded={productsNestedExpanded}
-                        aria-label="Toggle product subpages"
+                        aria-label={t.nav.toggleProductSubpages}
                         onClick={toggleProductsNested}
                         className={`shrink-0 border-l px-3 py-3 ${
                           isActive

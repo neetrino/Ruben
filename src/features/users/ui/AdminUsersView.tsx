@@ -10,6 +10,7 @@ import {
   ConfirmDialog,
 } from "@/components/ui/ConfirmDialog";
 import { ADMIN_INPUT } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   ADMIN_BADGE,
 } from "@/features/admin/ui/status-badge";
@@ -75,6 +76,7 @@ export function AdminUsersView({
   role,
 }: AdminUsersViewProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -120,15 +122,15 @@ export function AdminUsersView({
         setConfirmOpen(false);
         router.refresh();
       } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "Action failed.");
+        setError(caught instanceof Error ? caught.message : t.common.actionFailed);
       }
     });
   }
 
   const rolePills = [
-    { label: "All", value: undefined },
-    { label: "Admins", value: "ADMIN" },
-    { label: "Customers", value: "CUSTOMER" },
+    { label: t.users.roleFilter.all, value: undefined },
+    { label: t.users.roleFilter.admins, value: "ADMIN" },
+    { label: t.users.roleFilter.customers, value: "CUSTOMER" },
   ] as const;
 
   return (
@@ -137,13 +139,13 @@ export function AdminUsersView({
         <input
           name="q"
           defaultValue={q ?? ""}
-          placeholder="Search by email, phone, name..."
+          placeholder={t.users.searchPlaceholder}
           className={`${ADMIN_INPUT} min-w-[220px] flex-1`}
-          aria-label="Search users"
+          aria-label={t.users.searchAria}
         />
         {role ? <input type="hidden" name="role" value={role} /> : null}
         <Button type="submit" size="sm">
-          Search
+          {t.common.search}
         </Button>
       </form>
 
@@ -171,13 +173,13 @@ export function AdminUsersView({
         </div>
       </div>
 
-      <p className="mb-3 text-sm text-gray-600">Total users: {total}</p>
+      <p className="mb-3 text-sm text-gray-600">{t.users.total.replace("{count}", String(total))}</p>
 
       {error ? <p className="mb-3 text-sm text-red-700">{error}</p> : null}
 
       <Card className="mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
         <p className="text-sm text-gray-700">
-          Selected {selected.size} user{selected.size === 1 ? "" : "s"}
+          {t.users.bulk.selected.replace("{count}", String(selected.size))}
         </p>
         <Button
           type="button"
@@ -189,14 +191,14 @@ export function AdminUsersView({
             setConfirmOpen(true);
           }}
         >
-          Delete Selected
+          {t.users.bulk.deleteSelected}
         </Button>
       </Card>
 
       <Card className={ADMIN_TABLE_CARD}>
         {users.length === 0 ? (
           <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
-            No users match these filters.
+            {t.users.empty}
           </p>
         ) : (
           <div className={ADMIN_TABLE_OUTER_SCROLL}>
@@ -210,15 +212,15 @@ export function AdminUsersView({
                       checked={allSelected}
                       onChange={toggleAll}
                       disabled={isPending || users.length === 0}
-                      aria-label="Select all users"
+                      aria-label={t.users.selectAll}
                     />
                   </th>
-                  <th className={ADMIN_TABLE_TH}>User</th>
-                  <th className={ADMIN_TABLE_TH}>Contact</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Orders</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Roles</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Status</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Created</th>
+                  <th className={ADMIN_TABLE_TH}>{t.users.columns.user}</th>
+                  <th className={ADMIN_TABLE_TH}>{t.users.columns.contact}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.users.columns.orders}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.users.columns.roles}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.users.columns.status}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.users.columns.created}</th>
                 </tr>
               </thead>
               <tbody className={ADMIN_TABLE_TBODY}>
@@ -299,8 +301,8 @@ export function AdminUsersView({
                           }`}
                           aria-label={
                             isActive
-                              ? `Suspend ${displayName(user)}`
-                              : `Activate ${displayName(user)}`
+                              ? t.users.aria.suspend
+                              : t.users.aria.activate
                           }
                         >
                           <span
@@ -326,8 +328,10 @@ export function AdminUsersView({
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Delete"
-        description={`Are you sure you want to delete ${selected.size} selected user${selected.size === 1 ? "" : "s"}? This anonymizes their accounts and cannot be undone.`}
+        title={t.common.delete}
+        description={t.users.bulk.confirmDelete}
+        confirmLabel={t.common.delete}
+        cancelLabel={t.common.cancel}
         isPending={isPending}
         onClose={() => {
           if (!isPending) setConfirmOpen(false);

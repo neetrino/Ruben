@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
 import { Button } from "@/components/ui/Button";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { togglePromotionAction } from "@/features/promotions/application/upsert-promotion";
 
 type TogglePromotionButtonProps = {
@@ -18,6 +19,7 @@ export function TogglePromotionButton({
   isActive,
 }: TogglePromotionButtonProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
@@ -43,7 +45,7 @@ export function TogglePromotionButton({
           });
         }}
       >
-        {isPending ? "Updating…" : isActive ? "Deactivate" : "Activate"}
+        {isPending ? t.common.updating : isActive ? t.common.deactivate : t.common.activate}
       </Button>
       {error ? <p className="text-xs text-red-700">{error}</p> : null}
     </div>

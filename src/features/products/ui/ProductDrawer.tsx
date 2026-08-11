@@ -9,6 +9,7 @@ import {
   ADMIN_LABEL,
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type {
   AdminCategoryOption,
   AdminProductListItem,
@@ -65,6 +66,7 @@ export function ProductDrawer({
   product = null,
   categories: initialCategories,
 }: ProductDrawerProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const isEdit = product != null;
   const [title, setTitle] = useState("");
@@ -135,12 +137,12 @@ export function ProductDrawer({
     <SideSheet
       open={open}
       onClose={onClose}
-      ariaLabel={isEdit ? "Edit product" : "Add new product"}
+      ariaLabel={isEdit ? t.products.drawer.editTitle : t.products.drawer.createTitle}
       panelClassName="w-[min(100%,42rem)] sm:w-[40%]"
     >
         <div className="border-b border-gray-200 px-5 py-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            {isEdit ? "Edit product" : "Add new product"}
+            {isEdit ? t.products.drawer.editTitle : t.products.drawer.createTitle}
           </h2>
         </div>
 
@@ -208,26 +210,28 @@ export function ProductDrawer({
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
                 <span className={ADMIN_LABEL}>
-                  Title <span className="text-red-600">*</span>
+                  {t.products.drawer.fields.title}{" "}
+                  <span className="text-red-600">*</span>
                 </span>
                 <input
                   required
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Product title"
+                  placeholder={t.products.drawer.placeholders.title}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
               <label>
                 <span className={ADMIN_LABEL}>
-                  Slug <span className="text-red-600">*</span>
+                  {t.products.drawer.fields.slug}{" "}
+                  <span className="text-red-600">*</span>
                 </span>
                 <input
                   required
                   value={slug}
                   onChange={(event) => setSlug(event.target.value)}
-                  placeholder="product-slug"
+                  placeholder={t.products.drawer.placeholders.slug}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
@@ -235,17 +239,18 @@ export function ProductDrawer({
             </div>
 
             <label className="block">
-              <span className={ADMIN_LABEL}>Description</span>
+              <span className={ADMIN_LABEL}>{t.products.drawer.fields.description}</span>
               <textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
-                placeholder="Product description"
+                placeholder={t.products.drawer.placeholders.description}
                 className={ADMIN_TEXTAREA}
                 disabled={isPending}
               />
             </label>
 
             <ProductDrawerImages
+              locale={locale}
               images={images}
               disabled={isPending}
               onChange={handleImagesChange}
@@ -263,7 +268,8 @@ export function ProductDrawer({
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
                 <span className={ADMIN_LABEL}>
-                  Price <span className="text-red-600">*</span>
+                  {t.products.drawer.fields.price}{" "}
+                  <span className="text-red-600">*</span>
                 </span>
                 <input
                   required
@@ -271,19 +277,19 @@ export function ProductDrawer({
                   type="number"
                   value={priceAmount}
                   onChange={(event) => setPriceAmount(event.target.value)}
-                  placeholder="AMD price"
+                  placeholder={t.products.drawer.placeholders.price}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
               <label>
-                <span className={ADMIN_LABEL}>Compare at price</span>
+                <span className={ADMIN_LABEL}>{t.products.drawer.fields.compareAt}</span>
                 <input
                   min={0}
                   type="number"
                   value={compareAtAmount}
                   onChange={(event) => setCompareAtAmount(event.target.value)}
-                  placeholder="Optional"
+                  placeholder={t.products.drawer.placeholders.compareAt}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
@@ -293,20 +299,22 @@ export function ProductDrawer({
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
                 <span className={ADMIN_LABEL}>
-                  SKU <span className="text-red-600">*</span>
+                  {t.products.drawer.fields.sku}{" "}
+                  <span className="text-red-600">*</span>
                 </span>
                 <input
                   required
                   value={sku}
                   onChange={(event) => setSku(event.target.value)}
-                  placeholder="SKU"
+                  placeholder={t.products.drawer.placeholders.sku}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
               <label>
                 <span className={ADMIN_LABEL}>
-                  Quantity <span className="text-red-600">*</span>
+                  {t.products.drawer.fields.quantity}{" "}
+                  <span className="text-red-600">*</span>
                 </span>
                 <input
                   required
@@ -314,7 +322,7 @@ export function ProductDrawer({
                   type="number"
                   value={stockOnHand}
                   onChange={(event) => setStockOnHand(event.target.value)}
-                  placeholder="Stock"
+                  placeholder={t.products.drawer.placeholders.quantity}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
@@ -328,18 +336,18 @@ export function ProductDrawer({
             <Button type="submit" disabled={isPending}>
               {isPending
                 ? isEdit
-                  ? "Saving…"
-                  : "Creating…"
+                  ? t.common.saving
+                  : t.common.creating
                 : isEdit
-                  ? "Save"
-                  : "Create"}
+                  ? t.common.save
+                  : t.common.create}
             </Button>
             <button
               type="button"
               onClick={onClose}
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              Cancel
+              {t.common.cancel}
             </button>
           </div>
         </form>

@@ -1,6 +1,7 @@
 import type { Locale } from "@/lib/i18n/config";
 
 import enAbout from "@/locales/en/about.json";
+import enAdmin from "@/locales/en/admin.json";
 import enAuth from "@/locales/en/auth.json";
 import enBlog from "@/locales/en/blog.json";
 import enCart from "@/locales/en/cart.json";
@@ -16,6 +17,7 @@ import enProfile from "@/locales/en/profile.json";
 import enWishlist from "@/locales/en/wishlist.json";
 
 import hyAbout from "@/locales/hy/about.json";
+import hyAdmin from "@/locales/hy/admin.json";
 import hyAuth from "@/locales/hy/auth.json";
 import hyBlog from "@/locales/hy/blog.json";
 import hyCart from "@/locales/hy/cart.json";
@@ -31,6 +33,7 @@ import hyProfile from "@/locales/hy/profile.json";
 import hyWishlist from "@/locales/hy/wishlist.json";
 
 import ruAbout from "@/locales/ru/about.json";
+import ruAdmin from "@/locales/ru/admin.json";
 import ruAuth from "@/locales/ru/auth.json";
 import ruBlog from "@/locales/ru/blog.json";
 import ruCart from "@/locales/ru/cart.json";
@@ -47,6 +50,7 @@ import ruWishlist from "@/locales/ru/wishlist.json";
 
 type LocaleNamespaces = {
   common: typeof hyCommon;
+  admin: typeof hyAdmin;
   home: typeof hyHome;
   contact: typeof hyContact;
   about: typeof hyAbout;
@@ -68,6 +72,7 @@ function buildDictionary(namespaces: LocaleNamespaces) {
     nav: namespaces.common.nav,
     header: namespaces.common.header,
     footer: namespaces.common.footer,
+    admin: namespaces.admin,
     home: namespaces.home,
     contact: namespaces.contact,
     about: namespaces.about,
@@ -87,6 +92,7 @@ function buildDictionary(namespaces: LocaleNamespaces) {
 const dictionaries = {
   hy: buildDictionary({
     common: hyCommon,
+    admin: hyAdmin,
     home: hyHome,
     contact: hyContact,
     about: hyAbout,
@@ -103,6 +109,7 @@ const dictionaries = {
   }),
   en: buildDictionary({
     common: enCommon,
+    admin: enAdmin,
     home: enHome,
     contact: enContact,
     about: enAbout,
@@ -119,6 +126,7 @@ const dictionaries = {
   }),
   ru: buildDictionary({
     common: ruCommon,
+    admin: ruAdmin,
     home: ruHome,
     contact: ruContact,
     about: ruAbout,
@@ -136,7 +144,13 @@ const dictionaries = {
 } as const;
 
 export type Dictionary = (typeof dictionaries)[Locale];
+export type AdminDictionary = Dictionary["admin"];
 
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];
+}
+
+/** Admin copy for the given locale (sync; safe in client components). */
+export function getAdminDictionary(locale: Locale): AdminDictionary {
+  return dictionaries[locale].admin;
 }

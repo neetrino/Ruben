@@ -14,6 +14,7 @@ import {
   ADMIN_PAGE_SUBTITLE,
   ADMIN_PAGE_TITLE,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   ADMIN_TABLE,
   ADMIN_TABLE_CARD,
@@ -39,8 +40,8 @@ type AdminCouponsViewProps = {
   coupons: AdminPromotionListItem[];
 };
 
-function typeLabel(discountType: string): string {
-  return discountType === "PERCENTAGE" ? "Percent off" : "Fixed amount (AMD)";
+function typeLabel(discountType: string, percent: string, fixed: string): string {
+  return discountType === "PERCENTAGE" ? percent : fixed;
 }
 
 function valueLabel(discountType: string, discountValue: number): string {
@@ -59,6 +60,7 @@ function formatValidUntil(
 
 export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingCoupon, setEditingCoupon] =
     useState<AdminPromotionListItem | null>(null);
@@ -118,9 +120,9 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
     <section>
       <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className={ADMIN_PAGE_TITLE}>Promo codes</h1>
+          <h1 className={ADMIN_PAGE_TITLE}>{t.coupons.title}</h1>
           <p className={`mt-1 ${ADMIN_PAGE_SUBTITLE}`}>
-            Create, edit, or remove discount codes for checkout.
+            {t.coupons.subtitle}
           </p>
         </div>
         <Button
@@ -130,7 +132,7 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
           className="inline-flex items-center gap-1.5"
         >
           <Plus className="h-4 w-4" aria-hidden />
-          Add Promo Code
+          {t.coupons.add}
         </Button>
       </div>
 
@@ -139,21 +141,21 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
       <Card className={ADMIN_TABLE_CARD}>
         {coupons.length === 0 ? (
           <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
-            No promo codes yet.
+            {t.coupons.empty}
           </p>
         ) : (
           <div className={ADMIN_TABLE_OUTER_SCROLL}>
             <table className={ADMIN_TABLE}>
               <thead className={ADMIN_TABLE_THEAD}>
                 <tr>
-                  <th className={ADMIN_TABLE_TH}>Code</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Type</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Value</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Usage limit</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Used</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Active</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Valid until</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Actions</th>
+                  <th className={ADMIN_TABLE_TH}>{t.coupons.columns.code}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.type}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.value}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.usageLimit}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.used}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.active}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.validUntil}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.coupons.columns.actions}</th>
                 </tr>
               </thead>
               <tbody className={ADMIN_TABLE_TBODY}>
@@ -165,7 +167,7 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
                       </span>
                     </td>
                     <td className={ADMIN_TABLE_TD_CENTER}>
-                      {typeLabel(promo.discountType)}
+                      {typeLabel(promo.discountType, t.coupons.type.percent, t.coupons.type.fixed)}
                     </td>
                     <td className={ADMIN_TABLE_TD_CENTER}>
                       {valueLabel(promo.discountType, promo.discountValue)}
@@ -178,7 +180,7 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
                       {promo.isActive ? (
                         <Check
                           className="mx-auto h-4 w-4 text-gray-900"
-                          aria-label="Active"
+                          aria-label={t.coupons.columns.active}
                         />
                       ) : (
                         <span className="text-gray-400">—</span>
@@ -251,12 +253,14 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Delete"
+        title={t.common.delete}
         description={
           pendingDelete
-            ? deleteConfirmDescription("promo code", pendingDelete.code)
+            ? deleteConfirmDescription(t.common.entity.promoCode, pendingDelete.code, t.common.confirmDelete)
             : ""
         }
+        confirmLabel={t.common.delete}
+        cancelLabel={t.common.cancel}
         isPending={isPending}
         onClose={() => {
           if (!isPending) setPendingDelete(null);

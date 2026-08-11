@@ -8,6 +8,7 @@ import {
   ADMIN_TABLE_TD_CHECK,
   ADMIN_TABLE_CHECKBOX,
 } from "@/features/admin/ui/admin-table-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminProductListItem } from "@/features/products/application/list-admin-products";
 import { formatMoneyAmount } from "@/lib/money/format";
 
@@ -36,6 +37,7 @@ export function AdminProductRow({
   onDelete,
   onVisibility,
 }: AdminProductRowProps) {
+  const t = adminCopy(locale);
   const isActive = product.status === "ACTIVE";
   const created = new Date(product.createdAt);
   const createdLabel = `${created.getDate()}/${created.getMonth() + 1}/${created.getFullYear()}`;
@@ -62,7 +64,7 @@ export function AdminProductRow({
                 className="h-full w-full object-cover"
               />
             ) : (
-              <span className="text-[10px] text-gray-400">N/A</span>
+              <span className="text-[10px] text-gray-400">{t.common.na}</span>
             )}
           </div>
           <div className="min-w-0">
@@ -72,7 +74,9 @@ export function AdminProductRow({
         </div>
       </td>
       <td className={ADMIN_TABLE_TD}>
-        <span className="text-gray-900">{product.stockOnHand} pcs</span>
+        <span className="text-gray-900">
+          {t.products.pcs.replace("{count}", String(product.stockOnHand))}
+        </span>
       </td>
       <td className={ADMIN_TABLE_TD}>
         <div className="flex flex-col">
@@ -101,7 +105,7 @@ export function AdminProductRow({
           onClick={onFeatured}
           className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-amber-500"
           aria-label={
-            product.isFeatured ? "Unfeature product" : "Feature product"
+            product.isFeatured ? t.products.aria.unfeature : t.products.aria.feature
           }
         >
           <Star
@@ -115,7 +119,7 @@ export function AdminProductRow({
             type="button"
             onClick={onEdit}
             className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-            aria-label={`Edit ${product.title}`}
+            aria-label={t.products.aria.edit}
           >
             <Pencil className="h-4 w-4" />
           </button>
@@ -124,7 +128,7 @@ export function AdminProductRow({
             disabled={disabled}
             onClick={onDuplicate}
             className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-            aria-label={`Duplicate ${product.title}`}
+            aria-label={t.products.aria.duplicate}
           >
             <Copy className="h-4 w-4" />
           </button>
@@ -133,7 +137,7 @@ export function AdminProductRow({
             disabled={disabled}
             onClick={onDelete}
             className="rounded p-1.5 text-red-600 hover:bg-red-50"
-            aria-label={`Delete ${product.title}`}
+            aria-label={t.products.aria.delete}
           >
             <Trash2 className="h-4 w-4" />
           </button>
@@ -146,7 +150,7 @@ export function AdminProductRow({
             className={`relative ml-1 h-5 w-9 rounded-full transition-colors ${
               isActive ? "bg-green-500" : "bg-gray-300"
             }`}
-            aria-label={isActive ? "Deactivate product" : "Activate product"}
+            aria-label={isActive ? t.products.aria.deactivate : t.products.aria.activate}
           >
             <span
               className={`absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white transition-transform ${

@@ -5,6 +5,7 @@ import {
   orderStatusBadgeClass,
   paymentStatusBadgeClass,
 } from "@/features/admin/ui/status-badge";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminOrderDetailView } from "@/features/orders/application/order-detail-view";
 import {
   formatOrderDrawerMoney,
@@ -12,28 +13,37 @@ import {
 } from "@/features/orders/ui/order-drawer-format";
 
 type OrderDetailsDrawerSummaryProps = {
+  locale: string;
   detail: AdminOrderDetailView;
 };
 
 export function OrderDetailsDrawerSummary({
+  locale,
   detail,
 }: OrderDetailsDrawerSummaryProps) {
+  const t = adminCopy(locale);
+
   return (
     <div className="rounded-2xl border border-gray-200 px-5 py-4">
       <div className="grid gap-8 md:grid-cols-2">
         <section>
-          <h3 className="mb-4 text-base font-semibold text-gray-900">Summary</h3>
+          <h3 className="mb-4 text-base font-semibold text-gray-900">
+            {t.orders.drawer.sections.summary}
+          </h3>
           <dl className="space-y-3 text-sm">
-            <DetailRow label="Order #:" value={detail.orderNumber} />
             <DetailRow
-              label="Total:"
+              label={t.orders.drawer.labels.orderNumber}
+              value={detail.orderNumber}
+            />
+            <DetailRow
+              label={t.orders.drawer.labels.total}
               value={formatOrderDrawerMoney(
                 detail.totalAmount,
                 detail.baseCurrency,
               )}
             />
             <DetailRow
-              label="Status:"
+              label={t.orders.drawer.labels.status}
               value={
                 <span
                   className={`${ADMIN_BADGE} ${orderStatusBadgeClass(detail.status)}`}
@@ -43,7 +53,7 @@ export function OrderDetailsDrawerSummary({
               }
             />
             <DetailRow
-              label="Payment:"
+              label={t.orders.drawer.labels.payment}
               value={
                 <span
                   className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(detail.paymentStatus)}`}
@@ -57,12 +67,12 @@ export function OrderDetailsDrawerSummary({
 
         <section>
           <h3 className="mb-4 text-base font-semibold text-gray-900">
-            Customer
+            {t.orders.drawer.sections.customer}
           </h3>
           <dl className="space-y-3 text-sm">
-            <DetailRow label="Name:" value={detail.contactName} />
-            <DetailRow label="Phone Number:" value={detail.contactPhone} />
-            <DetailRow label="Email:" value={detail.contactEmail} />
+            <DetailRow label={t.orders.drawer.labels.name} value={detail.contactName} />
+            <DetailRow label={t.orders.drawer.labels.phone} value={detail.contactPhone} />
+            <DetailRow label={t.orders.drawer.labels.email} value={detail.contactEmail} />
           </dl>
         </section>
       </div>

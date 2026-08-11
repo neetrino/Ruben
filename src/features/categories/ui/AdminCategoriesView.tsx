@@ -27,6 +27,7 @@ import {
   ADMIN_TABLE_TH_CENTER,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   deleteCategoryAction,
   reorderCategoriesAction,
@@ -69,6 +70,7 @@ export function AdminCategoriesView({
   categories,
 }: AdminCategoriesViewProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [query, setQuery] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [editingCategory, setEditingCategory] =
@@ -164,7 +166,7 @@ export function AdminCategoriesView({
   return (
     <section>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className={ADMIN_PAGE_TITLE}>Categories</h1>
+        <h1 className={ADMIN_PAGE_TITLE}>{t.categories.title}</h1>
         <Button
           type="button"
           size="sm"
@@ -175,21 +177,21 @@ export function AdminCategoriesView({
           className="inline-flex items-center gap-1.5"
         >
           <Plus className="h-4 w-4" aria-hidden />
-          Add Category
+          {t.categories.add}
         </Button>
       </div>
 
       <input
         value={query}
         onChange={(event) => setQuery(event.target.value)}
-        placeholder="Enter category title"
+        placeholder={t.categories.searchPlaceholder}
         className={`${ADMIN_INPUT} mb-4`}
-        aria-label="Search categories"
+        aria-label={t.categories.searchAria}
       />
 
       {isFiltering ? (
         <p className="mb-3 text-xs text-gray-500">
-          Clear search to reorder categories.
+          {t.categories.clearToReorder}
         </p>
       ) : null}
 
@@ -199,19 +201,19 @@ export function AdminCategoriesView({
         {visible.length === 0 ? (
           <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
             {categories.length === 0
-              ? "No categories yet."
-              : "No categories match this search."}
+              ? t.categories.empty
+              : t.categories.emptySearch}
           </p>
         ) : (
           <div className={ADMIN_TABLE_OUTER_SCROLL}>
             <table className={ADMIN_TABLE}>
               <thead className={ADMIN_TABLE_THEAD}>
                 <tr>
-                  <th className={`${ADMIN_TABLE_TH} w-8`} aria-label="Reorder" />
-                  <th className={ADMIN_TABLE_TH}>Image</th>
-                  <th className={ADMIN_TABLE_TH}>Category Title</th>
-                  <th className={ADMIN_TABLE_TH}>Category</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>Actions</th>
+                  <th className={`${ADMIN_TABLE_TH} w-8`} aria-label={t.categories.aria.reorder} />
+                  <th className={ADMIN_TABLE_TH}>{t.categories.columns.image}</th>
+                  <th className={ADMIN_TABLE_TH}>{t.categories.columns.title}</th>
+                  <th className={ADMIN_TABLE_TH}>{t.categories.columns.category}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.categories.columns.actions}</th>
                 </tr>
               </thead>
               <tbody className={ADMIN_TABLE_TBODY}>
@@ -260,7 +262,7 @@ export function AdminCategoriesView({
                             setDraggingId(null);
                           }}
                           className="inline-flex cursor-grab touch-none text-gray-400 active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
-                          aria-label={`Reorder ${category.title}`}
+                          aria-label={t.categories.aria.reorder}
                         >
                           <GripVertical className="h-4 w-4" />
                         </button>
@@ -285,7 +287,7 @@ export function AdminCategoriesView({
                       </td>
                       <td className={ADMIN_TABLE_TD}>
                         <span className="text-sm text-gray-500">
-                          {category.parentTitle ?? "None (Root Category)"}
+                          {category.parentTitle ?? t.categories.root}
                         </span>
                       </td>
                       <td className={ADMIN_TABLE_TD_CENTER}>
@@ -293,7 +295,7 @@ export function AdminCategoriesView({
                           <button
                             type="button"
                             className="rounded p-1.5 text-gray-500 hover:bg-gray-100 hover:text-gray-900"
-                            aria-label={`Edit ${category.title}`}
+                            aria-label={t.categories.aria.edit}
                             onClick={() => {
                               setEditingCategory(category);
                               setDrawerOpen(true);
@@ -308,14 +310,14 @@ export function AdminCategoriesView({
                               requestDelete(category.id, category.title)
                             }
                             className="rounded p-1.5 text-red-600 hover:bg-red-50"
-                            aria-label={`Delete ${category.title}`}
+                            aria-label={t.categories.aria.delete}
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                           {category.childCount > 0 ? (
                             <span
                               className="ml-1 text-gray-400"
-                              aria-label={`${category.childCount} subcategories`}
+                              aria-label={t.categories.aria.subcategories.replace("{count}", String(category.childCount))}
                             >
                               <ChevronRight className="h-4 w-4" />
                             </span>
@@ -344,12 +346,14 @@ export function AdminCategoriesView({
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Delete"
+        title={t.common.delete}
         description={
           pendingDelete
-            ? deleteConfirmDescription("category", pendingDelete.title)
+            ? deleteConfirmDescription(t.common.entity.category, pendingDelete.title, t.common.confirmDelete)
             : ""
         }
+        confirmLabel={t.common.delete}
+        cancelLabel={t.common.cancel}
         isPending={isPending}
         onClose={() => {
           if (!isPending) setPendingDelete(null);

@@ -24,6 +24,7 @@ import {
 } from "@/features/admin/ui/status-badge";
 import { getAdminOrderByNumber } from "@/features/orders/application/queries";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminOrderDetailPageProps = {
   params: Promise<{ locale: string; orderNumber: string }>;
@@ -41,6 +42,7 @@ export default async function AdminOrderDetailPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const detail = await getAdminOrderByNumber(decodeURIComponent(orderNumber));
   if (!detail) {
     notFound();
@@ -58,7 +60,7 @@ export default async function AdminOrderDetailPage({
               href={`/${locale}/admin/orders`}
               className="font-medium text-gray-700 hover:underline"
             >
-              Orders
+              {t.orders.title}
             </Link>
           </p>
           <h1 className={ADMIN_PAGE_TITLE}>{order.orderNumber}</h1>
@@ -75,7 +77,7 @@ export default async function AdminOrderDetailPage({
             </span>
             {order.isArchived ? (
               <span className={`${ADMIN_BADGE} bg-gray-100 text-gray-800`}>
-                Archived
+                {t.orders.archived}
               </span>
             ) : null}
           </div>
@@ -84,7 +86,7 @@ export default async function AdminOrderDetailPage({
 
       <div className="mb-6 grid gap-6 md:grid-cols-2">
         <Card className="p-6">
-          <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>Customer</h2>
+          <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>{t.orders.detail.customer}</h2>
           <p className="text-sm font-medium text-gray-900">{order.contactName}</p>
           <p className="text-sm text-gray-600">{order.contactEmail}</p>
           <p className="text-sm text-gray-600">{order.contactPhone}</p>
@@ -101,45 +103,49 @@ export default async function AdminOrderDetailPage({
         </Card>
 
         <Card className="p-6">
-          <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>Totals</h2>
+          <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>{t.orders.detail.totals}</h2>
           <p className="text-sm text-gray-700">
-            Subtotal: {formatMoney(order.subtotalAmount, order.baseCurrency)}
+            {t.orders.drawer.totals.subtotal}:{" "}
+            {formatMoney(order.subtotalAmount, order.baseCurrency)}
           </p>
           <p className="text-sm text-gray-700">
-            Delivery
+            {t.orders.drawer.totals.delivery}
             {order.deliveryLabelSnapshot
               ? ` (${order.deliveryLabelSnapshot})`
               : ""}
             : {formatMoney(order.deliveryAmount, order.baseCurrency)}
           </p>
           <p className="text-sm text-gray-700">
-            Coupon discount
+            {t.orders.drawer.totals.couponDiscount}
             {order.promotionCodeSnapshot
               ? ` (${order.promotionCodeSnapshot})`
               : ""}
             : {formatMoney(order.discountAmount, order.baseCurrency)}
           </p>
           <p className="mt-2 text-sm font-semibold text-gray-900">
-            Total: {formatMoney(order.totalAmount, order.baseCurrency)}
+            {t.orders.drawer.totals.total}:{" "}
+            {formatMoney(order.totalAmount, order.baseCurrency)}
           </p>
           <p className="mt-2 text-sm text-gray-500">
-            Placed{" "}
-            {order.placedAt.toISOString().slice(0, 16).replace("T", " ")} UTC
+            {t.orders.placedAt.replace(
+              "{datetime}",
+              order.placedAt.toISOString().slice(0, 16).replace("T", " "),
+            )}
           </p>
         </Card>
       </div>
 
       <Card className={`mb-6 ${ADMIN_TABLE_CARD}`}>
         <div className="border-b border-gray-200 px-4 py-3 sm:px-5">
-          <h2 className={ADMIN_SECTION_TITLE}>Line items</h2>
+          <h2 className={ADMIN_SECTION_TITLE}>{t.orders.detail.lineItems}</h2>
         </div>
         <div className={ADMIN_TABLE_OUTER_SCROLL}>
           <table className={ADMIN_TABLE}>
             <thead className={ADMIN_TABLE_THEAD}>
               <tr>
-                <th className={ADMIN_TABLE_TH}>Product</th>
-                <th className={ADMIN_TABLE_TH}>Qty</th>
-                <th className={ADMIN_TABLE_TH}>Line total</th>
+                <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.product}</th>
+                <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.qty}</th>
+                <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.total}</th>
               </tr>
             </thead>
             <tbody className={ADMIN_TABLE_TBODY}>
@@ -165,7 +171,7 @@ export default async function AdminOrderDetailPage({
       </Card>
 
       <Card className="p-6">
-        <h2 className={`mb-4 ${ADMIN_SECTION_TITLE}`}>History</h2>
+        <h2 className={`mb-4 ${ADMIN_SECTION_TITLE}`}>{t.orders.detail.history}</h2>
         <ol className="space-y-3">
           {events.map((event) => (
             <li
@@ -180,8 +186,10 @@ export default async function AdminOrderDetailPage({
               </p>
               <p className="text-gray-500">
                 {event.createdAt.toISOString().slice(0, 19).replace("T", " ")}{" "}
-                UTC
-                {event.isCustomerVisible ? " · customer-visible" : " · internal"}
+                {t.common.utc}
+                {event.isCustomerVisible
+                  ? ` · ${t.orders.history.customerVisible}`
+                  : ` · ${t.orders.history.internal}`}
               </p>
               {event.payload &&
               typeof event.payload === "object" &&
@@ -192,7 +200,7 @@ export default async function AdminOrderDetailPage({
             </li>
           ))}
           {events.length === 0 ? (
-            <li className="text-sm text-gray-600">No events yet.</li>
+            <li className="text-sm text-gray-600">{t.orders.history.empty}</li>
           ) : null}
         </ol>
       </Card>

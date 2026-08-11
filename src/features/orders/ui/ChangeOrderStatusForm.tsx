@@ -10,6 +10,7 @@ import {
   ADMIN_LABEL,
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { changeOrderStatusAction } from "@/features/orders/application/change-order-status";
 import type { OrderStatus } from "@/features/orders/domain/order-status";
 
@@ -26,16 +27,25 @@ export function ChangeOrderStatusForm({
   currentStatus,
   eligibleStatuses,
 }: ChangeOrderStatusFormProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [toStatus, setToStatus] = useState(eligibleStatuses[0] ?? "");
   const [isPending, startTransition] = useTransition();
 
+  const orderStatusDisplayLabel: Partial<Record<string, string>> = {
+    PENDING: t.orders.status.pending,
+    CONFIRMED: t.orders.status.pending,
+    PROCESSING: t.orders.status.processing,
+    SHIPPED: t.orders.status.processing,
+    DELIVERED: t.orders.status.completed,
+    CANCELLED: t.orders.status.cancelled,
+    REFUNDED: t.orders.status.cancelled,
+  };
+
   if (eligibleStatuses.length === 0) {
     return (
-      <p className="text-sm text-gray-600">
-        Terminal status — no further transitions.
-      </p>
+      <p className="text-sm text-gray-600">{t.orders.terminalStatus}</p>
     );
   }
 
@@ -66,16 +76,19 @@ export function ChangeOrderStatusForm({
         }}
       >
         <p className="text-sm text-gray-700">
-          Current: <strong className="text-gray-900">{currentStatus}</strong>
+          {t.common.current}{" "}
+          <strong className="text-gray-900">
+            {orderStatusDisplayLabel[currentStatus] ?? currentStatus}
+          </strong>
         </p>
         <div>
-          <span className={ADMIN_LABEL}>New status</span>
+          <span className={ADMIN_LABEL}>{t.orders.form.newStatus}</span>
           <SelectDropdown
             name="toStatus"
-            ariaLabel="New status"
+            ariaLabel={t.orders.form.newStatus}
             value={toStatus}
             options={eligibleStatuses.map((status) => ({
-              label: status,
+              label: orderStatusDisplayLabel[status] ?? status,
               value: status,
             }))}
             disabled={isPending}
@@ -85,7 +98,7 @@ export function ChangeOrderStatusForm({
           />
         </div>
         <label>
-          <span className={ADMIN_LABEL}>Note (optional)</span>
+          <span className={ADMIN_LABEL}>{t.orders.form.noteOptional}</span>
           <textarea
             name="note"
             rows={2}
@@ -96,7 +109,7 @@ export function ChangeOrderStatusForm({
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <Button type="submit" size="sm" disabled={isPending}>
-          {isPending ? "Updating…" : "Update status"}
+          {isPending ? t.common.updating : t.orders.updateStatus}
         </Button>
       </form>
     </Card>

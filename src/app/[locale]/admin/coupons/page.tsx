@@ -5,6 +5,7 @@ import { listAdminPromotions } from "@/features/promotions/application/queries";
 import { adminPromotionsFilterSchema } from "@/features/promotions/schemas/admin-promotions";
 import { AdminCouponsView } from "@/features/promotions/ui/AdminCouponsView";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminCouponsPageProps = {
   params: Promise<{ locale: string }>;
@@ -29,6 +30,7 @@ export default async function AdminCouponsPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const raw = await searchParams;
   const parsed = adminPromotionsFilterSchema.safeParse({
     kind: "COUPON",
@@ -59,18 +61,20 @@ export default async function AdminCouponsPage({
               href={`/${locale}/admin/coupons?page=${filters.page - 1}`}
               className="font-medium hover:underline"
             >
-              Previous
+              {t.common.previous}
             </Link>
           ) : null}
           <span>
-            Page {filters.page} / {totalPages}
+            {t.common.pageOf
+              .replace("{page}", String(filters.page))
+              .replace("{total}", String(totalPages))}
           </span>
           {filters.page < totalPages ? (
             <Link
               href={`/${locale}/admin/coupons?page=${filters.page + 1}`}
               className="font-medium hover:underline"
             >
-              Next
+              {t.common.next}
             </Link>
           ) : null}
         </nav>

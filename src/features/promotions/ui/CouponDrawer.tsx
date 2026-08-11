@@ -11,6 +11,7 @@ import {
   ADMIN_INPUT,
   ADMIN_LABEL,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   createPromotionAction,
   updatePromotionAction,
@@ -50,6 +51,7 @@ export function CouponDrawer({
   coupon = null,
 }: CouponDrawerProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const isEdit = coupon != null;
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
@@ -91,12 +93,12 @@ export function CouponDrawer({
     <SideSheet
       open={open}
       onClose={onClose}
-      ariaLabel={isEdit ? "Edit coupon" : "New coupon"}
+      ariaLabel={isEdit ? t.coupons.drawer.editTitle : t.coupons.drawer.createTitle}
       panelClassName="w-full max-w-md"
     >
         <div className="border-b border-gray-200 px-5 py-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            {isEdit ? "Edit coupon" : "New coupon"}
+            {isEdit ? t.coupons.drawer.editTitle : t.coupons.drawer.createTitle}
           </h2>
         </div>
 
@@ -106,7 +108,7 @@ export function CouponDrawer({
             event.preventDefault();
             const nextCode = (code.trim() || name.trim()).toUpperCase();
             if (!nextCode) {
-              setError("Code is required.");
+              setError(t.coupons.drawer.codeRequired);
               return;
             }
 
@@ -148,23 +150,23 @@ export function CouponDrawer({
           <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
-                <span className={ADMIN_LABEL}>Name</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.name}</span>
                 <input
                   value={name}
                   onChange={(event) => setName(event.target.value)}
-                  placeholder="Name"
+                  placeholder={t.coupons.drawer.name}
                   className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
               <label>
-                <span className={ADMIN_LABEL}>Code</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.code}</span>
                 <input
                   value={code}
                   onChange={(event) =>
                     setCode(event.target.value.toUpperCase())
                   }
-                  placeholder="Code"
+                  placeholder={t.coupons.drawer.code}
                   className={`${ADMIN_INPUT} uppercase`}
                   disabled={isPending}
                 />
@@ -173,13 +175,13 @@ export function CouponDrawer({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <span className={ADMIN_LABEL}>Discount type</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.discountType}</span>
                 <SelectDropdown
-                  ariaLabel="Discount type"
+                  ariaLabel={t.coupons.drawer.discountType}
                   value={discountType}
                   options={[
-                    { label: "Percent off", value: "PERCENTAGE" },
-                    { label: "Fixed amount (AMD)", value: "FIXED" },
+                    { label: t.coupons.type.percent, value: "PERCENTAGE" },
+                    { label: t.coupons.type.fixed, value: "FIXED" },
                   ]}
                   disabled={isPending}
                   deferChange={false}
@@ -190,7 +192,7 @@ export function CouponDrawer({
                 />
               </div>
               <label>
-                <span className={ADMIN_LABEL}>Value</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.value}</span>
                 <input
                   type="number"
                   min={1}
@@ -205,7 +207,7 @@ export function CouponDrawer({
 
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
-                <span className={ADMIN_LABEL}>Quantity</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.quantity}</span>
                 <input
                   type="number"
                   min={1}
@@ -216,7 +218,7 @@ export function CouponDrawer({
                 />
               </label>
               <label>
-                <span className={ADMIN_LABEL}>Expires (optional)</span>
+                <span className={ADMIN_LABEL}>{t.coupons.drawer.expires}</span>
                 <input
                   type="datetime-local"
                   value={expiresAt}
@@ -231,10 +233,10 @@ export function CouponDrawer({
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-medium text-gray-900">
-                    Select users
+                    {t.coupons.drawer.selectUsers}
                   </p>
                   <p className="mt-0.5 text-sm text-gray-500">
-                    All users can use this coupon
+                    {t.coupons.drawer.allUsers}
                   </p>
                 </div>
                 <ChevronDown className="mt-1 h-4 w-4 shrink-0 text-gray-400" />
@@ -248,18 +250,18 @@ export function CouponDrawer({
             <Button type="submit" disabled={isPending}>
               {isPending
                 ? isEdit
-                  ? "Saving…"
-                  : "Creating…"
+                  ? t.common.saving
+                  : t.common.creating
                 : isEdit
-                  ? "Save"
-                  : "Create"}
+                  ? t.common.save
+                  : t.common.create}
             </Button>
             <button
               type="button"
               onClick={onClose}
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              Cancel
+              {t.common.cancel}
             </button>
           </div>
         </form>

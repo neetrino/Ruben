@@ -5,8 +5,10 @@ import type {
   AnalyticsTopCategory,
   AnalyticsTopProduct,
 } from "@/features/analytics/application/queries";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 
 type AnalyticsTopRankingsProps = {
+  locale: string;
   products: AnalyticsTopProduct[];
   categories: AnalyticsTopCategory[];
   formatMoney: (amount: number) => string;
@@ -34,18 +36,27 @@ function RankBadge({
 }
 
 export function AnalyticsTopRankings({
+  locale,
   products,
   categories,
   formatMoney,
 }: AnalyticsTopRankingsProps) {
+  const t = adminCopy(locale);
+  const soldLabel = (count: number): string =>
+    t.common.soldCount.replace("{count}", String(count));
+  const ordersLabel = (count: number): string =>
+    t.common.ordersCount.replace("{count}", String(count));
+  const itemsLabel = (count: number): string =>
+    t.common.itemsCount.replace("{count}", String(count));
+
   return (
     <div className="mb-6 space-y-4">
       <div>
         <h2 className="text-lg font-semibold text-gray-900">
-          Product analytics
+          {t.analytics.products.title}
         </h2>
         <p className="mt-1 text-sm text-gray-500">
-          Most sold products and most purchased categories
+          {`${t.analytics.products.mostSold} · ${t.analytics.products.mostCategories}`}
         </p>
       </div>
 
@@ -53,7 +64,7 @@ export function AnalyticsTopRankings({
         <Card className="rounded-2xl p-5 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h3 className="text-base font-semibold text-gray-900">
-              Most sold products
+              {t.analytics.products.mostSold}
             </h3>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
               <TrendingUp className="h-4 w-4" aria-hidden />
@@ -86,10 +97,10 @@ export function AnalyticsTopRankings({
                   <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
                     <span className="inline-flex items-center gap-1">
                       <ShoppingBag className="h-3 w-3" aria-hidden />
-                      {product.quantitySold} sold
+                      {soldLabel(product.quantitySold)}
                     </span>
                     <span>|</span>
-                    <span>{product.orderCount} orders</span>
+                    <span>{ordersLabel(product.orderCount)}</span>
                   </p>
                 </div>
                 <p className="shrink-0 text-sm font-bold text-gray-900">
@@ -99,7 +110,7 @@ export function AnalyticsTopRankings({
             ))}
             {products.length === 0 ? (
               <p className="py-8 text-center text-sm text-gray-500">
-                No product sales in this range.
+                {t.analytics.products.emptyProducts}
               </p>
             ) : null}
           </div>
@@ -108,7 +119,7 @@ export function AnalyticsTopRankings({
         <Card className="rounded-2xl p-5 sm:p-6">
           <div className="mb-4 flex items-center justify-between gap-3">
             <h3 className="text-base font-semibold text-gray-900">
-              Most purchased categories
+              {t.analytics.products.mostCategories}
             </h3>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
               <Tag className="h-4 w-4" aria-hidden />
@@ -126,9 +137,9 @@ export function AnalyticsTopRankings({
                     {category.title}
                   </p>
                   <p className="mt-1 flex flex-wrap items-center gap-2 text-xs text-gray-500">
-                    <span>{category.itemCount} items</span>
+                    <span>{itemsLabel(category.itemCount)}</span>
                     <span>|</span>
-                    <span>{category.orderCount} orders</span>
+                    <span>{ordersLabel(category.orderCount)}</span>
                   </p>
                 </div>
                 <p className="shrink-0 text-sm font-bold text-gray-900">
@@ -138,7 +149,7 @@ export function AnalyticsTopRankings({
             ))}
             {categories.length === 0 ? (
               <p className="py-8 text-center text-sm text-gray-500">
-                No category sales in this range.
+                {t.analytics.products.emptyCategories}
               </p>
             ) : null}
           </div>

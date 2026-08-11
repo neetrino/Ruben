@@ -10,6 +10,7 @@ import {
   ADMIN_LABEL,
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { changePaymentStatusAction } from "@/features/orders/application/change-payment-status";
 import type { PaymentStatus } from "@/features/orders/domain/payment-status";
 
@@ -26,16 +27,24 @@ export function ChangePaymentStatusForm({
   currentStatus,
   eligibleStatuses,
 }: ChangePaymentStatusFormProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [toStatus, setToStatus] = useState(eligibleStatuses[0] ?? "");
   const [isPending, startTransition] = useTransition();
 
+  const paymentStatusDisplayLabel: Partial<Record<string, string>> = {
+    PENDING: t.orders.payment.pending,
+    AUTHORIZED: t.orders.payment.pending,
+    CAPTURED: t.orders.payment.paid,
+    FAILED: t.orders.payment.failed,
+    REFUNDED: t.orders.payment.failed,
+    CANCELLED: t.orders.payment.failed,
+  };
+
   if (eligibleStatuses.length === 0) {
     return (
-      <p className="text-sm text-gray-600">
-        Terminal payment status — no further transitions.
-      </p>
+      <p className="text-sm text-gray-600">{t.orders.terminalPayment}</p>
     );
   }
 
@@ -66,16 +75,19 @@ export function ChangePaymentStatusForm({
         }}
       >
         <p className="text-sm text-gray-700">
-          Current: <strong className="text-gray-900">{currentStatus}</strong>
+          {t.common.current}{" "}
+          <strong className="text-gray-900">
+            {paymentStatusDisplayLabel[currentStatus] ?? currentStatus}
+          </strong>
         </p>
         <div>
-          <span className={ADMIN_LABEL}>New payment status</span>
+          <span className={ADMIN_LABEL}>{t.orders.form.newPaymentStatus}</span>
           <SelectDropdown
             name="toStatus"
-            ariaLabel="New payment status"
+            ariaLabel={t.orders.form.newPaymentStatus}
             value={toStatus}
             options={eligibleStatuses.map((status) => ({
-              label: status,
+              label: paymentStatusDisplayLabel[status] ?? status,
               value: status,
             }))}
             disabled={isPending}
@@ -85,7 +97,7 @@ export function ChangePaymentStatusForm({
           />
         </div>
         <label>
-          <span className={ADMIN_LABEL}>Note (optional)</span>
+          <span className={ADMIN_LABEL}>{t.orders.form.noteOptional}</span>
           <textarea
             name="note"
             rows={2}
@@ -96,7 +108,7 @@ export function ChangePaymentStatusForm({
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <Button type="submit" size="sm" disabled={isPending}>
-          {isPending ? "Updating…" : "Update payment"}
+          {isPending ? t.common.updating : t.orders.updatePayment}
         </Button>
       </form>
     </Card>

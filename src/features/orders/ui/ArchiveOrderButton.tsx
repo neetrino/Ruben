@@ -9,6 +9,7 @@ import {
   ConfirmDialog,
 } from "@/components/ui/ConfirmDialog";
 import { ADMIN_SECTION_TITLE } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { archiveOrderAction } from "@/features/orders/application/archive-order";
 
 type ArchiveOrderButtonProps = {
@@ -22,6 +23,7 @@ export function ArchiveOrderButton({
   orderNumber,
   isArchived,
 }: ArchiveOrderButtonProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -48,7 +50,7 @@ export function ArchiveOrderButton({
   return (
     <Card className="p-6">
       <div className="flex flex-col gap-3">
-        <h2 className={ADMIN_SECTION_TITLE}>Archive</h2>
+        <h2 className={ADMIN_SECTION_TITLE}>{t.orders.archived}</h2>
         <p className="text-sm text-gray-600">
           {isArchived
             ? "This order is archived. Restore it to show in default lists."
@@ -69,7 +71,7 @@ export function ArchiveOrderButton({
           }}
         >
           {isPending
-            ? "Saving…"
+            ? t.common.saving
             : isArchived
               ? "Restore order"
               : "Archive order"}
@@ -78,9 +80,10 @@ export function ArchiveOrderButton({
 
       <ConfirmDialog
         open={confirmOpen}
-        title="Archive"
+        title={t.orders.archived}
         description={`Are you sure you want to archive order "${orderNumber}"? It will be hidden from default admin lists.`}
         confirmLabel="Archive"
+        cancelLabel={t.common.cancel}
         isPending={isPending}
         onClose={() => {
           if (!isPending) setConfirmOpen(false);

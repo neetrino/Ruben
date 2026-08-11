@@ -61,3 +61,4 @@
 - Reviews feature removed: PDP UI, server actions, `reviews` table + `review_moderation_status` enum
 - Checkout payments: cash (COD), card (ArCa), FastShift; online cart clear after capture
 - Admin analytics aligned to day/week/month: best sales periods, best/top-buyer customers, most sold products/categories
+- Admin panel i18n: `locales/{en,hy,ru}/admin.json` keys via `getAdminDictionary` / `adminCopy`; locale switcher in admin shell

@@ -14,6 +14,7 @@ import {
 } from "@/features/analytics/domain/date-range";
 import { getAdminDashboardMetrics } from "@/features/orders/application/queries";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminPageProps = {
   params: Promise<{ locale: string }>;
@@ -26,37 +27,25 @@ function formatMoney(amount: number): string {
   });
 }
 
-const QUICK_ACTIONS = [
+const QUICK_ACTION_ICONS = [
   {
-    href: "products/new",
-    title: "Add product",
-    subtitle: "Create a new product",
     iconBg: "bg-green-100",
     iconColor: "text-green-600",
     iconPath: "M12 4v16m8-8H4",
   },
   {
-    href: "orders",
-    title: "Manage orders",
-    subtitle: "View all orders",
     iconBg: "bg-blue-100",
     iconColor: "text-blue-600",
     iconPath:
       "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2",
   },
   {
-    href: "users",
-    title: "Manage users",
-    subtitle: "View all users",
     iconBg: "bg-purple-100",
     iconColor: "text-purple-600",
     iconPath:
       "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z",
   },
   {
-    href: "settings",
-    title: "Settings",
-    subtitle: "Configure store",
     iconBg: "bg-yellow-100",
     iconColor: "text-yellow-600",
     iconPath:
@@ -70,16 +59,44 @@ export default async function AdminPage({ params }: AdminPageProps) {
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const metrics = await getAdminDashboardMetrics(defaultAnalyticsDateRange());
-  const revenueDelta = `${formatPeriodDelta(
-    metrics.revenueAmount,
-    metrics.previousRevenueAmount,
-  )} vs prev`;
+  const revenueDelta = t.dashboard.vsPrev.replace(
+    "{delta}",
+    formatPeriodDelta(metrics.revenueAmount, metrics.previousRevenueAmount),
+  );
+
+  const quickActions = [
+    {
+      href: "products/new",
+      title: t.dashboard.quick.addProduct,
+      subtitle: t.dashboard.quick.addProductHint,
+      ...QUICK_ACTION_ICONS[0],
+    },
+    {
+      href: "orders",
+      title: t.dashboard.quick.manageOrders,
+      subtitle: t.dashboard.quick.manageOrdersHint,
+      ...QUICK_ACTION_ICONS[1],
+    },
+    {
+      href: "users",
+      title: t.dashboard.quick.manageUsers,
+      subtitle: t.dashboard.quick.manageUsersHint,
+      ...QUICK_ACTION_ICONS[2],
+    },
+    {
+      href: "settings",
+      title: t.dashboard.quick.settings,
+      subtitle: t.dashboard.quick.settingsHint,
+      ...QUICK_ACTION_ICONS[3],
+    },
+  ];
 
   return (
     <section>
       <div className="mb-8">
-        <p className={ADMIN_PAGE_SUBTITLE}>Welcome to the admin dashboard</p>
+        <p className={ADMIN_PAGE_SUBTITLE}>{t.dashboard.welcome}</p>
       </div>
 
       <DashboardStatsGrid
@@ -95,13 +112,13 @@ export default async function AdminPage({ params }: AdminPageProps) {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">
-              Recent orders
+              {t.dashboard.recentOrders}
             </h2>
             <Link
               href={`/${locale}/admin/orders`}
               className="rounded-xl px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-100"
             >
-              View all
+              {t.common.viewAll}
             </Link>
           </div>
           <div className="space-y-4">
@@ -135,7 +152,7 @@ export default async function AdminPage({ params }: AdminPageProps) {
             ))}
             {metrics.recentOrders.length === 0 ? (
               <p className="py-8 text-center text-sm text-gray-600">
-                No recent orders.
+                {t.dashboard.emptyRecentOrders}
               </p>
             ) : null}
           </div>
@@ -144,13 +161,13 @@ export default async function AdminPage({ params }: AdminPageProps) {
         <Card className="p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-gray-900">
-              Top products
+              {t.dashboard.topProducts}
             </h2>
             <Link
               href={`/${locale}/admin/products`}
               className="rounded-xl px-3 py-1.5 text-sm font-medium text-gray-900 hover:bg-gray-100"
             >
-              View all
+              {t.common.viewAll}
             </Link>
           </div>
           <div className="space-y-4">
@@ -167,14 +184,14 @@ export default async function AdminPage({ params }: AdminPageProps) {
                     {product.title}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {product.quantity} sold
+                    {t.common.soldCount.replace("{count}", String(product.quantity))}
                   </p>
                 </div>
               </div>
             ))}
             {metrics.topProducts.length === 0 ? (
               <p className="py-8 text-center text-sm text-gray-600">
-                No product sales in this range.
+                {t.dashboard.emptyTopProducts}
               </p>
             ) : null}
           </div>
@@ -183,10 +200,10 @@ export default async function AdminPage({ params }: AdminPageProps) {
 
       <Card className="mb-8 p-6">
         <h2 className="mb-4 text-xl font-semibold text-gray-900">
-          Quick actions
+          {t.dashboard.quickActions}
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-          {QUICK_ACTIONS.map((action) => (
+          {quickActions.map((action) => (
             <Link
               key={action.href}
               href={`/${locale}/admin/${action.href}`}

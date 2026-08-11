@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
 import {
   getAdminMenuItems,
   isAdminTabActive,
@@ -16,7 +17,12 @@ import {
   ADMIN_SIDEBAR_MOBILE_DRAWER_WRAP,
   ADMIN_SIDEBAR_NAV,
 } from "@/features/admin/ui/admin-shell-classes";
+import {
+  adminCopy,
+  resolveAdminLocale,
+} from "@/features/admin/ui/resolve-admin-locale";
 import { useAdminProductsSubnavExpanded } from "@/features/admin/ui/useAdminProductsSubnavExpanded";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminSidebarProps = {
   locale: string;
@@ -37,7 +43,10 @@ function isNestedVisible(
 
 export function AdminSidebar({ locale }: AdminSidebarProps) {
   const pathname = usePathname() ?? `/${locale}/admin`;
-  const tabs = getAdminMenuItems(locale);
+  const t = adminCopy(locale);
+  const resolvedLocale = resolveAdminLocale(locale);
+  const languageLabel = getDictionary(resolvedLocale).header.language;
+  const tabs = getAdminMenuItems(locale, t.nav);
   const { collapsed } = useAdminSidebarCollapse();
   const [productsNestedExpanded, toggleProductsNested] =
     useAdminProductsSubnavExpanded(pathname, locale);
@@ -52,9 +61,12 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
             href={`/${locale}`}
             className="min-w-0 shrink text-sm font-semibold text-gray-900"
           >
-            White Shop
+            {t.nav.brand}
           </Link>
-          <AdminMenuDrawer locale={locale} pathname={pathname} />
+          <div className="flex shrink-0 items-center gap-2">
+            <LocaleSwitcher locale={resolvedLocale} label={languageLabel} />
+            <AdminMenuDrawer locale={locale} pathname={pathname} />
+          </div>
         </div>
       </div>
       <aside className={`${ADMIN_SIDEBAR_ASIDE} ${asideWidthClass}`}>
@@ -111,8 +123,8 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                   <button
                     type="button"
                     aria-expanded={productsNestedExpanded}
-                    aria-label="Toggle product subpages"
-                    title="Toggle product subpages"
+                    aria-label={t.nav.toggleProductSubpages}
+                    title={t.nav.toggleProductSubpages}
                     onClick={(event) => {
                       event.preventDefault();
                       toggleProductsNested();
@@ -161,6 +173,15 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
             );
           })}
         </nav>
+        {collapsed ? null : (
+          <div className="mt-auto border-t border-gray-200 px-4 py-3">
+            <LocaleSwitcher
+              locale={resolvedLocale}
+              label={languageLabel}
+              menuPlacement="top"
+            />
+          </div>
+        )}
       </aside>
     </>
   );

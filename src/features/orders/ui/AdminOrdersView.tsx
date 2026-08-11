@@ -61,6 +61,7 @@ export function AdminOrdersView({ locale, orders }: AdminOrdersViewProps) {
         onOpenOrder={openOrder}
       />
       <OrderDetailsDrawer
+        locale={locale}
         open={drawerOpen}
         onClose={closeDrawer}
         detail={detail}

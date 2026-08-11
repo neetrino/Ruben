@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 
 import { Card } from "@/components/ui/Card";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 
 type MetricTone = "blue" | "green" | "purple";
 
@@ -41,31 +42,34 @@ const TONE_CLASSES: Record<
 };
 
 type AnalyticsMetricCardsProps = {
+  locale: string;
   orderCount: number;
   revenueLabel: string;
   userCount: number;
 };
 
 export function AnalyticsMetricCards({
+  locale,
   orderCount,
   revenueLabel,
   userCount,
 }: AnalyticsMetricCardsProps) {
+  const t = adminCopy(locale);
   const metrics: MetricCard[] = [
     {
-      label: "Total Orders",
+      label: t.analytics.metrics.orders,
       value: String(orderCount),
       tone: "blue",
       icon: ClipboardList,
     },
     {
-      label: "Total Revenue",
+      label: t.analytics.metrics.revenue,
       value: revenueLabel,
       tone: "green",
       icon: DollarSign,
     },
     {
-      label: "Total Users",
+      label: t.analytics.metrics.users,
       value: String(userCount),
       tone: "purple",
       icon: Users,

@@ -15,6 +15,7 @@ import {
 } from "@/features/contact/domain/contact-rules";
 import { UpdateContactStatusForm } from "@/features/contact/ui/UpdateContactStatusForm";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminMessageDetailPageProps = {
   params: Promise<{ locale: string; id: string }>;
@@ -37,6 +38,7 @@ export default async function AdminMessageDetailPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const message = await getAdminContactMessageById(id);
   if (!message) {
     notFound();
@@ -53,7 +55,7 @@ export default async function AdminMessageDetailPage({
             href={`/${locale}/admin/messages`}
             className="font-medium text-gray-700 hover:underline"
           >
-            Messages
+            {t.messages.title}
           </Link>
         </p>
         <h1 className={ADMIN_PAGE_TITLE}>{message.subject}</h1>
@@ -62,12 +64,17 @@ export default async function AdminMessageDetailPage({
       <Card className="mb-6 p-6">
         <div className="grid gap-3 text-sm md:grid-cols-2">
           <p className="text-gray-700">
-            From: <strong className="text-gray-900">{message.name}</strong>
+            {t.messages.detail.from}:{" "}
+            <strong className="text-gray-900">{message.name}</strong>
           </p>
-          <p className="text-gray-700">Email: {message.email}</p>
-          <p className="text-gray-700">Phone: {message.phone ?? "—"}</p>
           <p className="text-gray-700">
-            Status:{" "}
+            {t.messages.detail.email}: {message.email}
+          </p>
+          <p className="text-gray-700">
+            {t.messages.detail.phone}: {message.phone ?? "—"}
+          </p>
+          <p className="text-gray-700">
+            {t.messages.detail.status}:{" "}
             <span
               className={`${ADMIN_BADGE} ${contactStatusBadgeClass(message.status)}`}
             >
@@ -75,19 +82,19 @@ export default async function AdminMessageDetailPage({
             </span>
           </p>
           <p className="text-gray-700">
-            Spam score:{" "}
+            {t.messages.detail.spamScore}:{" "}
             {message.spamScore === null ? "—" : message.spamScore}
           </p>
           <p className="text-gray-700">
-            Received:{" "}
+            {t.messages.detail.received}:{" "}
             {message.createdAt.toISOString().slice(0, 19).replace("T", " ")}{" "}
-            UTC
+            {t.common.utc}
           </p>
         </div>
       </Card>
 
       <Card className="mb-6 p-6">
-        <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>Message</h2>
+        <h2 className={`mb-3 ${ADMIN_SECTION_TITLE}`}>{t.messages.detail.message}</h2>
         <p className="whitespace-pre-wrap text-sm leading-relaxed text-gray-700">
           {message.message}
         </p>
@@ -101,7 +108,7 @@ export default async function AdminMessageDetailPage({
           eligibleStatuses={eligible}
         />
       ) : (
-        <p className="text-sm text-red-700">Unknown status.</p>
+        <p className="text-sm text-red-700">{t.messages.detail.unknownStatus}</p>
       )}
     </section>
   );

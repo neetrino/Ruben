@@ -11,8 +11,10 @@ import type {
   AnalyticsSalesBucket,
   AnalyticsTopCustomer,
 } from "@/features/analytics/application/queries";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 
 type AnalyticsSalesInsightsProps = {
+  locale: string;
   bestDay: AnalyticsSalesBucket | null;
   bestWeek: AnalyticsSalesBucket | null;
   bestMonth: AnalyticsSalesBucket | null;
@@ -27,12 +29,16 @@ function BucketCard({
   formatMoney,
   icon: Icon,
   tone,
+  emptyLabel,
+  ordersLabel,
 }: {
   title: string;
   bucket: AnalyticsSalesBucket | null;
   formatMoney: (amount: number) => string;
   icon: typeof CalendarDays;
   tone: "blue" | "emerald" | "amber";
+  emptyLabel: string;
+  ordersLabel: (count: number) => string;
 }) {
   const toneClasses = {
     blue: "bg-blue-50 text-blue-600",
@@ -57,11 +63,11 @@ function BucketCard({
             <span className="font-semibold text-gray-900">
               {formatMoney(bucket.revenueAmount)}
             </span>{" "}
-            · {bucket.orderCount} orders
+            · {ordersLabel(bucket.orderCount)}
           </p>
         </>
       ) : (
-        <p className="py-4 text-sm text-gray-500">No sales in this range.</p>
+        <p className="py-4 text-sm text-gray-500">{emptyLabel}</p>
       )}
     </Card>
   );
@@ -75,6 +81,8 @@ function CustomerList({
   icon: Icon,
   tone,
   metric,
+  emptyLabel,
+  ordersLabel,
 }: {
   title: string;
   subtitle: string;
@@ -83,6 +91,8 @@ function CustomerList({
   icon: typeof Crown;
   tone: "violet" | "sky";
   metric: "revenue" | "orders";
+  emptyLabel: string;
+  ordersLabel: (count: number) => string;
 }) {
   const toneClasses =
     tone === "violet"
@@ -130,13 +140,13 @@ function CustomerList({
                     {formatMoney(customer.revenueAmount)}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {customer.orderCount} orders
+                    {ordersLabel(customer.orderCount)}
                   </p>
                 </>
               ) : (
                 <>
                   <p className="text-sm font-bold text-gray-900">
-                    {customer.orderCount} orders
+                    {ordersLabel(customer.orderCount)}
                   </p>
                   <p className="text-xs text-gray-500">
                     {formatMoney(customer.revenueAmount)}
@@ -148,7 +158,7 @@ function CustomerList({
         ))}
         {customers.length === 0 ? (
           <p className="py-8 text-center text-sm text-gray-500">
-            No customer orders in this range.
+            {emptyLabel}
           </p>
         ) : null}
       </div>
@@ -157,6 +167,7 @@ function CustomerList({
 }
 
 export function AnalyticsSalesInsights({
+  locale,
   bestDay,
   bestWeek,
   bestMonth,
@@ -164,57 +175,71 @@ export function AnalyticsSalesInsights({
   topBuyers,
   formatMoney,
 }: AnalyticsSalesInsightsProps) {
+  const t = adminCopy(locale);
+  const ordersLabel = (count: number): string =>
+    t.common.ordersCount.replace("{count}", String(count));
+
   return (
     <div className="mb-6 space-y-4">
       <div>
-        <h2 className="text-lg font-semibold text-gray-900">Sales analytics</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t.analytics.sales.title}</h2>
         <p className="mt-1 text-sm text-gray-500">
-          Best sales periods and top customers for the selected range
+          {t.analytics.sales.subtitle}
         </p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
         <BucketCard
-          title="Best sales day"
+          title={t.analytics.sales.bestDay}
           bucket={bestDay}
           formatMoney={formatMoney}
           icon={CalendarDays}
           tone="blue"
+          emptyLabel={t.analytics.sales.empty}
+          ordersLabel={ordersLabel}
         />
         <BucketCard
-          title="Best sales week"
+          title={t.analytics.sales.bestWeek}
           bucket={bestWeek}
           formatMoney={formatMoney}
           icon={CalendarRange}
           tone="emerald"
+          emptyLabel={t.analytics.sales.empty}
+          ordersLabel={ordersLabel}
         />
         <BucketCard
-          title="Best sales month"
+          title={t.analytics.sales.bestMonth}
           bucket={bestMonth}
           formatMoney={formatMoney}
           icon={CalendarSearch}
           tone="amber"
+          emptyLabel={t.analytics.sales.empty}
+          ordersLabel={ordersLabel}
         />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <CustomerList
-          title="Best customer"
-          subtitle="Highest revenue in this range"
+          title={t.analytics.customers.best}
+          subtitle={t.analytics.customers.highestRevenue}
           customers={bestCustomers}
           formatMoney={formatMoney}
           icon={Crown}
           tone="violet"
           metric="revenue"
+          emptyLabel={t.analytics.customers.empty}
+          ordersLabel={ordersLabel}
         />
         <CustomerList
-          title="Most purchases"
-          subtitle="Customers with the most orders"
+          title={t.analytics.customers.mostPurchases}
+          subtitle={t.analytics.customers.mostOrders}
           customers={topBuyers}
           formatMoney={formatMoney}
           icon={ShoppingBag}
           tone="sky"
           metric="orders"
+          emptyLabel={t.analytics.customers.empty}
+          ordersLabel={ordersLabel}
         />
       </div>
     </div>

@@ -8,6 +8,7 @@ import { adminOrdersFilterSchema } from "@/features/orders/schemas/change-status
 import { AdminOrdersFilters } from "@/features/orders/ui/AdminOrdersFilters";
 import { AdminOrdersView } from "@/features/orders/ui/AdminOrdersView";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminOrdersPageProps = {
   params: Promise<{ locale: string }>;
@@ -49,6 +50,7 @@ export default async function AdminOrdersPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const raw = await searchParams;
   const parsed = adminOrdersFilterSchema.safeParse({
     status: firstParam(raw.status) || undefined,
@@ -76,10 +78,11 @@ export default async function AdminOrdersPage({
   return (
     <section>
       <div className="mb-6">
-        <h1 className={ADMIN_PAGE_TITLE}>Orders</h1>
+        <h1 className={ADMIN_PAGE_TITLE}>{t.orders.title}</h1>
       </div>
 
       <AdminOrdersFilters
+        locale={locale}
         total={total}
         status={filters.status}
         paymentStatus={filters.paymentStatus}
@@ -95,18 +98,20 @@ export default async function AdminOrdersPage({
               href={`/${locale}/admin/orders?${buildOrdersQuery(filters, filters.page - 1)}`}
               className="font-medium hover:underline"
             >
-              Previous
+              {t.common.previous}
             </Link>
           ) : null}
           <span>
-            Page {filters.page} / {totalPages}
+            {t.common.pageOf
+              .replace("{page}", String(filters.page))
+              .replace("{total}", String(totalPages))}
           </span>
           {filters.page < totalPages ? (
             <Link
               href={`/${locale}/admin/orders?${buildOrdersQuery(filters, filters.page + 1)}`}
               className="font-medium hover:underline"
             >
-              Next
+              {t.common.next}
             </Link>
           ) : null}
         </nav>

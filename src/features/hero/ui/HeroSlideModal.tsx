@@ -8,6 +8,7 @@ import {
   ADMIN_INPUT,
   ADMIN_LABEL,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   createHeroSlideAction,
   updateHeroSlideAction,
@@ -28,12 +29,13 @@ export function HeroSlideModal({
   slide = null,
 }: HeroSlideModalProps) {
   const isEdit = slide != null;
+  const t = adminCopy(locale);
 
   return (
     <SideSheet
       open={open}
       onClose={onClose}
-      ariaLabel={isEdit ? "Edit hero slide" : "Create hero slide"}
+      ariaLabel={isEdit ? t.hero.drawer.editTitle : t.hero.drawer.createTitle}
       panelClassName="w-full max-w-lg"
     >
       <HeroSlideDrawerForm
@@ -58,6 +60,7 @@ function HeroSlideDrawerForm({
   slide,
 }: HeroSlideDrawerFormProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const isEdit = slide != null;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState(
@@ -76,7 +79,7 @@ function HeroSlideDrawerForm({
     <>
         <div className="border-b border-gray-200 px-5 py-4">
           <h2 className="text-lg font-semibold text-gray-900">
-            {isEdit ? "Edit hero slide" : "Create hero slide"}
+            {isEdit ? t.hero.drawer.editTitle : t.hero.drawer.createTitle}
           </h2>
         </div>
 
@@ -113,7 +116,7 @@ function HeroSlideDrawerForm({
         >
           <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
             <label className="block">
-              <span className={ADMIN_LABEL}>Title</span>
+              <span className={ADMIN_LABEL}>{t.hero.form.title}</span>
               <input
                 required
                 value={title}
@@ -124,7 +127,7 @@ function HeroSlideDrawerForm({
             </label>
 
             <label className="block">
-              <span className={ADMIN_LABEL}>Subtitle</span>
+              <span className={ADMIN_LABEL}>{t.hero.form.subtitle}</span>
               <input
                 value={subtitle}
                 onChange={(event) => setSubtitle(event.target.value)}
@@ -134,7 +137,7 @@ function HeroSlideDrawerForm({
             </label>
 
             <div>
-              <span className={ADMIN_LABEL}>Upload image</span>
+              <span className={ADMIN_LABEL}>{t.hero.form.upload}</span>
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
@@ -142,7 +145,7 @@ function HeroSlideDrawerForm({
                   onClick={() => fileInputRef.current?.click()}
                   className="inline-flex items-center rounded-xl border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50"
                 >
-                  {imagePreview ? "Change image" : "+ Upload image"}
+                  {imagePreview ? t.hero.form.change : `+ ${t.hero.form.uploadPlus}`}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -181,7 +184,7 @@ function HeroSlideDrawerForm({
                     }}
                     className="text-sm font-medium text-gray-600 hover:text-red-600"
                   >
-                    Remove
+                    {t.hero.form.remove}
                   </button>
                 ) : null}
               </div>
@@ -202,18 +205,18 @@ function HeroSlideDrawerForm({
             <Button type="submit" disabled={isPending || !title.trim()}>
               {isPending
                 ? isEdit
-                  ? "Saving…"
-                  : "Creating…"
+                  ? t.common.saving
+                  : t.common.creating
                 : isEdit
-                  ? "Edit"
-                  : "Create"}
+                  ? t.common.edit
+                  : t.common.create}
             </Button>
             <button
               type="button"
               onClick={onClose}
               className="whitespace-nowrap text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              Cancel
+              {t.common.cancel}
             </button>
           </div>
         </form>
