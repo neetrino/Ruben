@@ -34,12 +34,12 @@
     "selectDeliveryLocation": "Ընտրեք առաքման վայրը"
   },
   "payment": {
-    "cashOnDelivery": "Կանխիկ առաքման պահին",
+    "cashOnDelivery": "Քեշ վճարում",
     "cashOnDeliveryDescription": "Վճարեք կանխիկ՝ պատվերը ստանալիս",
-    "idram": "Idram",
-    "idramDescription": "Վճարեք Idram դրամապանակով կամ քարտով",
-    "arca": "ArCa",
-    "arcaDescription": "Վճարեք ArCa քարտով"
+    "card": "Քարտային վճարում",
+    "cardDescription": "Անվտանգ վճարում բանկային քարտով (ArCa)",
+    "fastshift": "FastShift",
+    "fastshiftDescription": "Վճարեք FastShift դրամապանակով"
   },
   "coupon": {
     "title": "Ունե՞ք պրոմոկոդ",

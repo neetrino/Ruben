@@ -46,7 +46,7 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 - Product/category/catalog, stock, cart, checkout և order transaction
 - Customer profile, addresses և orders
 - Admin dashboard, products, categories և orders
-- Cash on Delivery payment adapter և admin-managed payment status
+- Cash on Delivery, ArCa card, and FastShift payment adapters և admin-managed payment status
 - R2 image storage, Redis rate limiting/cache, Resend-compatible email abstraction
 - Security baseline, SEO baseline, accessibility, responsive states
 - Unit, integration և critical Playwright E2E tests
@@ -63,7 +63,7 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 
 ### P2 — launch-ից հետո կամ առանձին հաստատմամբ
 
-- Online payment provider-ներ (Ameriabank/ArCa/Idram/Telcell/FastShift կամ այլ)
+- Additional online payment provider-ներ (Ameriabank/Idram/Telcell կամ այլ)
 - Product variants-ի ամբողջական UI (schema extension point-ը v1-ում նախատեսվում է)
 - Advanced search provider, realtime inventory, background queue
 - Granular staff roles/permissions, refunds automation, tax engine

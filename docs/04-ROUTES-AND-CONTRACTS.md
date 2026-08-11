@@ -88,7 +88,11 @@
 | `/api/auth/[...nextauth]` | Auth.js-defined | Auth callbacks/session; Auth.js contract |
 | `/api/uploads/intents` | POST | Admin upload intent; auth, purpose/MIME/size validation, rate limit |
 | `/api/uploads/[id]/finalize` | POST | Ownership/object metadata verification |
-| `/api/webhooks/payments/[provider]` | POST | Signature verification, raw body requirements, provider-event idempotency |
+| `/api/v1/payments/arca/init` | POST | Start ArCa card payment; returns `{ redirectUrl }` |
+| `/api/v1/payments/arca/callback` | GET | ArCa return URL; verifies via `getOrderStatusExtended.do` |
+| `/api/v1/payments/fastshift/init` | POST | Start FastShift payment; returns `{ redirectUrl }` |
+| `/api/v1/payments/fastshift/callback` | GET/POST | FastShift user redirect + webhook; status API verified |
+| `/api/webhooks/payments/[provider]` | POST | Generic webhook extension point (provider-event idempotency) |
 | `/api/exports/admin/analytics` | GET/POST | Admin-only, bounded date range, CSV injection protection |
 | `/sitemap.xml` | GET | Locale-aware generated sitemap |
 | `/robots.txt` | GET | Environment-aware crawler policy |

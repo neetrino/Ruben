@@ -135,7 +135,7 @@ Reviews feature-ը հանված է՝ storefront UI, server actions, և `reviews`
 | CHK-006 | Transaction-ը ստեղծում է order, item/address/money snapshots, initial status history, stock movements, decrement և cart clear։ |
 | CHK-007 | Անբավարար stock-ի դեպքում transaction-ը atomic rollback է լինում և user-ը ստանում է item-level conflict։ |
 | CHK-008 | Order-ը պահում է base/display currency code, exchange-rate snapshot, subtotal, discount, tax, delivery և total։ |
-| CHK-009 | COD adapter-ը P0 է; online provider-ը միայն approved adapter/webhook contract-ից հետո է ակտիվանում։ |
+| CHK-009 | Launch payment methods՝ cash (COD), card (ArCa redirect), FastShift redirect; cart clear միայն captured online payment-ից հետո։ |
 | CHK-010 | Success page-ը refresh/retry-safe է և order ownership check ունի։ |
 
 ## 8. Customer profile

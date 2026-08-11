@@ -47,10 +47,10 @@ type CheckoutLabels = {
   selectDeliveryLocation: string;
   cashOnDelivery: string;
   cashOnDeliveryDescription: string;
-  idram: string;
-  idramDescription: string;
-  arca: string;
-  arcaDescription: string;
+  card: string;
+  cardDescription: string;
+  fastshift: string;
+  fastshiftDescription: string;
   couponTitle: string;
   couponPlaceholder: string;
   couponApply: string;
@@ -141,25 +141,25 @@ export function CheckoutForm({
         logoSrc: null,
       },
       {
-        id: "idram" as const,
-        name: labels.idram,
-        description: labels.idramDescription,
-        logoSrc: "/assets/payments/idram.svg",
+        id: "card" as const,
+        name: labels.card,
+        description: labels.cardDescription,
+        logoSrc: "/assets/payments/arca.svg",
       },
       {
-        id: "arca" as const,
-        name: labels.arca,
-        description: labels.arcaDescription,
-        logoSrc: "/assets/payments/arca.svg",
+        id: "fastshift" as const,
+        name: labels.fastshift,
+        description: labels.fastshiftDescription,
+        logoSrc: "/assets/payments/fastshift.svg",
       },
     ],
     [
-      labels.arca,
-      labels.arcaDescription,
+      labels.card,
+      labels.cardDescription,
       labels.cashOnDelivery,
       labels.cashOnDeliveryDescription,
-      labels.idram,
-      labels.idramDescription,
+      labels.fastshift,
+      labels.fastshiftDescription,
     ],
   );
 
@@ -261,6 +261,11 @@ export function CheckoutForm({
 
       if (!result.ok) {
         setError(result.error);
+        return;
+      }
+
+      if (result.redirectUrl) {
+        window.location.assign(result.redirectUrl);
         return;
       }
 

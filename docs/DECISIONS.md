@@ -37,7 +37,7 @@
 | DEC-015 | Order model | Approved by user | Address snapshots-ը `orders` JSONB-ում, status/notes/provider events-ը `order_events`-ում | `order_items` և `payments` առանձին են մնում |
 | DEC-016 | Media ownership | Approved by user | Product/category/hero/blog ownership-ը `media_assets` typed FKs/roles-ով | Generic polymorphic owner առանց FK չի օգտագործվում |
 | OPEN-001 | Hosting/runtime | Open | Vercel, այլ Node hosting, region և runtime սահմաններ | Next.js Node runtime, deployment չի արվում մինչև approval |
-| OPEN-002 | Online payments | Open | Որ provider-ներն են launch scope-ում և ինչ webhook/refund flows են պետք | Միայն COD |
+| OPEN-002 | Online payments | Approved by user | Launch methods՝ cash (COD), card (ArCa), FastShift | Idram/Telcell/Ameriabank deferred |
 | OPEN-003 | Exchange rates | Open | Provider, update schedule, fallback և margin/rounding policy | Admin-maintained AMD rates + Redis cache |
 | OPEN-004 | Tax | Open | Prices tax-inclusive՞ են, tax zones/rates և invoice behavior | Tax amount 0, բայց schema/summary field-ը նախատեսված է |
 | OPEN-005 | Order status model | Open | Allowed statuses և revenue-generating status-ներ | Draft set՝ pending/confirmed/processing/shipped/delivered/cancelled/refunded |
@@ -70,7 +70,7 @@
 - [x] Product owner-ը հաստատել է P0/P1 launch scope-ը (implementation start 2026-07-18)։
 - [x] Tech lead-ը հաստատել է modular monolith layout-ը։
 - [x] Hosting kickoff՝ Vercel-compatible; regions/WAF հետո։
-- [x] Payment launch scope՝ միայն COD (online providers deferred)։
+- [x] Payment launch scope՝ cash (COD), card (ArCa), FastShift։
 - [ ] Tax/order/refund policies-ը վերջնական հաստատված են (P0-ում tax=0 default)։
 - [ ] Legal content owner-ը նշանակված է (routes shell մինչև copy)։
 - [x] Design kickoff՝ minimal UI + shadcn/Tailwind; Figma polish later։

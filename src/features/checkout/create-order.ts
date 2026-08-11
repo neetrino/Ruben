@@ -27,7 +27,12 @@ import {
   checkoutSchema,
   type CheckoutInput,
 } from "@/features/checkout/schemas";
-import { toPaymentRecord } from "@/features/checkout/domain/payment-methods";
+import {
+  isOnlineCheckoutPaymentMethod,
+  toPaymentRecord,
+} from "@/features/checkout/domain/payment-methods";
+import { startArcaPayment } from "@/features/payments/application/start-arca-payment";
+import { startFastshiftPayment } from "@/features/payments/application/start-fastshift-payment";
 import {
   ORDER_NUMBER_LOCK_KEY,
   formatOrderNumber,
@@ -62,10 +67,23 @@ function deliveryLabel(countryCode: string, city: string | null): string {
 }
 
 export type CreateOrderResult =
-  | { ok: true; orderNumber: string }
+  | { ok: true; orderNumber: string; redirectUrl?: string }
   | { ok: false; error: string };
 
-/** Creates a COD order with server-side totals, stock decrement, and cart clear. */
+async function startProviderRedirect(
+  paymentMethod: CheckoutInput["paymentMethod"],
+  orderNumber: string,
+): Promise<string> {
+  if (paymentMethod === "card") {
+    return startArcaPayment(orderNumber);
+  }
+  if (paymentMethod === "fastshift") {
+    return startFastshiftPayment(orderNumber);
+  }
+  throw new Error("Unsupported online payment method.");
+}
+
+/** Creates an order; online methods return a provider redirect URL. */
 export async function createOrderAction(
   raw: CheckoutInput,
 ): Promise<CreateOrderResult> {
@@ -75,6 +93,7 @@ export async function createOrderAction(
   }
 
   const input = parsed.data;
+  const onlinePayment = isOnlineCheckoutPaymentMethod(input.paymentMethod);
   const user = await getCurrentUser();
   const { cart, items } = await getCartWithItems();
   const cookieStore = await cookies();
@@ -111,9 +130,12 @@ export async function createOrderAction(
   );
 
   try {
-    const orderNumber = await withTransaction(async (tx) => {
+    const placed = await withTransaction(async (tx) => {
       const [existing] = await tx
-        .select({ orderNumber: orders.orderNumber })
+        .select({
+          orderNumber: orders.orderNumber,
+          paymentStatus: orders.paymentStatus,
+        })
         .from(orders)
         .where(
           and(
@@ -125,7 +147,11 @@ export async function createOrderAction(
         .limit(1);
 
       if (existing) {
-        return existing.orderNumber;
+        return {
+          orderNumber: existing.orderNumber,
+          reused: true as const,
+          paymentStatus: existing.paymentStatus,
+        };
       }
 
       let delivery: typeof deliveryRules.$inferSelect | null = null;
@@ -410,6 +436,7 @@ export async function createOrderAction(
         currency: defaultCurrency,
         status: "PENDING",
         attemptNumber: 1,
+        metadata: onlinePayment ? { cartId: cart.id } : undefined,
       });
 
       await tx.insert(orderEvents).values({
@@ -423,17 +450,44 @@ export async function createOrderAction(
         payload: { source: "checkout" },
       });
 
-      await tx.delete(cartItems).where(eq(cartItems.cartId, cart.id));
-      await tx
-        .update(carts)
-        .set({ status: "CONVERTED", updatedAt: now })
-        .where(eq(carts.id, cart.id));
+      if (!onlinePayment) {
+        await tx.delete(cartItems).where(eq(cartItems.cartId, cart.id));
+        await tx
+          .update(carts)
+          .set({ status: "CONVERTED", updatedAt: now })
+          .where(eq(carts.id, cart.id));
+      }
 
-      return number;
+      return {
+        orderNumber: number,
+        reused: false as const,
+        paymentStatus: "PENDING" as const,
+      };
     });
 
+    if (onlinePayment) {
+      if (placed.paymentStatus === "CAPTURED") {
+        await revalidateCartPaths();
+        return { ok: true, orderNumber: placed.orderNumber };
+      }
+
+      try {
+        const redirectUrl = await startProviderRedirect(
+          input.paymentMethod,
+          placed.orderNumber,
+        );
+        return { ok: true, orderNumber: placed.orderNumber, redirectUrl };
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "Unable to start online payment.";
+        return { ok: false, error: message };
+      }
+    }
+
     await revalidateCartPaths();
-    return { ok: true, orderNumber };
+    return { ok: true, orderNumber: placed.orderNumber };
   } catch (error) {
     const message =
       error instanceof Error ? error.message : "Unable to place order.";

@@ -92,7 +92,7 @@ Connection pool size, `statement_timeout`, `lock_timeout`, `idle_in_transaction_
 | Image delivery | `next/image` + configured public base URL | ✅ | Responsive sizes, alt text, format/size policy |
 | Email | Provider interface, Resend adapter first | ✅ | Verification/reset/order events |
 | Exchange rates | Provider interface + Redis cache | ✅ | Concrete source/rounding policy բաց է |
-| Payments | Provider interface + COD adapter | ✅ | Online adapter(s) բաց են |
+| Payments | Provider interface + COD + ArCa card + FastShift | ✅ | Idram/Telcell/Ameriabank deferred |
 | Analytics | First-party aggregate queries | ✅ | Product analytics provider optional/open |
 | Error tracking | Provider-neutral boundary | ✅ | Structured logs first; Sentry adapter optional later |
 
