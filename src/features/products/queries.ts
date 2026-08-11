@@ -1,6 +1,16 @@
 import "server-only";
 
-import { and, asc, desc, eq, inArray, isNull, or, sql } from "drizzle-orm";
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  inArray,
+  isNotNull,
+  isNull,
+  or,
+  sql,
+} from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
@@ -235,6 +245,44 @@ export async function getFeaturedProducts(
   return unstable_cache(
     async () => loadFeaturedProducts(locale),
     ["featured-products", locale],
+    {
+      tags: [CACHE_TAGS.products],
+      revalidate: PUBLIC_CACHE_REVALIDATE_SECONDS,
+    },
+  )();
+}
+
+const ON_SALE_PRODUCTS_LIMIT = 8;
+
+async function loadOnSaleProducts(locale: Locale): Promise<CatalogProduct[]> {
+  const rows = await getDb()
+    .select()
+    .from(products)
+    .where(
+      and(
+        eq(products.status, "ACTIVE"),
+        isNull(products.deletedAt),
+        isNotNull(products.compareAtAmount),
+        sql`${products.compareAtAmount} > ${products.priceAmount}`,
+      ),
+    )
+    .orderBy(desc(products.updatedAt))
+    .limit(ON_SALE_PRODUCTS_LIMIT);
+
+  const priced = await withProductImages(rows, locale);
+  return priced.filter(
+    (product) =>
+      product.discountPercent != null && product.discountPercent > 0,
+  );
+}
+
+/** Active catalog products with a visible compare-at / discount price. */
+export async function getOnSaleProducts(
+  locale: Locale,
+): Promise<CatalogProduct[]> {
+  return unstable_cache(
+    async () => loadOnSaleProducts(locale),
+    ["on-sale-products", locale],
     {
       tags: [CACHE_TAGS.products],
       revalidate: PUBLIC_CACHE_REVALIDATE_SECONDS,

@@ -5,16 +5,33 @@
   "featuredTitle": "Featured Products",
   "viewAll": "View more",
   "emptyFeatured": "No featured products yet.",
+  "promotionsTitle": "Promotions & discounts",
+  "promotionsSubtitle": "Special offers and current deals",
+  "emptyPromotions": "No active discounts yet — browse the full catalog.",
+  "globalDiscountLabel": "Store-wide discount up to {percent}%",
+  "whyTitle": "Why choose us",
+  "partnersTitle": "Our partners",
+  "partnersSubtitle": "Trusted brands we work with",
   "aboutEyebrow": "About us",
   "aboutTitle": "We provide high quality products",
   "aboutDescription": "Discover a curated selection of products with reliable delivery and customer-first support.",
   "aboutCta": "Learn more",
   "features": {
-    "deliveryTitle": "Fast Delivery",
+    "warrantyTitle": "Warranty",
+    "warrantyDescription": "Official warranty on every product.",
+    "deliveryTitle": "Fast delivery",
     "deliveryDescription": "Quick and reliable shipping to your door.",
-    "qualityTitle": "Best Quality",
-    "qualityDescription": "Carefully selected products you can trust.",
-    "returnTitle": "Free Return",
-    "returnDescription": "Easy returns when something is not right."
+    "installmentTitle": "Installments",
+    "installmentDescription": "Flexible installment options without hassle.",
+    "originalTitle": "Original products",
+    "originalDescription": "Only authentic, verified products."
+  },
+  "offers": {
+    "saleTitle": "Seasonal sales",
+    "saleDescription": "Selected products at reduced prices.",
+    "installmentTitle": "Buy in installments",
+    "installmentDescription": "Pay in parts without extra burden.",
+    "deliveryTitle": "Fast delivery",
+    "deliveryDescription": "Order today and receive it shortly."
   }
 }

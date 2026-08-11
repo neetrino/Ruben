@@ -129,7 +129,6 @@ Shared params՝ `q`, feature-specific filters, `sort`, `page`, `pageSize`, optio
 | `mergeGuestCart` | Customer | Idempotent transaction | Guest token revoke |
 | `applyCouponPreview` | Guest/Customer | Read-only preview | No redemption reservation by default |
 | `placeOrder` | Guest/Customer | Required idempotency + DB transaction | Stock, order, payment init/outbox |
-| `submitReview` | Customer | Eligibility + unique invariant | Moderation queue/admin refresh |
 | `submitContactMessage` | Public | Rate/honeypot; duplicate guard optional | Admin notification |
 | `create/updateProduct` | Admin | Transaction | Audit, media links, cache invalidation |
 | `adjustStock` | Admin | Movement + inventory atomic | Audit, low-stock/cache effects |
@@ -184,7 +183,6 @@ Raw database constraint/provider error-ը client չի հասնում։ Expected 
 | Wishlist | Optional guest policy | Own | Own as shopper only |
 | Checkout/order create | Own cart | Own cart | Own as shopper only |
 | Customer order read | Confirmation-safe own | Own | Any via admin route |
-| Review create | No | Own verified purchase | As customer only unless separate moderation action |
 | Product/category/hero CRUD | No | No | Yes |
 | Order status/payment admin update | No | No | Yes |
 | User role/status | No | No | Yes, last-admin guard |
@@ -199,7 +197,6 @@ Permission-ը ստուգվում է resource query-ի հետ միասին կամ
 | Product publish/update/archive | product ID/slugs, catalog, featured, category relations | product/catalog/analytics relevant namespaces |
 | Category update | category ID/slugs, catalog, breadcrumbs | category/catalog namespaces |
 | Hero update/reorder | home/hero per locale | hero cache if used |
-| Review moderation | product detail/rating | rating aggregates |
 | Blog publish/update | blog list/post/sitemap | blog cache if used |
 | Promotion/settings update | catalog/product/checkout pricing contexts | promotion/settings namespaces |
 | Order/status update | owner order/profile dashboard/admin orders/analytics | analytics/order summary |

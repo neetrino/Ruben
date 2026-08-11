@@ -170,17 +170,15 @@
 - XSS/CSV/rate-limit/cache invalidation tests pass։
 - Blog/contact/analytics representative E2E pass։
 
-## 12. Reviews, currency and optional online payments — Phase 10
+## 12. Currency and optional online payments — Phase 10
 
 ### Deliverables
 
-- Verified-purchase reviews, aggregates և moderation։
 - Exchange-rate provider/cache/fallback և order rate snapshot hardening։
 - Approved online payment adapter(s), webhook idempotency, payment transitions և provider sandbox tests՝ եթե launch scope-ում են։
 
 ### Exit criteria
 
-- Review eligibility/moderation E2E pass։
 - Currency rounding/staleness/snapshot tests pass։
 - Payment signature/replay/amount/currency/sandbox tests pass, եթե կիրառելի է։
 
@@ -216,7 +214,7 @@ flowchart LR
   P6 --> P8["8 Admin Operations"]
   P5 --> P9["9 Content/Analytics"]
   P8 --> P9
-  P7 --> P10["10 Reviews/Currency/Payments"]
+  P7 --> P10["10 Currency/Payments"]
   P8 --> P10
   P9 --> P11["11 Hardening"]
   P10 --> P11

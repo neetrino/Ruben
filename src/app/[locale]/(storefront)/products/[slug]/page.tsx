@@ -6,7 +6,6 @@ import { getEnv } from "@/config/env";
 import { getProductDetailBySlug } from "@/features/products/queries";
 import { ProductDetailView } from "@/features/products/ui/ProductDetailView";
 import { ProductRelatedSection } from "@/features/products/ui/ProductRelatedSection";
-import { ProductReviewsIsland } from "@/features/products/ui/ProductReviewsIsland";
 import { isProductInWishlist } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -148,18 +147,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
             locale={locale}
             productId={product.id}
             currency={currency}
-            isSignedIn={isSignedIn}
-            dictionary={dictionary}
-          />
-        </Suspense>
-      }
-      reviewsSlot={
-        <Suspense fallback={<SectionFallback />}>
-          <ProductReviewsIsland
-            locale={locale}
-            productId={product.id}
-            productSlug={product.translation.slug}
-            userId={user?.id}
             isSignedIn={isSignedIn}
             dictionary={dictionary}
           />

@@ -1,7 +1,7 @@
 # White Shop — progress
 
 **Overall status.** Phases 0–11 delivered as working product slices (launch hardening docs ready; production deploy not executed)
-**Last update.** 2026-07-18
+**Last update.** 2026-08-11
 
 ## Milestones
 
@@ -9,15 +9,15 @@
 |---:|---|---|---|
 | 0 | Approval | Done | Kickoff defaults |
 | 1 | Foundation | Done | Next.js, i18n, providers |
-| 2 | Database foundation | Done | 25 tables + seed |
+| 2 | Database foundation | Done | 24 tables + seed |
 | 3 | Identity and authorization | Done | DB sessions, login/register/logout |
 | 4 | Catalog admin and media | Done (minimal) | Admin products/categories; R2 adapter when credentials set |
-| 5 | Storefront catalog | Done (minimal) | List/detail/featured from DB |
+| 5 | Storefront catalog | Done | URL filter/sort/page + card fields (CAT-001–010; brand/attributes deferred — no schema) |
 | 6 | Cart and checkout | Done | Durable cart + COD + coupon apply |
 | 7 | Customer self-service | Done (minimal) | Profile, orders, personal info |
 | 8 | Admin commerce operations | Done | Dashboard, orders ops, users, promotions |
 | 9 | Content / analytics | Done | Hero, contact, blog, analytics, settings |
-| 10 | Reviews / currency / payments | Done | Reviews, FX cache, COD + webhook guards |
+| 10 | Currency / payments | Done | FX cache, COD + webhook guards (reviews removed) |
 | 11 | Hardening / release | Done (docs) | Headers, legal stubs, release checklist |
 
 ## Phase 8–11 close-out — 2026-07-18
@@ -36,7 +36,7 @@
 - Maintenance gate for non-admin storefront users
 
 ### Phase 10 (prior)
-- Reviews moderation, FX conversion/cache/stale fallback, payment webhook guards
+- FX conversion/cache/stale fallback, payment webhook guards (reviews feature removed 2026-08-11)
 
 ### Phase 11
 - Security headers (CSP baseline, nosniff, frame deny, referrer, permissions)
@@ -56,3 +56,6 @@
 - Online payment provider selection (OPEN-002)
 - Real Upstash/Resend adapters when credentials provided
 - Re-upload existing media after enabling R2 (local `public/uploads` keys are not in the bucket)
+
+### 2026-08-11
+- Reviews feature removed: PDP UI, server actions, `reviews` table + `review_moderation_status` enum

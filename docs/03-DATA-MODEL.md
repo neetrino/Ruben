@@ -2,9 +2,9 @@
 
 **Database.** PostgreSQL (Neon)
 **ORM/migrations.** Drizzle ORM / Drizzle Kit
-**Կարգավիճակ.** Canonical 25-table schema migrated; idempotent seed available (`pnpm db:seed`)
-**Canonical table count.** 25
-**Վերջին թարմացում.** 2026-07-18
+**Կարգավիճակ.** Canonical 24-table schema migrated; idempotent seed available (`pnpm db:seed`)
+**Canonical table count.** 24
+**Վերջին թարմացում.** 2026-08-11
 
 ## 1. Սխեմայի նպատակը
 
@@ -29,7 +29,7 @@
 - Financial, stock և audit records-ը hard delete չեն ընդունում։
 - Flexible JSONB-ը միշտ Zod schema/version ունի և business-critical relational կապերը չի փոխարինում։
 
-## 3. Canonical 25-table inventory
+## 3. Canonical 24-table inventory
 
 | # | Table | Domain | Նշանակություն |
 |---:|---|---|---|
@@ -54,10 +54,9 @@
 | 19 | `order_items` | Orders | Immutable purchased-item snapshots |
 | 20 | `order_events` | Orders | Status, notes և payment provider events |
 | 21 | `payments` | Payments | Payment attempts/current provider state |
-| 22 | `reviews` | Engagement | Verified-purchase reviews/moderation |
-| 23 | `contact_messages` | Support | Contact inbox |
-| 24 | `audit_logs` | Security | Immutable admin/security audit |
-| 25 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
+| 22 | `contact_messages` | Support | Contact inbox |
+| 23 | `audit_logs` | Security | Immutable admin/security audit |
+| 24 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
 
 ### Count assumptions
 
@@ -260,13 +259,9 @@ Order, nullable product reference, product title/SKU/image/attributes snapshots,
 
 Order, provider/method, provider reference, requested amount/currency, current status, attempt number, safe metadata և timestamps։ Մեկ order-ը կարող է ունենալ COD row կամ բազմաթիվ online attempts։ Card/secret/full sensitive payload չի պահվում։
 
-## 11. Reviews և support
+## 11. Support
 
-### 11.1 `reviews`
-
-User, product, eligible order item, rating 1–5, plain/sanitized comment, moderation status/actor/time/reason և timestamps։ Unique `(user_id, product_id)` proposed invariant։ Public aggregates-ը միայն approved rows են։
-
-### 11.2 `contact_messages`
+### 11.1 `contact_messages`
 
 Name, normalized email, optional phone, subject, message, status (`UNREAD`,`READ`,`REPLIED`,`ARCHIVED`), minimal spam metadata և timestamps։ Raw IP retention-ը privacy policy է պահանջում։
 
@@ -300,7 +295,7 @@ Redis loss-ը չի կորցնում order/cart/product/user durable source of tr
 |---|---|
 | User → sessions | `CASCADE` թույլատրելի է ephemeral sessions-ի համար |
 | User → addresses/cart/wishlist | account anonymization transaction; hard delete միայն safe ephemeral rows-ի համար |
-| User → orders/reviews/audit | Retain/restrict; anonymize PII, ոչ cascade |
+| User → orders/audit | Retain/restrict; anonymize PII, ոչ cascade |
 | Product → categories/media/stock | Archive product; physical cleanup միայն explicit maintenance-ում |
 | Product → order items/stock movements | Retain/restrict historical references |
 | Category → children/product relations | Reassign/archive, default `RESTRICT` |
@@ -324,7 +319,6 @@ Redis loss-ը չի կորցնում order/cart/product/user durable source of tr
 - Orders order number, user/date, status/date, payment status/date, promotion/user/status և durable idempotency composite unique։
 - Order items order/product; order events order/time/type և provider event partial unique։
 - Payments order/attempt, provider reference/status։
-- Reviews user/product unique, product/status/date։
 - Contact status/date; audit actor/target/time; outbox status/available time։
 
 Actual indexes-ը validate են արվում representative data-ի `EXPLAIN (ANALYZE, BUFFERS)`-ով։

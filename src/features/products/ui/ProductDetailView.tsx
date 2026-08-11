@@ -16,7 +16,6 @@ type ProductDetailViewProps = {
   dictionary: Dictionary;
   jsonLd: Record<string, unknown>;
   relatedSlot: React.ReactNode;
-  reviewsSlot: React.ReactNode;
 };
 
 export function ProductDetailView({
@@ -29,7 +28,6 @@ export function ProductDetailView({
   dictionary,
   jsonLd,
   relatedSlot,
-  reviewsSlot,
 }: ProductDetailViewProps) {
   const labels = dictionary.product;
   const inStock = product.stockOnHand > 0;
@@ -119,7 +117,6 @@ export function ProductDetailView({
       </div>
 
       {relatedSlot}
-      {reviewsSlot}
 
       <script
         type="application/ld+json"

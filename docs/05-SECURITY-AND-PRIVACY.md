@@ -70,7 +70,7 @@
 
 - React escaped rendering default է; `dangerouslySetInnerHTML` միայն centralized sanitized rich-content component-ում։
 - Blog rich text-ը sanitize է արվում server-side allowlist-ով ստեղծելիս/թարմացնելիս և ցանկալի է կրկին անվտանգ render boundary-ով։
-- User review/contact/admin notes-ը plain text է, ոչ HTML։
+- User contact/admin notes-ը plain text է, ոչ HTML։
 - Image alt text-ը escaped text է։
 - CSP-ը սկսվում է report-only inventory-ից, ապա enforce է արվում hosting/provider allowlist-ով։ Inline script/style exceptions-ը նվազագույն են և documented։
 - Open Graph/JSON-LD serialization-ը անվտանգ encoder է օգտագործում՝ script break-out-ից խուսափելու համար։
@@ -82,7 +82,7 @@ Rate limit policy-ն config-driven է և ունի environment + endpoint + ident
 | Risk group | Key strategy | Additional control |
 |---|---|---|
 | Login/register/reset/verify | hashed IP + normalized identity bucket | Generic errors, progressive cooldown |
-| Contact/review | user or hashed IP | Honeypot, content length/spam signals |
+| Contact | user or hashed IP | Honeypot, content length/spam signals |
 | Cart/wishlist | user/guest token | Higher burst, DB constraints |
 | Coupon preview | user/cart + code hash | Prevent code enumeration |
 | Checkout/order | user/cart + idempotency | Strict burst, DB uniqueness |
@@ -195,7 +195,7 @@ Audit row-ը ներառում է actor, action, target, safe before/after diff, 
 | IDOR/BOLA | Cross-user profile/order/address tests |
 | RBAC | Customer-to-admin route/action denial tests |
 | CSRF/origin | Negative Route Handler/Action tests where applicable |
-| XSS | Sanitizer unit tests + payload E2E for blog/review/contact |
+| XSS | Sanitizer unit tests + payload E2E for blog/contact |
 | SQL injection | Schema/allowlist tests; no interpolated identifiers from input |
 | Rate limiting | Boundary/retry-after tests and Redis failure policy |
 | Upload | MIME/size/purpose/ownership/finalize negative tests |

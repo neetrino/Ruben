@@ -5,16 +5,33 @@
   "featuredTitle": "Ընտրված ապրանքներ",
   "viewAll": "Տեսնել ավելին",
   "emptyFeatured": "Ընտրված ապրանքներ դեռ չկան։",
+  "promotionsTitle": "Ակցիաներ և զեղչեր",
+  "promotionsSubtitle": "Հատուկ առաջարկներ և ընթացիկ զեղչեր",
+  "emptyPromotions": "Ակտիվ զեղչեր դեռ չկան — դիտեք ամբողջ տեսականին։",
+  "globalDiscountLabel": "Խանութի զեղչ՝ մինչև {percent}%",
+  "whyTitle": "Ինչու ընտրել մեզ",
+  "partnersTitle": "Մեր գործընկերները",
+  "partnersSubtitle": "Վստահելի բրենդներ, որոնց հետ աշխատում ենք",
   "aboutEyebrow": "Մեր մասին",
   "aboutTitle": "Մենք առաջարկում ենք որակյալ ապրանքներ",
   "aboutDescription": "Բացահայտեք խնամքով ընտրված տեսականի՝ հուսալի առաքմամբ և հաճախորդակենտրոն աջակցությամբ։",
   "aboutCta": "Իմանալ ավելին",
   "features": {
+    "warrantyTitle": "Երաշխիք",
+    "warrantyDescription": "Պաշտոնական երաշխիք բոլոր ապրանքների համար։",
     "deliveryTitle": "Արագ առաքում",
     "deliveryDescription": "Արագ և հուսալի առաքում ձեր դուռը։",
-    "qualityTitle": "Լավագույն որակ",
-    "qualityDescription": "Խնամքով ընտրված ապրանքներ, որոնց կարելի է վստահել։",
-    "returnTitle": "Անվճար վերադարձ",
-    "returnDescription": "Հեշտ վերադարձ, եթե ինչ-որ բան ճիշտ չէ։"
+    "installmentTitle": "Ապառիկ",
+    "installmentDescription": "Հարմար ապառիկային պայմաններ առանց բարդությունների։",
+    "originalTitle": "Օրիգինալ ապրանքներ",
+    "originalDescription": "Միայն օրիգինալ և վավերացված ապրանքներ։"
+  },
+  "offers": {
+    "saleTitle": "Սեզոնային զեղչեր",
+    "saleDescription": "Ընտրված ապրանքներ՝ նվազեցված գնով։",
+    "installmentTitle": "Գնեք ապառիկով",
+    "installmentDescription": "Վճարեք մաս-մաս՝ առանց ավելորդ բեռի։",
+    "deliveryTitle": "Արագ առաքում",
+    "deliveryDescription": "Պատվիրեք այսօր և ստացեք կարճ ժամկետում։"
   }
 }

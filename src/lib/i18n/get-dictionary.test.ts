@@ -9,9 +9,14 @@ describe("getDictionary", () => {
     expect(dictionary.brand).toBe("White-Shop");
     expect(dictionary.nav.home).toBe("Home");
     expect(dictionary.home.title).toBe("White Shop");
+    expect(dictionary.home.whyTitle).toBe("Why choose us");
+    expect(dictionary.home.partnersTitle).toBe("Our partners");
+    expect(dictionary.footer.social).toBe("Social");
     expect(dictionary.contact.title).toBe("Contact");
     expect(dictionary.cartDrawer.title).toBe("Shopping Cart");
     expect(dictionary.checkout.title).toBe("Checkout");
+    expect(dictionary.catalog.sortPopular).toBe("Popular");
+    expect(dictionary.catalog.clearFilters).toBe("Clear filters");
   });
 
   it("loads Armenian and Russian namespaces", () => {

@@ -24,7 +24,6 @@ export const CANONICAL_TABLES = [
   "order_items",
   "order_events",
   "payments",
-  "reviews",
   "contact_messages",
   "audit_logs",
   "outbox_events",

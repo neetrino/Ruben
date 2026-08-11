@@ -87,7 +87,7 @@ Connection pool size, `statement_timeout`, `lock_timeout`, `idle_in_transaction_
 | Պարամետր | Որոշում | Ստատուս | Նշում |
 |---|---|---|---|
 | Redis | Upstash Redis | ✅ | Cache/rate limit + ephemeral verification/reset tokens; ոչ durable commerce authority |
-| Rate limiting | Upstash Ratelimit | ✅ | Auth, contact, review, coupon, upload, order endpoints |
+| Rate limiting | Upstash Ratelimit | ✅ | Auth, contact, coupon, upload, order endpoints |
 | Object storage | Cloudflare R2 | ✅ | Store object key, not full CDN URL |
 | Image delivery | `next/image` + configured public base URL | ✅ | Responsive sizes, alt text, format/size policy |
 | Email | Provider interface, Resend adapter first | ✅ | Verification/reset/order events |

@@ -4,6 +4,7 @@ import { drizzle } from "drizzle-orm/neon-http";
 import { hashPassword } from "@/lib/auth/password";
 import * as schema from "@/db/schema";
 import { getSeedEnv } from "@/db/seed/env";
+import { seedElectronicsProductImages } from "@/db/seed/electronics-media";
 import { seedIds } from "@/db/seed/ids";
 
 async function seed(): Promise<void> {
@@ -72,28 +73,52 @@ async function seed(): Promise<void> {
 
   await db
     .insert(schema.categories)
-    .values({
-      id: seedIds.categoryApparel,
-      translations: {
-        hy: {
-          title: "Apparel",
-          slug: "hagust",
-          description: "Core apparel category",
+    .values([
+      {
+        id: seedIds.categoryApparel,
+        translations: {
+          hy: {
+            title: "Հագուստ",
+            slug: "hagust",
+            description: "Հիմնական հագուստի կատեգորիա",
+          },
+          en: {
+            title: "Apparel",
+            slug: "apparel",
+            description: "Core apparel category",
+          },
+          ru: {
+            title: "Одежда",
+            slug: "odezhda",
+            description: "Основная категория одежды",
+          },
         },
-        en: {
-          title: "Apparel",
-          slug: "apparel",
-          description: "Core apparel category",
-        },
-        ru: {
-          title: "Odezhda",
-          slug: "odezhda",
-          description: "Core apparel category",
-        },
+        sortOrder: 1,
+        status: "ACTIVE",
       },
-      sortOrder: 1,
-      status: "ACTIVE",
-    })
+      {
+        id: seedIds.categoryElectronics,
+        translations: {
+          hy: {
+            title: "Էլեկտրոնիկա",
+            slug: "elektronika",
+            description: "Գաջեթներ և աքսեսուարներ",
+          },
+          en: {
+            title: "Electronics",
+            slug: "electronics",
+            description: "Gadgets and accessories",
+          },
+          ru: {
+            title: "Электроника",
+            slug: "elektronika",
+            description: "Гаджеты и аксессуары",
+          },
+        },
+        sortOrder: 2,
+        status: "ACTIVE",
+      },
+    ])
     .onConflictDoUpdate({
       target: schema.categories.id,
       set: {
@@ -158,6 +183,139 @@ async function seed(): Promise<void> {
         status: "ACTIVE",
         isFeatured: true,
       },
+      {
+        id: seedIds.productWirelessEarbuds,
+        sku: "WS-EARBUDS-001",
+        translations: {
+          hy: {
+            title: "Անլար ականջակալներ",
+            slug: "anlar-akanjakalner",
+            description: "Bluetooth ականջակալներ՝ աղմուկի ճնշմամբ",
+          },
+          en: {
+            title: "Wireless Earbuds",
+            slug: "wireless-earbuds",
+            description: "Bluetooth earbuds with noise reduction",
+          },
+          ru: {
+            title: "Беспроводные наушники",
+            slug: "besprovodnye-naushniki",
+            description: "Bluetooth-наушники с шумоподавлением",
+          },
+        },
+        priceAmount: 45000,
+        compareAtAmount: 52000,
+        stockOnHand: 40,
+        lowStockThreshold: 5,
+        status: "ACTIVE",
+        isFeatured: true,
+      },
+      {
+        id: seedIds.productSmartWatch,
+        sku: "WS-WATCH-001",
+        translations: {
+          hy: {
+            title: "Խելացի ժամացույց",
+            slug: "khelaci-zhamacuyc",
+            description: "Ֆիտնես ժամացույց՝ սրտի ռիթմի մոնիտորինգով",
+          },
+          en: {
+            title: "Smart Watch",
+            slug: "smart-watch",
+            description: "Fitness smartwatch with heart-rate monitoring",
+          },
+          ru: {
+            title: "Умные часы",
+            slug: "umnye-chasy",
+            description: "Фитнес-часы с мониторингом пульса",
+          },
+        },
+        priceAmount: 89000,
+        compareAtAmount: 99000,
+        stockOnHand: 20,
+        lowStockThreshold: 3,
+        status: "ACTIVE",
+        isFeatured: true,
+      },
+      {
+        id: seedIds.productUsbCHub,
+        sku: "WS-HUB-001",
+        translations: {
+          hy: {
+            title: "USB-C հաբ",
+            slug: "usb-c-hab",
+            description: "7-պորտանի USB-C հաբ՝ HDMI-ով",
+          },
+          en: {
+            title: "USB-C Hub",
+            slug: "usb-c-hub",
+            description: "7-port USB-C hub with HDMI",
+          },
+          ru: {
+            title: "USB-C хаб",
+            slug: "usb-c-khab",
+            description: "7-портовый USB-C хаб с HDMI",
+          },
+        },
+        priceAmount: 22000,
+        stockOnHand: 35,
+        lowStockThreshold: 5,
+        status: "ACTIVE",
+        isFeatured: false,
+      },
+      {
+        id: seedIds.productPowerBank,
+        sku: "WS-POWER-001",
+        translations: {
+          hy: {
+            title: "Power Bank 20000mAh",
+            slug: "power-bank-20000",
+            description: "Արագ լիցքավորմամբ շարժական մարտկոց",
+          },
+          en: {
+            title: "Power Bank 20000mAh",
+            slug: "power-bank-20000",
+            description: "Portable battery with fast charging",
+          },
+          ru: {
+            title: "Power Bank 20000mAh",
+            slug: "power-bank-20000",
+            description: "Портативный аккумулятор с быстрой зарядкой",
+          },
+        },
+        priceAmount: 18000,
+        compareAtAmount: 21000,
+        stockOnHand: 60,
+        lowStockThreshold: 8,
+        status: "ACTIVE",
+        isFeatured: true,
+      },
+      {
+        id: seedIds.productBluetoothSpeaker,
+        sku: "WS-SPEAKER-001",
+        translations: {
+          hy: {
+            title: "Bluetooth բարձրախոս",
+            slug: "bluetooth-bardzrakhos",
+            description: "Ջրակայուն շարժական բարձրախոս",
+          },
+          en: {
+            title: "Bluetooth Speaker",
+            slug: "bluetooth-speaker",
+            description: "Waterproof portable speaker",
+          },
+          ru: {
+            title: "Bluetooth-колонка",
+            slug: "bluetooth-kolonka",
+            description: "Водонепроницаемая портативная колонка",
+          },
+        },
+        priceAmount: 32000,
+        stockOnHand: 28,
+        lowStockThreshold: 4,
+        status: "ACTIVE",
+        isFeatured: true,
+      },
     ])
     .onConflictDoUpdate({
       target: schema.products.id,
@@ -183,6 +341,41 @@ async function seed(): Promise<void> {
         categoryId: seedIds.categoryApparel,
         isPrimary: true,
         sortOrder: 2,
+      },
+      {
+        id: seedIds.productCategoryWirelessEarbuds,
+        productId: seedIds.productWirelessEarbuds,
+        categoryId: seedIds.categoryElectronics,
+        isPrimary: true,
+        sortOrder: 1,
+      },
+      {
+        id: seedIds.productCategorySmartWatch,
+        productId: seedIds.productSmartWatch,
+        categoryId: seedIds.categoryElectronics,
+        isPrimary: true,
+        sortOrder: 2,
+      },
+      {
+        id: seedIds.productCategoryUsbCHub,
+        productId: seedIds.productUsbCHub,
+        categoryId: seedIds.categoryElectronics,
+        isPrimary: true,
+        sortOrder: 3,
+      },
+      {
+        id: seedIds.productCategoryPowerBank,
+        productId: seedIds.productPowerBank,
+        categoryId: seedIds.categoryElectronics,
+        isPrimary: true,
+        sortOrder: 4,
+      },
+      {
+        id: seedIds.productCategoryBluetoothSpeaker,
+        productId: seedIds.productBluetoothSpeaker,
+        categoryId: seedIds.categoryElectronics,
+        isPrimary: true,
+        sortOrder: 5,
       },
     ])
     .onConflictDoNothing({ target: schema.productCategories.id });
@@ -348,13 +541,24 @@ async function seed(): Promise<void> {
       },
     });
 
+  const electronicsImages = await seedElectronicsProductImages(env.DATABASE_URL);
+
   console.info(
     JSON.stringify({
       level: "info",
       message: "seed.complete",
       adminEmail: env.SEED_ADMIN_EMAIL.toLowerCase(),
       customerEmail: customerEmail.toLowerCase(),
-      products: ["WS-TEE-001", "WS-HOODIE-001"],
+      products: [
+        "WS-TEE-001",
+        "WS-HOODIE-001",
+        "WS-EARBUDS-001",
+        "WS-WATCH-001",
+        "WS-HUB-001",
+        "WS-POWER-001",
+        "WS-SPEAKER-001",
+      ],
+      electronicsImages,
       coupon: "WELCOME10",
     }),
   );

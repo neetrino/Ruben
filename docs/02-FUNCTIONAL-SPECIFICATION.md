@@ -40,7 +40,7 @@
 
 | ID | Պահանջ / acceptance criteria |
 |---|---|
-| HOME-001 | `/{locale}` page-ը պարունակում է Header, Hero, Featured Products, short About, CTA և Footer։ |
+| HOME-001 | `/{locale}` page-ը պարունակում է Header, Hero, Featured Products, Promotions/discounts, Why-choose-us (warranty/delivery/installment/original), Partners, short About, CTA և Footer (contacts, social, map, key links)։ |
 | HOME-002 | Hero query-ն վերադարձնում է միայն active slide-երը sort order-ով և locale translation-ով։ |
 | HOME-003 | Slide-ը ունի desktop/mobile media; responsive `<picture>`/image behavior-ը ճիշտ asset-ն է ընտրում։ |
 | HOME-004 | Hero action URL-ը validation է անցնում; internal URL-ը render է լինում `Link`-ով։ |
@@ -58,7 +58,7 @@
 | CAT-004 | Active filter chips-ը յուրաքանչյուր filter-ի removal control ունեն։ |
 | CAT-005 | Pagination-ը server-side է, stable sort/tie-breaker-ով; page size-ը allowlist-ից է։ |
 | CAT-006 | Grid-ը wide desktop-ում 4, laptop-ում 3, mobile-ում 2 readable card է, առանց horizontal overflow-ի։ |
-| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, price, compare-at, computed discount %, wishlist և stock state։ |
+| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, short specs summary (description), price, compare-at, computed discount %, wishlist և stock state։ |
 | CAT-008 | Transparent PNG/WebP asset-ի container-ը theme-aware/transparent է և պարտադիր սպիտակ background չի ավելացնում։ |
 | CAT-009 | Card click-ը տանում է `/{locale}/products/{slug}`; wishlist interaction-ը չի trigger անում card navigation-ը։ |
 | CAT-010 | Unpublished/archived product-ը public catalog-ում չի ցուցադրվում։ |
@@ -76,13 +76,7 @@
 
 ### 4.3 Reviews
 
-| ID | Պահանջ / acceptance criteria |
-|---|---|
-| REV-001 | Review section-ը ցույց է տալիս approved reviews, average և 1–5 distribution։ |
-| REV-002 | Review submit կարող է անել login եղած Customer-ը, ով ունի eligible delivered/completed order item տվյալ product-ի համար։ |
-| REV-003 | Rating-ը integer 1–5 է, comment-ը length/sanitization rules ունի։ |
-| REV-004 | User/product զույգի համար կա առավելագույնը մեկ review (կամ approved alternate key policy ADR-ով)։ |
-| REV-005 | Նոր review-ը pending moderation է; Admin-ը approve/reject է անում audit trail-ով։ |
+Reviews feature-ը հանված է՝ storefront UI, server actions, և `reviews` table/enum։
 
 ## 5. Authentication
 
