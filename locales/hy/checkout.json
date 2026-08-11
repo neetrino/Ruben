@@ -29,6 +29,7 @@
     "storePickupDescription": "Վերցրեք պատվերը խանութից (Անվճար)",
     "delivery": "Առաքում",
     "deliveryDescription": "Կառաքենք ձեր հասցեով",
+    "deliveryUnavailable": "Առաքումն անհասանելի է — վայրեր կարգավորված չեն",
     "freePickup": "Անվճար (Ինքնաառաքում)",
     "enterCity": "Մուտքագրեք քաղաքը",
     "selectDeliveryLocation": "Ընտրեք առաքման վայրը"

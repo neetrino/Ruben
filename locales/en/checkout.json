@@ -29,6 +29,7 @@
     "storePickupDescription": "Pick up your order from our store (Free)",
     "delivery": "Delivery",
     "deliveryDescription": "We will deliver your order to your address",
+    "deliveryUnavailable": "Delivery is unavailable — no locations configured",
     "freePickup": "Free (Store Pickup)",
     "enterCity": "Enter City",
     "selectDeliveryLocation": "Select delivery location"

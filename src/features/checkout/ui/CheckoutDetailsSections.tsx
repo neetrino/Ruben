@@ -32,6 +32,7 @@ type CheckoutDetailsLabels = {
   storePickupDescription: string;
   delivery: string;
   deliveryDescription: string;
+  deliveryUnavailable: string;
 };
 
 type PaymentOption = {
@@ -175,12 +176,14 @@ export function CheckoutDetailsSections({
               checked={shippingMethod === "delivery"}
               onChange={() => onShippingMethodChange("delivery")}
               className="mr-4"
-              disabled={pending || deliveryOptions.length === 0}
+              disabled={pending}
             />
             <div className="flex-1">
               <div className="font-medium text-gray-900">{labels.delivery}</div>
               <div className="text-sm text-gray-600">
-                {labels.deliveryDescription}
+                {deliveryOptions.length === 0
+                  ? labels.deliveryUnavailable
+                  : labels.deliveryDescription}
               </div>
             </div>
           </label>

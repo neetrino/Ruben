@@ -42,6 +42,7 @@ type CheckoutLabels = {
   storePickupDescription: string;
   delivery: string;
   deliveryDescription: string;
+  deliveryUnavailable: string;
   freePickup: string;
   enterCity: string;
   selectDeliveryLocation: string;

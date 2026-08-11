@@ -29,6 +29,7 @@
     "storePickupDescription": "Заберите заказ в магазине (Бесплатно)",
     "delivery": "Доставка",
     "deliveryDescription": "Доставим заказ по вашему адресу",
+    "deliveryUnavailable": "Доставка недоступна — локации не настроены",
     "freePickup": "Бесплатно (Самовывоз)",
     "enterCity": "Укажите город",
     "selectDeliveryLocation": "Выберите место доставки"
