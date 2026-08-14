@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { ADMIN_LABEL } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { updateContactStatusAction } from "@/features/contact/application/update-contact-status";
 import type { ContactStatus } from "@/features/contact/domain/contact-rules";
 
@@ -24,13 +25,14 @@ export function UpdateContactStatusForm({
   eligibleStatuses,
 }: UpdateContactStatusFormProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState(eligibleStatuses[0] ?? "");
   const [isPending, startTransition] = useTransition();
 
   if (eligibleStatuses.length === 0) {
     return (
-      <p className="text-sm text-gray-600">No further status changes.</p>
+      <p className="text-sm text-gray-600">{t.messages.statusForm.noFurther}</p>
     );
   }
 
@@ -56,13 +58,14 @@ export function UpdateContactStatusForm({
         }}
       >
         <p className="text-sm text-gray-700">
-          Current: <strong className="text-gray-900">{currentStatus}</strong>
+          {t.messages.statusForm.current}{" "}
+          <strong className="text-gray-900">{currentStatus}</strong>
         </p>
         <div>
-          <span className={ADMIN_LABEL}>New status</span>
+          <span className={ADMIN_LABEL}>{t.messages.statusForm.newStatus}</span>
           <SelectDropdown
             name="status"
-            ariaLabel="New status"
+            ariaLabel={t.messages.statusForm.newStatus}
             value={status}
             options={eligibleStatuses.map((item) => ({
               label: item,
@@ -76,7 +79,7 @@ export function UpdateContactStatusForm({
         </div>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <Button type="submit" size="sm" disabled={isPending}>
-          {isPending ? "Updating…" : "Update status"}
+          {isPending ? t.common.updating : t.messages.statusForm.update}
         </Button>
       </form>
     </Card>

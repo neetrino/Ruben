@@ -4,6 +4,7 @@ import {
   ADMIN_BADGE,
   paymentStatusBadgeClass,
 } from "@/features/admin/ui/status-badge";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminOrderDetailView } from "@/features/orders/application/order-detail-view";
 import {
   formatOrderDrawerMoney,
@@ -11,26 +12,30 @@ import {
 } from "@/features/orders/ui/order-drawer-format";
 
 type OrderDetailsDrawerShippingProps = {
+  locale: string;
   detail: AdminOrderDetailView;
 };
 
 export function OrderDetailsDrawerShipping({
+  locale,
   detail,
 }: OrderDetailsDrawerShippingProps) {
+  const t = adminCopy(locale);
+
   return (
     <div className="grid gap-4 md:grid-cols-2">
       <section className="rounded-2xl border border-gray-200 px-5 py-4">
         <h3 className="mb-4 text-base font-semibold text-gray-900">
-          Shipping Address
+          {t.orders.drawer.sections.shipping}
         </h3>
         <dl className="space-y-3 text-sm">
           <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="text-gray-500">Shipping Method:</dt>
+            <dt className="text-gray-500">{t.orders.drawer.labels.shippingMethod}:</dt>
             <dd className="font-medium text-gray-900">{detail.shippingMethod}</dd>
           </div>
           {detail.isPickup ? (
             <div className="flex flex-wrap items-center gap-x-2">
-              <dt className="text-gray-500">Pickup store:</dt>
+              <dt className="text-gray-500">{t.orders.drawer.labels.pickupStore}:</dt>
               <dd className="font-medium text-gray-900">{detail.storeName}</dd>
             </div>
           ) : null}
@@ -50,14 +55,16 @@ export function OrderDetailsDrawerShipping({
       </section>
 
       <section className="rounded-2xl border border-gray-200 px-5 py-4">
-        <h3 className="mb-4 text-base font-semibold text-gray-900">Payment</h3>
+        <h3 className="mb-4 text-base font-semibold text-gray-900">
+          {t.orders.drawer.sections.payment}
+        </h3>
         <dl className="space-y-3 text-sm">
           <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="text-gray-500">Method:</dt>
+            <dt className="text-gray-500">{t.orders.drawer.labels.method}:</dt>
             <dd className="font-medium text-gray-900">{detail.paymentMethod}</dd>
           </div>
           <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="text-gray-500">Amount:</dt>
+            <dt className="text-gray-500">{t.orders.drawer.labels.amount}:</dt>
             <dd className="font-medium text-gray-900">
               {formatOrderDrawerMoney(
                 detail.paymentAmount,
@@ -66,7 +73,7 @@ export function OrderDetailsDrawerShipping({
             </dd>
           </div>
           <div className="flex flex-wrap items-center gap-x-2">
-            <dt className="text-gray-500">Status:</dt>
+            <dt className="text-gray-500">{t.orders.drawer.labels.status}:</dt>
             <dd>
               <span
                 className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(detail.paymentStatus)}`}

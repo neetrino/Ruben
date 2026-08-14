@@ -21,6 +21,7 @@ import {
   ADMIN_TABLE_TH_CHECK,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   duplicateProductAction,
   softDeleteProductsAction,
@@ -50,6 +51,7 @@ export function AdminProductsTable({
   sortLinks,
   onEdit,
 }: AdminProductsTableProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [error, setError] = useState<string | null>(null);
@@ -84,7 +86,7 @@ export function AdminProductsTable({
         await action();
         router.refresh();
       } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "Action failed.");
+        setError(caught instanceof Error ? caught.message : t.common.actionFailed);
       }
     });
   }
@@ -118,7 +120,7 @@ export function AdminProductsTable({
         setPendingDelete(null);
         router.refresh();
       } catch (caught) {
-        setError(caught instanceof Error ? caught.message : "Action failed.");
+        setError(caught instanceof Error ? caught.message : t.common.actionFailed);
       }
     });
   }
@@ -127,7 +129,7 @@ export function AdminProductsTable({
     <div className="flex flex-col gap-4">
       <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
         <p className="text-sm text-gray-700">
-          Selected {selected.size} product{selected.size === 1 ? "" : "s"}
+          {t.products.bulk.selected.replace("{count}", String(selected.size))}
         </p>
         <Button
           type="button"
@@ -136,7 +138,7 @@ export function AdminProductsTable({
           disabled={isPending || selected.size === 0}
           onClick={deleteSelected}
         >
-          Delete Selected
+          {t.products.bulk.deleteSelected}
         </Button>
       </Card>
 
@@ -145,7 +147,7 @@ export function AdminProductsTable({
       <Card className={ADMIN_TABLE_CARD}>
         {products.length === 0 ? (
           <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
-            No products match these filters.
+            {t.products.empty}
           </p>
         ) : (
           <div className={ADMIN_TABLE_OUTER_SCROLL}>
@@ -159,33 +161,33 @@ export function AdminProductsTable({
                       checked={allSelected}
                       onChange={toggleAll}
                       disabled={isPending}
-                      aria-label="Select all products"
+                      aria-label={t.products.selectAll}
                     />
                   </th>
                   <th className={ADMIN_TABLE_TH}>
                     <Link href={sortLinks.title} className="hover:text-gray-900">
-                      Product
+                      {t.products.columns.product}
                     </Link>
                   </th>
                   <th className={ADMIN_TABLE_TH}>
                     <Link href={sortLinks.stock} className="hover:text-gray-900">
-                      Stock
+                      {t.products.columns.stock}
                     </Link>
                   </th>
                   <th className={ADMIN_TABLE_TH}>
                     <Link href={sortLinks.price} className="hover:text-gray-900">
-                      Price
+                      {t.products.columns.price}
                     </Link>
                   </th>
-                  <th className={ADMIN_TABLE_TH}>Category</th>
-                  <th className={ADMIN_TABLE_TH}>Featured</th>
-                  <th className={ADMIN_TABLE_TH}>Actions</th>
+                  <th className={ADMIN_TABLE_TH}>{t.products.columns.category}</th>
+                  <th className={ADMIN_TABLE_TH}>{t.products.columns.featured}</th>
+                  <th className={ADMIN_TABLE_TH}>{t.products.columns.actions}</th>
                   <th className={ADMIN_TABLE_TH}>
                     <Link
                       href={sortLinks.created}
                       className="hover:text-gray-900"
                     >
-                      Created
+                      {t.products.columns.created}
                     </Link>
                   </th>
                 </tr>
@@ -244,14 +246,20 @@ export function AdminProductsTable({
 
       <ConfirmDialog
         open={pendingDelete !== null}
-        title="Delete"
+        title={t.common.delete}
         description={
           pendingDelete?.kind === "bulk"
             ? `Are you sure you want to delete ${pendingDelete.label}? This action cannot be undone.`
             : pendingDelete
-              ? deleteConfirmDescription("product", pendingDelete.label)
+              ? deleteConfirmDescription(
+                  t.common.entity.product,
+                  pendingDelete.label,
+                  t.common.confirmDelete,
+                )
               : ""
         }
+        confirmLabel={t.common.delete}
+        cancelLabel={t.common.cancel}
         isPending={isPending}
         onClose={() => {
           if (!isPending) setPendingDelete(null);

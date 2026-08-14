@@ -9,6 +9,7 @@ import {
   ADMIN_INPUT,
   ADMIN_LABEL,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   createCategoryFromDrawerAction,
   updateCategoryFromDrawerAction,
@@ -32,6 +33,7 @@ export function AddCategoryDrawer({
   category = null,
 }: AddCategoryDrawerProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const isEdit = category != null;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [title, setTitle] = useState("");
@@ -78,12 +80,12 @@ export function AddCategoryDrawer({
     <SideSheet
       open={open}
       onClose={onClose}
-      ariaLabel={isEdit ? "Edit Category" : "Add Category"}
+      ariaLabel={isEdit ? t.categories.drawer.editTitle : t.categories.drawer.createTitle}
       panelClassName="w-full max-w-lg"
     >
       <div className="border-b border-gray-200 px-5 py-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          {isEdit ? "Edit Category" : "Add Category"}
+          {isEdit ? t.categories.drawer.editTitle : t.categories.drawer.createTitle}
         </h2>
       </div>
 
@@ -132,20 +134,20 @@ export function AddCategoryDrawer({
           <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
             <label className="block">
               <span className={ADMIN_LABEL}>
-                Category Title <span className="text-red-600">*</span>
+                {t.categories.drawer.titleLabel} <span className="text-red-600">*</span>
               </span>
               <input
                 required
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
-                placeholder="Enter category title"
+                placeholder={t.products.categories.titlePlaceholder}
                 className={ADMIN_INPUT}
                 disabled={isPending}
               />
             </label>
 
             <label className="block">
-              <span className={ADMIN_LABEL}>Slug</span>
+              <span className={ADMIN_LABEL}>{t.categories.drawer.slug}</span>
               <input
                 value={displaySlug === "---" ? "" : displaySlug}
                 onChange={(event) => {
@@ -157,16 +159,16 @@ export function AddCategoryDrawer({
                 disabled={isPending}
               />
               <span className="mt-1 block text-xs text-gray-500">
-                Generated automatically from the title and used on /products.
+                {t.categories.drawer.slugHint}
               </span>
             </label>
 
             <div>
-              <span className={ADMIN_LABEL}>Parent Category</span>
+              <span className={ADMIN_LABEL}>{t.categories.drawer.parent}</span>
               <SelectDropdown
-                ariaLabel="Parent Category"
+                ariaLabel={t.categories.drawer.parent}
                 value={parentId}
-                allLabel="None (Root Category)"
+                allLabel={t.categories.root}
                 options={parentOptions.map((item) => ({
                   label: item.title,
                   value: item.id,
@@ -179,13 +181,13 @@ export function AddCategoryDrawer({
             </div>
 
             <div>
-              <span className={ADMIN_LABEL}>Status</span>
+              <span className={ADMIN_LABEL}>{t.categories.drawer.status}</span>
               <SelectDropdown
-                ariaLabel="Status"
+                ariaLabel={t.categories.drawer.status}
                 value={status}
                 options={[
-                  { label: "Published", value: "ACTIVE" },
-                  { label: "Archived", value: "ARCHIVED" },
+                  { label: t.categories.status.published, value: "ACTIVE" },
+                  { label: t.categories.status.archived, value: "ARCHIVED" },
                 ]}
                 disabled={isPending}
                 deferChange={false}
@@ -197,7 +199,7 @@ export function AddCategoryDrawer({
             </div>
 
             <div>
-              <span className={ADMIN_LABEL}>Image</span>
+              <span className={ADMIN_LABEL}>{t.categories.drawer.image}</span>
               <div className="mt-1 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
@@ -205,7 +207,7 @@ export function AddCategoryDrawer({
                   onClick={() => fileInputRef.current?.click()}
                   className="inline-flex items-center rounded-xl border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50"
                 >
-                  {imagePreview ? "Change Image" : "+ Upload Image"}
+                  {imagePreview ? t.categories.drawer.changeImage : `+ ${t.categories.drawer.uploadImage}`}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -244,7 +246,7 @@ export function AddCategoryDrawer({
                     }}
                     className="text-sm font-medium text-gray-600 hover:text-red-600"
                   >
-                    Remove
+                    {t.categories.drawer.remove}
                   </button>
                 ) : null}
               </div>
@@ -264,18 +266,18 @@ export function AddCategoryDrawer({
             <Button type="submit" disabled={isPending || !title.trim()}>
               {isPending
                 ? isEdit
-                  ? "Saving…"
-                  : "Creating…"
+                  ? t.common.saving
+                  : t.common.creating
                 : isEdit
-                  ? "Save"
-                  : "Create Category"}
+                  ? t.common.save
+                  : t.categories.drawer.create}
             </Button>
             <button
               type="button"
               onClick={onClose}
               className="whitespace-nowrap text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              Cancel
+              {t.common.cancel}
             </button>
           </div>
         </form>

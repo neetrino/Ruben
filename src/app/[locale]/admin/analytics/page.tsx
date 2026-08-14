@@ -10,8 +10,10 @@ import {
 import { AnalyticsMetricCards } from "@/features/analytics/ui/AnalyticsMetricCards";
 import { AnalyticsOrdersByDay } from "@/features/analytics/ui/AnalyticsOrdersByDay";
 import { AnalyticsPeriodCard } from "@/features/analytics/ui/AnalyticsPeriodCard";
+import { AnalyticsSalesInsights } from "@/features/analytics/ui/AnalyticsSalesInsights";
 import { AnalyticsTopRankings } from "@/features/analytics/ui/AnalyticsTopRankings";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 import { formatMoneyAmount } from "@/lib/money/format";
 
 type AdminAnalyticsPageProps = {
@@ -37,8 +39,9 @@ export default async function AdminAnalyticsPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const raw = await searchParams;
-  const defaults = rangeForAnalyticsPeriod("last_7_days");
+  const defaults = rangeForAnalyticsPeriod("this_month");
   const parsed = analyticsDateRangeSchema.safeParse({
     from: firstParam(raw.from) ?? defaults.from,
     to: firstParam(raw.to) ?? defaults.to,
@@ -58,9 +61,7 @@ export default async function AdminAnalyticsPage({
   return (
     <section>
       <div className="mb-6">
-        <p className={ADMIN_PAGE_SUBTITLE}>
-          Track your business performance and statistics
-        </p>
+        <p className={ADMIN_PAGE_SUBTITLE}>{t.analytics.subtitle}</p>
       </div>
 
       <AnalyticsPeriodCard
@@ -74,18 +75,31 @@ export default async function AdminAnalyticsPage({
       />
 
       <AnalyticsMetricCards
+        locale={locale}
         orderCount={summary.orderCount}
         revenueLabel={formatMoney(summary.revenueAmount)}
         userCount={summary.userCount}
       />
 
+      <AnalyticsSalesInsights
+        locale={locale}
+        bestDay={summary.bestDay}
+        bestWeek={summary.bestWeek}
+        bestMonth={summary.bestMonth}
+        bestCustomers={summary.bestCustomers}
+        topBuyers={summary.topBuyers}
+        formatMoney={formatMoney}
+      />
+
       <AnalyticsTopRankings
+        locale={locale}
         products={summary.topProducts}
         categories={summary.topCategories}
         formatMoney={formatMoney}
       />
 
       <AnalyticsOrdersByDay
+        locale={locale}
         rows={summary.dailyRows}
         formatMoney={formatMoney}
       />

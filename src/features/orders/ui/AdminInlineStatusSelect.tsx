@@ -20,16 +20,15 @@ import {
   orderStatusBadgeClass,
   paymentStatusBadgeClass,
 } from "@/features/admin/ui/status-badge";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { changeOrderStatusAction } from "@/features/orders/application/change-order-status";
 import { changePaymentStatusAction } from "@/features/orders/application/change-payment-status";
 import {
   ADMIN_ORDER_STATUS_OPTIONS,
-  orderStatusLabel,
   type OrderStatus,
 } from "@/features/orders/domain/order-status";
 import {
   ADMIN_PAYMENT_STATUS_OPTIONS,
-  paymentStatusLabel,
   type PaymentStatus,
 } from "@/features/orders/domain/payment-status";
 
@@ -38,6 +37,44 @@ type MenuPosition = {
   left: number;
   minWidth: number;
 };
+
+type OrderStatusKeys = {
+  pending: string;
+  processing: string;
+  completed: string;
+  cancelled: string;
+};
+
+type PaymentStatusKeys = {
+  paid: string;
+  pending: string;
+  failed: string;
+};
+
+function localOrderStatusLabel(status: string, s: OrderStatusKeys): string {
+  const map: Partial<Record<string, string>> = {
+    PENDING: s.pending,
+    CONFIRMED: s.pending,
+    PROCESSING: s.processing,
+    SHIPPED: s.processing,
+    DELIVERED: s.completed,
+    CANCELLED: s.cancelled,
+    REFUNDED: s.cancelled,
+  };
+  return map[status] ?? status;
+}
+
+function localPaymentStatusLabel(status: string, p: PaymentStatusKeys): string {
+  const map: Partial<Record<string, string>> = {
+    PENDING: p.pending,
+    AUTHORIZED: p.pending,
+    CAPTURED: p.paid,
+    FAILED: p.failed,
+    REFUNDED: p.failed,
+    CANCELLED: p.failed,
+  };
+  return map[status] ?? status;
+}
 
 type AdminInlineStatusSelectProps = {
   locale: string;
@@ -54,6 +91,7 @@ export function AdminInlineStatusSelect({
   value,
   disabled = false,
 }: AdminInlineStatusSelectProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -87,15 +125,23 @@ export function AdminInlineStatusSelect({
     return () => clearTimeout(timer);
   }, [open]);
 
+  const localizedOrderOptions = ADMIN_ORDER_STATUS_OPTIONS.map((opt) => ({
+    ...opt,
+    label: localOrderStatusLabel(opt.value, t.orders.status),
+  }));
+
+  const localizedPaymentOptions = ADMIN_PAYMENT_STATUS_OPTIONS.map((opt) => ({
+    ...opt,
+    label: localPaymentStatusLabel(opt.value, t.orders.payment),
+  }));
+
   const options =
-    kind === "order"
-      ? ADMIN_ORDER_STATUS_OPTIONS
-      : ADMIN_PAYMENT_STATUS_OPTIONS;
+    kind === "order" ? localizedOrderOptions : localizedPaymentOptions;
 
   const currentLabel =
     kind === "order"
-      ? orderStatusLabel(displayValue)
-      : paymentStatusLabel(displayValue);
+      ? localOrderStatusLabel(displayValue, t.orders.status)
+      : localPaymentStatusLabel(displayValue, t.orders.payment);
 
   const badgeClassName =
     kind === "order"
@@ -218,21 +264,18 @@ export function AdminInlineStatusSelect({
             <div
               id={menuId}
               role="listbox"
-              aria-label={`Change ${kind} status`}
+              aria-label={t.orders.changeStatusAria}
               className="overflow-hidden rounded-2xl border border-gray-100 bg-white py-2"
             >
               {options.map((option) => {
-                const selected =
+                const isSelected =
                   option.value === displayValue ||
-                  (kind === "order" &&
-                    orderStatusLabel(displayValue) === option.label) ||
-                  (kind === "payment" &&
-                    paymentStatusLabel(displayValue) === option.label);
+                  currentLabel === option.label;
                 return (
                   <SelectDropdownOptionRow
                     key={option.value}
                     label={option.label}
-                    selected={selected}
+                    selected={isSelected}
                     onSelect={() => selectStatus(option.value)}
                   />
                 );
@@ -249,7 +292,7 @@ export function AdminInlineStatusSelect({
         type="button"
         disabled={disabled || isPending}
         className={`inline-flex h-8 items-center gap-1.5 rounded-full px-3 text-xs font-medium outline-none transition-opacity disabled:opacity-50 ${badgeClassName}`}
-        aria-label={`Change ${kind} status`}
+        aria-label={t.orders.changeStatusAria}
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-controls={menuId}

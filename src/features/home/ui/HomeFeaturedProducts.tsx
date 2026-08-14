@@ -12,6 +12,7 @@ type FeaturedItem = {
   imageUrl: string | null;
   inStock: boolean;
   inWishlist?: boolean;
+  inCompare?: boolean;
 };
 
 type HomeFeaturedProductsProps = {
@@ -21,6 +22,8 @@ type HomeFeaturedProductsProps = {
   viewAllHref: string;
   emptyLabel: string;
   wishlistLabel: string;
+  compareLabel: string;
+  compareLimitLabel: string;
   addToCartLabel: string;
   isSignedIn: boolean;
   products: readonly FeaturedItem[];
@@ -33,6 +36,8 @@ export function HomeFeaturedProducts({
   viewAllHref,
   emptyLabel,
   wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   addToCartLabel,
   isSignedIn,
   products,
@@ -71,8 +76,11 @@ export function HomeFeaturedProducts({
                 locale={locale}
                 productId={product.id}
                 inWishlist={product.inWishlist ?? false}
+                inCompare={product.inCompare ?? false}
                 isSignedIn={isSignedIn}
                 wishlistLabel={wishlistLabel}
+                compareLabel={compareLabel}
+                compareLimitLabel={compareLimitLabel}
                 addToCartLabel={addToCartLabel}
               />
             ))}

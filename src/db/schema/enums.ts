@@ -90,12 +90,6 @@ export const orderEventTypeEnum = pgEnum("order_event_type", [
   "PAYMENT_PROVIDER",
 ]);
 
-export const reviewModerationStatusEnum = pgEnum("review_moderation_status", [
-  "PENDING",
-  "APPROVED",
-  "REJECTED",
-]);
-
 export const contactMessageStatusEnum = pgEnum("contact_message_status", [
   "UNREAD",
   "READ",

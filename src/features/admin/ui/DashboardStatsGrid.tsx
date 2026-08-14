@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { Card } from "@/components/ui/Card";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 
 type DashboardStatsGridProps = {
   locale: string;
@@ -69,12 +70,13 @@ export function DashboardStatsGrid({
   revenueDelta,
 }: DashboardStatsGridProps) {
   const base = `/${locale}/admin`;
+  const t = adminCopy(locale);
 
   return (
     <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
       <StatCard
         href={`${base}/users`}
-        label="Users"
+        label={t.dashboard.stats.users}
         value={String(users)}
         iconBg="bg-blue-100"
         iconColor="text-blue-600"
@@ -82,7 +84,7 @@ export function DashboardStatsGrid({
       />
       <StatCard
         href={`${base}/products`}
-        label="Active products"
+        label={t.dashboard.stats.activeProducts}
         value={String(products)}
         iconBg="bg-green-100"
         iconColor="text-green-600"
@@ -90,7 +92,7 @@ export function DashboardStatsGrid({
       />
       <StatCard
         href={`${base}/orders`}
-        label="Orders (range)"
+        label={t.dashboard.stats.ordersRange}
         value={String(orders)}
         iconBg="bg-yellow-100"
         iconColor="text-yellow-600"
@@ -98,7 +100,7 @@ export function DashboardStatsGrid({
       />
       <StatCard
         href={`${base}/analytics`}
-        label="Revenue (range)"
+        label={t.dashboard.stats.revenueRange}
         value={revenueLabel}
         hint={revenueDelta}
         iconBg="bg-purple-100"

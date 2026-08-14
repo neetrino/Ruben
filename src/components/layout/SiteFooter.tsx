@@ -1,8 +1,14 @@
 import { Mail, MapPin, Phone } from "lucide-react";
 
+import {
+  FacebookIcon,
+  InstagramIcon,
+  LinkedInIcon,
+} from "@/components/layout/SocialIcons";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import { STORE_MAP_EMBED_SRC } from "@/lib/store/map-embed";
 
 type SiteFooterProps = {
   dictionary: Dictionary;
@@ -13,58 +19,48 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="storefront-footer mt-auto hidden border-t border-gray-800 bg-black md:block">
+    <footer className="storefront-footer mt-auto border-t border-gray-800 bg-black pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="mb-4 text-lg font-semibold text-white">
               {dictionary.footer.shop}
             </h3>
             <p className="text-sm text-gray-300">{dictionary.footer.description}</p>
-          </div>
-
-          <div>
-            <h4 className="mb-4 text-sm font-semibold text-white">
-              {dictionary.footer.quickLinks}
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <AppLink
-                  href={`/${locale}/products`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
+            <div className="mt-6">
+              <h4 className="mb-3 text-sm font-semibold text-white">
+                {dictionary.footer.social}
+              </h4>
+              <div className="flex items-center gap-4 text-gray-300">
+                <a
+                  href={dictionary.contact.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                  aria-label="Instagram"
                 >
-                  {dictionary.nav.products}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/blog`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                  <InstagramIcon className="h-5 w-5" />
+                </a>
+                <a
+                  href={dictionary.contact.social.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                  aria-label="Facebook"
                 >
-                  {dictionary.nav.blog}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/about`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                  <FacebookIcon className="h-5 w-5" />
+                </a>
+                <a
+                  href={dictionary.contact.social.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-white"
+                  aria-label="LinkedIn"
                 >
-                  {dictionary.nav.about}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/contact`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.nav.contact}
-                </AppLink>
-              </li>
-            </ul>
+                  <LinkedInIcon className="h-5 w-5" />
+                </a>
+              </div>
+            </div>
           </div>
 
           <div>
@@ -88,6 +84,24 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
                   className="text-sm text-gray-300 transition-colors hover:text-white"
                 >
                   {dictionary.footer.terms}
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  href={`/${locale}/legal/refund`}
+                  prefetchPolicy="intent"
+                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                >
+                  {dictionary.footer.refundPolicy}
+                </AppLink>
+              </li>
+              <li>
+                <AppLink
+                  href={`/${locale}/legal/delivery`}
+                  prefetchPolicy="intent"
+                  className="text-sm text-gray-300 transition-colors hover:text-white"
+                >
+                  {dictionary.footer.deliveryPolicy}
                 </AppLink>
               </li>
             </ul>
@@ -123,6 +137,24 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
                 </a>
               </li>
             </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-sm font-semibold text-white">
+              {dictionary.footer.map}
+            </h4>
+            <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-900">
+              <iframe
+                title={dictionary.contact.mapTitle}
+                src={STORE_MAP_EMBED_SRC}
+                width="100%"
+                height="180"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="block w-full border-0"
+                allowFullScreen
+              />
+            </div>
           </div>
         </div>
 

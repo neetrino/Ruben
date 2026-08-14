@@ -7,6 +7,7 @@ import {
   ADMIN_INPUT,
   ADMIN_LABEL,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { createCategoryAction } from "@/features/categories/actions";
 import { slugifyCategoryTitle } from "@/features/categories/domain/slugify";
 import type { AdminCategoryOption } from "@/features/products/application/list-admin-products";
@@ -28,6 +29,7 @@ export function ProductDrawerCategories({
   onCategoriesChange,
   onSelectedChange,
 }: ProductDrawerCategoriesProps) {
+  const t = adminCopy(locale);
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
@@ -40,7 +42,7 @@ export function ProductDrawerCategories({
     .map((category) => category.title);
   const triggerLabel =
     selectedTitles.length === 0
-      ? "Select categories"
+      ? t.products.categories.select
       : selectedTitles.join(", ");
 
   function toggleCategory(id: string): void {
@@ -54,7 +56,7 @@ export function ProductDrawerCategories({
   function createCategory(): void {
     const title = newTitle.trim();
     if (!title) {
-      setError("Category title is required.");
+      setError(t.products.categories.titleRequired);
       return;
     }
 
@@ -83,7 +85,7 @@ export function ProductDrawerCategories({
 
   return (
     <div>
-      <span className={ADMIN_LABEL}>Categories</span>
+      <span className={ADMIN_LABEL}>{t.products.categories.title}</span>
       <div className={`relative mt-1 ${open ? "z-50" : "z-0"}`}>
         <button
           type="button"
@@ -123,11 +125,11 @@ export function ProductDrawerCategories({
             >
               {categories.length === 0 ? (
                 <p className="px-4 py-2.5 text-sm text-gray-500">
-                  No categories yet.
+                  {t.products.categories.empty}
                 </p>
               ) : (
                 categories.map((category) => {
-                  const selected = selectedIds.includes(category.id);
+                  const isSelected = selectedIds.includes(category.id);
                   return (
                     <button
                       key={category.id}
@@ -138,13 +140,13 @@ export function ProductDrawerCategories({
                     >
                       <span
                         className={
-                          selected
+                          isSelected
                             ? "flex h-4 w-4 shrink-0 items-center justify-center rounded border border-gray-900 bg-gray-900 text-white"
                             : "flex h-4 w-4 shrink-0 rounded border border-gray-300 bg-white"
                         }
                         aria-hidden
                       >
-                        {selected ? (
+                        {isSelected ? (
                           <svg
                             viewBox="0 0 12 12"
                             className="h-3 w-3"
@@ -177,7 +179,7 @@ export function ProductDrawerCategories({
           onClick={() => setShowAdd((value) => !value)}
           className="inline-flex items-center rounded-xl border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50"
         >
-          + Add category
+          {t.products.categories.addCategory}
         </button>
       </div>
 
@@ -185,12 +187,13 @@ export function ProductDrawerCategories({
         <div className="mt-3 space-y-2 rounded-xl border border-gray-200 bg-gray-50 p-3">
           <label className="block">
             <span className={ADMIN_LABEL}>
-              Category title <span className="text-red-600">*</span>
+              {t.products.categories.titleLabel}{" "}
+              <span className="text-red-600">*</span>
             </span>
             <input
               value={newTitle}
               onChange={(event) => setNewTitle(event.target.value)}
-              placeholder="Enter category title"
+              placeholder={t.products.categories.titlePlaceholder}
               className={ADMIN_INPUT}
               disabled={disabled || isPending}
             />
@@ -202,7 +205,7 @@ export function ProductDrawerCategories({
               onClick={createCategory}
               className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
             >
-              {isPending ? "Adding…" : "Add"}
+              {isPending ? t.products.categories.adding : t.products.categories.add}
             </button>
             <button
               type="button"
@@ -214,7 +217,7 @@ export function ProductDrawerCategories({
               }}
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
-              Cancel
+              {t.common.cancel}
             </button>
           </div>
           {error ? <p className="text-sm text-red-700">{error}</p> : null}

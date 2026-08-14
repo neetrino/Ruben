@@ -1,46 +1,56 @@
 import type { Locale } from "@/lib/i18n/config";
 
 import enAbout from "@/locales/en/about.json";
+import enAdmin from "@/locales/en/admin.json";
 import enAuth from "@/locales/en/auth.json";
 import enBlog from "@/locales/en/blog.json";
 import enCart from "@/locales/en/cart.json";
 import enCatalog from "@/locales/en/catalog.json";
 import enCheckout from "@/locales/en/checkout.json";
 import enCommon from "@/locales/en/common.json";
+import enCompare from "@/locales/en/compare.json";
 import enContact from "@/locales/en/contact.json";
 import enHome from "@/locales/en/home.json";
+import enLegal from "@/locales/en/legal.json";
 import enProduct from "@/locales/en/product.json";
 import enProfile from "@/locales/en/profile.json";
 import enWishlist from "@/locales/en/wishlist.json";
 
 import hyAbout from "@/locales/hy/about.json";
+import hyAdmin from "@/locales/hy/admin.json";
 import hyAuth from "@/locales/hy/auth.json";
 import hyBlog from "@/locales/hy/blog.json";
 import hyCart from "@/locales/hy/cart.json";
 import hyCatalog from "@/locales/hy/catalog.json";
 import hyCheckout from "@/locales/hy/checkout.json";
 import hyCommon from "@/locales/hy/common.json";
+import hyCompare from "@/locales/hy/compare.json";
 import hyContact from "@/locales/hy/contact.json";
 import hyHome from "@/locales/hy/home.json";
+import hyLegal from "@/locales/hy/legal.json";
 import hyProduct from "@/locales/hy/product.json";
 import hyProfile from "@/locales/hy/profile.json";
 import hyWishlist from "@/locales/hy/wishlist.json";
 
 import ruAbout from "@/locales/ru/about.json";
+import ruAdmin from "@/locales/ru/admin.json";
 import ruAuth from "@/locales/ru/auth.json";
 import ruBlog from "@/locales/ru/blog.json";
 import ruCart from "@/locales/ru/cart.json";
 import ruCatalog from "@/locales/ru/catalog.json";
 import ruCheckout from "@/locales/ru/checkout.json";
 import ruCommon from "@/locales/ru/common.json";
+import ruCompare from "@/locales/ru/compare.json";
 import ruContact from "@/locales/ru/contact.json";
 import ruHome from "@/locales/ru/home.json";
+import ruLegal from "@/locales/ru/legal.json";
 import ruProduct from "@/locales/ru/product.json";
 import ruProfile from "@/locales/ru/profile.json";
 import ruWishlist from "@/locales/ru/wishlist.json";
 
 type LocaleNamespaces = {
   common: typeof hyCommon;
+  admin: typeof hyAdmin;
   home: typeof hyHome;
   contact: typeof hyContact;
   about: typeof hyAbout;
@@ -52,6 +62,8 @@ type LocaleNamespaces = {
   blog: typeof hyBlog;
   catalog: typeof hyCatalog;
   wishlist: typeof hyWishlist;
+  compare: typeof hyCompare;
+  legal: typeof hyLegal;
 };
 
 function buildDictionary(namespaces: LocaleNamespaces) {
@@ -60,6 +72,7 @@ function buildDictionary(namespaces: LocaleNamespaces) {
     nav: namespaces.common.nav,
     header: namespaces.common.header,
     footer: namespaces.common.footer,
+    admin: namespaces.admin,
     home: namespaces.home,
     contact: namespaces.contact,
     about: namespaces.about,
@@ -71,12 +84,15 @@ function buildDictionary(namespaces: LocaleNamespaces) {
     blog: namespaces.blog,
     catalog: namespaces.catalog,
     wishlist: namespaces.wishlist,
+    compare: namespaces.compare,
+    legal: namespaces.legal,
   } as const;
 }
 
 const dictionaries = {
   hy: buildDictionary({
     common: hyCommon,
+    admin: hyAdmin,
     home: hyHome,
     contact: hyContact,
     about: hyAbout,
@@ -88,9 +104,12 @@ const dictionaries = {
     blog: hyBlog,
     catalog: hyCatalog,
     wishlist: hyWishlist,
+    compare: hyCompare,
+    legal: hyLegal,
   }),
   en: buildDictionary({
     common: enCommon,
+    admin: enAdmin,
     home: enHome,
     contact: enContact,
     about: enAbout,
@@ -102,9 +121,12 @@ const dictionaries = {
     blog: enBlog,
     catalog: enCatalog,
     wishlist: enWishlist,
+    compare: enCompare,
+    legal: enLegal,
   }),
   ru: buildDictionary({
     common: ruCommon,
+    admin: ruAdmin,
     home: ruHome,
     contact: ruContact,
     about: ruAbout,
@@ -116,11 +138,19 @@ const dictionaries = {
     blog: ruBlog,
     catalog: ruCatalog,
     wishlist: ruWishlist,
+    compare: ruCompare,
+    legal: ruLegal,
   }),
 } as const;
 
 export type Dictionary = (typeof dictionaries)[Locale];
+export type AdminDictionary = Dictionary["admin"];
 
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale];
+}
+
+/** Admin copy for the given locale (sync; safe in client components). */
+export function getAdminDictionary(locale: Locale): AdminDictionary {
+  return dictionaries[locale].admin;
 }

@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { X } from "lucide-react";
 
 import { ADMIN_LABEL } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 
 export type ProductDraftImage = {
   key: string;
@@ -15,16 +16,19 @@ export type ProductDraftImage = {
 };
 
 type ProductDrawerImagesProps = {
+  locale: string;
   images: ProductDraftImage[];
   disabled: boolean;
   onChange: (images: ProductDraftImage[]) => void;
 };
 
 export function ProductDrawerImages({
+  locale,
   images,
   disabled,
   onChange,
 }: ProductDrawerImagesProps) {
+  const t = adminCopy(locale);
   const inputRef = useRef<HTMLInputElement>(null);
 
   function setPrimary(key: string): void {
@@ -72,7 +76,7 @@ export function ProductDrawerImages({
 
   return (
     <div>
-      <span className={ADMIN_LABEL}>Main Product Image</span>
+      <span className={ADMIN_LABEL}>{t.products.images.main}</span>
       <div className="mt-1 flex flex-wrap items-center gap-3">
         <button
           type="button"
@@ -80,7 +84,7 @@ export function ProductDrawerImages({
           onClick={() => inputRef.current?.click()}
           className="inline-flex items-center rounded-xl border border-dashed border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 disabled:opacity-50"
         >
-          + Upload Image
+          + {t.products.images.upload}
         </button>
         <input
           ref={inputRef}
@@ -95,9 +99,7 @@ export function ProductDrawerImages({
           }}
         />
       </div>
-      <p className="mt-1 text-xs text-gray-500">
-        Upload one or more images, then mark the main image with the checkbox.
-      </p>
+      <p className="mt-1 text-xs text-gray-500">{t.products.images.hint}</p>
 
       {images.length > 0 ? (
         <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -120,14 +122,14 @@ export function ProductDrawerImages({
                     onChange={() => setPrimary(image.key)}
                     className="h-3.5 w-3.5 rounded border-gray-300"
                   />
-                  Main
+                  {t.products.images.mainBadge}
                 </label>
                 <button
                   type="button"
                   disabled={disabled}
                   onClick={() => removeImage(image.key)}
                   className="rounded p-1 text-gray-500 hover:bg-white hover:text-red-600"
-                  aria-label="Remove image"
+                  aria-label={t.products.images.remove}
                 >
                   <X className="h-3.5 w-3.5" />
                 </button>

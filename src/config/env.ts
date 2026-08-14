@@ -24,8 +24,20 @@ const envSchema = z.object({
   R2_ENDPOINT: z.string().url().optional(),
   EMAIL_FROM: z.string().email().optional(),
   RESEND_API_KEY: z.string().min(1).optional(),
+  /** ArCa card payments (optional until credentials are provisioned). */
+  ARCA_TEST_MODE: z.boolean().default(true),
+  ARCA_BANK: z.enum(["idbank", "inecobank"]).optional(),
+  ARCA_USERNAME: z.string().min(1).optional(),
+  ARCA_PASSWORD: z.string().min(1).optional(),
+  ARCA_LIVE_USERNAME: z.string().min(1).optional(),
+  ARCA_LIVE_PASSWORD: z.string().min(1).optional(),
+  /** FastShift wallet payments (optional until credentials are provisioned). */
+  FASTSHIFT_TEST_MODE: z.boolean().default(true),
+  FASTSHIFT_TOKEN: z.string().min(1).optional(),
+  FASTSHIFT_LIVE_TOKEN: z.string().min(1).optional(),
+  FASTSHIFT_REGISTER_URL: z.string().url().optional(),
+  FASTSHIFT_STATUS_URL_BASE: z.string().url().optional(),
 });
-
 export type AppEnv = z.infer<typeof envSchema>;
 
 let cachedEnv: AppEnv | undefined;
@@ -62,8 +74,23 @@ export function getEnv(): AppEnv {
     R2_ENDPOINT: optionalEnv(process.env.R2_ENDPOINT),
     EMAIL_FROM: optionalEnv(process.env.EMAIL_FROM),
     RESEND_API_KEY: optionalEnv(process.env.RESEND_API_KEY),
+    ARCA_TEST_MODE: process.env.ARCA_TEST_MODE !== "false",
+    ARCA_BANK: (() => {
+      const bank = optionalEnv(process.env.ARCA_BANK);
+      return bank === "idbank" || bank === "inecobank" ? bank : undefined;
+    })(),
+    ARCA_USERNAME: optionalEnv(process.env.ARCA_USERNAME),
+    ARCA_PASSWORD: optionalEnv(process.env.ARCA_PASSWORD),
+    ARCA_LIVE_USERNAME: optionalEnv(process.env.ARCA_LIVE_USERNAME),
+    ARCA_LIVE_PASSWORD: optionalEnv(process.env.ARCA_LIVE_PASSWORD),
+    FASTSHIFT_TEST_MODE: process.env.FASTSHIFT_TEST_MODE !== "false",
+    FASTSHIFT_TOKEN: optionalEnv(process.env.FASTSHIFT_TOKEN),
+    FASTSHIFT_LIVE_TOKEN: optionalEnv(process.env.FASTSHIFT_LIVE_TOKEN),
+    FASTSHIFT_REGISTER_URL: optionalEnv(process.env.FASTSHIFT_REGISTER_URL),
+    FASTSHIFT_STATUS_URL_BASE: optionalEnv(
+      process.env.FASTSHIFT_STATUS_URL_BASE,
+    ),
   });
-
   if (!parsed.success) {
     const details = parsed.error.issues
       .map((issue) => `${issue.path.join(".")}: ${issue.message}`)

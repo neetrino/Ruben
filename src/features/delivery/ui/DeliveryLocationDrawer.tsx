@@ -8,6 +8,7 @@ import {
   ADMIN_INPUT,
   ADMIN_LABEL,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   createDeliveryLocationAction,
   updateDeliveryLocationAction,
@@ -33,6 +34,7 @@ function DeliveryLocationForm({
   onClose,
 }: DeliveryLocationFormProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const isEdit = location != null;
   const [country, setCountry] = useState(location?.country ?? "");
   const [city, setCity] = useState(location?.city ?? "");
@@ -87,11 +89,11 @@ function DeliveryLocationForm({
       <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label>
-            <span className={ADMIN_LABEL}>Country</span>
+            <span className={ADMIN_LABEL}>{t.delivery.fields.country}</span>
             <input
               value={country}
               onChange={(event) => setCountry(event.target.value)}
-              placeholder="Armenia"
+              placeholder={t.delivery.placeholders.country}
               required
               className={ADMIN_INPUT}
               disabled={isPending}
@@ -99,11 +101,11 @@ function DeliveryLocationForm({
           </label>
 
           <label>
-            <span className={ADMIN_LABEL}>City</span>
+            <span className={ADMIN_LABEL}>{t.delivery.fields.city}</span>
             <input
               value={city}
               onChange={(event) => setCity(event.target.value)}
-              placeholder="Yerevan"
+              placeholder={t.delivery.placeholders.city}
               required
               className={ADMIN_INPUT}
               disabled={isPending}
@@ -113,7 +115,7 @@ function DeliveryLocationForm({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label>
-            <span className={ADMIN_LABEL}>Price (AMD)</span>
+            <span className={ADMIN_LABEL}>{t.delivery.fields.price}</span>
             <input
               type="number"
               min={0}
@@ -121,21 +123,21 @@ function DeliveryLocationForm({
               required
               value={priceAmount}
               onChange={(event) => setPriceAmount(event.target.value)}
-              placeholder="1500"
+              placeholder={t.delivery.placeholders.price}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
           </label>
 
           <label>
-            <span className={ADMIN_LABEL}>Free delivery from (AMD)</span>
+            <span className={ADMIN_LABEL}>{t.delivery.fields.freeFrom}</span>
             <input
               type="number"
               min={0}
               step={1}
               value={freeThresholdAmount}
               onChange={(event) => setFreeThresholdAmount(event.target.value)}
-              placeholder="50000"
+              placeholder={t.delivery.placeholders.freeFrom}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -147,14 +149,14 @@ function DeliveryLocationForm({
 
       <div className="flex items-center gap-4 border-t border-gray-200 px-5 py-4">
         <Button type="submit" disabled={isPending}>
-          {isPending ? "Saving…" : "Save"}
+          {isPending ? t.common.saving : t.common.save}
         </Button>
         <button
           type="button"
           onClick={onClose}
           className="text-sm font-medium text-gray-600 hover:text-gray-900"
         >
-          Cancel
+          {t.common.cancel}
         </button>
       </div>
     </form>
@@ -168,16 +170,17 @@ export function DeliveryLocationDrawer({
   location = null,
 }: DeliveryLocationDrawerProps) {
   const formKey = location?.id ?? "new";
+  const t = adminCopy(locale);
 
   return (
     <SideSheet
       open={open}
       onClose={onClose}
-      ariaLabel={location ? "Edit location" : "Add location"}
+      ariaLabel={location ? t.delivery.drawer.editTitle : t.delivery.drawer.createTitle}
     >
       <div className="border-b border-gray-200 px-5 py-4">
         <h2 className="text-lg font-semibold text-gray-900">
-          {location ? "Edit location" : "Add location"}
+          {location ? t.delivery.drawer.editTitle : t.delivery.drawer.createTitle}
         </h2>
       </div>
 

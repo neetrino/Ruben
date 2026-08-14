@@ -1,7 +1,7 @@
 # White Shop — progress
 
 **Overall status.** Phases 0–11 delivered as working product slices (launch hardening docs ready; production deploy not executed)
-**Last update.** 2026-07-18
+**Last update.** 2026-08-11
 
 ## Milestones
 
@@ -12,12 +12,12 @@
 | 2 | Database foundation | Done | 25 tables + seed |
 | 3 | Identity and authorization | Done | DB sessions, login/register/logout |
 | 4 | Catalog admin and media | Done (minimal) | Admin products/categories; R2 adapter when credentials set |
-| 5 | Storefront catalog | Done (minimal) | List/detail/featured from DB |
-| 6 | Cart and checkout | Done | Durable cart + COD + coupon apply |
+| 5 | Storefront catalog | Done | URL filter/sort/page + card fields (CAT-001–010; brand/attributes deferred — no schema) |
+| 6 | Cart and checkout | Done | Durable cart + COD/card/FastShift + coupon apply |
 | 7 | Customer self-service | Done (minimal) | Profile, orders, personal info |
 | 8 | Admin commerce operations | Done | Dashboard, orders ops, users, promotions |
 | 9 | Content / analytics | Done | Hero, contact, blog, analytics, settings |
-| 10 | Reviews / currency / payments | Done | Reviews, FX cache, COD + webhook guards |
+| 10 | Currency / payments | Done | FX cache, COD + ArCa + FastShift + webhook guards |
 | 11 | Hardening / release | Done (docs) | Headers, legal stubs, release checklist |
 
 ## Phase 8–11 close-out — 2026-07-18
@@ -31,12 +31,12 @@
 ### Phase 9
 - Hero CMS + contact spam/rate-limit + messages inbox
 - Blog CMS/public routes + HTML sanitizer + BlogPosting JSON-LD
-- Analytics dashboard + Redis cache + CSV export (formula-safe)
+- Analytics dashboard + Redis cache + CSV export (formula-safe); day/week/month sales + product insights
 - Store settings (identity, branding, social, stacking, revenue, maintenance)
 - Maintenance gate for non-admin storefront users
 
 ### Phase 10 (prior)
-- Reviews moderation, FX conversion/cache/stale fallback, payment webhook guards
+- FX conversion/cache/stale fallback, payment webhook guards (reviews feature removed 2026-08-11)
 
 ### Phase 11
 - Security headers (CSP baseline, nosniff, frame deny, referrer, permissions)
@@ -53,6 +53,12 @@
 ### Remaining non-blocking items
 - Email verify/reset, Playwright E2E suite
 - Approved legal copy (OPEN-014)
-- Online payment provider selection (OPEN-002)
+- ArCa/FastShift merchant credentials + sandbox end-to-end
 - Real Upstash/Resend adapters when credentials provided
 - Re-upload existing media after enabling R2 (local `public/uploads` keys are not in the bucket)
+
+### 2026-08-11
+- Reviews feature removed: PDP UI, server actions, `reviews` table + `review_moderation_status` enum
+- Checkout payments: cash (COD), card (ArCa), FastShift; online cart clear after capture
+- Admin analytics aligned to day/week/month: best sales periods, best/top-buyer customers, most sold products/categories
+- Admin panel i18n: `locales/{en,hy,ru}/admin.json` keys via `getAdminDictionary` / `adminCopy`; locale switcher in admin shell

@@ -1,0 +1,693 @@
+{
+  "nav": {
+    "brand": "White Shop",
+    "brandHome": "Go to homepage",
+    "menu": "Menu",
+    "menuAria": "Open navigation menu",
+    "expandSidebar": "Expand sidebar",
+    "collapseSidebar": "Collapse sidebar",
+    "toggleProductSubpages": "Toggle product subpages",
+    "dashboard": "Dashboard",
+    "orders": "Orders",
+    "products": "Products",
+    "categories": "Categories",
+    "delivery": "Delivery",
+    "discounts": "Discounts",
+    "coupons": "Coupons",
+    "users": "Users",
+    "analytics": "Analytics",
+    "hero": "Hero Slides",
+    "blog": "Blog",
+    "messages": "Messages",
+    "settings": "Settings"
+  },
+  "common": {
+    "viewAll": "View all",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} / {total}",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "save": "Save",
+    "saving": "Saving…",
+    "create": "Create",
+    "creating": "Creating…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting…",
+    "edit": "Edit",
+    "updating": "Updating…",
+    "actionFailed": "Action failed. Please try again.",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "current": "Current:",
+    "utc": "UTC",
+    "na": "N/A",
+    "soldCount": "{count} sold",
+    "ordersCount": "{count} orders",
+    "itemsCount": "{count} items",
+    "confirmDelete": "Are you sure you want to delete the {entity} \"{name}\"? This action cannot be undone.",
+    "entity": {
+      "product": "product",
+      "category": "category",
+      "deliveryLocation": "delivery location",
+      "promoCode": "promo code",
+      "post": "post",
+      "slide": "slide"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "vsPrev": "{delta} vs prev",
+    "recentOrders": "Recent Orders",
+    "topProducts": "Top Products",
+    "quickActions": "Quick Actions",
+    "emptyRecentOrders": "No recent orders to display.",
+    "emptyTopProducts": "No product sales data yet.",
+    "quick": {
+      "addProduct": "Add Product",
+      "addProductHint": "Create a new product listing",
+      "manageOrders": "Manage Orders",
+      "manageOrdersHint": "Review and process orders",
+      "manageUsers": "Manage Users",
+      "manageUsersHint": "View and manage customer accounts",
+      "settings": "Settings",
+      "settingsHint": "Configure store settings"
+    },
+    "stats": {
+      "users": "Total Users",
+      "activeProducts": "Active Products",
+      "ordersRange": "Orders (range)",
+      "revenueRange": "Revenue (range)"
+    }
+  },
+  "orders": {
+    "title": "Orders",
+    "total": "{count} orders",
+    "empty": "No orders found.",
+    "archived": "Archived",
+    "searchPlaceholder": "Search by order #, customer…",
+    "searchAria": "Search orders",
+    "filter": {
+      "orderStatus": "Order status",
+      "paymentStatus": "Payment status",
+      "allStatuses": "All statuses",
+      "allPaymentStatuses": "All payment statuses"
+    },
+    "status": {
+      "pending": "Pending",
+      "processing": "Processing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "payment": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "columns": {
+      "order": "Order",
+      "customer": "Customer",
+      "status": "Status",
+      "payment": "Payment",
+      "total": "Total",
+      "placed": "Placed"
+    },
+    "bulk": {
+      "selected": "{count} selected",
+      "deleteSelected": "Delete selected",
+      "deleting": "Deleting…",
+      "selectAtLeastOne": "Select at least one order.",
+      "deletedResult": "Deleted {count}, skipped {skipped}.",
+      "confirmDelete": "Delete the selected orders? This action cannot be undone."
+    },
+    "selectAll": "Select all orders",
+    "selectOne": "Select {orderNumber}",
+    "selectedOnPage": "All orders on this page selected.",
+    "changeStatusAria": "Change order status",
+    "drawer": {
+      "title": "Order details",
+      "loading": "Loading order…",
+      "sections": {
+        "summary": "Summary",
+        "customer": "Customer",
+        "shipping": "Shipping",
+        "payment": "Payment",
+        "items": "Items"
+      },
+      "labels": {
+        "orderNumber": "Order #",
+        "total": "Total",
+        "status": "Status",
+        "payment": "Payment",
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "shippingMethod": "Shipping method",
+        "pickupStore": "Pickup store",
+        "method": "Method",
+        "amount": "Amount"
+      },
+      "freePickup": "Free pickup",
+      "totals": {
+        "subtotal": "Subtotal",
+        "delivery": "Delivery",
+        "couponDiscount": "Coupon discount",
+        "total": "Total"
+      },
+      "items": {
+        "product": "Product",
+        "sku": "SKU",
+        "qty": "Qty",
+        "price": "Price",
+        "total": "Total"
+      }
+    },
+    "detail": {
+      "customer": "Customer",
+      "totals": "Totals",
+      "lineItems": "Line items",
+      "history": "History"
+    },
+    "placedAt": "Placed {datetime} UTC",
+    "history": {
+      "customerVisible": "Customer-visible",
+      "internal": "Internal",
+      "empty": "No history entries yet."
+    },
+    "terminalStatus": "This order has reached a terminal status and cannot be changed.",
+    "terminalPayment": "This payment status is final and cannot be changed.",
+    "form": {
+      "newStatus": "New status",
+      "newPaymentStatus": "New payment status",
+      "noteOptional": "Note (optional)"
+    },
+    "updateStatus": "Update status",
+    "updatePayment": "Update payment",
+    "note": {
+      "title": "Add note",
+      "label": "Note",
+      "saving": "Saving…",
+      "add": "Add note"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "total": "{count} products",
+    "add": "Add product",
+    "empty": "No products found.",
+    "search": {
+      "titleSlug": "Search by title or slug…",
+      "sku": "Search by SKU…"
+    },
+    "filter": {
+      "category": "Category",
+      "allCategories": "All categories",
+      "stock": "Stock"
+    },
+    "stock": {
+      "all": "All",
+      "inStock": "In stock",
+      "outOfStock": "Out of stock",
+      "lowStock": "Low stock"
+    },
+    "columns": {
+      "product": "Product",
+      "stock": "Stock",
+      "price": "Price",
+      "category": "Category",
+      "featured": "Featured",
+      "actions": "Actions",
+      "created": "Created"
+    },
+    "bulk": {
+      "selected": "{count} selected",
+      "deleteSelected": "Delete selected"
+    },
+    "selectAll": "Select all products",
+    "pcs": "{count} pcs",
+    "aria": {
+      "feature": "Feature product",
+      "unfeature": "Unfeature product",
+      "edit": "Edit product",
+      "duplicate": "Duplicate product",
+      "delete": "Delete product",
+      "activate": "Activate product",
+      "deactivate": "Deactivate product"
+    },
+    "drawer": {
+      "editTitle": "Edit product",
+      "createTitle": "Create product",
+      "fields": {
+        "title": "Title",
+        "slug": "Slug",
+        "description": "Description",
+        "price": "Price",
+        "compareAt": "Compare-at price",
+        "sku": "SKU",
+        "quantity": "Quantity"
+      },
+      "placeholders": {
+        "title": "e.g. Classic White T-Shirt",
+        "slug": "e.g. classic-white-t-shirt",
+        "description": "Describe the product…",
+        "price": "0.00",
+        "compareAt": "0.00",
+        "sku": "e.g. SKU-001",
+        "quantity": "0"
+      }
+    },
+    "categories": {
+      "title": "Categories",
+      "select": "Select category",
+      "empty": "No categories available.",
+      "addCategory": "Add new category",
+      "titleRequired": "Category title is required.",
+      "titleLabel": "Category title",
+      "titlePlaceholder": "Enter category title",
+      "adding": "Adding…",
+      "add": "Add"
+    },
+    "images": {
+      "main": "Main image",
+      "upload": "Upload image",
+      "mainBadge": "Main",
+      "remove": "Remove image",
+      "hint": "Drag to reorder. First image becomes the main image."
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "add": "Add category",
+    "searchPlaceholder": "Search categories…",
+    "searchAria": "Search categories",
+    "clearToReorder": "Clear search to reorder categories.",
+    "empty": "No categories yet.",
+    "emptySearch": "No categories match your search.",
+    "columns": {
+      "image": "Image",
+      "title": "Title",
+      "category": "Category",
+      "actions": "Actions"
+    },
+    "root": "Root category",
+    "aria": {
+      "edit": "Edit category",
+      "delete": "Delete category",
+      "reorder": "Drag to reorder",
+      "subcategories": "{count} subcategories"
+    },
+    "drawer": {
+      "editTitle": "Edit category",
+      "createTitle": "Create category",
+      "titleLabel": "Title",
+      "slug": "Slug",
+      "parent": "Parent category",
+      "status": "Status",
+      "image": "Image",
+      "slugHint": "Used in the URL. Auto-generated from title.",
+      "changeImage": "Change image",
+      "uploadImage": "Upload image",
+      "remove": "Remove image",
+      "create": "Create category"
+    },
+    "status": {
+      "published": "Published",
+      "archived": "Archived"
+    }
+  },
+  "delivery": {
+    "title": "Delivery Locations",
+    "subtitle": "Manage shipping zones and prices.",
+    "add": "Add location",
+    "empty": "No delivery locations configured.",
+    "columns": {
+      "country": "Country",
+      "city": "City",
+      "price": "Price",
+      "freeFrom": "Free from",
+      "actions": "Actions"
+    },
+    "drawer": {
+      "editTitle": "Edit delivery location",
+      "createTitle": "Add delivery location"
+    },
+    "fields": {
+      "country": "Country",
+      "city": "City",
+      "price": "Shipping price",
+      "freeFrom": "Free shipping from"
+    },
+    "placeholders": {
+      "country": "e.g. Armenia",
+      "city": "e.g. Yerevan",
+      "price": "0.00",
+      "freeFrom": "0.00 (leave blank to disable)"
+    }
+  },
+  "discounts": {
+    "title": "Discounts",
+    "automatic": "Automatic",
+    "usedCount": "Used {count} times",
+    "rootCategory": "Root category",
+    "global": {
+      "title": "Global Discount",
+      "forAll": "Apply a discount to all products",
+      "inputAria": "Global discount percentage",
+      "invalid": "Enter a valid percentage between 1 and 100.",
+      "none": "No global discount active.",
+      "active": "Active global discount: {percent}%.",
+      "cleared": "Global discount cleared.",
+      "set": "Global discount set to {percent}%."
+    },
+    "info": {
+      "title": "How discounts work",
+      "about": "Discounts are applied in priority order. Higher priority discounts take precedence.",
+      "moreSettings": "More settings are available in the coupon section.",
+      "points": {
+        "1": "Global discount applies to all products.",
+        "2": "Category discounts apply to all products in a category.",
+        "3": "Product discounts apply to specific products.",
+        "4": "Coupon codes can be combined if stacking is allowed."
+      }
+    },
+    "category": {
+      "title": "Category Discounts",
+      "subtitle": "Set a percentage discount per category.",
+      "empty": "No categories available.",
+      "clear": "Clear",
+      "invalid": "Enter a value between 0 and 100.",
+      "saved": "Saved {count} category discount(s)."
+    },
+    "product": {
+      "title": "Product Discounts",
+      "subtitle": "Set a percentage discount for individual products.",
+      "search": "Search products",
+      "searchPlaceholder": "Search by title or SKU…",
+      "empty": "No products found.",
+      "cleared": "Cleared discount for \"{title}\".",
+      "saved": "Saved discount for \"{title}\"."
+    },
+    "form": {
+      "editTitle": "Edit discount",
+      "createCoupon": "Create coupon",
+      "createAutomatic": "Create automatic discount",
+      "kind": "Discount kind",
+      "code": "Coupon code",
+      "productTarget": "Product",
+      "categoryTarget": "Category",
+      "none": "None",
+      "targetHint": "Leave blank to apply to all products.",
+      "discountType": "Discount type",
+      "percentage": "Percentage",
+      "fixed": "Fixed amount",
+      "discountValue": "Discount value",
+      "maxDiscount": "Maximum discount",
+      "minOrder": "Minimum order value",
+      "totalUsage": "Total usage limit",
+      "perUser": "Usage limit per user",
+      "startsAt": "Starts at",
+      "endsAt": "Ends at",
+      "priority": "Priority",
+      "allowStacking": "Allow stacking with other discounts",
+      "active": "Active",
+      "saveChanges": "Save changes",
+      "create": "Create"
+    }
+  },
+  "coupons": {
+    "title": "Coupons",
+    "subtitle": "Manage coupon codes for your store.",
+    "add": "Add coupon",
+    "empty": "No coupons found.",
+    "breadcrumb": "Coupons",
+    "usedCount": "{count} used",
+    "columns": {
+      "code": "Code",
+      "type": "Type",
+      "value": "Value",
+      "usageLimit": "Usage limit",
+      "used": "Used",
+      "active": "Active",
+      "validUntil": "Valid until",
+      "actions": "Actions"
+    },
+    "type": {
+      "percent": "Percent",
+      "fixed": "Fixed"
+    },
+    "drawer": {
+      "editTitle": "Edit coupon",
+      "createTitle": "Create coupon",
+      "name": "Name / label",
+      "code": "Coupon code",
+      "discountType": "Discount type",
+      "value": "Discount value",
+      "quantity": "Usage quantity",
+      "expires": "Expires at",
+      "codeRequired": "Coupon code is required.",
+      "selectUsers": "Restrict to specific users",
+      "allUsers": "All users"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "breadcrumb": "Users",
+    "total": "{count} users",
+    "empty": "No users found.",
+    "searchPlaceholder": "Search by name or email…",
+    "searchAria": "Search users",
+    "roleFilter": {
+      "admin": "Admin",
+      "customer": "Customer",
+      "all": "All roles",
+      "admins": "Admins",
+      "customers": "Customers"
+    },
+    "columns": {
+      "user": "User",
+      "contact": "Contact",
+      "orders": "Orders",
+      "roles": "Roles",
+      "status": "Status",
+      "created": "Created"
+    },
+    "bulk": {
+      "selected": "{count} selected",
+      "deleteSelected": "Delete selected",
+      "confirmDelete": "Delete the selected users? This action cannot be undone."
+    },
+    "selectAll": "Select all users",
+    "aria": {
+      "suspend": "Suspend user",
+      "activate": "Activate user"
+    },
+    "detail": {
+      "role": "Role",
+      "status": "Status",
+      "phone": "Phone",
+      "emailVerified": "Email verified",
+      "no": "No",
+      "never": "Never",
+      "lastLogin": "Last login",
+      "created": "Member since",
+      "unknownRole": "Unknown role",
+      "unknownStatus": "Unknown status",
+      "noOrders": "No orders yet.",
+      "recentOrders": "Recent orders"
+    },
+    "roleForm": {
+      "title": "Change role",
+      "newRole": "New role",
+      "update": "Update role"
+    },
+    "statusForm": {
+      "title": "Change status",
+      "newStatus": "New status",
+      "update": "Update status",
+      "terminal": "This status is final and cannot be changed."
+    }
+  },
+  "analytics": {
+    "subtitle": "Store performance overview",
+    "period": {
+      "title": "Period",
+      "label": "Date range",
+      "from": "From",
+      "to": "To",
+      "apply": "Apply"
+    },
+    "presets": {
+      "today": "Today",
+      "thisWeek": "This week",
+      "thisMonth": "This month",
+      "custom": "Custom range"
+    },
+    "export": "Download CSV export",
+    "invalidRange": "Invalid date range. Start must be before end.",
+    "metrics": {
+      "orders": "Orders",
+      "revenue": "Revenue",
+      "users": "New users"
+    },
+    "sales": {
+      "title": "Sales Summary",
+      "subtitle": "Aggregated sales for the selected period.",
+      "bestDay": "Best day",
+      "bestWeek": "Best week",
+      "bestMonth": "Best month",
+      "empty": "No sales data for this period."
+    },
+    "customers": {
+      "best": "Top Customers",
+      "highestRevenue": "Highest revenue",
+      "mostPurchases": "Most purchases",
+      "mostOrders": "Most orders",
+      "empty": "No customer data for this period."
+    },
+    "products": {
+      "title": "Product Performance",
+      "mostSold": "Most sold products",
+      "mostCategories": "Top categories",
+      "emptyProducts": "No product sales data for this period.",
+      "emptyCategories": "No category data for this period."
+    },
+    "ordersByDay": {
+      "title": "Orders by Day",
+      "subtitle": "Daily order and revenue breakdown.",
+      "chartAria": "Orders by day chart",
+      "empty": "No daily data for this period.",
+      "revenueLabel": "Revenue"
+    }
+  },
+  "hero": {
+    "title": "Hero Slides",
+    "count": "{count} slide(s)",
+    "create": "Add slide",
+    "slidesHeading": "Slides ({count})",
+    "noImage": "No image",
+    "sort": "sort {n}",
+    "published": "Published",
+    "draft": "Draft",
+    "empty": "No slides yet. Add your first hero slide.",
+    "drawer": {
+      "editTitle": "Edit slide",
+      "createTitle": "Create slide"
+    },
+    "form": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "upload": "Upload image",
+      "change": "Change image",
+      "uploadPlus": "Upload image",
+      "remove": "Remove image"
+    },
+    "actions": {
+      "edit": "Edit",
+      "create": "Create",
+      "unpublish": "Unpublish",
+      "publish": "Publish"
+    }
+  },
+  "blog": {
+    "title": "Blog",
+    "add": "Add post",
+    "searchPlaceholder": "Search posts…",
+    "searchAria": "Search blog posts",
+    "empty": "No posts yet.",
+    "emptySearch": "No posts match your search.",
+    "status": {
+      "published": "Published",
+      "draft": "Draft",
+      "archived": "Archived"
+    },
+    "drawer": {
+      "editTitle": "Edit post",
+      "createTitle": "Create post",
+      "translations": "Translations",
+      "title": "Title",
+      "excerpt": "Excerpt",
+      "body": "Body",
+      "plainOrHtml": "Plain text or HTML",
+      "common": "Common settings",
+      "publicationDate": "Publication date",
+      "publicationHint": "Leave blank to publish immediately.",
+      "status": "Status",
+      "cover": "Cover image",
+      "changeImage": "Change image",
+      "uploadImage": "Upload image",
+      "remove": "Remove image"
+    },
+    "coverHint": "Recommended size: 1200 × 630 px.",
+    "validationRequired": "Title and body are required.",
+    "form": {
+      "editTitle": "Edit post",
+      "createTitle": "Create post",
+      "excerpt": "Excerpt",
+      "contentHtml": "Content (HTML)",
+      "seoTitle": "SEO title",
+      "seoDescription": "SEO description",
+      "tags": "Tags"
+    },
+    "actions": {
+      "publish": "Publish",
+      "archive": "Archive",
+      "saveChanges": "Save changes"
+    }
+  },
+  "messages": {
+    "title": "Messages",
+    "count": "{count} message(s)",
+    "empty": "No messages found.",
+    "filter": {
+      "search": "Search",
+      "placeholder": "Search messages…",
+      "status": "Status",
+      "all": "All",
+      "submit": "Apply filters"
+    },
+    "columns": {
+      "subject": "Subject",
+      "from": "From",
+      "status": "Status",
+      "received": "Received"
+    },
+    "spam": "spam {score}",
+    "detail": {
+      "from": "From",
+      "email": "Email",
+      "phone": "Phone",
+      "status": "Status",
+      "spamScore": "Spam score",
+      "received": "Received",
+      "message": "Message",
+      "unknownStatus": "Unknown status"
+    },
+    "statusForm": {
+      "noFurther": "No further actions available.",
+      "current": "Current status:",
+      "newStatus": "New status",
+      "update": "Update status"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage your store configuration.",
+    "identity": {
+      "title": "Store Identity",
+      "name": "Store name",
+      "supportEmail": "Support email",
+      "phone": "Phone number",
+      "save": "Save identity"
+    },
+    "fx": {
+      "title": "Exchange Rates",
+      "usd": "USD rate (to base currency)",
+      "rub": "RUB rate (to base currency)",
+      "save": "Save rates",
+      "help": "Rates are used for currency conversion across the storefront."
+    },
+    "saved": "Saved {key}."
+  }
+}

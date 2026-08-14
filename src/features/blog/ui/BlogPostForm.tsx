@@ -11,6 +11,7 @@ import {
   ADMIN_SECTION_TITLE,
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { ADMIN_BADGE } from "@/features/admin/ui/status-badge";
 import {
   archiveBlogPostAction,
@@ -49,11 +50,20 @@ export function BlogPostForm({
   status,
   defaults,
 }: BlogPostFormProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const tagsDefault = defaults?.tags ?? "";
+
+  function statusLabel(value: string): string {
+    const normalized = value.toUpperCase();
+    if (normalized === "PUBLISHED") return t.blog.status.published;
+    if (normalized === "DRAFT") return t.blog.status.draft;
+    if (normalized === "ARCHIVED") return t.blog.status.archived;
+    return value;
+  }
 
   return (
     <div className="flex max-w-xl flex-col gap-4">
@@ -94,22 +104,22 @@ export function BlogPostForm({
           }}
         >
           <h2 className={ADMIN_SECTION_TITLE}>
-            {mode === "edit" ? "Edit blog post" : "Create blog post"}
+            {mode === "edit" ? t.blog.form.editTitle : t.blog.form.createTitle}
           </h2>
 
           {status ? (
             <p className="text-sm text-gray-600">
-              Status:{" "}
+              {t.blog.drawer.status}:{" "}
               <span
                 className={`${ADMIN_BADGE} ${blogStatusBadgeClass(status)}`}
               >
-                {status}
+                {statusLabel(status)}
               </span>
             </p>
           ) : null}
 
           <label>
-            <span className={ADMIN_LABEL}>Title</span>
+            <span className={ADMIN_LABEL}>{t.blog.drawer.title}</span>
             <input
               name="title"
               required
@@ -130,7 +140,7 @@ export function BlogPostForm({
             />
           </label>
           <label>
-            <span className={ADMIN_LABEL}>Excerpt</span>
+            <span className={ADMIN_LABEL}>{t.blog.form.excerpt}</span>
             <textarea
               name="excerpt"
               rows={2}
@@ -140,7 +150,7 @@ export function BlogPostForm({
             />
           </label>
           <label>
-            <span className={ADMIN_LABEL}>Content (HTML)</span>
+            <span className={ADMIN_LABEL}>{t.blog.form.contentHtml}</span>
             <textarea
               name="content"
               required
@@ -151,7 +161,7 @@ export function BlogPostForm({
             />
           </label>
           <label>
-            <span className={ADMIN_LABEL}>SEO title</span>
+            <span className={ADMIN_LABEL}>{t.blog.form.seoTitle}</span>
             <input
               name="seoTitle"
               defaultValue={defaults?.seoTitle ?? ""}
@@ -160,7 +170,7 @@ export function BlogPostForm({
             />
           </label>
           <label>
-            <span className={ADMIN_LABEL}>SEO description</span>
+            <span className={ADMIN_LABEL}>{t.blog.form.seoDescription}</span>
             <textarea
               name="seoDescription"
               rows={2}
@@ -170,7 +180,7 @@ export function BlogPostForm({
             />
           </label>
           <label>
-            <span className={ADMIN_LABEL}>Tags (comma-separated)</span>
+            <span className={ADMIN_LABEL}>{t.blog.form.tags}</span>
             <input
               name="tags"
               defaultValue={tagsDefault}
@@ -182,10 +192,10 @@ export function BlogPostForm({
           {error ? <p className="text-sm text-red-700">{error}</p> : null}
           <Button type="submit" disabled={isPending}>
             {isPending
-              ? "Saving…"
+              ? t.common.saving
               : mode === "edit"
-                ? "Save changes"
-                : "Create"}
+                ? t.blog.actions.saveChanges
+                : t.common.create}
           </Button>
         </form>
       </Card>
@@ -212,7 +222,7 @@ export function BlogPostForm({
                 });
               }}
             >
-              Publish
+              {t.blog.actions.publish}
             </Button>
           ) : null}
           {canArchiveBlogPost(status) ? (
@@ -235,7 +245,7 @@ export function BlogPostForm({
                 });
               }}
             >
-              Archive
+              {t.blog.actions.archive}
             </Button>
           ) : null}
         </div>

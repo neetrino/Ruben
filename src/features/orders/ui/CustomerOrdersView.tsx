@@ -54,6 +54,7 @@ export function CustomerOrdersView({ locale, orders }: CustomerOrdersViewProps) 
     <>
       <CustomerOrdersTable orders={orders} onOpenOrder={openOrder} />
       <OrderDetailsDrawer
+        locale={locale}
         open={drawerOpen}
         onClose={closeDrawer}
         detail={detail}

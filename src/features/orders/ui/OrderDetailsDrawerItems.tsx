@@ -7,28 +7,35 @@ import {
   ADMIN_TABLE_TH,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminOrderDetailView } from "@/features/orders/application/order-detail-view";
 import { formatOrderDrawerMoney } from "@/features/orders/ui/order-drawer-format";
 
 type OrderDetailsDrawerItemsProps = {
+  locale: string;
   detail: AdminOrderDetailView;
 };
 
 export function OrderDetailsDrawerItems({
+  locale,
   detail,
 }: OrderDetailsDrawerItemsProps) {
+  const t = adminCopy(locale);
+
   return (
     <div className="rounded-2xl border border-gray-200 px-5 py-4">
-      <h3 className="mb-4 text-base font-semibold text-gray-900">Items</h3>
+      <h3 className="mb-4 text-base font-semibold text-gray-900">
+        {t.orders.drawer.sections.items}
+      </h3>
       <div className={`${ADMIN_TABLE_OUTER_SCROLL} rounded-xl border border-gray-100`}>
         <table className={ADMIN_TABLE}>
           <thead className={ADMIN_TABLE_THEAD}>
             <tr>
-              <th className={ADMIN_TABLE_TH}>Product</th>
-              <th className={ADMIN_TABLE_TH}>SKU</th>
-              <th className={ADMIN_TABLE_TH}>Qty</th>
-              <th className={ADMIN_TABLE_TH}>Price</th>
-              <th className={ADMIN_TABLE_TH}>Total</th>
+              <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.product}</th>
+              <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.sku}</th>
+              <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.qty}</th>
+              <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.price}</th>
+              <th className={ADMIN_TABLE_TH}>{t.orders.drawer.items.total}</th>
             </tr>
           </thead>
           <tbody className={ADMIN_TABLE_TBODY}>

@@ -22,12 +22,18 @@ type ConfirmDialogProps = {
   onClose: () => void;
 };
 
-/** Builds the standard destructive delete copy used across admin confirms. */
+/**
+ * Builds destructive delete copy from a localized template.
+ * Template placeholders: `{entity}`, `{name}`.
+ */
 export function deleteConfirmDescription(
   entityLabel: string,
   name: string,
+  template = 'Are you sure you want to delete the {entity} "{name}"? This action cannot be undone.',
 ): string {
-  return `Are you sure you want to delete the ${entityLabel} "${name}"? This action cannot be undone.`;
+  return template
+    .replace("{entity}", entityLabel)
+    .replace("{name}", name);
 }
 
 /**

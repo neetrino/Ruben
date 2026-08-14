@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { SiteHeaderMainNav } from "@/components/layout/SiteHeaderMainNav";
 import { SiteHeaderTopBar } from "@/components/layout/SiteHeaderTopBar";
 import { getCartItemCount } from "@/features/cart/cart";
+import { getCompareCount } from "@/features/compare/queries";
 import { getWishlistCount } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
@@ -37,10 +38,11 @@ async function SiteHeaderMainNavAsync({
     { href: `/${locale}/contact`, label: dictionary.nav.contact },
   ] as const;
 
-  const [user, cartItemCount, wishlistCount] = await Promise.all([
+  const [user, cartItemCount, wishlistCount, compareCount] = await Promise.all([
     getCurrentUser(),
     getCartItemCount(),
     getWishlistCount(),
+    getCompareCount(),
   ]);
 
   return (
@@ -52,12 +54,13 @@ async function SiteHeaderMainNavAsync({
       navItems={navItems}
       cartItemCount={cartItemCount}
       wishlistCount={wishlistCount}
+      compareCount={compareCount}
     />
   );
 }
 
 /**
- * Storefront chrome: top bar streams immediately; account/cart/wishlist
+ * Storefront chrome: top bar streams immediately; account/cart/wishlist/compare
  * load in a Suspense island so page content is not blocked.
  */
 export function SiteHeader({ locale, currency, dictionary }: SiteHeaderProps) {

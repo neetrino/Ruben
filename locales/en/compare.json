@@ -1,0 +1,19 @@
+{
+  "empty": "Your compare list is empty.",
+  "signInPrompt": "Sign in to compare products.",
+  "clearAll": "Clear all",
+  "remove": "Remove from compare",
+  "limitHint": "You can compare up to {max} products.",
+  "limitReached": "Compare list is full. Remove a product first.",
+  "emptyValue": "—",
+  "rows": {
+    "product": "Product",
+    "price": "Price",
+    "compareAt": "Compare at",
+    "discount": "Discount",
+    "sku": "SKU",
+    "availability": "Availability",
+    "categories": "Categories",
+    "description": "Description"
+  }
+}

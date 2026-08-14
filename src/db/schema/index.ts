@@ -23,6 +23,7 @@ export {
 export {
   cartItems,
   carts,
+  compareItems,
   wishlistItems,
 } from "@/db/schema/commerce";
 export {
@@ -32,10 +33,7 @@ export {
   updatedAtColumn,
 } from "@/db/schema/columns";
 export * from "@/db/schema/enums";
-export {
-  contactMessages,
-  reviews,
-} from "@/db/schema/engagement";
+export { contactMessages } from "@/db/schema/engagement";
 export {
   mediaAssets,
   storeSettings,

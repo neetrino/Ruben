@@ -32,6 +32,7 @@ type CheckoutDetailsLabels = {
   storePickupDescription: string;
   delivery: string;
   deliveryDescription: string;
+  deliveryUnavailable: string;
 };
 
 type PaymentOption = {
@@ -109,18 +110,6 @@ export function CheckoutDetailsSections({
           </div>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
-              {labels.email}
-              <input
-                name="contactEmail"
-                type="email"
-                required
-                defaultValue={defaultEmail}
-                disabled={pending}
-                className={FIELD_CLASS}
-                autoComplete="email"
-              />
-            </label>
-            <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.phone}
               <input
                 name="contactPhone"
@@ -131,6 +120,18 @@ export function CheckoutDetailsSections({
                 disabled={pending}
                 className={FIELD_CLASS}
                 autoComplete="tel"
+              />
+            </label>
+            <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+              {labels.email}
+              <input
+                name="contactEmail"
+                type="email"
+                required
+                defaultValue={defaultEmail}
+                disabled={pending}
+                className={FIELD_CLASS}
+                autoComplete="email"
               />
             </label>
           </div>
@@ -175,12 +176,14 @@ export function CheckoutDetailsSections({
               checked={shippingMethod === "delivery"}
               onChange={() => onShippingMethodChange("delivery")}
               className="mr-4"
-              disabled={pending || deliveryOptions.length === 0}
+              disabled={pending}
             />
             <div className="flex-1">
               <div className="font-medium text-gray-900">{labels.delivery}</div>
               <div className="text-sm text-gray-600">
-                {labels.deliveryDescription}
+                {deliveryOptions.length === 0
+                  ? labels.deliveryUnavailable
+                  : labels.deliveryDescription}
               </div>
             </div>
           </label>

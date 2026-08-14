@@ -11,6 +11,7 @@ import {
 } from "@/features/promotions/application/queries";
 import { PromotionForm } from "@/features/promotions/ui/PromotionForm";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminCouponDetailPageProps = {
   params: Promise<{ locale: string; id: string }>;
@@ -24,6 +25,7 @@ export default async function AdminCouponDetailPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const [promo, targets] = await Promise.all([
     getAdminPromotionById(id),
     listPromotionTargetOptions(),
@@ -41,12 +43,12 @@ export default async function AdminCouponDetailPage({
             href={`/${locale}/admin/coupons`}
             className="font-medium text-gray-700 hover:underline"
           >
-            Coupons
+            {t.coupons.breadcrumb}
           </Link>
         </p>
         <h1 className={ADMIN_PAGE_TITLE}>{promo.code}</h1>
         <p className={`mt-1 ${ADMIN_PAGE_SUBTITLE}`}>
-          Used {promo.usedCount} times
+          {t.coupons.usedCount.replace("{count}", String(promo.usedCount))}
         </p>
       </div>
 

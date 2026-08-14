@@ -9,6 +9,7 @@
     "about": "Մեր մասին",
     "contact": "Կապ",
     "wishlist": "Ցանկեր",
+    "compare": "Համեմատել",
     "openMenu": "Բացել մենյուն",
     "closeMenu": "Փակել մենյուն",
     "navigation": "Նավիգացիա",
@@ -26,11 +27,14 @@
   "footer": {
     "shop": "Խանութ",
     "description": "Պրոֆեսիոնալ առցանց խանութ ամենօրյա գնումների համար։",
-    "quickLinks": "Արագ հղումներ",
     "legal": "Իրավական",
     "privacyPolicy": "Գաղտնիության քաղաքականություն",
-    "terms": "Պայմաններ",
+    "terms": "Պայմաններ և դրույթներ",
+    "refundPolicy": "Վերադարձի քաղաքականություն",
+    "deliveryPolicy": "Առաքման քաղաքականություն",
     "contactInfo": "Կապի տվյալներ",
+    "social": "Սոցիալական ցանցեր",
+    "map": "Քարտեզ",
     "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
   }
 }

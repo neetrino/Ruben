@@ -5,6 +5,7 @@ import { listAdminUsers } from "@/features/users/application/queries";
 import { adminUsersFilterSchema } from "@/features/users/schemas/admin-users";
 import { AdminUsersView } from "@/features/users/ui/AdminUsersView";
 import { isLocale } from "@/lib/i18n/config";
+import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminUsersPageProps = {
   params: Promise<{ locale: string }>;
@@ -46,6 +47,7 @@ export default async function AdminUsersPage({
     notFound();
   }
 
+  const t = getAdminDictionary(locale);
   const raw = await searchParams;
   const parsed = adminUsersFilterSchema.safeParse({
     q: firstParam(raw.q) || undefined,
@@ -78,18 +80,20 @@ export default async function AdminUsersPage({
               href={`/${locale}/admin/users?${buildUsersQuery(filters, filters.page - 1)}`}
               className="font-medium hover:underline"
             >
-              Previous
+              {t.common.previous}
             </Link>
           ) : null}
           <span>
-            Page {filters.page} / {totalPages}
+            {t.common.pageOf
+              .replace("{page}", String(filters.page))
+              .replace("{total}", String(totalPages))}
           </span>
           {filters.page < totalPages ? (
             <Link
               href={`/${locale}/admin/users?${buildUsersQuery(filters, filters.page + 1)}`}
               className="font-medium hover:underline"
             >
-              Next
+              {t.common.next}
             </Link>
           ) : null}
         </nav>

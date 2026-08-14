@@ -323,3 +323,43 @@ body {
     padding-right: 0.75rem;
   }
 }
+
+/* Dual-thumb catalog price range: track clicks pass through; thumbs stay interactive. */
+.catalog-price-thumb {
+  pointer-events: none;
+}
+
+.catalog-price-thumb::-webkit-slider-runnable-track {
+  background: transparent;
+  height: 0.375rem;
+}
+
+.catalog-price-thumb::-moz-range-track {
+  background: transparent;
+  border: none;
+  height: 0.375rem;
+}
+
+.catalog-price-thumb::-webkit-slider-thumb {
+  pointer-events: auto;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 9999px;
+  background: #111827;
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  cursor: grab;
+}
+
+.catalog-price-thumb::-moz-range-thumb {
+  pointer-events: auto;
+  width: 1.125rem;
+  height: 1.125rem;
+  border: 2px solid #ffffff;
+  border-radius: 9999px;
+  background: #111827;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  cursor: grab;
+}

@@ -10,6 +10,7 @@ import {
   ADMIN_SECTION_TITLE,
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { addOrderNoteAction } from "@/features/orders/application/add-order-note";
 
 type AddOrderNoteFormProps = {
@@ -18,6 +19,7 @@ type AddOrderNoteFormProps = {
 };
 
 export function AddOrderNoteForm({ locale, orderNumber }: AddOrderNoteFormProps) {
+  const t = adminCopy(locale);
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -48,9 +50,9 @@ export function AddOrderNoteForm({ locale, orderNumber }: AddOrderNoteFormProps)
           });
         }}
       >
-        <h2 className={ADMIN_SECTION_TITLE}>Add internal note</h2>
+        <h2 className={ADMIN_SECTION_TITLE}>{t.orders.note.title}</h2>
         <label>
-          <span className={ADMIN_LABEL}>Note</span>
+          <span className={ADMIN_LABEL}>{t.orders.note.label}</span>
           <textarea
             name="note"
             rows={3}
@@ -62,7 +64,7 @@ export function AddOrderNoteForm({ locale, orderNumber }: AddOrderNoteFormProps)
         </label>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <Button type="submit" size="sm" disabled={isPending}>
-          {isPending ? "Saving…" : "Add note"}
+          {isPending ? t.orders.note.saving : t.orders.note.add}
         </Button>
       </form>
     </Card>

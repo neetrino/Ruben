@@ -23,7 +23,7 @@
 
 | ID | Պահանջ / acceptance criteria |
 |---|---|
-| NAV-001 | Header-ը ցույց է տալիս Home, Products, About, Contact, Blog, locale, currency, wishlist, cart count և account control։ |
+| NAV-001 | Header-ը ցույց է տալիս Home, Products, About, Contact, Blog, locale, currency, compare, wishlist, cart count և account control։ |
 | NAV-002 | Guest account click-ը տանում է login; Customer menu-ն ունի Profile/Logout; Admin menu-ն՝ Admin/Profile/Logout։ |
 | NAV-003 | Locale switch-ը պահպանում է համարժեք route-ը և թույլատրելի query params-ը; fallback-ը locale home-ն է։ |
 | NAV-004 | Currency switch-ը փոխում է display preference-ը, ոչ base price-ը։ |
@@ -40,7 +40,7 @@
 
 | ID | Պահանջ / acceptance criteria |
 |---|---|
-| HOME-001 | `/{locale}` page-ը պարունակում է Header, Hero, Featured Products, short About, CTA և Footer։ |
+| HOME-001 | `/{locale}` page-ը պարունակում է Header, Hero, Featured Products, Promotions/discounts, Why-choose-us (warranty/delivery/installment/original), Partners, short About, CTA և Footer (contacts, social, map, key links)։ |
 | HOME-002 | Hero query-ն վերադարձնում է միայն active slide-երը sort order-ով և locale translation-ով։ |
 | HOME-003 | Slide-ը ունի desktop/mobile media; responsive `<picture>`/image behavior-ը ճիշտ asset-ն է ընտրում։ |
 | HOME-004 | Hero action URL-ը validation է անցնում; internal URL-ը render է լինում `Link`-ով։ |
@@ -58,9 +58,9 @@
 | CAT-004 | Active filter chips-ը յուրաքանչյուր filter-ի removal control ունեն։ |
 | CAT-005 | Pagination-ը server-side է, stable sort/tie-breaker-ով; page size-ը allowlist-ից է։ |
 | CAT-006 | Grid-ը wide desktop-ում 4, laptop-ում 3, mobile-ում 2 readable card է, առանց horizontal overflow-ի։ |
-| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, price, compare-at, computed discount %, wishlist և stock state։ |
+| CAT-007 | Product card-ը ցույց է տալիս media, badge, title, category, short specs summary (description), price, compare-at, computed discount %, wishlist, compare և stock state։ |
 | CAT-008 | Transparent PNG/WebP asset-ի container-ը theme-aware/transparent է և պարտադիր սպիտակ background չի ավելացնում։ |
-| CAT-009 | Card click-ը տանում է `/{locale}/products/{slug}`; wishlist interaction-ը չի trigger անում card navigation-ը։ |
+| CAT-009 | Card click-ը տանում է `/{locale}/products/{slug}`; wishlist/compare interaction-ը չի trigger անում card navigation-ը։ |
 | CAT-010 | Unpublished/archived product-ը public catalog-ում չի ցուցադրվում։ |
 
 ### 4.2 Product detail
@@ -73,16 +73,20 @@
 | PDP-004 | Add to Cart-ը server-side վերահաստատում է product status/stock/price և վերադարձնում է actionable conflict error։ |
 | PDP-005 | Related products-ը նույն category-ից active products են, current product-ը բացառված է։ |
 | PDP-006 | Metadata/JSON-LD-ը համապատասխանում է locale-specific canonical product data-ին։ |
+| PDP-007 | Compare toggle-ը wishlist-ի նման է՝ signed-in user-ի համար durable `compare_items` entry է ավելացնում/հեռացնում։ |
 
 ### 4.3 Reviews
 
+Reviews feature-ը հանված է՝ storefront UI, server actions, և `reviews` table/enum։
+
+### 4.4 Compare
+
 | ID | Պահանջ / acceptance criteria |
 |---|---|
-| REV-001 | Review section-ը ցույց է տալիս approved reviews, average և 1–5 distribution։ |
-| REV-002 | Review submit կարող է անել login եղած Customer-ը, ով ունի eligible delivered/completed order item տվյալ product-ի համար։ |
-| REV-003 | Rating-ը integer 1–5 է, comment-ը length/sanitization rules ունի։ |
-| REV-004 | User/product զույգի համար կա առավելագույնը մեկ review (կամ approved alternate key policy ADR-ով)։ |
-| REV-005 | Նոր review-ը pending moderation է; Admin-ը approve/reject է անում audit trail-ով։ |
+| CMP-001 | `/{locale}/compare` page-ը ցույց է տալիս signed-in user-ի compare list-ը side-by-side table-ով։ |
+| CMP-002 | Համեմատության rows՝ image/title, price, compare-at, discount, SKU, availability, categories, description։ |
+| CMP-003 | Max compare size-ը application constant է (default 4)՝ limit-ի դեպքում clear error։ |
+| CMP-004 | Guest-ը redirect է լինում login; remove/clear actions-ը server-side են։ |
 
 ## 5. Authentication
 
@@ -141,7 +145,7 @@
 | CHK-006 | Transaction-ը ստեղծում է order, item/address/money snapshots, initial status history, stock movements, decrement և cart clear։ |
 | CHK-007 | Անբավարար stock-ի դեպքում transaction-ը atomic rollback է լինում և user-ը ստանում է item-level conflict։ |
 | CHK-008 | Order-ը պահում է base/display currency code, exchange-rate snapshot, subtotal, discount, tax, delivery և total։ |
-| CHK-009 | COD adapter-ը P0 է; online provider-ը միայն approved adapter/webhook contract-ից հետո է ակտիվանում։ |
+| CHK-009 | Launch payment methods՝ cash (COD), card (ArCa redirect), FastShift redirect; cart clear միայն captured online payment-ից հետո։ |
 | CHK-010 | Success page-ը refresh/retry-safe է և order ownership check ունի։ |
 
 ## 8. Customer profile
@@ -208,7 +212,10 @@
 
 ### Analytics
 
-- Revenue/orders over time, AOV, available conversion metrics, top products/categories, new/returning customers, coupon usage, status breakdown։
+- Period presets՝ today / this week / this month (+ custom bounded range)։
+- Sales analytics՝ best sales day/week/month, best customer (revenue), customer with most purchases (order count)։
+- Product analytics՝ most sold products, most purchased categories։
+- Summary metrics + orders-by-day trend/CSV export։
 - Date range-ը validated/bounded է; CSV export-ը permission-protected և formula-injection safe է։
 - Expensive aggregates-ը indexed/query-optimized և ըստ անհրաժեշտության Redis-cached են։
 

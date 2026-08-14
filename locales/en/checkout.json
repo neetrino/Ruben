@@ -29,17 +29,18 @@
     "storePickupDescription": "Pick up your order from our store (Free)",
     "delivery": "Delivery",
     "deliveryDescription": "We will deliver your order to your address",
+    "deliveryUnavailable": "Delivery is unavailable — no locations configured",
     "freePickup": "Free (Store Pickup)",
     "enterCity": "Enter City",
     "selectDeliveryLocation": "Select delivery location"
   },
   "payment": {
-    "cashOnDelivery": "Cash on Delivery",
+    "cashOnDelivery": "Cash payment",
     "cashOnDeliveryDescription": "Pay cash when you receive your order",
-    "idram": "Idram",
-    "idramDescription": "Pay with Idram wallet or card",
-    "arca": "ArCa",
-    "arcaDescription": "Pay with ArCa card"
+    "card": "Card payment",
+    "cardDescription": "Pay securely with your bank card (ArCa)",
+    "fastshift": "FastShift",
+    "fastshiftDescription": "Pay with your FastShift wallet"
   },
   "coupon": {
     "title": "Have a coupon?",

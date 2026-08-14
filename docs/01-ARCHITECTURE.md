@@ -101,7 +101,6 @@ src/
     orders/
     payments/
     promotions/
-    reviews/
     wishlist/
     delivery/
     hero/

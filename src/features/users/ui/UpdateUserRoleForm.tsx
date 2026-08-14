@@ -10,6 +10,7 @@ import {
   ADMIN_LABEL,
   ADMIN_SECTION_TITLE,
 } from "@/features/admin/ui/admin-form-classes";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { updateUserRoleAction } from "@/features/users/application/update-user";
 import {
   USER_ROLES,
@@ -30,6 +31,7 @@ export function UpdateUserRoleForm({
   disabled = false,
 }: UpdateUserRoleFormProps) {
   const router = useRouter();
+  const t = adminCopy(locale);
   const [error, setError] = useState<string | null>(null);
   const roleOptions = USER_ROLES.filter((role) => role !== currentRole);
   const [role, setRole] = useState(roleOptions[0] ?? "");
@@ -56,15 +58,15 @@ export function UpdateUserRoleForm({
           });
         }}
       >
-        <h3 className={ADMIN_SECTION_TITLE}>Role</h3>
+        <h3 className={ADMIN_SECTION_TITLE}>{t.users.roleForm.title}</h3>
         <p className="text-sm text-gray-700">
-          Current: <strong className="text-gray-900">{currentRole}</strong>
+          {t.common.current} <strong className="text-gray-900">{currentRole}</strong>
         </p>
         <div>
-          <span className={ADMIN_LABEL}>New role</span>
+          <span className={ADMIN_LABEL}>{t.users.roleForm.newRole}</span>
           <SelectDropdown
             name="role"
-            ariaLabel="New role"
+            ariaLabel={t.users.roleForm.newRole}
             value={role}
             options={roleOptions.map((item) => ({
               label: item,
@@ -78,7 +80,7 @@ export function UpdateUserRoleForm({
         </div>
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
         <Button type="submit" size="sm" disabled={disabled || isPending}>
-          {isPending ? "Updating…" : "Update role"}
+          {isPending ? t.common.updating : t.users.roleForm.update}
         </Button>
       </form>
     </Card>

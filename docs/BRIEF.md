@@ -22,7 +22,7 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 ## Թիրախային լսարան և դերեր
 
 - **Guest.** դիտում և որոնում է catalog-ը, ընտրում locale/currency, պահում wishlist/cart, գրանցվում կամ checkout է սկսում։
-- **Customer.** գնում է ապրանքներ, կառավարում է profile/address-ները, դիտում է պատվերները և verified purchase-ից հետո թողնում review։
+- **Customer.** գնում է ապրանքներ, կառավարում է profile/address-ները և դիտում է պատվերները։
 - **Admin.** կառավարում է store-ը, catalog-ը, orders-ը, promotions-ը, users-ը, content-ը, delivery-ն և analytics-ը։
 - **Operations/Support.** Admin role-ի շրջանակում մշակում է պատվերներ, հաղորդագրություններ և customer խնդիրներ։ Առանձին role-երի ընդլայնումը v1-ից հետո է։
 
@@ -32,7 +32,7 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 2. Guest-ը filter/search է անում product list-ում, բացում product-ը, ավելացնում cart/wishlist և checkout է անցնում։
 3. Guest cart-ը login/registration-ից հետո merge է լինում customer-ի durable cart-ի հետ։
 4. Customer-ը ընտրում/ստեղծում է հասցե, կիրառում coupon, ընտրում delivery/payment և idempotent կերպով ստեղծում order։
-5. Customer-ը դիտում է order detail-ը և միայն կատարված գնումից հետո ստեղծում մեկ review տվյալ product-ի համար։
+5. Customer-ը դիտում է order detail-ը և պատվերի կարգավիճակը։
 6. Admin-ը ստեղծում է product՝ locale selector-ով մեկ դաշտերի հավաքածուով (ցանկալի լեզուներով), upload է անում պատկերներ, կառավարում stock/discount/status-ը և հրապարակում այն։
 7. Admin-ը մշակում է order status/payment status-ը՝ history և audit trail-ով։
 8. Admin-ը կառավարում է hero, categories, coupons, delivery rules, blog, messages և store settings։
@@ -46,14 +46,14 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 - Product/category/catalog, stock, cart, checkout և order transaction
 - Customer profile, addresses և orders
 - Admin dashboard, products, categories և orders
-- Cash on Delivery payment adapter և admin-managed payment status
+- Cash on Delivery, ArCa card, and FastShift payment adapters և admin-managed payment status
 - R2 image storage, Redis rate limiting/cache, Resend-compatible email abstraction
 - Security baseline, SEO baseline, accessibility, responsive states
 - Unit, integration և critical Playwright E2E tests
 
 ### P1 — launch completeness
 
-- Wishlist, verified-purchase reviews և moderation
+- Wishlist
 - Coupons, category/product discounts և stacking policy
 - Delivery rules ըստ location specificity-ի
 - Home hero CMS, blog CMS, contact/messages
@@ -63,7 +63,7 @@ White Shop-ը բազմալեզու, բազմարժույթ, production-ready e-c
 
 ### P2 — launch-ից հետո կամ առանձին հաստատմամբ
 
-- Online payment provider-ներ (Ameriabank/ArCa/Idram/Telcell/FastShift կամ այլ)
+- Additional online payment provider-ներ (Ameriabank/Idram/Telcell կամ այլ)
 - Product variants-ի ամբողջական UI (schema extension point-ը v1-ում նախատեսվում է)
 - Advanced search provider, realtime inventory, background queue
 - Granular staff roles/permissions, refunds automation, tax engine

@@ -9,6 +9,7 @@
     "about": "О нас",
     "contact": "Контакты",
     "wishlist": "Избранное",
+    "compare": "Сравнение",
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню",
     "navigation": "Навигация",
@@ -26,11 +27,14 @@
   "footer": {
     "shop": "Магазин",
     "description": "Профессиональный интернет-магазин для повседневных покупок.",
-    "quickLinks": "Быстрые ссылки",
     "legal": "Правовая информация",
     "privacyPolicy": "Политика конфиденциальности",
-    "terms": "Условия",
+    "terms": "Условия использования",
+    "refundPolicy": "Политика возврата",
+    "deliveryPolicy": "Политика доставки",
     "contactInfo": "Контактная информация",
+    "social": "Соцсети",
+    "map": "Карта",
     "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
   }
 }

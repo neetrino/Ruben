@@ -29,17 +29,18 @@
     "storePickupDescription": "Заберите заказ в магазине (Бесплатно)",
     "delivery": "Доставка",
     "deliveryDescription": "Доставим заказ по вашему адресу",
+    "deliveryUnavailable": "Доставка недоступна — локации не настроены",
     "freePickup": "Бесплатно (Самовывоз)",
     "enterCity": "Укажите город",
     "selectDeliveryLocation": "Выберите место доставки"
   },
   "payment": {
-    "cashOnDelivery": "Наличными при получении",
+    "cashOnDelivery": "Наличными",
     "cashOnDeliveryDescription": "Оплатите наличными при получении заказа",
-    "idram": "Idram",
-    "idramDescription": "Оплата через Idram или картой",
-    "arca": "ArCa",
-    "arcaDescription": "Оплата картой ArCa"
+    "card": "Оплата картой",
+    "cardDescription": "Безопасная оплата банковской картой (ArCa)",
+    "fastshift": "FastShift",
+    "fastshiftDescription": "Оплата через кошелёк FastShift"
   },
   "coupon": {
     "title": "Есть промокод?",

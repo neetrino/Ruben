@@ -87,12 +87,12 @@ Connection pool size, `statement_timeout`, `lock_timeout`, `idle_in_transaction_
 | Պարամետր | Որոշում | Ստատուս | Նշում |
 |---|---|---|---|
 | Redis | Upstash Redis | ✅ | Cache/rate limit + ephemeral verification/reset tokens; ոչ durable commerce authority |
-| Rate limiting | Upstash Ratelimit | ✅ | Auth, contact, review, coupon, upload, order endpoints |
+| Rate limiting | Upstash Ratelimit | ✅ | Auth, contact, coupon, upload, order endpoints |
 | Object storage | Cloudflare R2 | ✅ | Store object key, not full CDN URL |
 | Image delivery | `next/image` + configured public base URL | ✅ | Responsive sizes, alt text, format/size policy |
 | Email | Provider interface, Resend adapter first | ✅ | Verification/reset/order events |
 | Exchange rates | Provider interface + Redis cache | ✅ | Concrete source/rounding policy բաց է |
-| Payments | Provider interface + COD adapter | ✅ | Online adapter(s) բաց են |
+| Payments | Provider interface + COD + ArCa card + FastShift | ✅ | Idram/Telcell/Ameriabank deferred |
 | Analytics | First-party aggregate queries | ✅ | Product analytics provider optional/open |
 | Error tracking | Provider-neutral boundary | ✅ | Structured logs first; Sentry adapter optional later |
 
