@@ -108,6 +108,7 @@ export function CartDrawer({
         panelClassName="w-[87%] max-w-[420px]"
         zIndexClassName="z-[200]"
         backdropBlur
+        closeClassName="bg-[var(--brand)] text-black hover:brightness-95"
       >
         <div className="border-b border-gray-100 px-6 py-5">
           <h2 className="text-xl font-bold tracking-tight text-gray-900">
@@ -145,12 +146,12 @@ export function CartDrawer({
                 href={`/${locale}/products`}
                 prefetchPolicy="intent"
                 onClick={closeDrawer}
-                className="relative mt-6 inline-flex min-h-[50px] w-full max-w-sm items-center rounded-full bg-gray-900 py-1.5 pr-1.5 pl-5 text-sm font-semibold text-white transition-colors hover:bg-black"
+                className="relative mt-6 inline-flex min-h-[50px] w-full max-w-sm items-center rounded-full bg-[var(--brand)] py-1.5 pr-1.5 pl-5 text-sm font-semibold text-black transition-colors hover:brightness-95"
               >
                 <span className="pointer-events-none absolute inset-0 flex items-center justify-center px-12">
                   {labels.emptyCta}
                 </span>
-                <span className="relative ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15">
+                <span className="relative ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-black/10">
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </span>
               </AppLink>
@@ -264,7 +265,7 @@ export function CartDrawer({
             <AppLink
               href={`/${locale}/checkout`}
               prefetchPolicy="intent"
-              className="mt-5 flex min-h-[50px] w-full items-center justify-center rounded-full bg-gray-900 px-4 text-sm font-semibold text-white transition-colors hover:bg-black"
+              className="mt-5 flex min-h-[50px] w-full items-center justify-center rounded-full bg-[var(--brand)] px-4 text-sm font-semibold text-black transition-colors hover:brightness-95"
               onClick={closeDrawer}
             >
               {labels.checkout}

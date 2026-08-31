@@ -26,6 +26,8 @@ type SideSheetProps = {
   closeVariant?: "circle" | "edge-tab";
   /** Soften backdrop (cart-style). */
   backdropBlur?: boolean;
+  /** Extra classes for the floating close control (e.g. brand yellow). */
+  closeClassName?: string;
 };
 
 /**
@@ -42,6 +44,7 @@ export function SideSheet({
   zIndexClassName = "z-50",
   closeVariant = "circle",
   backdropBlur = false,
+  closeClassName = "bg-gray-900 text-white hover:bg-black",
 }: SideSheetProps) {
   const [mounted, setMounted] = useState(false);
   const [rendered, setRendered] = useState(false);
@@ -158,7 +161,7 @@ export function SideSheet({
           <button
             type="button"
             onClick={onClose}
-            className={`absolute top-1/2 ${closePosition} z-10 flex h-[38px] w-10 -translate-y-1/2 items-center justify-center bg-gray-900 text-white transition-transform hover:scale-105 ${
+            className={`absolute top-1/2 ${closePosition} z-10 flex h-[38px] w-10 -translate-y-1/2 items-center justify-center outline-none transition-transform hover:scale-105 ${closeClassName} ${
               isRight
                 ? "rounded-l-full rounded-r-none"
                 : "rounded-r-full rounded-l-none"
@@ -171,7 +174,7 @@ export function SideSheet({
           <button
             type="button"
             onClick={onClose}
-            className={`absolute top-5 ${closePosition} z-10 flex h-10 w-10 shrink-0 items-center justify-center bg-gray-900 text-white transition-colors hover:bg-black ${
+            className={`absolute top-5 ${closePosition} z-10 flex h-10 w-10 shrink-0 items-center justify-center outline-none transition-colors ${closeClassName} ${
               isRight
                 ? "rounded-l-full rounded-r-none"
                 : "rounded-r-full rounded-l-none"
