@@ -26,7 +26,7 @@ export function HomeArrowCta({
     <AppLink
       href={href}
       prefetchPolicy="intent"
-      className={`inline-flex h-12 items-center gap-4 rounded-full py-3 pr-3 pl-6 text-base font-bold uppercase tracking-wide transition ${toneClass} ${className}`}
+      className={`inline-flex h-12 items-center gap-4 rounded-full py-3 pr-1 pl-6 text-base font-bold uppercase tracking-wide transition ${toneClass} ${className}`}
     >
       <span>{label}</span>
       <Image
