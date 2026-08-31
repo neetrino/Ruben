@@ -21,7 +21,7 @@ export function HomePartners({
   return (
     <section
       id="partners"
-      className="relative z-10 -mt-16 scroll-mt-28 flex min-h-[280px] items-center rounded-t-[40px] bg-white py-16 sm:-mt-24 sm:min-h-[360px] sm:py-20 lg:min-h-[400px] lg:py-0"
+      className="relative z-10 -mt-12 scroll-mt-28 flex min-h-[280px] items-center rounded-t-[40px] bg-white py-16 sm:-mt-16 sm:min-h-[360px] sm:py-20 lg:min-h-[400px] lg:py-0"
     >
       <div className="mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-[138px]">
         {title ? <h2 className="sr-only">{title}</h2> : null}

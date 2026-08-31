@@ -76,7 +76,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
   return (
     <section className="relative overflow-x-clip rounded-t-[40px] bg-[var(--brand-deep)]">
       {/* Mobile */}
-      <div className="mx-auto flex max-w-lg flex-col gap-10 px-6 py-14 lg:hidden">
+      <div className="mx-auto flex max-w-lg flex-col gap-10 px-6 py-10 lg:hidden">
         <div className="relative mx-auto aspect-[557/453] w-full max-w-[557px] overflow-hidden">
           <div className="absolute top-[-70.86%] left-[-21.18%] h-[255.52%] w-[138.54%]">
             <Image
@@ -120,8 +120,9 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
         })}
       </div>
 
-      {/* Desktop — exact Figma 1440×1174 composition */}
-      <div className="relative mx-auto hidden aspect-[1440/1174] w-full max-w-[1440px] lg:block">
+      {/* Desktop — Figma 1440×1174, cropped a bit top/bottom */}
+      <div className="relative mx-auto hidden aspect-[1440/1000] w-full max-w-[1440px] overflow-hidden lg:block">
+        <div className="absolute top-[-4%] left-0 aspect-[1440/1174] w-full">
         {/* 151:364 sink 414,256 557×453 */}
         <div className="absolute top-[21.806%] left-[28.75%] z-[1] h-[38.586%] w-[38.681%] overflow-hidden">
           <div className="absolute top-[-70.86%] left-[-21.18%] h-[255.52%] w-[138.54%]">
@@ -217,6 +218,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
             sizes="204px"
             className="object-contain"
           />
+        </div>
         </div>
       </div>
     </section>
