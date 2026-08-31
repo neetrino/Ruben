@@ -30,16 +30,16 @@ export function CompareHeaderLink({
         <Image
           src={iconSrc}
           alt=""
-          width={31}
+          width={35}
           height={35}
-          className="h-[35px] w-[31px]"
+          className="size-[35px]"
           aria-hidden
         />
       ) : (
         <GitCompareArrows className="h-5 w-5" aria-hidden="true" />
       )}
       {count > 0 ? (
-        <span className="absolute top-0.5 right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-semibold text-black">
+        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-semibold text-black">
           {count > 99 ? "99+" : count}
         </span>
       ) : null}
