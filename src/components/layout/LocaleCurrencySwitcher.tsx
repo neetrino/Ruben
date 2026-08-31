@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { ChevronDown } from "lucide-react";
 
+import { HEADER_ASSETS } from "@/components/layout/header-assets";
 import { DROPDOWN_ANIMATION_MS } from "@/components/ui/SelectDropdown";
 import { setCurrencyAction } from "@/features/preferences/set-currency-action";
 import type { Locale } from "@/lib/i18n/config";
@@ -25,6 +27,7 @@ type LocaleCurrencySwitcherProps = {
   currency: Currency;
   currencyLabel: string;
   languageLabel: string;
+  appearance?: "default" | "navbar";
 };
 
 function replaceLocaleInPath(pathname: string, nextLocale: Locale): string {
@@ -51,6 +54,7 @@ export function LocaleCurrencySwitcher({
   currency,
   currencyLabel,
   languageLabel,
+  appearance = "default",
 }: LocaleCurrencySwitcherProps) {
   const router = useRouter();
   const pathname = usePathname() ?? `/${locale}`;
@@ -161,24 +165,44 @@ export function LocaleCurrencySwitcher({
     >
       <button
         type="button"
-        className="flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 transition-colors hover:bg-gray-50"
+        className={
+          appearance === "navbar"
+            ? "flex h-[37px] w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white transition-colors hover:bg-white/10"
+            : "flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 transition-colors hover:bg-gray-50"
+        }
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={menuId}
         aria-label={`${currency} / ${localeShortLabels[locale]}`}
         onClick={() => (open ? closeMenu() : openMenu())}
       >
-        <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">
-          <span>{currency}</span>
-          <span className="inline-block w-[2px]" aria-hidden />
-          <span>/</span>
-          <span className="inline-block w-[2px]" aria-hidden />
-          <span>{localeShortLabels[locale]}</span>
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : ""}`}
-          aria-hidden
-        />
+        {appearance === "navbar" ? (
+          <>
+            <Image
+              src={HEADER_ASSETS.globe}
+              alt=""
+              width={24}
+              height={24}
+              className="size-[22px] shrink-0"
+              aria-hidden
+            />
+            <span className="text-base tracking-[1.8px]">{currency}</span>
+          </>
+        ) : (
+          <>
+            <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">
+              <span>{currency}</span>
+              <span className="inline-block w-[2px]" aria-hidden />
+              <span>/</span>
+              <span className="inline-block w-[2px]" aria-hidden />
+              <span>{localeShortLabels[locale]}</span>
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : ""}`}
+              aria-hidden
+            />
+          </>
+        )}
       </button>
 
       {rendered ? (

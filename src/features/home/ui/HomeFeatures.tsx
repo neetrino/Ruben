@@ -1,12 +1,7 @@
-import type { ReactNode } from "react";
-import {
-  BadgeCheck,
-  CreditCard,
-  ShieldCheck,
-  Truck,
-} from "lucide-react";
+import Image from "next/image";
 
-export type HomeFeatureIcon = "warranty" | "delivery" | "installment" | "original";
+import { HOME_ASSETS } from "@/features/home/config/assets";
+import type { HomeFeatureIcon } from "@/features/home/ui/feature-icons";
 
 type FeatureItem = {
   icon: HomeFeatureIcon;
@@ -15,39 +10,90 @@ type FeatureItem = {
 };
 
 type HomeFeaturesProps = {
-  title: string;
   items: readonly FeatureItem[];
 };
 
-const FEATURE_ICONS: Record<HomeFeatureIcon, ReactNode> = {
-  warranty: <ShieldCheck className="h-7 w-7" aria-hidden="true" />,
-  delivery: <Truck className="h-7 w-7" aria-hidden="true" />,
-  installment: <CreditCard className="h-7 w-7" aria-hidden="true" />,
-  original: <BadgeCheck className="h-7 w-7" aria-hidden="true" />,
+const FEATURE_ICONS: Record<HomeFeatureIcon, string> = {
+  warranty: HOME_ASSETS.featureIconShield,
+  delivery: HOME_ASSETS.featureIconBolt,
+  installment: HOME_ASSETS.featureIconCard,
+  original: HOME_ASSETS.featureIconSeal,
 };
 
-export function HomeFeatures({ title, items }: HomeFeaturesProps) {
+const CARD_LAYOUT: Record<
+  HomeFeatureIcon,
+  { place: string; align: string; iconPlace: string }
+> = {
+  warranty: {
+    place: "lg:col-start-1 lg:row-start-1 lg:justify-self-end lg:self-end",
+    align: "text-left",
+    iconPlace: "right-4 -top-16",
+  },
+  delivery: {
+    place: "lg:col-start-3 lg:row-start-1 lg:justify-self-start lg:self-center",
+    align: "text-right",
+    iconPlace: "left-4 -top-16",
+  },
+  installment: {
+    place: "lg:col-start-1 lg:row-start-2 lg:justify-self-start lg:self-start",
+    align: "text-left",
+    iconPlace: "right-6 -top-14",
+  },
+  original: {
+    place: "lg:col-start-3 lg:row-start-2 lg:justify-self-end lg:self-start",
+    align: "text-left",
+    iconPlace: "right-4 -top-16",
+  },
+};
+
+export type { HomeFeatureIcon };
+
+export function HomeFeatures({ items }: HomeFeaturesProps) {
   return (
-    <section className="border-y border-gray-200 bg-white py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="mb-10 text-center text-3xl font-bold text-gray-900 md:text-4xl">
-          {title}
-        </h2>
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {items.map((item) => (
-            <div key={item.title} className="text-center">
-              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 text-gray-900">
-                {FEATURE_ICONS[item.icon]}
+    <section className="rounded-t-[40px] bg-[var(--brand-deep)] py-16 sm:py-24">
+      <div className="relative mx-auto grid max-w-[1440px] gap-8 px-6 sm:px-10 lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-6 lg:gap-y-10 lg:px-[51px]">
+        <div className="relative order-first mx-auto flex w-full max-w-md items-center justify-center lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none">
+          <div className="pointer-events-none absolute inset-x-8 bottom-8 top-1/3 rounded-[50%] bg-[var(--brand)]/40 blur-2xl" />
+          <Image
+            src={HOME_ASSETS.featuresSink}
+            alt=""
+            width={557}
+            height={453}
+            className="relative z-10 h-auto w-full max-w-[420px] object-contain drop-shadow-xl lg:max-w-[520px]"
+          />
+        </div>
+
+        {items.map((item) => {
+          const layout = CARD_LAYOUT[item.icon];
+          return (
+            <article
+              key={item.title}
+              className={`relative rounded-[30px] bg-white px-8 py-10 shadow-sm ${layout.place}`}
+            >
+              <div
+                className={`absolute ${layout.iconPlace} size-[120px] sm:size-[150px]`}
+              >
+                <Image
+                  src={FEATURE_ICONS[item.icon]}
+                  alt=""
+                  fill
+                  sizes="150px"
+                  className="object-contain"
+                />
               </div>
-              <h3 className="mb-2 text-lg font-semibold text-gray-900">
+              <h3
+                className={`text-xl font-medium tracking-wide text-[#1a1c1c] uppercase sm:text-2xl ${layout.align}`}
+              >
                 {item.title}
               </h3>
-              <p className="text-sm leading-relaxed text-gray-600">
+              <p
+                className={`mt-3 text-base leading-6 text-[#4c4546] ${layout.align}`}
+              >
                 {item.description}
               </p>
-            </div>
-          ))}
-        </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );

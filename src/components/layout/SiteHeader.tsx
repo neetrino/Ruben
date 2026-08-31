@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 
 import { SiteHeaderMainNav } from "@/components/layout/SiteHeaderMainNav";
-import { SiteHeaderTopBar } from "@/components/layout/SiteHeaderTopBar";
 import { getCartItemCount } from "@/features/cart/cart";
 import { getCompareCount } from "@/features/compare/queries";
 import { getWishlistCount } from "@/features/wishlist/queries";
@@ -16,12 +15,19 @@ type SiteHeaderProps = {
   dictionary: Dictionary;
 };
 
-function HeaderControlsFallback() {
+function HeaderControlsFallback({ brand }: { brand: string }) {
   return (
-    <div
-      className="h-11 w-28 animate-pulse rounded-lg bg-gray-100"
-      aria-hidden="true"
-    />
+    <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-8">
+      <div className="mx-auto flex max-w-[1364px] items-center justify-between gap-4 rounded-[70px] bg-[#212121] px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
+        <span className="text-sm font-semibold tracking-wide text-white uppercase">
+          {brand}
+        </span>
+        <div
+          className="h-9 w-28 animate-pulse rounded-full bg-white/10"
+          aria-hidden="true"
+        />
+      </div>
+    </header>
   );
 }
 
@@ -33,8 +39,9 @@ async function SiteHeaderMainNavAsync({
   const navItems = [
     { href: `/${locale}`, label: dictionary.nav.home },
     { href: `/${locale}/products`, label: dictionary.nav.products },
-    { href: `/${locale}/blog`, label: dictionary.nav.blog },
-    { href: `/${locale}/about`, label: dictionary.nav.about },
+    { href: `/${locale}#categories`, label: dictionary.nav.categories },
+    { href: `/${locale}#partners`, label: dictionary.nav.brands },
+    { href: `/${locale}#promotions`, label: dictionary.nav.promotions },
     { href: `/${locale}/contact`, label: dictionary.nav.contact },
   ] as const;
 
@@ -60,31 +67,17 @@ async function SiteHeaderMainNavAsync({
 }
 
 /**
- * Storefront chrome: top bar streams immediately; account/cart/wishlist/compare
- * load in a Suspense island so page content is not blocked.
+ * Storefront chrome: floating dark pill navbar matching Figma TopNavBar.
+ * Account/cart/wishlist/compare load in a Suspense island.
  */
 export function SiteHeader({ locale, currency, dictionary }: SiteHeaderProps) {
   return (
     <div
-      className="site-header sticky top-0 z-[80] shrink-0 md:relative"
+      className="site-header sticky top-0 z-[80] shrink-0 bg-transparent md:relative"
       data-site-header
     >
-      <SiteHeaderTopBar
-        locale={locale}
-        currency={currency}
-        dictionary={dictionary}
-      />
       <Suspense
-        fallback={
-          <header className="relative z-10 border-b border-gray-200/80 bg-gradient-to-b from-gray-50 to-white shadow-sm">
-            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
-              <span className="text-lg font-semibold tracking-tight text-gray-900">
-                {dictionary.brand}
-              </span>
-              <HeaderControlsFallback />
-            </div>
-          </header>
-        }
+        fallback={<HeaderControlsFallback brand={dictionary.brand} />}
       >
         <SiteHeaderMainNavAsync
           locale={locale}

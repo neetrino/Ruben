@@ -1,7 +1,8 @@
 import { notFound } from "next/navigation";
 
 import { listActiveHeroSlides } from "@/features/hero/application/queries";
-import { HomeAboutTeaser } from "@/features/home/ui/HomeAboutTeaser";
+import { listStorefrontCategories } from "@/features/home/application/list-storefront-categories";
+import { HomeCategories } from "@/features/home/ui/HomeCategories";
 import { HomeFeaturedProducts } from "@/features/home/ui/HomeFeaturedProducts";
 import { HomeFeatures } from "@/features/home/ui/HomeFeatures";
 import { HomeHero } from "@/features/home/ui/HomeHero";
@@ -30,6 +31,7 @@ type PricedCard = {
   id: string;
   href: string;
   title: string;
+  brandLabel: string | null;
   priceFormatted: string;
   compareAtFormatted: string | null;
   discountPercent: number | null;
@@ -52,6 +54,7 @@ export default async function HomePage({ params }: HomePageProps) {
     heroSlides,
     featuredProducts,
     onSaleProducts,
+    categories,
     globalDiscount,
     currency,
     user,
@@ -59,6 +62,7 @@ export default async function HomePage({ params }: HomePageProps) {
     listActiveHeroSlides(locale),
     getFeaturedProducts(locale),
     getOnSaleProducts(locale),
+    listStorefrontCategories(locale),
     getStoreGlobalDiscount(),
     getSelectedCurrency(),
     getCurrentUser(),
@@ -90,6 +94,7 @@ export default async function HomePage({ params }: HomePageProps) {
       id: product.id,
       href: `/${locale}/products/${product.translation.slug}`,
       title: product.translation.title,
+      brandLabel: null,
       priceFormatted: price.formatted,
       compareAtFormatted: compareAt?.formatted ?? null,
       discountPercent: product.discountPercent,
@@ -111,14 +116,28 @@ export default async function HomePage({ params }: HomePageProps) {
         )
       : null;
 
+  const categoryCards = categories.map((category) => ({
+    id: category.id,
+    title: category.title,
+    href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
+    imageUrl: category.imageUrl,
+  }));
+
   return (
-    <div className="-mx-4 -my-10 sm:-mx-6 lg:-mx-8">
+    <div className="home-page-root relative bg-white">
       <HomeHero
         slides={heroSlides}
-        fallbackTitle={dictionary.home.title}
+        brandName={dictionary.home.title}
         fallbackSubtitle={dictionary.home.subtitle}
         fallbackCtaLabel={dictionary.home.cta}
         fallbackCtaHref={productsHref}
+      />
+
+      <HomeCategories
+        categories={categoryCards}
+        emptyLabel={dictionary.home.categoriesEmpty}
+        prevLabel={dictionary.home.categoriesPrev}
+        nextLabel={dictionary.home.categoriesNext}
       />
 
       <HomeFeaturedProducts
@@ -138,7 +157,6 @@ export default async function HomePage({ params }: HomePageProps) {
       <HomePromotions
         locale={locale}
         title={dictionary.home.promotionsTitle}
-        subtitle={dictionary.home.promotionsSubtitle}
         viewAllLabel={dictionary.home.viewAll}
         viewAllHref={productsHref}
         emptyLabel={dictionary.home.emptyPromotions}
@@ -149,27 +167,9 @@ export default async function HomePage({ params }: HomePageProps) {
         addToCartLabel={dictionary.product.addToCart}
         isSignedIn={Boolean(user)}
         products={promoCards}
-        offers={[
-          {
-            title: dictionary.home.offers.saleTitle,
-            description: dictionary.home.offers.saleDescription,
-            href: productsHref,
-          },
-          {
-            title: dictionary.home.offers.installmentTitle,
-            description: dictionary.home.offers.installmentDescription,
-            href: productsHref,
-          },
-          {
-            title: dictionary.home.offers.deliveryTitle,
-            description: dictionary.home.offers.deliveryDescription,
-            href: `/${locale}/contact`,
-          },
-        ]}
       />
 
       <HomeFeatures
-        title={dictionary.home.whyTitle}
         items={[
           {
             icon: "warranty",
@@ -194,18 +194,7 @@ export default async function HomePage({ params }: HomePageProps) {
         ]}
       />
 
-      <HomePartners
-        title={dictionary.home.partnersTitle}
-        subtitle={dictionary.home.partnersSubtitle}
-      />
-
-      <HomeAboutTeaser
-        eyebrow={dictionary.home.aboutEyebrow}
-        title={dictionary.home.aboutTitle}
-        description={dictionary.home.aboutDescription}
-        ctaLabel={dictionary.home.aboutCta}
-        ctaHref={`/${locale}/about`}
-      />
+      <HomePartners title={dictionary.home.partnersTitle} />
     </div>
   );
 }

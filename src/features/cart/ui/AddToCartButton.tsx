@@ -1,6 +1,6 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -13,6 +13,8 @@ type AddToCartButtonProps = {
   disabled?: boolean;
   className?: string;
   size?: "sm" | "md";
+  /** Replaces the default cart icon when provided. */
+  children?: ReactNode;
 };
 
 export function AddToCartButton({
@@ -21,6 +23,7 @@ export function AddToCartButton({
   disabled = false,
   className = "",
   size = "md",
+  children,
 }: AddToCartButtonProps) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -52,12 +55,14 @@ export function AddToCartButton({
       aria-label={label}
       className={`inline-flex items-center justify-center rounded-full transition disabled:cursor-not-allowed disabled:opacity-40 ${className}`}
     >
-      <ShoppingCart
-        className={`${iconClass} ${
-          justAdded ? "fill-gray-900 text-gray-900" : "text-gray-700"
-        }`}
-        aria-hidden
-      />
+      {children ?? (
+        <ShoppingCart
+          className={`${iconClass} ${
+            justAdded ? "fill-gray-900 text-gray-900" : "text-gray-700"
+          }`}
+          aria-hidden
+        />
+      )}
     </button>
   );
 }

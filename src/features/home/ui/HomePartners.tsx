@@ -4,33 +4,25 @@ import {
 } from "@/features/home/config/partners";
 
 type HomePartnersProps = {
-  title: string;
-  subtitle: string;
   brands?: readonly HomePartnerBrand[];
+  title?: string;
 };
 
 export function HomePartners({
-  title,
-  subtitle,
   brands = HOME_PARTNER_BRANDS,
+  title,
 }: HomePartnersProps) {
   return (
-    <section className="border-y border-gray-200 bg-gray-50 py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-            {title}
-          </h2>
-          <p className="mt-2 text-base text-gray-600">{subtitle}</p>
-        </div>
-
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {brands.map((brand) => (
-            <li
-              key={brand.id}
-              className="flex h-20 items-center justify-center border border-gray-200 bg-white px-4"
-            >
-              <span className="text-lg font-semibold tracking-wide text-gray-700">
+    <section
+      id="partners"
+      className="scroll-mt-28 rounded-t-[40px] bg-white py-20 sm:py-24"
+    >
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-[51px]">
+        {title ? <h2 className="sr-only">{title}</h2> : null}
+        <ul className="flex flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24">
+          {brands.slice(0, 4).map((brand) => (
+            <li key={brand.id}>
+              <span className="text-2xl font-black tracking-[0.12em] text-black uppercase sm:text-3xl">
                 {brand.name}
               </span>
             </li>

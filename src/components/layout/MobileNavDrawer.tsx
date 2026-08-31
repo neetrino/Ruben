@@ -29,9 +29,13 @@ type MobileNavDrawerProps = {
   locale: Locale;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
+  appearance?: "default" | "navbar";
 };
 
 function isNavItemActive(pathname: string, href: string, locale: Locale): boolean {
+  if (href.includes("#")) {
+    return false;
+  }
   if (href === `/${locale}` || href === `/${locale}/`) {
     return pathname === `/${locale}` || pathname === `/${locale}/`;
   }
@@ -46,6 +50,7 @@ export function MobileNavDrawer({
   locale,
   dictionary,
   navItems,
+  appearance = "default",
 }: MobileNavDrawerProps) {
   const menuId = useId();
   const pathname = usePathname() ?? "";
@@ -169,7 +174,11 @@ export function MobileNavDrawer({
       <button
         type="button"
         onClick={toggleMenu}
-        className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+        className={
+          appearance === "navbar"
+            ? "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+            : "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+        }
         aria-label={open ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
         aria-expanded={open}
         aria-controls={menuId}
@@ -240,7 +249,7 @@ export function MobileNavDrawer({
                       );
                       return (
                         <AppLink
-                          key={item.href}
+                          key={`${item.href}-${item.label}`}
                           href={item.href}
                           prefetchPolicy="intent"
                           aria-current={active ? "page" : undefined}

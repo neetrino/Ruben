@@ -6,9 +6,9 @@ describe("getDictionary", () => {
   it("merges namespace files into the storefront dictionary shape", () => {
     const dictionary = getDictionary("en");
 
-    expect(dictionary.brand).toBe("White-Shop");
-    expect(dictionary.nav.home).toBe("Home");
-    expect(dictionary.home.title).toBe("White Shop");
+    expect(dictionary.brand).toBe("RUBEN");
+    expect(dictionary.nav.home).toBe("HOME");
+    expect(dictionary.home.title).toBe("RUBEN");
     expect(dictionary.home.whyTitle).toBe("Why choose us");
     expect(dictionary.home.partnersTitle).toBe("Our partners");
     expect(dictionary.footer.social).toBe("Social");
@@ -19,6 +19,9 @@ describe("getDictionary", () => {
     expect(dictionary.catalog.clearFilters).toBe("Clear filters");
     expect(dictionary.compare.empty).toBe("Your compare list is empty.");
     expect(dictionary.nav.compare).toBe("Compare");
+    expect(dictionary.nav.categories).toBe("CATEGORIES");
+    expect(dictionary.nav.brands).toBe("BRANDS");
+    expect(dictionary.nav.promotions).toBe("SALE");
     expect(dictionary.admin.nav.dashboard).toBe("Dashboard");
     expect(dictionary.admin.common.save).toBe("Save");
     expect(dictionary.legal.privacy.title).toBe("Privacy Policy");
@@ -30,12 +33,12 @@ describe("getDictionary", () => {
   });
 
   it("loads Armenian and Russian namespaces", () => {
-    expect(getDictionary("hy").nav.home).toBe("Գլխավոր");
+    expect(getDictionary("hy").nav.home).toBe("ԳԼԽԱՎՈՐ");
     expect(getDictionary("hy").admin.nav.dashboard).toBe("Վահանակ");
     expect(getDictionary("hy").legal.privacy.title).toBe(
       "Գաղտնիության քաղաքականություն",
     );
-    expect(getDictionary("ru").nav.home).toBe("Главная");
+    expect(getDictionary("ru").nav.home).toBe("ГЛАВНАЯ");
     expect(getDictionary("ru").admin.nav.dashboard).toBe("Дашборд");
     expect(getDictionary("ru").legal.refund.title).toBe("Политика возврата");
   });

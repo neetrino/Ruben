@@ -1,30 +1,25 @@
-import { AppLink } from "@/components/ui/AppLink";
-import { ProductCard } from "@/features/products/ui/ProductCard";
+import { HomeArrowCta } from "@/features/home/ui/HomeArrowCta";
+import { HomeProductCard } from "@/features/home/ui/HomeProductCard";
 import type { Locale } from "@/lib/i18n/config";
 
 type PromoProduct = {
   id: string;
   href: string;
   title: string;
+  brandLabel?: string | null;
   priceFormatted: string;
   compareAtFormatted?: string | null;
   discountPercent?: number | null;
+  badgeLabel?: string | null;
   imageUrl: string | null;
   inStock: boolean;
   inWishlist?: boolean;
   inCompare?: boolean;
 };
 
-type OfferCard = {
-  title: string;
-  description: string;
-  href: string;
-};
-
 type HomePromotionsProps = {
   locale: Locale;
   title: string;
-  subtitle: string;
   viewAllLabel: string;
   viewAllHref: string;
   emptyLabel: string;
@@ -35,13 +30,11 @@ type HomePromotionsProps = {
   addToCartLabel: string;
   isSignedIn: boolean;
   products: readonly PromoProduct[];
-  offers: readonly OfferCard[];
 };
 
 export function HomePromotions({
   locale,
   title,
-  subtitle,
   viewAllLabel,
   viewAllHref,
   emptyLabel,
@@ -52,63 +45,35 @@ export function HomePromotions({
   addToCartLabel,
   isSignedIn,
   products,
-  offers,
 }: HomePromotionsProps) {
-  const hasProducts = products.length > 0;
-
   return (
-    <section className="bg-white py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-              {title}
-            </h2>
-            <p className="mt-2 text-base text-gray-600">{subtitle}</p>
-          </div>
-          <AppLink
-            href={viewAllHref}
-            prefetchPolicy="intent"
-            className="text-sm font-semibold text-gray-700 underline-offset-2 hover:underline"
-          >
-            {viewAllLabel}
-          </AppLink>
+    <section id="promotions" className="scroll-mt-28 bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 lg:px-[51px]">
+        <div className="mb-10 flex items-center justify-between gap-4">
+          <h2 className="text-xl font-bold tracking-wide text-black uppercase sm:text-2xl">
+            {title}
+          </h2>
+          <HomeArrowCta href={viewAllHref} label={viewAllLabel} />
         </div>
 
         {globalDiscountLabel ? (
-          <p className="mb-8 rounded-lg bg-gray-900 px-4 py-3 text-center text-sm font-semibold text-white sm:text-base">
+          <p className="mb-8 rounded-full bg-black px-4 py-3 text-center text-sm font-semibold text-white sm:text-base">
             {globalDiscountLabel}
           </p>
         ) : null}
 
-        <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-3">
-          {offers.map((offer) => (
-            <AppLink
-              key={offer.title}
-              href={offer.href}
-              prefetchPolicy="intent"
-              className="block border border-gray-200 bg-gray-50 p-5 transition hover:border-gray-300 hover:bg-gray-100"
-            >
-              <h3 className="text-lg font-semibold text-gray-900">
-                {offer.title}
-              </h3>
-              <p className="mt-2 text-sm leading-relaxed text-gray-600">
-                {offer.description}
-              </p>
-            </AppLink>
-          ))}
-        </div>
-
-        {hasProducts ? (
-          <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        {products.length > 0 ? (
+          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
             {products.map((product, index) => (
-              <ProductCard
+              <HomeProductCard
                 key={product.id}
                 href={product.href}
                 title={product.title}
+                brandLabel={product.brandLabel}
                 priceFormatted={product.priceFormatted}
                 compareAtFormatted={product.compareAtFormatted}
                 discountPercent={product.discountPercent}
+                badgeLabel={product.badgeLabel}
                 imageUrl={product.imageUrl}
                 inStock={product.inStock}
                 priority={index < 4}
@@ -125,7 +90,7 @@ export function HomePromotions({
             ))}
           </div>
         ) : (
-          <p className="text-gray-600">{emptyLabel}</p>
+          <p className="text-neutral-600">{emptyLabel}</p>
         )}
       </div>
     </section>
