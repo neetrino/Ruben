@@ -19,7 +19,7 @@ type SiteHeaderCartTriggerProps = {
 };
 
 const ICON_BUTTON =
-  "relative inline-flex size-9 items-center justify-center text-white transition-opacity hover:opacity-80";
+  "relative inline-flex size-[35px] items-center justify-center text-white transition-opacity hover:opacity-80";
 
 export function SiteHeaderCartTrigger({
   locale,
@@ -54,9 +54,9 @@ export function SiteHeaderCartTrigger({
             <Image
               src={HEADER_ASSETS.cart}
               alt=""
-              width={24}
-              height={24}
-              className="size-6"
+              width={35}
+              height={35}
+              className="size-[35px]"
               aria-hidden
             />
           ) : (

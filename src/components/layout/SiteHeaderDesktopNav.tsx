@@ -46,8 +46,8 @@ export function SiteHeaderDesktopNav({
             prefetchPolicy="intent"
             className={
               active
-                ? "border-b-2 border-[var(--brand-deep)] pb-1.5 text-xs tracking-[1.8px] text-[var(--brand-deep)] uppercase"
-                : "text-xs tracking-[1.8px] text-white uppercase transition-colors hover:text-[var(--brand-deep)]"
+                ? "border-b-2 border-[var(--brand-deep)] pb-1.5 text-xs leading-4 tracking-[1.8px] text-[var(--brand-deep)] uppercase"
+                : "text-xs leading-4 tracking-[1.8px] text-white uppercase transition-colors hover:text-[var(--brand-deep)]"
             }
             aria-current={active ? "page" : undefined}
           >

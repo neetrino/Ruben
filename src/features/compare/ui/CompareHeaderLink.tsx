@@ -30,9 +30,9 @@ export function CompareHeaderLink({
         <Image
           src={iconSrc}
           alt=""
-          width={24}
-          height={24}
-          className="size-6"
+          width={31}
+          height={35}
+          className="h-[35px] w-[31px]"
           aria-hidden
         />
       ) : (

@@ -30,9 +30,9 @@ export function WishlistHeaderLink({
         <Image
           src={iconSrc}
           alt=""
-          width={24}
-          height={24}
-          className="size-6"
+          width={35}
+          height={33}
+          className="h-[33px] w-[35px]"
           aria-hidden
         />
       ) : (

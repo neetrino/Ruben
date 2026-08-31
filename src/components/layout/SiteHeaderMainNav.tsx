@@ -31,7 +31,7 @@ type SiteHeaderMainNavProps = {
 };
 
 const ICON_BUTTON =
-  "relative inline-flex size-9 items-center justify-center text-white transition-opacity hover:opacity-80";
+  "relative inline-flex size-[35px] items-center justify-center text-white transition-opacity hover:opacity-80";
 
 export function SiteHeaderMainNav({
   locale,
@@ -46,8 +46,8 @@ export function SiteHeaderMainNav({
   const searchHref = `/${locale}/products`;
 
   return (
-    <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-8">
-      <div className="mx-auto flex max-w-[1364px] items-center justify-between gap-4 rounded-[70px] bg-[#212121] px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
+    <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-[38px] lg:pt-[26px]">
+      <div className="mx-auto flex h-14 max-w-[1364px] items-center justify-between rounded-[70px] bg-[#212121] px-4 sm:h-[63px] sm:px-6 lg:px-[69px]">
         <AppLink
           href={`/${locale}`}
           prefetchPolicy="intent"
@@ -60,13 +60,13 @@ export function SiteHeaderMainNav({
             width={57}
             height={35}
             priority
-            className="h-[28px] w-auto sm:h-[35px]"
+            className="h-[28px] w-auto sm:h-[35px] sm:w-[57px]"
           />
         </AppLink>
 
         <SiteHeaderDesktopNav locale={locale} items={navItems} />
 
-        <div className="flex items-center gap-1 sm:gap-2">
+        <div className="flex items-center gap-2">
           <AppLink
             href={searchHref}
             prefetchPolicy="intent"
@@ -83,7 +83,7 @@ export function SiteHeaderMainNav({
             />
           </AppLink>
 
-          <div className="hidden items-center gap-1 md:flex">
+          <div className="hidden items-center gap-2 md:flex">
             <WishlistHeaderLink
               locale={locale}
               label={dictionary.nav.wishlist}

@@ -183,10 +183,10 @@ export function LocaleCurrencySwitcher({
               alt=""
               width={24}
               height={24}
-              className="size-[22px] shrink-0"
+              className="size-6 shrink-0"
               aria-hidden
             />
-            <span className="text-base tracking-[1.8px]">{currency}</span>
+            <span className="text-base leading-4 tracking-[1.8px]">{currency}</span>
           </>
         ) : (
           <>

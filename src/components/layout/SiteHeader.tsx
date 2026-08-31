@@ -17,8 +17,8 @@ type SiteHeaderProps = {
 
 function HeaderControlsFallback({ brand }: { brand: string }) {
   return (
-    <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-8">
-      <div className="mx-auto flex max-w-[1364px] items-center justify-between gap-4 rounded-[70px] bg-[#212121] px-4 py-3 sm:px-6 sm:py-3.5 lg:px-8">
+    <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-[38px] lg:pt-[26px]">
+      <div className="mx-auto flex h-14 max-w-[1364px] items-center justify-between rounded-[70px] bg-[#212121] px-4 sm:h-[63px] sm:px-6 lg:px-[69px]">
         <span className="text-sm font-semibold tracking-wide text-white uppercase">
           {brand}
         </span>
