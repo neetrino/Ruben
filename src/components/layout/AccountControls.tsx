@@ -21,14 +21,14 @@ type AccountControlsProps = {
 };
 
 const menuItemClassName =
-  "block w-full whitespace-nowrap px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 hover:text-gray-900";
+  "block w-full whitespace-nowrap px-4 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-[var(--brand)] hover:text-gray-900";
 
 function iconButtonClassName(
   appearance: "default" | "navbar",
   active = false,
 ): string {
   if (appearance === "navbar") {
-    return "inline-flex size-[31px] items-center justify-center overflow-hidden rounded-full transition-opacity hover:opacity-90";
+    return "inline-flex size-[35px] shrink-0 items-center justify-center self-center overflow-hidden rounded-full transition-opacity hover:opacity-90";
   }
   const base =
     "inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors duration-150";
@@ -52,9 +52,9 @@ export function AccountControls({
       <Image
         src={HEADER_ASSETS.user}
         alt=""
-        width={31}
-        height={31}
-        className="size-[31px]"
+        width={35}
+        height={35}
+        className="size-[35px] object-contain"
         aria-hidden
       />
     ) : (

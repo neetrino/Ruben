@@ -1,11 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { ChevronDown } from "lucide-react";
 
-import { HEADER_ASSETS } from "@/components/layout/header-assets";
 import { DROPDOWN_ANIMATION_MS } from "@/components/ui/SelectDropdown";
 import { setCurrencyAction } from "@/features/preferences/set-currency-action";
 import type { Locale } from "@/lib/i18n/config";
@@ -15,11 +13,11 @@ import { currencies } from "@/lib/money/currency";
 
 const HOVER_CLOSE_DELAY_MS = 140;
 
-/** Short codes for the navbar trigger (MaMarie-style `AMD / HY`). */
+/** Short codes for the navbar trigger (caps in pill: ENG / ՀԱՅ / РУС). */
 const localeShortLabels: Record<Locale, string> = {
-  hy: "HY",
-  en: "EN",
-  ru: "RU",
+  hy: "ՀԱՅ",
+  en: "ENG",
+  ru: "РУС",
 };
 
 type LocaleCurrencySwitcherProps = {
@@ -41,7 +39,7 @@ function replaceLocaleInPath(pathname: string, nextLocale: Locale): string {
 
 function optionClassName(selected: boolean): string {
   return selected
-    ? "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm font-semibold text-gray-900 bg-gray-100 transition-colors"
+    ? "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm font-semibold text-gray-900 bg-[var(--brand)] transition-colors"
     : "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-900";
 }
 
@@ -167,7 +165,7 @@ export function LocaleCurrencySwitcher({
         type="button"
         className={
           appearance === "navbar"
-            ? "flex h-[37px] w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white transition-colors hover:bg-white/10"
+            ? "flex h-[37px] min-w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white transition-colors hover:bg-white/10"
             : "flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 transition-colors hover:bg-gray-50"
         }
         aria-expanded={open}
@@ -177,17 +175,13 @@ export function LocaleCurrencySwitcher({
         onClick={() => (open ? closeMenu() : openMenu())}
       >
         {appearance === "navbar" ? (
-          <>
-            <Image
-              src={HEADER_ASSETS.globe}
-              alt=""
-              width={24}
-              height={24}
-              className="size-6 shrink-0"
-              aria-hidden
-            />
-            <span className="text-base leading-4 tracking-[1.8px]">{currency}</span>
-          </>
+          <span className="text-base leading-4 tracking-[1.8px] whitespace-nowrap">
+            {currency}
+            <span className="mx-1" aria-hidden>
+              /
+            </span>
+            {localeShortLabels[locale]}
+          </span>
         ) : (
           <>
             <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">

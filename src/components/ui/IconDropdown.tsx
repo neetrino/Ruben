@@ -99,7 +99,7 @@ export function IconDropdown({
   return (
     <div
       ref={rootRef}
-      className={elevated ? "relative z-[210]" : "relative z-0"}
+      className={`inline-flex items-center ${elevated ? "relative z-[210]" : "relative z-0"}`}
       onMouseEnter={openOnHover ? openMenu : undefined}
       onMouseLeave={openOnHover ? scheduleClose : undefined}
     >
