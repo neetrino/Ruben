@@ -192,7 +192,6 @@ export default async function ProductsPage({
                   imageUrl={product.imageUrl}
                   inStock={product.stockOnHand > 0}
                   categoryLabel={product.category?.title ?? null}
-                  specsSummary={product.specsSummary}
                   badgeLabel={product.badgeLabel}
                   priority={index < 4}
                   locale={rawLocale}

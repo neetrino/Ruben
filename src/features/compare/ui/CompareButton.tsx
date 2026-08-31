@@ -5,6 +5,7 @@ import { GitCompareArrows } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { ProductCardCompareIcon } from "@/components/icons/product-card-icons";
 import { toggleCompareAction } from "@/features/compare/actions";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -17,6 +18,8 @@ type CompareButtonProps = {
   limitReachedLabel?: string;
   className?: string;
   size?: "sm" | "md";
+  /** Use Figma product-card swap arrows instead of Lucide. */
+  iconVariant?: "default" | "productCard";
 };
 
 export function CompareButton({
@@ -28,11 +31,13 @@ export function CompareButton({
   limitReachedLabel,
   className = "",
   size = "md",
+  iconVariant = "default",
 }: CompareButtonProps) {
   const router = useRouter();
   const [inCompare, setInCompare] = useState(initialInCompare);
   const [pending, startTransition] = useTransition();
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
+  const productCardIconClass = size === "sm" ? "h-5 w-[15px]" : "h-6 w-[18px]";
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -75,13 +80,21 @@ export function CompareButton({
       aria-pressed={inCompare}
       className={`inline-flex items-center justify-center rounded-full transition disabled:opacity-60 ${className}`}
     >
-      <GitCompareArrows
-        className={`${iconClass} ${
-          inCompare ? "text-gray-900" : "text-gray-700"
-        }`}
-        strokeWidth={inCompare ? 2.5 : 1.75}
-        aria-hidden
-      />
+      {iconVariant === "productCard" ? (
+        <ProductCardCompareIcon
+          className={`${productCardIconClass} ${
+            inCompare ? "text-black" : "text-[#1A1C1C]"
+          }`}
+        />
+      ) : (
+        <GitCompareArrows
+          className={`${iconClass} ${
+            inCompare ? "text-gray-900" : "text-gray-700"
+          }`}
+          strokeWidth={inCompare ? 2.5 : 1.75}
+          aria-hidden
+        />
+      )}
     </button>
   );
 }

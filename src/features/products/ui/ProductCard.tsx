@@ -1,6 +1,10 @@
 import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
+import {
+  ProductCardPlusIcon,
+  ProductCardStarIcon,
+} from "@/components/icons/product-card-icons";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
 import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
@@ -14,12 +18,14 @@ type ProductCardProps = {
   discountPercent?: number | null;
   imageUrl: string | null;
   inStock: boolean;
-  /** Primary category title (CAT-007). */
+  /** Brand name shown above the title when available. */
+  brandLabel?: string | null;
+  /** Fallback for the brand slot (e.g. primary category). */
   categoryLabel?: string | null;
-  /** Short technical summary from product description. */
-  specsSummary?: string | null;
-  /** Localized badge text when present. */
+  /** Localized badge text when present (e.g. ԹՈՓ). */
   badgeLabel?: string | null;
+  /** Preformatted rating, e.g. "(4,9)". */
+  ratingFormatted?: string | null;
   priority?: boolean;
   locale?: Locale;
   productId?: string;
@@ -41,9 +47,10 @@ export function ProductCard({
   discountPercent = null,
   imageUrl,
   inStock,
+  brandLabel = null,
   categoryLabel = null,
-  specsSummary = null,
   badgeLabel = null,
+  ratingFormatted = null,
   priority = false,
   locale,
   productId,
@@ -56,7 +63,7 @@ export function ProductCard({
   addToCartLabel,
   outOfStockLabel = "Out of stock",
 }: ProductCardProps) {
-  const onSale = Boolean(compareAtFormatted);
+  const metaLabel = brandLabel ?? categoryLabel;
   const showWishlist =
     locale != null && productId != null && wishlistLabel != null;
   const showCompare =
@@ -64,31 +71,31 @@ export function ProductCard({
   const showAddToCart = productId != null && addToCartLabel != null;
 
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-gray-200 bg-white transition-shadow hover:shadow-md">
-      <div className="relative aspect-square overflow-hidden bg-transparent">
+    <article className="relative mx-auto w-full max-w-[318px]">
+      <div className="relative mx-auto h-[280px] w-[88%] overflow-visible rounded-[60px] bg-[#eaeaea] sm:h-[320px] lg:h-[379px]">
         <AppLink
           href={href}
           prefetchPolicy={priority ? "intent" : "auto"}
-          className="absolute inset-0 block"
+          className="absolute inset-0 block overflow-hidden rounded-[60px]"
         >
           {imageUrl ? (
             <Image
               src={imageUrl}
               alt={title}
               fill
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px"
               priority={priority}
+              className="object-contain p-6"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center bg-gray-100 text-sm text-gray-400">
+            <div className="flex h-full items-center justify-center text-sm text-neutral-400">
               No image
             </div>
           )}
         </AppLink>
 
-        {showWishlist || showCompare ? (
-          <div className="absolute top-3 left-3 z-10 flex flex-col gap-2">
+        {showWishlist || showCompare || discountPercent != null || badgeLabel ? (
+          <div className="absolute top-2 right-[-10px] z-10 flex w-[47px] flex-col items-end gap-[5px]">
             {showWishlist ? (
               <WishlistButton
                 locale={locale}
@@ -97,7 +104,8 @@ export function ProductCard({
                 isSignedIn={isSignedIn}
                 label={wishlistLabel}
                 size="sm"
-                className="h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
+                iconVariant="productCard"
+                className="h-12 w-12 bg-white/90 text-neutral-800 shadow-[0_1px_6px_rgba(0,0,0,0.25)] backdrop-blur-sm hover:bg-white"
               />
             ) : null}
             {showCompare ? (
@@ -109,46 +117,32 @@ export function ProductCard({
                 label={compareLabel}
                 limitReachedLabel={compareLimitLabel}
                 size="sm"
-                className="h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
+                iconVariant="productCard"
+                className="h-12 w-12 bg-white/45 text-neutral-800 shadow-[0_1px_6px_rgba(0,0,0,0.25)] backdrop-blur-[4px] hover:bg-white/70"
               />
+            ) : null}
+            {discountPercent != null ? (
+              <span className="inline-flex h-[23px] w-full items-center justify-center rounded-full bg-[var(--brand)] text-[10px] font-bold text-white">
+                -{discountPercent}%
+              </span>
+            ) : null}
+            {badgeLabel ? (
+              <span className="inline-flex h-[23px] w-full items-center justify-center rounded-full bg-black px-1 text-[10px] font-bold text-white uppercase">
+                {badgeLabel}
+              </span>
             ) : null}
           </div>
         ) : null}
-
-        {badgeLabel ? (
-          <span className="absolute top-3 right-3 z-10 max-w-[70%] truncate rounded bg-gray-900/90 px-2 py-1 text-xs font-semibold text-white">
-            {badgeLabel}
-          </span>
-        ) : discountPercent != null ? (
-          <span className="absolute top-3 right-3 z-10 rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-            -{discountPercent}%
-          </span>
-        ) : null}
-
-        {showAddToCart ? (
-          <AddToCartButton
-            productId={productId}
-            label={addToCartLabel}
-            disabled={!inStock}
-            size="sm"
-            className="absolute right-3 bottom-3 z-10 h-9 w-9 bg-white/90 text-gray-800 shadow-sm hover:bg-white"
-          />
-        ) : null}
-
-        {!inStock ? (
-          <span className="absolute bottom-3 left-3 z-10 rounded bg-gray-900/90 px-2 py-1 text-xs font-semibold text-white">
-            {outOfStockLabel}
-          </span>
-        ) : null}
       </div>
 
-      <div className="flex flex-col gap-1 p-4">
-        {categoryLabel ? (
-          <p className="text-xs font-medium tracking-wide text-gray-500 uppercase">
-            {categoryLabel}
+      <div className="relative z-10 -mt-28 min-h-[147px] rounded-[40px] bg-[rgba(131,131,131,0.11)] px-5 pt-[22px] pb-4 backdrop-blur-[2px] sm:-mt-32">
+        {metaLabel ? (
+          <p className="text-[10px] leading-[15px] tracking-[1px] text-[#4c4546] uppercase">
+            {metaLabel}
           </p>
         ) : null}
-        <h3 className="line-clamp-2 text-base font-medium text-gray-900">
+
+        <h3 className="mt-1 line-clamp-2 text-base leading-[21px] font-bold text-black uppercase">
           <AppLink
             href={href}
             prefetchPolicy={priority ? "intent" : "auto"}
@@ -157,18 +151,45 @@ export function ProductCard({
             {title}
           </AppLink>
         </h3>
-        {specsSummary ? (
-          <p className="line-clamp-2 text-sm text-gray-600">{specsSummary}</p>
-        ) : null}
-        <div className="mt-1 flex flex-wrap items-baseline gap-2">
-          <p className="text-lg font-semibold text-gray-900">{priceFormatted}</p>
-          {onSale ? (
-            <p className="text-sm text-gray-500 line-through">
+
+        <div className="mt-2 flex flex-wrap items-baseline gap-3">
+          <p className="text-lg font-black text-black">{priceFormatted}</p>
+          {compareAtFormatted ? (
+            <p className="text-sm text-black/60 line-through">
               {compareAtFormatted}
             </p>
           ) : null}
         </div>
+
+        <div className="mt-3 flex min-h-12 items-end justify-between gap-3">
+          <div className="flex min-h-4 items-center gap-1">
+            {!inStock ? (
+              <span className="text-xs font-semibold text-neutral-600">
+                {outOfStockLabel}
+              </span>
+            ) : ratingFormatted ? (
+              <>
+                <ProductCardStarIcon className="h-[15px] w-4 text-black" />
+                <span className="text-sm leading-[15px] text-[#575757]">
+                  {ratingFormatted}
+                </span>
+              </>
+            ) : null}
+          </div>
+
+          {showAddToCart ? (
+            <AddToCartButton
+              productId={productId}
+              label={addToCartLabel}
+              disabled={!inStock}
+              size="sm"
+              className="h-12 w-12 shrink-0 bg-black text-white shadow-[0_2px_5px_rgba(0,0,0,0.25)] hover:bg-neutral-800"
+            >
+              <ProductCardPlusIcon className="h-[18px] w-[18px] text-white" />
+            </AddToCartButton>
+          ) : null}
+        </div>
       </div>
-    </div>
+    </article>
   );
 }

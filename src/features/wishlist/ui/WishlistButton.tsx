@@ -5,6 +5,7 @@ import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { ProductCardHeartIcon } from "@/components/icons/product-card-icons";
 import { toggleWishlistAction } from "@/features/wishlist/actions";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -16,6 +17,8 @@ type WishlistButtonProps = {
   label: string;
   className?: string;
   size?: "sm" | "md";
+  /** Use Figma product-card heart instead of Lucide. */
+  iconVariant?: "default" | "productCard";
 };
 
 export function WishlistButton({
@@ -26,11 +29,13 @@ export function WishlistButton({
   label,
   className = "",
   size = "md",
+  iconVariant = "default",
 }: WishlistButtonProps) {
   const router = useRouter();
   const [inWishlist, setInWishlist] = useState(initialInWishlist);
   const [pending, startTransition] = useTransition();
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
+  const productCardIconClass = size === "sm" ? "h-5 w-5" : "h-6 w-6";
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -69,14 +74,27 @@ export function WishlistButton({
       aria-pressed={inWishlist}
       className={`inline-flex items-center justify-center rounded-full transition disabled:opacity-60 ${className}`}
     >
-      <Heart
-        className={`${iconClass} ${
-          inWishlist
-            ? "fill-red-500 text-red-500"
-            : "fill-transparent text-gray-700"
-        }`}
-        aria-hidden
-      />
+      {iconVariant === "productCard" ? (
+        inWishlist ? (
+          <Heart
+            className={`${productCardIconClass} fill-black text-black`}
+            aria-hidden
+          />
+        ) : (
+          <ProductCardHeartIcon
+            className={`${productCardIconClass} text-black`}
+          />
+        )
+      ) : (
+        <Heart
+          className={`${iconClass} ${
+            inWishlist
+              ? "fill-red-500 text-red-500"
+              : "fill-transparent text-gray-700"
+          }`}
+          aria-hidden
+        />
+      )}
     </button>
   );
 }
