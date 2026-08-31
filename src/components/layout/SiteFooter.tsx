@@ -1,166 +1,210 @@
-import { Mail, MapPin, Phone } from "lucide-react";
+import Image from "next/image";
 
-import {
-  FacebookIcon,
-  InstagramIcon,
-  LinkedInIcon,
-} from "@/components/layout/SocialIcons";
+import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
-import { STORE_MAP_EMBED_SRC } from "@/lib/store/map-embed";
 
 type SiteFooterProps = {
   dictionary: Dictionary;
   locale: Locale;
 };
 
+const LINK_CLASS =
+  "text-sm leading-5 text-white/50 transition-colors hover:text-white";
+const HEADING_CLASS = "text-lg leading-[15px] font-normal text-white uppercase";
+const SOCIAL_CLASS =
+  "inline-flex size-9 items-center justify-center rounded-full border border-white/18 text-white transition-colors hover:border-white/40 hover:bg-white/5";
+
 export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   const year = new Date().getFullYear();
+  const footer = dictionary.footer;
+  const contact = dictionary.contact;
+
+  const navLinks = [
+    { href: `/${locale}/products`, label: footer.shop },
+    { href: `/${locale}/about`, label: dictionary.nav.about },
+    { href: `/${locale}#promotions`, label: footer.specialOffers },
+    { href: `/${locale}/blog`, label: footer.gallery },
+    { href: `/${locale}/contact`, label: dictionary.nav.contact },
+  ] as const;
+
+  const supportLinks = [
+    { href: `/${locale}/legal/delivery`, label: footer.deliveryReturns },
+    { href: `/${locale}/legal/terms`, label: footer.terms },
+    { href: `/${locale}/legal/privacy`, label: footer.privacyPolicy },
+    { href: `/${locale}/contact`, label: footer.faq },
+  ] as const;
+
+  const socials = [
+    {
+      href: contact.social.instagram,
+      label: "Instagram",
+      icon: FOOTER_ASSETS.instagram,
+      size: 16,
+    },
+    {
+      href: contact.social.facebook,
+      label: "Facebook",
+      icon: FOOTER_ASSETS.facebook,
+      size: 16,
+    },
+    {
+      href: contact.social.whatsapp,
+      label: "WhatsApp",
+      icon: FOOTER_ASSETS.whatsapp,
+      size: 20,
+    },
+  ] as const;
+
+  const copyrightPrefix = footer.copyrightPrefix.replace(
+    "{year}",
+    String(year),
+  );
 
   return (
-    <footer className="storefront-footer mt-auto border-t border-gray-800 bg-black pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <h3 className="mb-4 text-lg font-semibold text-white">
-              {dictionary.footer.shop}
-            </h3>
-            <p className="text-sm text-gray-300">{dictionary.footer.description}</p>
-            <div className="mt-6">
-              <h4 className="mb-3 text-sm font-semibold text-white">
-                {dictionary.footer.social}
-              </h4>
-              <div className="flex items-center gap-4 text-gray-300">
+    <footer className="storefront-footer relative mt-auto overflow-hidden bg-black pb-[calc(3.5rem+env(safe-area-inset-bottom))] text-white md:pb-0">
+      {/* Figma 118:970 — left tile plane */}
+      <Image
+        src={FOOTER_ASSETS.tiles}
+        alt=""
+        width={1006}
+        height={1006}
+        className="pointer-events-none absolute top-[-56px] left-[-40%] z-0 hidden h-[1006px] w-[1006px] max-w-none object-cover select-none sm:block lg:left-[-572px]"
+        aria-hidden
+      />
+      {/* Figma 118:969 — right tile plane */}
+      <Image
+        src={FOOTER_ASSETS.tiles}
+        alt=""
+        width={1006}
+        height={1006}
+        className="pointer-events-none absolute top-[-56px] right-[-20%] z-0 h-[1006px] w-[1006px] max-w-none object-cover select-none lg:right-auto lg:left-[434px]"
+        aria-hidden
+      />
+      <div className="pointer-events-none absolute inset-0 z-[1] bg-black/35" aria-hidden />
+
+      <div className="relative z-10 mx-auto max-w-[1440px] px-[5.56%] pt-24 pb-10 sm:pt-28 lg:pt-32">
+        <div className="flex flex-col gap-12 border-b border-white/12 pb-16 lg:flex-row lg:items-start lg:justify-between lg:gap-12 xl:gap-16">
+          <div className="max-w-[469px] shrink-0">
+            <Image
+              src={FOOTER_ASSETS.logo}
+              alt={dictionary.brand}
+              width={87}
+              height={54}
+              className="h-[54px] w-auto"
+            />
+            <p className="mt-8 max-w-[320px] text-sm leading-[22.75px] text-white/45">
+              {footer.description}
+            </p>
+            <div className="mt-8 flex items-center gap-3">
+              {socials.map((item) => (
                 <a
-                  href={dictionary.contact.social.instagram}
+                  key={item.label}
+                  href={item.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="transition-colors hover:text-white"
-                  aria-label="Instagram"
+                  className={SOCIAL_CLASS}
+                  aria-label={item.label}
                 >
-                  <InstagramIcon className="h-5 w-5" />
+                  <Image
+                    src={item.icon}
+                    alt=""
+                    width={item.size}
+                    height={item.size}
+                    className="opacity-90"
+                    aria-hidden
+                  />
                 </a>
-                <a
-                  href={dictionary.contact.social.facebook}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-white"
-                  aria-label="Facebook"
-                >
-                  <FacebookIcon className="h-5 w-5" />
-                </a>
-                <a
-                  href={dictionary.contact.social.linkedin}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="transition-colors hover:text-white"
-                  aria-label="LinkedIn"
-                >
-                  <LinkedInIcon className="h-5 w-5" />
-                </a>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div>
-            <h4 className="mb-4 text-sm font-semibold text-white">
-              {dictionary.footer.legal}
-            </h4>
-            <ul className="space-y-2">
-              <li>
-                <AppLink
-                  href={`/${locale}/legal/privacy`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.footer.privacyPolicy}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/legal/terms`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.footer.terms}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/legal/refund`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.footer.refundPolicy}
-                </AppLink>
-              </li>
-              <li>
-                <AppLink
-                  href={`/${locale}/legal/delivery`}
-                  prefetchPolicy="intent"
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.footer.deliveryPolicy}
-                </AppLink>
-              </li>
-            </ul>
-          </div>
+          <div className="grid min-w-0 flex-1 grid-cols-1 gap-10 sm:grid-cols-3 sm:gap-6 lg:gap-8 xl:gap-10">
+            <div>
+              <h3 className={`${HEADING_CLASS} whitespace-nowrap`}>
+                {footer.navigation}
+              </h3>
+              <ul className="mt-6 space-y-3">
+                {navLinks.map((item) => (
+                  <li key={item.href + item.label}>
+                    <AppLink
+                      href={item.href}
+                      prefetchPolicy="intent"
+                      className={LINK_CLASS}
+                    >
+                      {item.label}
+                    </AppLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div>
-            <h4 className="mb-4 text-sm font-semibold text-white">
-              {dictionary.footer.contactInfo}
-            </h4>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-gray-400" />
-                <span className="text-sm text-gray-300">
-                  {dictionary.contact.storeAddress}
-                </span>
-              </li>
-              <li className="flex items-center gap-2">
-                <Phone className="h-5 w-5 shrink-0 text-gray-400" />
-                <a
-                  href={`tel:${dictionary.contact.storePhone}`}
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.contact.storePhone}
-                </a>
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-5 w-5 shrink-0 text-gray-400" />
-                <a
-                  href={`mailto:${dictionary.contact.storeEmail}`}
-                  className="text-sm text-gray-300 transition-colors hover:text-white"
-                >
-                  {dictionary.contact.storeEmail}
-                </a>
-              </li>
-            </ul>
-          </div>
+            <div>
+              <h3
+                className={`${HEADING_CLASS} whitespace-nowrap tracking-[1px]`}
+              >
+                {footer.support}
+              </h3>
+              <ul className="mt-6 space-y-4">
+                {supportLinks.map((item) => (
+                  <li key={item.href}>
+                    <AppLink
+                      href={item.href}
+                      prefetchPolicy="intent"
+                      className="text-sm leading-5 text-white/60 transition-colors hover:text-white"
+                    >
+                      {item.label}
+                    </AppLink>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div>
-            <h4 className="mb-4 text-sm font-semibold text-white">
-              {dictionary.footer.map}
-            </h4>
-            <div className="overflow-hidden rounded-lg border border-gray-700 bg-gray-900">
-              <iframe
-                title={dictionary.contact.mapTitle}
-                src={STORE_MAP_EMBED_SRC}
-                width="100%"
-                height="180"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="block w-full border-0"
-                allowFullScreen
-              />
+            <div>
+              <h3 className={`${HEADING_CLASS} whitespace-nowrap`}>
+                {footer.contactInfo}
+              </h3>
+              <ul className="mt-6 space-y-3 text-sm leading-5 text-white/50">
+                <li>{contact.storeAddress}</li>
+                <li>
+                  <a
+                    href={`tel:${contact.storePhone.replace(/\s/g, "")}`}
+                    className="transition-colors hover:text-white"
+                  >
+                    {contact.storePhone}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`mailto:${contact.storeEmail}`}
+                    className="transition-colors hover:text-white"
+                  >
+                    {contact.storeEmail}
+                  </a>
+                </li>
+                <li className="border-t border-white/10 pt-4">
+                  {footer.hours}
+                </li>
+              </ul>
             </div>
           </div>
         </div>
 
-        <div className="mt-8 border-t border-gray-800 pt-8">
-          <p className="text-center text-sm text-gray-300 md:text-left">
-            {dictionary.footer.copyright.replace("{year}", String(year))}
+        <div className="flex w-full items-center justify-center pt-8">
+          <p className="max-w-full text-center text-sm leading-5 text-white/40">
+            <span>{copyrightPrefix} </span>
+            <a
+              href="https://neetrino.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
+            >
+              {footer.copyrightCompany}
+            </a>
+            {footer.copyrightSuffix ? (
+              <span> {footer.copyrightSuffix}</span>
+            ) : null}
           </p>
         </div>
       </div>

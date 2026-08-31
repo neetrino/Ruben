@@ -29,15 +29,24 @@
   },
   "footer": {
     "shop": "Магазин",
-    "description": "Профессиональный интернет-магазин для повседневных покупок.",
+    "description": "«Армянская кухня, музыка и гостеприимство — в новом звучании».",
+    "navigation": "Навигация",
+    "support": "Поддержка",
     "legal": "Правовая информация",
     "privacyPolicy": "Политика конфиденциальности",
     "terms": "Условия использования",
     "refundPolicy": "Политика возврата",
     "deliveryPolicy": "Политика доставки",
-    "contactInfo": "Контактная информация",
+    "deliveryReturns": "Доставка и возврат",
+    "faq": "Частые вопросы",
+    "specialOffers": "Специальные предложения",
+    "gallery": "Галерея",
+    "contactInfo": "Контакты",
     "social": "Соцсети",
     "map": "Карта",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Пн–Вс: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | Все права защищены | Создано",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": ""
   }
 }

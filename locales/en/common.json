@@ -29,15 +29,24 @@
   },
   "footer": {
     "shop": "Shop",
-    "description": "Professional e-commerce storefront for everyday shopping.",
+    "description": "«Armenian cuisine, music and hospitality — with a new sound».",
+    "navigation": "Navigation",
+    "support": "Support",
     "legal": "Legal",
     "privacyPolicy": "Privacy Policy",
     "terms": "Terms & Conditions",
     "refundPolicy": "Refund Policy",
     "deliveryPolicy": "Delivery Policy",
-    "contactInfo": "Contact Information",
+    "deliveryReturns": "Delivery and Returns",
+    "faq": "FAQ",
+    "specialOffers": "Special offers",
+    "gallery": "Gallery",
+    "contactInfo": "Contact",
     "social": "Social",
     "map": "Map",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Mon–Sun: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved | Created by",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": ""
   }
 }

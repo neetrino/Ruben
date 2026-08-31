@@ -50,7 +50,7 @@ export type { HomeFeatureIcon };
 
 export function HomeFeatures({ items }: HomeFeaturesProps) {
   return (
-    <section className="rounded-t-[40px] bg-[var(--brand-deep)] py-16 sm:py-24">
+    <section className="rounded-t-[40px] bg-[var(--brand-deep)] pt-16 pb-28 sm:pt-24 sm:pb-36">
       <div className="relative mx-auto grid max-w-[1440px] gap-8 px-6 sm:px-10 lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-6 lg:gap-y-10 lg:px-[51px]">
         <div className="relative order-first mx-auto flex w-full max-w-md items-center justify-center lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none">
           <div className="pointer-events-none absolute inset-x-8 bottom-8 top-1/3 rounded-[50%] bg-[var(--brand)]/40 blur-2xl" />

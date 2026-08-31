@@ -29,15 +29,24 @@
   },
   "footer": {
     "shop": "Խանութ",
-    "description": "Պրոֆեսիոնալ առցանց խանութ ամենօրյա գնումների համար։",
+    "description": "«Հայկական խոհանոց, երաժշտություն եւ հյուրընկալություն՝ նոր հնչողությամբ»։",
+    "navigation": "Նավիգացիա",
+    "support": "Աջակցություն",
     "legal": "Իրավական",
     "privacyPolicy": "Գաղտնիության քաղաքականություն",
     "terms": "Պայմաններ և դրույթներ",
     "refundPolicy": "Վերադարձի քաղաքականություն",
     "deliveryPolicy": "Առաքման քաղաքականություն",
-    "contactInfo": "Կապի տվյալներ",
+    "deliveryReturns": "Առաքում և Վերադարձ",
+    "faq": "Հաճախ տրվող հարցեր",
+    "specialOffers": "Հատուկ առաջարկներ",
+    "gallery": "Պատկերասրահ",
+    "contactInfo": "Կոնտակտ",
     "social": "Սոցիալական ցանցեր",
     "map": "Քարտեզ",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Երկ–Կիր: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | Բոլոր իրավունքները պաշտպանված են | Ստեղծվել է",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": "կողմից"
   }
 }
