@@ -36,8 +36,8 @@ const CARDS: Record<
   warranty: {
     box: "left-[20.833%] top-[14.48%] h-[17.845%] w-[28.958%]",
     align: "text-left",
-    titleTop: "top-[29.36%]",
-    bodyTop: "top-[50.84%]",
+    titleTop: "top-[22%]",
+    bodyTop: "top-[42%]",
   },
   delivery: {
     box: "left-[62.847%] top-[23.424%] h-[17.547%] w-[27.986%]",
@@ -106,12 +106,12 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
                 />
               </div>
               <h3
-                className={`text-2xl leading-8 text-[#1a1c1c] uppercase ${CARDS[icon].align}`}
+                className={`whitespace-pre-line text-2xl leading-8 text-[#1a1c1c] uppercase ${CARDS[icon].align}`}
               >
                 {item.title}
               </h3>
               <p
-                className={`mt-3 text-base leading-6 text-[#4c4546] ${CARDS[icon].align}`}
+                className={`mt-3 whitespace-pre-line text-base leading-6 text-[#4c4546] ${CARDS[icon].align}`}
               >
                 {item.description}
               </p>
@@ -174,12 +174,12 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
                 </div>
               ) : null}
               <h3
-                className={`absolute right-12 left-12 ${card.titleTop} text-2xl leading-8 text-[#1a1c1c] uppercase ${card.align}`}
+                className={`absolute right-12 left-12 ${card.titleTop} whitespace-pre-line text-2xl leading-8 text-[#1a1c1c] uppercase ${card.align}`}
               >
                 {item.title}
               </h3>
               <p
-                className={`absolute right-12 left-12 ${card.bodyTop} text-base leading-6 text-[#4c4546] ${card.align}`}
+                className={`absolute right-12 left-12 ${card.bodyTop} whitespace-pre-line text-base leading-6 text-[#4c4546] ${card.align}`}
               >
                 {item.description}
               </p>
