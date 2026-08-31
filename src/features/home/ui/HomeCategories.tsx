@@ -94,18 +94,15 @@ export function HomeCategories({
     >
       <div
         className="mb-12 flex gap-2 overflow-x-auto px-6 pt-1 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        role="tablist"
         aria-label="Categories"
       >
         {categories.map((category) => {
           const isActive = category.id === resolvedActiveId;
           return (
-            <button
+            <AppLink
               key={category.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              onClick={() => selectCategory(category.id)}
+              href={category.href}
+              prefetchPolicy="intent"
               className={
                 isActive
                   ? "shrink-0 rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
@@ -113,7 +110,7 @@ export function HomeCategories({
               }
             >
               {category.title}
-            </button>
+            </AppLink>
           );
         })}
       </div>
