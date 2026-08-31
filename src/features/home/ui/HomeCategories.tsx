@@ -30,6 +30,7 @@ export function HomeCategories({
   prevLabel,
   nextLabel,
 }: HomeCategoriesProps) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const [activeArrow, setActiveArrow] = useState<-1 | 1>(1);
@@ -39,11 +40,20 @@ export function HomeCategories({
 
   const selectCategory = useCallback((id: string) => {
     setActiveId(id);
+    const scroller = scrollerRef.current;
     const card = cardRefs.current.get(id);
-    card?.scrollIntoView({
+    if (!scroller || !card) return;
+
+    const scrollerRect = scroller.getBoundingClientRect();
+    const cardRect = card.getBoundingClientRect();
+    const nextLeft =
+      scroller.scrollLeft +
+      (cardRect.left - scrollerRect.left) -
+      (scrollerRect.width - cardRect.width) / 2;
+    const maxLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+    scroller.scrollTo({
+      left: Math.min(maxLeft, Math.max(0, nextLeft)),
       behavior: "smooth",
-      inline: "center",
-      block: "nearest",
     });
   }, []);
 
@@ -109,6 +119,7 @@ export function HomeCategories({
       </div>
 
       <div
+        ref={scrollerRef}
         className="flex snap-x snap-mandatory items-end gap-8 overflow-x-auto px-6 pb-8 sm:gap-11 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {categories.map((category, index) => {
