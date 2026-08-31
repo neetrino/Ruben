@@ -71,6 +71,12 @@ body {
   [aria-disabled="true"] {
     cursor: not-allowed;
   }
+
+  /* No browser default blue focus ring (ESC / keyboard leave a flashy outline). */
+  :focus,
+  :focus-visible {
+    outline: none;
+  }
 }
 
 /* Confirm / modal dismiss — same motion as Mobee storefront dialog */

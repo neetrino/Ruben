@@ -122,7 +122,11 @@ export function LocaleCurrencySwitcher({
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") closeMenu();
+      if (event.key !== "Escape") return;
+      closeMenu();
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("mousedown", handlePointerDown);
@@ -165,8 +169,8 @@ export function LocaleCurrencySwitcher({
         type="button"
         className={
           appearance === "navbar"
-            ? "flex h-[37px] min-w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white transition-colors hover:bg-white/10"
-            : "flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 transition-colors hover:bg-gray-50"
+            ? "flex h-[37px] min-w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white outline-none transition-colors hover:bg-white/10"
+            : "flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 outline-none transition-colors hover:bg-gray-50"
         }
         aria-expanded={open}
         aria-haspopup="dialog"

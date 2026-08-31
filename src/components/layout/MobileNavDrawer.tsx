@@ -146,7 +146,11 @@ export function MobileNavDrawer({
     document.body.style.overflow = "hidden";
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     function handleTouchMove(event: TouchEvent): void {

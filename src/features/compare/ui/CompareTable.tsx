@@ -108,6 +108,7 @@ export function CompareTable({ locale, items, labels }: CompareTableProps) {
                     label={labels.addToCart}
                     disabled={product.stockOnHand < 1}
                     size="md"
+                    imageUrl={product.imageUrl}
                     className="h-10 w-10 self-start rounded-full border border-gray-200 bg-white text-gray-800 hover:bg-gray-50"
                   />
                 </div>

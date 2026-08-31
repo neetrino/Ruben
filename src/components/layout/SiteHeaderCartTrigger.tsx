@@ -19,7 +19,7 @@ type SiteHeaderCartTriggerProps = {
 };
 
 const ICON_BUTTON =
-  "relative inline-flex size-[35px] items-center justify-center text-white transition-opacity hover:opacity-80";
+  "relative inline-flex size-[35px] items-center justify-center text-white outline-none transition-opacity hover:opacity-80";
 
 export function SiteHeaderCartTrigger({
   locale,
@@ -49,6 +49,7 @@ export function SiteHeaderCartTrigger({
           className={ICON_BUTTON}
           aria-label={label}
           aria-expanded={open}
+          data-cart-target
         >
           {variant === "desktop" ? (
             <Image

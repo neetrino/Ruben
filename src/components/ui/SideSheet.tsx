@@ -85,7 +85,11 @@ export function SideSheet({
     document.body.style.overflow = "hidden";
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") onClose();
+      if (event.key !== "Escape") return;
+      onClose();
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("keydown", handleKeyDown);

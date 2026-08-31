@@ -3,9 +3,10 @@
 import type { MouseEvent, ReactNode } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 
 import { addToCart } from "@/features/cart/cart";
+import { flyToCart } from "@/features/cart/ui/fly-to-cart";
 
 type AddToCartButtonProps = {
   productId: string;
@@ -13,6 +14,8 @@ type AddToCartButtonProps = {
   disabled?: boolean;
   className?: string;
   size?: "sm" | "md";
+  /** Product image used for the fly-to-cart mini preview. */
+  imageUrl?: string | null;
   /** Replaces the default cart icon when provided. */
   children?: ReactNode;
 };
@@ -23,9 +26,11 @@ export function AddToCartButton({
   disabled = false,
   className = "",
   size = "md",
+  imageUrl = null,
   children,
 }: AddToCartButtonProps) {
   const router = useRouter();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [pending, startTransition] = useTransition();
   const [justAdded, setJustAdded] = useState(false);
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
@@ -34,6 +39,10 @@ export function AddToCartButton({
     event.preventDefault();
     event.stopPropagation();
     if (disabled || pending) return;
+
+    if (buttonRef.current) {
+      flyToCart({ from: buttonRef.current, imageUrl });
+    }
 
     startTransition(async () => {
       try {
@@ -49,6 +58,7 @@ export function AddToCartButton({
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       onClick={handleClick}
       disabled={disabled || pending}

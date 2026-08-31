@@ -18,7 +18,7 @@ type IconDropdownProps = {
 };
 
 const DEFAULT_TRIGGER_CLASS =
-  "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm transition-colors hover:border-gray-300";
+  "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm outline-none transition-colors hover:border-gray-300";
 
 export function IconDropdown({
   label,
@@ -77,7 +77,11 @@ export function IconDropdown({
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("mousedown", handlePointerDown);

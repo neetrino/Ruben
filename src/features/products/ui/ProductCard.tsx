@@ -183,6 +183,7 @@ export function ProductCard({
               label={addToCartLabel}
               disabled={!inStock}
               size="sm"
+              imageUrl={imageUrl}
               className="h-12 w-12 shrink-0 bg-black text-white shadow-[0_2px_5px_rgba(0,0,0,0.25)] hover:bg-neutral-800"
             >
               <ProductCardPlusIcon className="h-[18px] w-[18px] text-white" />

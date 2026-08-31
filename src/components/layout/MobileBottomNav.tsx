@@ -44,7 +44,7 @@ function startsWithPath(pathname: string, base: string): boolean {
 
 function tabClassName(active: boolean): string {
   return [
-    "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 text-[10px] font-medium transition-colors",
+    "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 text-[10px] font-medium outline-none transition-colors",
     active ? "text-gray-900" : "text-gray-500 hover:text-gray-800",
   ].join(" ");
 }
@@ -167,6 +167,7 @@ export function MobileBottomNav({
               aria-label={label}
               aria-expanded={open}
               className={tabClassName(open)}
+              data-cart-target
             >
               <span className="relative inline-flex">
                 <ShoppingCart

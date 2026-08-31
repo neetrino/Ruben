@@ -180,7 +180,11 @@ export function ProfileMobileTabSheet({
     document.body.style.overflow = "hidden";
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") onCloseRef.current();
+      if (event.key !== "Escape") return;
+      onCloseRef.current();
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("keydown", handleKeyDown);
