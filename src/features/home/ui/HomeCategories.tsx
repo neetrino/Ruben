@@ -20,11 +20,6 @@ type HomeCategoriesProps = {
   nextLabel: string;
 };
 
-const FALLBACK_IMAGES = [
-  HOME_ASSETS.categorySink,
-  HOME_ASSETS.categoryShower,
-] as const;
-
 function isWideCard(index: number): boolean {
   return index % 2 === 0;
 }
@@ -107,10 +102,6 @@ export function HomeCategories({
       >
         {categories.map((category, index) => {
           const wide = isWideCard(index);
-          const fallback =
-            FALLBACK_IMAGES[index % FALLBACK_IMAGES.length] ??
-            HOME_ASSETS.categorySink;
-          const imageSrc = category.imageUrl ?? fallback;
 
           return (
             <div
@@ -139,21 +130,23 @@ export function HomeCategories({
                       : "mt-[18px] h-[180px] sm:h-[206px]"
                   }`}
                 >
-                  <Image
-                    src={imageSrc}
-                    alt={category.title}
-                    fill
-                    sizes={
-                      wide
-                        ? "(max-width: 640px) 78vw, 345px"
-                        : "(max-width: 640px) 40vw, 137px"
-                    }
-                    className={
-                      wide
-                        ? "object-contain object-bottom transition duration-300 group-hover:scale-105"
-                        : "object-cover object-center transition duration-300 group-hover:scale-105"
-                    }
-                  />
+                  {category.imageUrl ? (
+                    <Image
+                      src={category.imageUrl}
+                      alt={category.title}
+                      fill
+                      sizes={
+                        wide
+                          ? "(max-width: 640px) 78vw, 345px"
+                          : "(max-width: 640px) 40vw, 137px"
+                      }
+                      className={
+                        wide
+                          ? "object-contain object-bottom transition duration-300 group-hover:scale-105"
+                          : "object-cover object-center transition duration-300 group-hover:scale-105"
+                      }
+                    />
+                  ) : null}
                 </div>
                 <p className="mt-4 text-center text-base font-bold leading-4 tracking-wide text-white uppercase">
                   {category.title}
