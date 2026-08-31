@@ -19,6 +19,8 @@ export function middleware(request: NextRequest): NextResponse {
     pathname.startsWith("/api") ||
     pathname.startsWith("/opengraph-image") ||
     pathname.startsWith("/twitter-image") ||
+    pathname.startsWith("/icon") ||
+    pathname.startsWith("/apple-icon") ||
     pathname.includes(".")
   ) {
     return nextWithPathname(request, pathname);

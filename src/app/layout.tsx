@@ -19,13 +19,13 @@ const appUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: {
-    default: "White Shop",
-    template: "%s · White Shop",
+    default: "Ruben",
+    template: "%s · Ruben",
   },
   description: "Multilingual e-commerce storefront",
   openGraph: {
     type: "website",
-    siteName: "White Shop",
+    siteName: "Ruben",
   },
   twitter: {
     card: "summary_large_image",
