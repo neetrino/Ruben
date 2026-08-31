@@ -13,12 +13,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const appUrl =
+  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(appUrl),
   title: {
     default: "White Shop",
     template: "%s · White Shop",
   },
   description: "Multilingual e-commerce storefront",
+  openGraph: {
+    type: "website",
+    siteName: "White Shop",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
