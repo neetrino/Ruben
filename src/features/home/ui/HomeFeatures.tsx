@@ -20,80 +20,204 @@ const FEATURE_ICONS: Record<HomeFeatureIcon, string> = {
   original: HOME_ASSETS.featureIconSeal,
 };
 
-const CARD_LAYOUT: Record<
+/**
+ * Figma 118:1202 artboard 1440×1174 — positions as % of frame.
+ * Cards: 151:356 warranty, 151:349 delivery, 151:342 installment, 151:366 original.
+ */
+const CARDS: Record<
   HomeFeatureIcon,
-  { place: string; align: string; iconPlace: string }
+  {
+    box: string;
+    align: "text-left" | "text-right";
+    titleTop: string;
+    bodyTop: string;
+  }
 > = {
   warranty: {
-    place: "lg:col-start-1 lg:row-start-1 lg:justify-self-end lg:self-end",
+    box: "left-[20.833%] top-[14.48%] h-[17.845%] w-[28.958%]",
     align: "text-left",
-    iconPlace: "right-4 -top-16",
+    titleTop: "top-[29.36%]",
+    bodyTop: "top-[50.84%]",
   },
   delivery: {
-    place: "lg:col-start-3 lg:row-start-1 lg:justify-self-start lg:self-center",
+    box: "left-[62.847%] top-[23.424%] h-[17.547%] w-[27.986%]",
     align: "text-right",
-    iconPlace: "left-4 -top-16",
+    titleTop: "top-[30.58%]",
+    bodyTop: "top-[55.34%]",
   },
   installment: {
-    place: "lg:col-start-1 lg:row-start-2 lg:justify-self-start lg:self-start",
+    box: "left-[9.097%] top-[37.819%] h-[16.78%] w-[29.097%]",
     align: "text-left",
-    iconPlace: "right-6 -top-14",
+    titleTop: "top-[23.35%]",
+    bodyTop: "top-[43.15%]",
   },
   original: {
-    place: "lg:col-start-3 lg:row-start-2 lg:justify-self-end lg:self-start",
+    box: "left-[57.917%] top-[46.593%] h-[17.291%] w-[30.903%]",
     align: "text-left",
-    iconPlace: "right-4 -top-16",
+    titleTop: "top-[25.86%]",
+    bodyTop: "top-[62.81%]",
   },
 };
+
+const ORDER: HomeFeatureIcon[] = [
+  "warranty",
+  "delivery",
+  "installment",
+  "original",
+];
 
 export type { HomeFeatureIcon };
 
 export function HomeFeatures({ items }: HomeFeaturesProps) {
-  return (
-    <section className="rounded-t-[40px] bg-[var(--brand-deep)] pt-16 pb-28 sm:pt-24 sm:pb-36">
-      <div className="relative mx-auto grid max-w-[1440px] gap-8 px-6 sm:px-10 lg:grid-cols-3 lg:grid-rows-2 lg:gap-x-6 lg:gap-y-10 lg:px-[51px]">
-        <div className="relative order-first mx-auto flex w-full max-w-md items-center justify-center lg:order-none lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:max-w-none">
-          <div className="pointer-events-none absolute inset-x-8 bottom-8 top-1/3 rounded-[50%] bg-[var(--brand)]/40 blur-2xl" />
-          <Image
-            src={HOME_ASSETS.featuresSink}
-            alt=""
-            width={557}
-            height={453}
-            className="relative z-10 h-auto w-full max-w-[420px] object-contain drop-shadow-xl lg:max-w-[520px]"
-          />
-        </div>
+  const byIcon = Object.fromEntries(
+    items.map((item) => [item.icon, item]),
+  ) as Record<HomeFeatureIcon, FeatureItem | undefined>;
 
-        {items.map((item) => {
-          const layout = CARD_LAYOUT[item.icon];
+  return (
+    <section className="relative overflow-x-clip rounded-t-[40px] bg-[var(--brand-deep)]">
+      {/* Mobile */}
+      <div className="mx-auto flex max-w-lg flex-col gap-10 px-6 py-14 lg:hidden">
+        <div className="relative mx-auto aspect-[557/453] w-full max-w-[557px] overflow-hidden">
+          <div className="absolute top-[-70.86%] left-[-21.18%] h-[255.52%] w-[138.54%]">
+            <Image
+              src={HOME_ASSETS.featuresSink}
+              alt=""
+              fill
+              sizes="557px"
+              className="object-cover"
+            />
+          </div>
+        </div>
+        {ORDER.map((icon) => {
+          const item = byIcon[icon];
+          if (!item) return null;
           return (
             <article
-              key={item.title}
-              className={`relative rounded-[30px] bg-white px-8 py-10 shadow-sm ${layout.place}`}
+              key={icon}
+              className="relative rounded-[30px] bg-white px-12 pt-16 pb-10"
             >
-              <div
-                className={`absolute ${layout.iconPlace} size-[120px] sm:size-[150px]`}
-              >
+              <div className="absolute -top-12 right-8 size-[120px]">
                 <Image
-                  src={FEATURE_ICONS[item.icon]}
+                  src={FEATURE_ICONS[icon]}
                   alt=""
                   fill
-                  sizes="150px"
+                  sizes="120px"
                   className="object-contain"
                 />
               </div>
               <h3
-                className={`text-xl font-medium tracking-wide text-[#1a1c1c] uppercase sm:text-2xl ${layout.align}`}
+                className={`text-2xl leading-8 text-[#1a1c1c] uppercase ${CARDS[icon].align}`}
               >
                 {item.title}
               </h3>
               <p
-                className={`mt-3 text-base leading-6 text-[#4c4546] ${layout.align}`}
+                className={`mt-3 text-base leading-6 text-[#4c4546] ${CARDS[icon].align}`}
               >
                 {item.description}
               </p>
             </article>
           );
         })}
+      </div>
+
+      {/* Desktop — exact Figma 1440×1174 composition */}
+      <div className="relative mx-auto hidden aspect-[1440/1174] w-full max-w-[1440px] lg:block">
+        {/* 151:364 sink 414,256 557×453 */}
+        <div className="absolute top-[21.806%] left-[28.75%] z-[1] h-[38.586%] w-[38.681%] overflow-hidden">
+          <div className="absolute top-[-70.86%] left-[-21.18%] h-[255.52%] w-[138.54%]">
+            <Image
+              src={HOME_ASSETS.featuresSink}
+              alt=""
+              fill
+              sizes="770px"
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {/* 151:365 reflection 370,675 687×254 */}
+        <div className="pointer-events-none absolute top-[57.496%] left-[25.694%] z-[1] h-[21.635%] w-[47.708%] overflow-hidden mix-blend-color-burn">
+          <div className="absolute top-[-304.69%] left-[-6.94%] h-[455.71%] w-[112.32%]">
+            <Image
+              src={HOME_ASSETS.featuresSink}
+              alt=""
+              fill
+              sizes="770px"
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {ORDER.map((icon) => {
+          const item = byIcon[icon];
+          if (!item) return null;
+          const card = CARDS[icon];
+          const aboveSink = icon === "original";
+          return (
+            <article
+              key={icon}
+              className={`absolute rounded-[30px] bg-white ${card.box} ${
+                aboveSink ? "z-[4]" : "z-0"
+              }`}
+            >
+              {/* Shield is nested on warranty card in Figma 118:1206 */}
+              {icon === "warranty" ? (
+                <div className="pointer-events-none absolute top-[-31.6%] left-[51.03%] z-10 h-[88.78%] w-[44.6%]">
+                  <Image
+                    src={FEATURE_ICONS.warranty}
+                    alt=""
+                    fill
+                    sizes="186px"
+                    className="object-contain"
+                  />
+                </div>
+              ) : null}
+              <h3
+                className={`absolute right-12 left-12 ${card.titleTop} text-2xl leading-8 text-[#1a1c1c] uppercase ${card.align}`}
+              >
+                {item.title}
+              </h3>
+              <p
+                className={`absolute right-12 left-12 ${card.bodyTop} text-base leading-6 text-[#4c4546] ${card.align}`}
+              >
+                {item.description}
+              </p>
+            </article>
+          );
+        })}
+
+        {/* 151:375 bolt — under sink with other cards */}
+        <div className="pointer-events-none absolute top-[14.821%] left-[64.489%] z-0 h-[21.915%] w-[12.321%] rotate-[2.43deg]">
+          <Image
+            src={FEATURE_ICONS.delivery}
+            alt=""
+            fill
+            sizes="177px"
+            className="object-contain"
+          />
+        </div>
+
+        {/* 151:376 card — under sink with other cards */}
+        <div className="pointer-events-none absolute top-[30.92%] left-[21.528%] z-0 h-[16.099%] w-[10.486%]">
+          <Image
+            src={FEATURE_ICONS.installment}
+            alt=""
+            fill
+            sizes="151px"
+            className="object-contain"
+          />
+        </div>
+
+        {/* 151:377 seal 1068,473 204×204 — above sink with original card */}
+        <div className="pointer-events-none absolute top-[40.29%] left-[74.167%] z-[5] h-[17.376%] w-[14.167%]">
+          <Image
+            src={FEATURE_ICONS.original}
+            alt=""
+            fill
+            sizes="204px"
+            className="object-contain"
+          />
+        </div>
       </div>
     </section>
   );
