@@ -44,7 +44,7 @@ export function SideSheet({
   zIndexClassName = "z-50",
   closeVariant = "circle",
   backdropBlur = false,
-  closeClassName = "bg-gray-900 text-white hover:bg-black",
+  closeClassName = "bg-[var(--brand)] text-black hover:brightness-95",
 }: SideSheetProps) {
   const [mounted, setMounted] = useState(false);
   const [rendered, setRendered] = useState(false);

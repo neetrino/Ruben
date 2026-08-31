@@ -399,8 +399,8 @@ export function BlogPostDrawer({
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
 
-          <div className="border-t border-gray-200 px-5 py-4">
-            <Button type="submit" className="w-full" disabled={isPending}>
+          <div className="flex justify-end border-t border-gray-200 px-5 py-4">
+            <Button type="submit" disabled={isPending}>
               {isPending ? t.common.saving : t.common.save}
             </Button>
           </div>

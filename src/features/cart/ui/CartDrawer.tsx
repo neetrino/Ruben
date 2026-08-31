@@ -108,7 +108,6 @@ export function CartDrawer({
         panelClassName="w-[87%] max-w-[420px]"
         zIndexClassName="z-[200]"
         backdropBlur
-        closeClassName="bg-[var(--brand)] text-black hover:brightness-95"
       >
         <div className="border-b border-gray-100 px-6 py-5">
           <h2 className="text-xl font-bold tracking-tight text-gray-900">

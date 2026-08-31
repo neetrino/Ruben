@@ -147,10 +147,7 @@ function DeliveryLocationForm({
         {error ? <p className="text-sm text-red-700">{error}</p> : null}
       </div>
 
-      <div className="flex items-center gap-4 border-t border-gray-200 px-5 py-4">
-        <Button type="submit" disabled={isPending}>
-          {isPending ? t.common.saving : t.common.save}
-        </Button>
+      <div className="flex items-center justify-end gap-4 border-t border-gray-200 px-5 py-4">
         <button
           type="button"
           onClick={onClose}
@@ -158,6 +155,9 @@ function DeliveryLocationForm({
         >
           {t.common.cancel}
         </button>
+        <Button type="submit" disabled={isPending}>
+          {isPending ? t.common.saving : t.common.save}
+        </Button>
       </div>
     </form>
   );
