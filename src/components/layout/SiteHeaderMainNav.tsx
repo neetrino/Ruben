@@ -6,6 +6,7 @@ import { LocaleCurrencySwitcher } from "@/components/layout/LocaleCurrencySwitch
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteHeaderCartTrigger } from "@/components/layout/SiteHeaderCartTrigger";
 import { SiteHeaderDesktopNav } from "@/components/layout/SiteHeaderDesktopNav";
+import { SiteHeaderLogoLink } from "@/components/layout/SiteHeaderLogoLink";
 import { AppLink } from "@/components/ui/AppLink";
 import { CompareHeaderLink } from "@/features/compare/ui/CompareHeaderLink";
 import { WishlistHeaderLink } from "@/features/wishlist/ui/WishlistHeaderLink";
@@ -48,21 +49,7 @@ export function SiteHeaderMainNav({
   return (
     <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-[38px] lg:pt-[26px]">
       <div className="mx-auto flex h-14 max-w-[1364px] items-center justify-between rounded-[70px] bg-[#212121] px-4 sm:h-[63px] sm:px-6 lg:px-[69px]">
-        <AppLink
-          href={`/${locale}`}
-          prefetchPolicy="intent"
-          className="relative z-10 shrink-0"
-          aria-label={dictionary.brand}
-        >
-          <Image
-            src={HEADER_ASSETS.logo}
-            alt={dictionary.brand}
-            width={57}
-            height={35}
-            priority
-            className="h-[28px] w-auto sm:h-[35px] sm:w-[57px]"
-          />
-        </AppLink>
+        <SiteHeaderLogoLink locale={locale} brandLabel={dictionary.brand} />
 
         <SiteHeaderDesktopNav locale={locale} items={navItems} />
 
