@@ -30,19 +30,12 @@ export function HomeCategories({
   prevLabel,
   nextLabel,
 }: HomeCategoriesProps) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
+  const [activeArrow, setActiveArrow] = useState<-1 | 1>(1);
   const resolvedActiveId = categories.some((category) => category.id === activeId)
     ? activeId
     : (categories[0]?.id ?? "");
-
-  const scrollCarouselBy = useCallback((dir: -1 | 1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const delta = Math.max(320, Math.round(el.clientWidth * 0.6));
-    el.scrollBy({ left: dir * delta, behavior: "smooth" });
-  }, []);
 
   const selectCategory = useCallback((id: string) => {
     setActiveId(id);
@@ -53,6 +46,25 @@ export function HomeCategories({
       block: "nearest",
     });
   }, []);
+
+  const scrollCarouselBy = useCallback(
+    (dir: -1 | 1) => {
+      if (categories.length === 0) return;
+      setActiveArrow(dir);
+      const currentIndex = Math.max(
+        0,
+        categories.findIndex((category) => category.id === resolvedActiveId),
+      );
+      const nextIndex = Math.min(
+        categories.length - 1,
+        Math.max(0, currentIndex + dir),
+      );
+      const next = categories[nextIndex];
+      if (!next || next.id === resolvedActiveId) return;
+      selectCategory(next.id);
+    },
+    [categories, resolvedActiveId, selectCategory],
+  );
 
   if (categories.length === 0) {
     return (
@@ -97,7 +109,6 @@ export function HomeCategories({
       </div>
 
       <div
-        ref={scrollerRef}
         className="flex snap-x snap-mandatory items-end gap-8 overflow-x-auto px-6 pb-8 sm:gap-11 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {categories.map((category, index) => {
@@ -166,7 +177,11 @@ export function HomeCategories({
         >
           <span className="inline-flex size-[41px] -scale-y-100 rotate-[135deg]">
             <Image
-              src={HOME_ASSETS.arrowGray}
+              src={
+                activeArrow === -1
+                  ? HOME_ASSETS.arrowYellow
+                  : HOME_ASSETS.arrowGray
+              }
               alt=""
               width={41}
               height={41}
@@ -183,7 +198,11 @@ export function HomeCategories({
         >
           <span className="inline-flex size-[41px] rotate-[45deg]">
             <Image
-              src={HOME_ASSETS.arrowYellow}
+              src={
+                activeArrow === 1
+                  ? HOME_ASSETS.arrowYellow
+                  : HOME_ASSETS.arrowGray
+              }
               alt=""
               width={41}
               height={41}
