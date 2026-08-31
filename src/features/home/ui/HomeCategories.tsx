@@ -65,12 +65,10 @@ export function HomeCategories({
         0,
         categories.findIndex((category) => category.id === resolvedActiveId),
       );
-      const nextIndex = Math.min(
-        categories.length - 1,
-        Math.max(0, currentIndex + dir),
-      );
+      const nextIndex =
+        (currentIndex + dir + categories.length) % categories.length;
       const next = categories[nextIndex];
-      if (!next || next.id === resolvedActiveId) return;
+      if (!next) return;
       selectCategory(next.id);
     },
     [categories, resolvedActiveId, selectCategory],
