@@ -83,13 +83,13 @@ export function CompareButton({
       {iconVariant === "productCard" ? (
         <ProductCardCompareIcon
           className={`${productCardIconClass} ${
-            inCompare ? "text-black" : "text-[#1A1C1C]"
+            inCompare ? "text-[var(--brand)]" : "text-[#1A1C1C]"
           }`}
         />
       ) : (
         <GitCompareArrows
           className={`${iconClass} ${
-            inCompare ? "text-gray-900" : "text-gray-700"
+            inCompare ? "text-[var(--brand)]" : "text-gray-700"
           }`}
           strokeWidth={inCompare ? 2.5 : 1.75}
           aria-hidden

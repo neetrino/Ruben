@@ -77,7 +77,7 @@ export function WishlistButton({
       {iconVariant === "productCard" ? (
         inWishlist ? (
           <Heart
-            className={`${productCardIconClass} fill-black text-black`}
+            className={`${productCardIconClass} fill-[var(--brand)] text-[var(--brand)]`}
             aria-hidden
           />
         ) : (
@@ -89,7 +89,7 @@ export function WishlistButton({
         <Heart
           className={`${iconClass} ${
             inWishlist
-              ? "fill-red-500 text-red-500"
+              ? "fill-[var(--brand)] text-[var(--brand)]"
               : "fill-transparent text-gray-700"
           }`}
           aria-hidden

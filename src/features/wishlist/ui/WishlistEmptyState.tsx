@@ -20,12 +20,12 @@ export function WishlistEmptyState({
   return (
     <div className="flex min-h-[360px] flex-col items-center justify-center px-4 py-16 text-center">
       <div className="flex size-28 items-center justify-center rounded-full bg-[#eaeaea]">
-        <span className="relative size-14 overflow-hidden">
+        <span className="relative size-20 overflow-hidden">
           <Image
             src={PRODUCT_ASSETS.wishlistHeart}
             alt=""
-            width={56}
-            height={50}
+            width={80}
+            height={72}
             className="size-full object-contain opacity-70"
             unoptimized
           />

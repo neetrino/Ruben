@@ -33,9 +33,9 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
 
   if (!user) {
     return (
-      <section className="flex flex-col gap-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-          {dictionary.nav.wishlist}
+      <section className="flex flex-col gap-4 pt-6 sm:pt-8 lg:pt-10">
+        <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
+          {dictionary.wishlist.title}
         </h1>
         <p className="text-gray-600">
           <Link
@@ -70,9 +70,9 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
   });
 
   return (
-    <section className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-        {dictionary.nav.wishlist}
+    <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
+      <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
+        {dictionary.wishlist.title}
       </h1>
 
       {priced.length === 0 ? (
