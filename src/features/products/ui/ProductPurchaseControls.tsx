@@ -1,9 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 
 import { addToCart } from "@/features/cart/cart";
+import { flyToCart } from "@/features/cart/ui/fly-to-cart";
 import { PRODUCT_ASSETS } from "@/features/products/ui/product-assets";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
@@ -15,6 +17,7 @@ type ProductPurchaseControlsProps = {
   inWishlist: boolean;
   isSignedIn: boolean;
   wishlistLabel: string;
+  imageUrl?: string | null;
   labels: {
     quantity: string;
     decreaseQuantity: string;
@@ -22,7 +25,6 @@ type ProductPurchaseControlsProps = {
     addToCart: string;
     adding: string;
     outOfStock: string;
-    added: string;
     error: string;
   };
 };
@@ -34,11 +36,13 @@ export function ProductPurchaseControls({
   inWishlist,
   isSignedIn,
   wishlistLabel,
+  imageUrl = null,
   labels,
 }: ProductPurchaseControlsProps) {
+  const router = useRouter();
+  const addButtonRef = useRef<HTMLButtonElement>(null);
   const maxQty = Math.max(stockOnHand, 0);
   const [quantity, setQuantity] = useState(maxQty > 0 ? 1 : 0);
-  const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
   const disabled = maxQty < 1;
@@ -46,18 +50,21 @@ export function ProductPurchaseControls({
   function changeQuantity(next: number): void {
     if (disabled) return;
     setQuantity(Math.min(Math.max(1, next), maxQty));
-    setMessage(null);
     setError(null);
   }
 
   function handleAdd(): void {
     if (disabled || quantity < 1) return;
-    setMessage(null);
     setError(null);
+
+    if (addButtonRef.current) {
+      flyToCart({ from: addButtonRef.current, imageUrl });
+    }
+
     startTransition(async () => {
       try {
         await addToCart(productId, quantity);
-        setMessage(labels.added);
+        router.refresh();
       } catch {
         setError(labels.error);
       }
@@ -95,6 +102,7 @@ export function ProductPurchaseControls({
         </div>
 
         <button
+          ref={addButtonRef}
           type="button"
           disabled={disabled || pending}
           onClick={handleAdd}
@@ -130,11 +138,6 @@ export function ProductPurchaseControls({
         />
       </div>
 
-      {message ? (
-        <p className="text-sm text-[#00a63e]" role="status">
-          {message}
-        </p>
-      ) : null}
       {error ? (
         <p className="text-sm text-red-700" role="alert">
           {error}

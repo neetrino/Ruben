@@ -157,6 +157,7 @@ export function ProductDetailView({
             inWishlist={inWishlist}
             isSignedIn={isSignedIn}
             wishlistLabel={dictionary.nav.wishlist}
+            imageUrl={product.images[0]?.url ?? product.imageUrl}
             labels={{
               quantity: labels.quantity,
               decreaseQuantity: dictionary.cartDrawer.decreaseQuantity,
@@ -164,7 +165,6 @@ export function ProductDetailView({
               addToCart: labels.addToCart,
               adding: labels.adding,
               outOfStock: labels.outOfStock,
-              added: labels.added,
               error: labels.addError,
             }}
           />
