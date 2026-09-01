@@ -1,6 +1,6 @@
 import { convertAmount } from "@/lib/money/convert";
 import type { Currency } from "@/lib/money/currency";
-import { defaultCurrency } from "@/lib/money/currency";
+import { currencySymbols, defaultCurrency } from "@/lib/money/currency";
 import { getCurrencyMeta } from "@/lib/money/currency-meta";
 import { formatMoneyAmount } from "@/lib/money/format";
 
@@ -101,5 +101,6 @@ export function formatCatalogSliderPrice(
 ): string {
   const scale = getCurrencyMeta(currency).scale;
   const minor = Math.round(majorUnits * 10 ** scale);
-  return formatMoneyAmount(minor, currency, locale);
+  const withCode = formatMoneyAmount(minor, currency, locale);
+  return withCode.replace(` ${currency}`, ` ${currencySymbols[currency]}`);
 }

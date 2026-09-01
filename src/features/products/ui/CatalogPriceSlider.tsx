@@ -48,18 +48,32 @@ export function CatalogPriceSlider({
   onCommit,
 }: CatalogPriceSliderProps) {
   const baseId = useId();
-  const [minValue, setMinValue] = useState(minPrice ?? bounds.min);
-  const [maxValue, setMaxValue] = useState(maxPrice ?? bounds.max);
-  const [syncedKey, setSyncedKey] = useState(
-    `${minPrice ?? ""}:${maxPrice ?? ""}`,
+  const [minValue, setMinValue] = useState(() =>
+    clamp(minPrice ?? bounds.min, bounds.min, bounds.max),
   );
+  const [maxValue, setMaxValue] = useState(() =>
+    clamp(maxPrice ?? bounds.max, bounds.min, bounds.max),
+  );
+  const [syncedKey, setSyncedKey] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const urlKey = `${minPrice ?? ""}:${maxPrice ?? ""}`;
-  if (urlKey !== syncedKey) {
-    setSyncedKey(urlKey);
-    setMinValue(minPrice ?? bounds.min);
-    setMaxValue(maxPrice ?? bounds.max);
+  const syncKey = [
+    minPrice ?? "",
+    maxPrice ?? "",
+    bounds.currency,
+    bounds.min,
+    bounds.max,
+    bounds.step,
+  ].join(":");
+
+  if (syncKey !== syncedKey) {
+    setSyncedKey(syncKey);
+    setMinValue(
+      clamp(minPrice ?? bounds.min, bounds.min, bounds.max),
+    );
+    setMaxValue(
+      clamp(maxPrice ?? bounds.max, bounds.min, bounds.max),
+    );
   }
 
   useEffect(() => {
@@ -90,26 +104,28 @@ export function CatalogPriceSlider({
     commit(minValue, nextMax);
   }
 
+  const safeMin = clamp(minValue, bounds.min, bounds.max);
+  const safeMax = clamp(maxValue, bounds.min, bounds.max);
   const span = Math.max(bounds.max - bounds.min, 1);
-  const leftPercent = ((minValue - bounds.min) / span) * 100;
-  const rightPercent = ((maxValue - bounds.min) / span) * 100;
+  const leftPercent = ((safeMin - bounds.min) / span) * 100;
+  const rightPercent = ((safeMax - bounds.min) / span) * 100;
 
   return (
     <div className="space-y-0">
-      <div className="flex items-center gap-2 pt-0">
-        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-3 py-2">
+      <div className="flex min-w-0 items-center gap-1.5 pt-0">
+        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-2.5 py-2">
           <span className="text-xs leading-[15px] text-[#999]">{fromLabel}</span>
-          <span className="truncate text-[13px] leading-[19.5px] font-bold text-black">
-            {formatCatalogSliderPrice(minValue, bounds.currency, locale)}
+          <span className="text-[12px] leading-[18px] font-bold whitespace-nowrap text-black sm:text-[13px] sm:leading-[19.5px]">
+            {formatCatalogSliderPrice(safeMin, bounds.currency, locale)}
           </span>
         </div>
-        <span className="text-base text-[#ccc]" aria-hidden="true">
+        <span className="shrink-0 text-base text-[#ccc]" aria-hidden="true">
           —
         </span>
-        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-3 py-2">
+        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-2.5 py-2">
           <span className="text-xs leading-[15px] text-[#999]">{toLabel}</span>
-          <span className="truncate text-[13px] leading-[19.5px] font-bold text-black">
-            {formatCatalogSliderPrice(maxValue, bounds.currency, locale)}
+          <span className="text-[12px] leading-[18px] font-bold whitespace-nowrap text-black sm:text-[13px] sm:leading-[19.5px]">
+            {formatCatalogSliderPrice(safeMax, bounds.currency, locale)}
           </span>
         </div>
       </div>
@@ -130,9 +146,9 @@ export function CatalogPriceSlider({
           min={bounds.min}
           max={bounds.max}
           step={bounds.step}
-          value={minValue}
+          value={safeMin}
           aria-label={`${label} ${fromLabel}`}
-          className="catalog-price-thumb catalog-price-thumb-min absolute inset-0 z-20 m-0 w-full appearance-none bg-transparent p-0"
+          className="catalog-price-thumb catalog-price-thumb-min absolute inset-0 z-20 m-0 h-5 w-full appearance-none bg-transparent p-0"
           onChange={(event) => onMinChange(Number(event.target.value))}
         />
         <input
@@ -141,9 +157,9 @@ export function CatalogPriceSlider({
           min={bounds.min}
           max={bounds.max}
           step={bounds.step}
-          value={maxValue}
+          value={safeMax}
           aria-label={`${label} ${toLabel}`}
-          className="catalog-price-thumb catalog-price-thumb-max absolute inset-0 z-30 m-0 w-full appearance-none bg-transparent p-0"
+          className="catalog-price-thumb catalog-price-thumb-max absolute inset-0 z-30 m-0 h-5 w-full appearance-none bg-transparent p-0"
           onChange={(event) => onMaxChange(Number(event.target.value))}
         />
       </div>

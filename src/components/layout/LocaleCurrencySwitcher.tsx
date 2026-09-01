@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -56,6 +56,7 @@ export function LocaleCurrencySwitcher({
 }: LocaleCurrencySwitcherProps) {
   const router = useRouter();
   const pathname = usePathname() ?? `/${locale}`;
+  const searchParams = useSearchParams();
   const [pending, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [rendered, setRendered] = useState(false);
@@ -145,6 +146,12 @@ export function LocaleCurrencySwitcher({
     startTransition(async () => {
       await setCurrencyAction(next);
       closeMenu();
+      // Price filters are display-currency major units — drop them on FX switch.
+      const params = new URLSearchParams(searchParams?.toString() ?? "");
+      params.delete("minPrice");
+      params.delete("maxPrice");
+      const query = params.toString();
+      router.replace(query ? `${pathname}?${query}` : pathname);
       router.refresh();
     });
   }
