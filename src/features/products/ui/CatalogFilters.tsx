@@ -44,7 +44,7 @@ const PANEL =
   "w-full rounded-[24px] bg-[rgba(131,131,131,0.08)] p-6";
 
 const HEADING =
-  "mb-0 flex items-center gap-2 text-[14px] font-bold tracking-[1px] text-black uppercase";
+  "mb-3 flex items-center gap-2 text-[14px] font-bold tracking-[1px] text-black uppercase";
 
 function categoryOptionClass(active: boolean): string {
   return [
@@ -147,7 +147,7 @@ export function CatalogFilters({
           </span>
           {copy.brandLabel}
         </h2>
-        <div className="mt-[7px] flex flex-col gap-[3px]">
+        <div className="mt-1 flex flex-col gap-[3px]">
           {visibleBrands.map((brand) => {
             const checked = selectedBrands.includes(brand.id);
             return (
