@@ -45,7 +45,7 @@ export type CheckoutCardBadgeFramedBoxSize = {
 };
 
 export const CHECKOUT_PAYMENT_WALLET_LOGO_SRC =
-  "/assets/payments/checkout/fastshift.png";
+  "/assets/payments/checkout/fastshift.webp";
 export const CHECKOUT_PAYMENT_WALLET_LOGO_SOURCE_WIDTH_PX = 1024;
 export const CHECKOUT_PAYMENT_WALLET_LOGO_SOURCE_HEIGHT_PX = 270;
 
