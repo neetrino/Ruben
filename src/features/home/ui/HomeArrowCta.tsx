@@ -1,7 +1,5 @@
-import Image from "next/image";
-
 import { AppLink } from "@/components/ui/AppLink";
-import { HOME_ASSETS } from "@/features/home/config/assets";
+import { HomeArrowCtaIcon } from "@/features/home/ui/HomeArrowCtaIcon";
 
 type HomeArrowCtaProps = {
   href: string;
@@ -26,17 +24,12 @@ export function HomeArrowCta({
     <AppLink
       href={href}
       prefetchPolicy="intent"
-      className={`inline-flex h-12 items-center gap-4 rounded-full py-3 pr-1 pl-6 text-base font-bold uppercase tracking-wide transition ${toneClass} ${className}`}
+      className={`group inline-flex h-12 items-center gap-4 rounded-full py-3 pr-1 pl-6 text-base font-bold uppercase tracking-wide transition ${toneClass} ${className}`}
     >
       <span>{label}</span>
-      <Image
-        src={HOME_ASSETS.arrowCta}
-        alt=""
-        width={41}
-        height={41}
-        className="size-[41px] shrink-0"
-        aria-hidden
-      />
+      <HomeArrowCtaIcon />
     </AppLink>
   );
 }
+
+export { HomeArrowCtaIcon } from "@/features/home/ui/HomeArrowCtaIcon";

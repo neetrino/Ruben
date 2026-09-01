@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-import { HomeArrowCta } from "@/features/home/ui/HomeArrowCta";
+import { HomeArrowCta, HomeArrowCtaIcon } from "@/features/home/ui/HomeArrowCta";
 import { HOME_ASSETS } from "@/features/home/config/assets";
 import type { StorefrontHeroSlide } from "@/features/hero/application/queries";
 
@@ -73,17 +73,10 @@ export function HomeHero({
             ) : (
               <a
                 href={ctaHref}
-                className="inline-flex h-12 items-center gap-4 rounded-full bg-black py-3 pr-3 pl-6 text-base font-bold tracking-wide text-white uppercase transition hover:bg-neutral-900"
+                className="group inline-flex h-12 items-center gap-4 rounded-full bg-black py-3 pr-1 pl-6 text-base font-bold tracking-wide text-white uppercase transition hover:bg-neutral-900"
               >
                 <span>{ctaLabel}</span>
-                <Image
-                  src={HOME_ASSETS.arrowCta}
-                  alt=""
-                  width={41}
-                  height={41}
-                  className="size-[41px] shrink-0"
-                  aria-hidden
-                />
+                <HomeArrowCtaIcon />
               </a>
             )}
           </div>
