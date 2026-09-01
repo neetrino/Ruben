@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { adjustLocalCartItemCount } from "@/features/cart/cart-client-sync";
 import { addToCart } from "@/features/cart/cart";
 import { flyToCart } from "@/features/cart/ui/fly-to-cart";
+import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { PRODUCT_ASSETS } from "@/features/products/ui/product-assets";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
@@ -16,8 +17,11 @@ type ProductPurchaseControlsProps = {
   productId: string;
   stockOnHand: number;
   inWishlist: boolean;
+  inCompare: boolean;
   isSignedIn: boolean;
   wishlistLabel: string;
+  compareLabel: string;
+  compareLimitLabel: string;
   imageUrl?: string | null;
   labels: {
     quantity: string;
@@ -35,8 +39,11 @@ export function ProductPurchaseControls({
   productId,
   stockOnHand,
   inWishlist,
+  inCompare,
   isSignedIn,
   wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   imageUrl = null,
   labels,
 }: ProductPurchaseControlsProps) {
@@ -130,15 +137,27 @@ export function ProductPurchaseControls({
               : labels.addToCart}
         </button>
 
-        <WishlistButton
-          locale={locale}
-          productId={productId}
-          initialInWishlist={inWishlist}
-          isSignedIn={isSignedIn}
-          label={wishlistLabel}
-          iconVariant="productCard"
-          className="size-11 shrink-0 border border-[#e0e0e0] bg-white text-[#1a1c1c] hover:bg-neutral-50"
-        />
+        <div className="flex shrink-0 items-center gap-2">
+          <WishlistButton
+            locale={locale}
+            productId={productId}
+            initialInWishlist={inWishlist}
+            isSignedIn={isSignedIn}
+            label={wishlistLabel}
+            iconVariant="productCard"
+            className="size-11 shrink-0 border border-[#e0e0e0] bg-white text-[#1a1c1c] hover:bg-neutral-50"
+          />
+          <CompareButton
+            locale={locale}
+            productId={productId}
+            initialInCompare={inCompare}
+            isSignedIn={isSignedIn}
+            label={compareLabel}
+            limitReachedLabel={compareLimitLabel}
+            iconVariant="productCard"
+            className="size-11 shrink-0 border border-[#e0e0e0] bg-white text-[#1a1c1c] hover:bg-neutral-50"
+          />
+        </div>
       </div>
 
       {error ? (

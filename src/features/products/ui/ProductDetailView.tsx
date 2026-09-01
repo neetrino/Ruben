@@ -13,6 +13,7 @@ type ProductDetailViewProps = {
   compareAtFormatted: string | null;
   isSignedIn: boolean;
   inWishlist: boolean;
+  inCompare: boolean;
   dictionary: Dictionary;
   jsonLd: Record<string, unknown>;
   relatedSlot: React.ReactNode;
@@ -36,6 +37,7 @@ export function ProductDetailView({
   compareAtFormatted,
   isSignedIn,
   inWishlist,
+  inCompare,
   dictionary,
   jsonLd,
   relatedSlot,
@@ -155,8 +157,11 @@ export function ProductDetailView({
             productId={product.id}
             stockOnHand={product.stockOnHand}
             inWishlist={inWishlist}
+            inCompare={inCompare}
             isSignedIn={isSignedIn}
             wishlistLabel={dictionary.nav.wishlist}
+            compareLabel={dictionary.nav.compare}
+            compareLimitLabel={dictionary.compare.limitReached}
             imageUrl={product.images[0]?.url ?? product.imageUrl}
             labels={{
               quantity: labels.quantity,
