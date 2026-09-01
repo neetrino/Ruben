@@ -1,10 +1,7 @@
 import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
-import {
-  ProductCardPlusIcon,
-  ProductCardStarIcon,
-} from "@/components/icons/product-card-icons";
+import { ProductCardPlusIcon } from "@/components/icons/product-card-icons";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
 import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
@@ -24,8 +21,6 @@ type ProductCardProps = {
   categoryLabel?: string | null;
   /** Localized badge text when present (e.g. ԹՈՓ). */
   badgeLabel?: string | null;
-  /** Preformatted rating, e.g. "(4,9)". */
-  ratingFormatted?: string | null;
   priority?: boolean;
   locale?: Locale;
   productId?: string;
@@ -50,7 +45,6 @@ export function ProductCard({
   brandLabel = null,
   categoryLabel = null,
   badgeLabel = null,
-  ratingFormatted = null,
   priority = false,
   locale,
   productId,
@@ -167,13 +161,6 @@ export function ProductCard({
               <span className="text-xs font-semibold text-neutral-600">
                 {outOfStockLabel}
               </span>
-            ) : ratingFormatted ? (
-              <>
-                <ProductCardStarIcon className="h-[15px] w-4 text-black" />
-                <span className="text-sm leading-[15px] text-[#575757]">
-                  {ratingFormatted}
-                </span>
-              </>
             ) : null}
           </div>
 

@@ -58,22 +58,3 @@ export function ProductCardPlusIcon({ className, ...props }: IconProps) {
     </svg>
   );
 }
-
-/** Figma product-card rating star (outline). */
-export function ProductCardStarIcon({ className, ...props }: IconProps) {
-  return (
-    <svg
-      viewBox="0 0 16 15"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      aria-hidden
-      {...props}
-    >
-      <path
-        d="M6.144 8.874L5.472 11.7L8 10.2L10.528 11.716L9.856 8.874L12.08 6.979L9.168 6.726L8 4.042L6.848 6.711L3.92 6.963L6.144 8.874ZM8 12.063L3.056 15L4.368 9.458L0 5.716L5.76 5.226L8 0L10.24 5.226L16 5.716L11.648 9.458L12.944 15L8 12.063Z"
-        fill="currentColor"
-      />
-    </svg>
-  );
-}

@@ -2,5 +2,4 @@
 export const PRODUCT_ASSETS = {
   cartPlus: "/assets/product/cart-plus.svg",
   wishlistHeart: "/assets/product/wishlist-heart.svg",
-  star: "/assets/product/star.svg",
 } as const;
