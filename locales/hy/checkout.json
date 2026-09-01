@@ -36,7 +36,7 @@
   },
   "payment": {
     "cashOnDelivery": "Կանխիկ առաքման պահին",
-    "cashOnDeliveryDescription": "Վճարեք պատվերը ստանալիս:",
+    "cashOnDeliveryDescription": "Վճարեք պատվերը ստանալիս",
     "cashPickup": "Կանխիկ վճարում",
     "card": "Քարտային վճարում",
     "cardShort": "Քարտով",

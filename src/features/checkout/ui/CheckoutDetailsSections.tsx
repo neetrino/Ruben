@@ -178,7 +178,7 @@ export function CheckoutDetailsSections({
           <h2 className="mb-6 text-xl font-semibold text-gray-900">
             {labels.shippingAddress}
           </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-4">
             <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.deliveryLocation}
               <SelectDropdown
