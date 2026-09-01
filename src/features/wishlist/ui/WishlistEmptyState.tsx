@@ -32,23 +32,24 @@ export function WishlistEmptyState({
         </span>
       </div>
 
-      <h2 className="mt-6 text-2xl font-bold tracking-tight text-black">
-        {title}
-      </h2>
-      <p className="mt-3 max-w-md text-sm leading-relaxed text-[#888]">
-        {description}
-      </p>
-
-      <AppLink
-        href={`/${locale}/products`}
-        prefetchPolicy="intent"
-        className="mt-8 inline-flex h-11 items-center gap-3 rounded-full bg-[var(--brand)] py-1.5 pr-1.5 pl-5 text-sm font-semibold text-black transition-colors hover:brightness-95"
-      >
-        <span>{ctaLabel}</span>
-        <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10">
-          <ArrowRight className="size-4" aria-hidden />
-        </span>
-      </AppLink>
+      <div className="mt-6 inline-grid max-w-full grid-cols-[auto] justify-items-stretch">
+        <h2 className="text-2xl font-bold tracking-tight whitespace-nowrap text-black">
+          {title}
+        </h2>
+        <p className="mt-3 w-0 min-w-full text-sm leading-relaxed text-[#888]">
+          {description}
+        </p>
+        <AppLink
+          href={`/${locale}/products`}
+          prefetchPolicy="intent"
+          className="mt-8 inline-flex h-11 w-full items-center gap-3 rounded-full bg-[var(--brand)] py-1.5 pr-1.5 pl-5 text-sm font-semibold text-black transition-colors hover:brightness-95"
+        >
+          <span className="min-w-0 flex-1 text-center">{ctaLabel}</span>
+          <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10">
+            <ArrowRight className="size-4" aria-hidden />
+          </span>
+        </AppLink>
+      </div>
     </div>
   );
 }
