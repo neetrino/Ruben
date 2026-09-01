@@ -10,6 +10,7 @@ import type { CheckoutOrderProduct } from "@/features/checkout/ui/checkout-order
 import { previewCouponAction } from "@/features/checkout/application/preview-coupon";
 import { createOrderAction } from "@/features/checkout/create-order";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
+import { CHECKOUT_PAYMENT_WALLET_LOGO_SRC } from "@/features/checkout/ui/checkout-payment-ui";
 import { CheckoutDetailsSections } from "@/features/checkout/ui/CheckoutDetailsSections";
 import { CheckoutOrderSummary } from "@/features/checkout/ui/CheckoutOrderSummary";
 import { CheckoutProductsInOrder } from "@/features/checkout/ui/CheckoutProductsInOrder";
@@ -52,7 +53,9 @@ type CheckoutLabels = {
   selectDeliveryLocation: string;
   cashOnDelivery: string;
   cashOnDeliveryDescription: string;
+  cashPickup: string;
   card: string;
+  cardShort: string;
   cardDescription: string;
   fastshift: string;
   fastshiftDescription: string;
@@ -136,33 +139,45 @@ export function CheckoutForm({
   );
 
   const paymentOptions = useMemo(
-    () => [
+    () => {
+      const isPickup = shippingMethod === "pickup";
+
+      return [
+        {
+          id: "cash_on_delivery" as const,
+          name: isPickup ? labels.cashPickup : labels.cashOnDelivery,
+          shortName: isPickup ? labels.cashPickup : labels.cashOnDelivery,
+          description: isPickup ? "" : labels.cashOnDeliveryDescription,
+          iconKind: "cash" as const,
+        },
       {
-        id: "cash_on_delivery" as const,
-        name: labels.cashOnDelivery,
-        description: labels.cashOnDeliveryDescription,
-        logoSrc: null,
+        id: "fastshift" as const,
+        name: labels.fastshift,
+        shortName: labels.fastshift,
+        description: labels.fastshiftDescription,
+        iconKind: "wallet" as const,
+        walletLogoSrc: CHECKOUT_PAYMENT_WALLET_LOGO_SRC,
+        walletAlt: "FastShift",
       },
       {
         id: "card" as const,
         name: labels.card,
+        shortName: labels.cardShort,
         description: labels.cardDescription,
-        logoSrc: "/assets/payments/arca.svg",
+        iconKind: "card-badges" as const,
       },
-      {
-        id: "fastshift" as const,
-        name: labels.fastshift,
-        description: labels.fastshiftDescription,
-        logoSrc: "/assets/payments/fastshift.svg",
-      },
-    ],
+    ];
+    },
     [
       labels.card,
       labels.cardDescription,
+      labels.cardShort,
       labels.cashOnDelivery,
       labels.cashOnDeliveryDescription,
+      labels.cashPickup,
       labels.fastshift,
       labels.fastshiftDescription,
+      shippingMethod,
     ],
   );
 

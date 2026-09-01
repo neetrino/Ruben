@@ -37,8 +37,10 @@
   "payment": {
     "cashOnDelivery": "Наличными",
     "cashOnDeliveryDescription": "Оплатите наличными при получении заказа",
+    "cashPickup": "Наличная оплата",
     "card": "Оплата картой",
-    "cardDescription": "Безопасная оплата банковской картой (ArCa)",
+    "cardShort": "Картой",
+    "cardDescription": "Безопасная оплата банковской картой (ArCa, Visa, Mastercard)",
     "fastshift": "FastShift",
     "fastshiftDescription": "Оплата через кошелёк FastShift"
   },

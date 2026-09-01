@@ -25,20 +25,22 @@
     "city": "Քաղաք"
   },
   "shipping": {
-    "storePickup": "Ինքնաառաքում",
+    "storePickup": "Վերցնել խանութից",
     "storePickupDescription": "Վերցրեք պատվերը խանութից (Անվճար)",
     "delivery": "Առաքում",
     "deliveryDescription": "Կառաքենք ձեր հասցեով",
     "deliveryUnavailable": "Առաքումն անհասանելի է — վայրեր կարգավորված չեն",
-    "freePickup": "Անվճար (Ինքնաառաքում)",
+    "freePickup": "Անվճար (Վերցնել խանութից)",
     "enterCity": "Մուտքագրեք քաղաքը",
     "selectDeliveryLocation": "Ընտրեք առաքման վայրը"
   },
   "payment": {
     "cashOnDelivery": "Կանխիկ առաքման պահին",
     "cashOnDeliveryDescription": "Վճարեք պատվերը ստանալիս:",
+    "cashPickup": "Կանխիկ վճարում",
     "card": "Քարտային վճարում",
-    "cardDescription": "Անվտանգ վճարում բանկային քարտով (ArCa)",
+    "cardShort": "Քարտով",
+    "cardDescription": "Անվտանգ վճարում բանկային քարտով (ArCa, Visa, Mastercard)",
     "fastshift": "FastShift",
     "fastshiftDescription": "Վճարեք FastShift դրամապանակով"
   },

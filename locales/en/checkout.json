@@ -37,8 +37,10 @@
   "payment": {
     "cashOnDelivery": "Cash payment",
     "cashOnDeliveryDescription": "Pay cash when you receive your order",
+    "cashPickup": "Cash payment",
     "card": "Card payment",
-    "cardDescription": "Pay securely with your bank card (ArCa)",
+    "cardShort": "Card",
+    "cardDescription": "Pay securely with your bank card (ArCa, Visa, Mastercard)",
     "fastshift": "FastShift",
     "fastshiftDescription": "Pay with your FastShift wallet"
   },

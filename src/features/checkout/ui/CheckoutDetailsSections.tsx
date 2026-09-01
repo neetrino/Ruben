@@ -4,7 +4,10 @@ import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
 import { checkoutOptionClass } from "@/features/checkout/ui/checkout-option-styles";
-import { CheckoutPaymentMethods } from "@/features/checkout/ui/CheckoutPaymentMethods";
+import {
+  CheckoutPaymentMethods,
+  type CheckoutPaymentOption,
+} from "@/features/checkout/ui/CheckoutPaymentMethods";
 import { CheckoutRadio } from "@/features/checkout/ui/CheckoutRadio";
 import type { CheckoutDeliveryOption } from "@/features/delivery/application/queries";
 
@@ -34,13 +37,6 @@ type CheckoutDetailsLabels = {
   deliveryUnavailable: string;
 };
 
-type PaymentOption = {
-  id: CheckoutPaymentMethod;
-  name: string;
-  description: string;
-  logoSrc: string | null;
-};
-
 type CheckoutDetailsSectionsProps = {
   labels: CheckoutDetailsLabels;
   pending: boolean;
@@ -51,7 +47,7 @@ type CheckoutDetailsSectionsProps = {
   onDeliveryRuleChange: (ruleId: string) => void;
   paymentMethod: CheckoutPaymentMethod;
   onPaymentMethodChange: (method: CheckoutPaymentMethod) => void;
-  paymentOptions: PaymentOption[];
+  paymentOptions: CheckoutPaymentOption[];
   defaultFirstName: string;
   defaultLastName: string;
   defaultEmail: string;
