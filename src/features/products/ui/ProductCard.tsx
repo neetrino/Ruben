@@ -89,7 +89,7 @@ export function ProductCard({
         </AppLink>
 
         {showWishlist || showCompare || discountPercent != null || badgeLabel ? (
-          <div className="absolute top-2 right-[-10px] z-10 flex w-[47px] flex-col items-end gap-[5px]">
+          <div className="absolute top-2 right-0 z-10 flex w-12 translate-x-1/2 flex-col items-center gap-[5px]">
             {showWishlist ? (
               <WishlistButton
                 locale={locale}
