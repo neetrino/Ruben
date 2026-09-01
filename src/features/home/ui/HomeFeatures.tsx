@@ -1,6 +1,8 @@
 import Image from "next/image";
 
 import { HOME_ASSETS } from "@/features/home/config/assets";
+import { HomeFeatureIconMotion } from "@/features/home/ui/HomeFeatureIconMotion";
+import type { HomeFeatureIconMotionKind } from "@/features/home/ui/home-feature-icon-motion";
 import type { HomeFeatureIcon } from "@/features/home/ui/feature-icons";
 
 type FeatureItem = {
@@ -19,6 +21,44 @@ const FEATURE_ICONS: Record<HomeFeatureIcon, string> = {
   installment: HOME_ASSETS.featureIconCard,
   original: HOME_ASSETS.featureIconSeal,
 };
+
+const ICON_MOTION: Record<HomeFeatureIcon, HomeFeatureIconMotionKind> = {
+  warranty: "float",
+  delivery: "bounce",
+  installment: "sway",
+  original: "floatSoft",
+};
+
+type AnimatedFeatureIconProps = {
+  icon: HomeFeatureIcon;
+  sizes: string;
+  className?: string;
+  rotateClassName?: string;
+};
+
+function AnimatedFeatureIcon({
+  icon,
+  sizes,
+  className = "object-contain",
+  rotateClassName,
+}: AnimatedFeatureIconProps) {
+  return (
+    <HomeFeatureIconMotion
+      motion={ICON_MOTION[icon]}
+      className="relative h-full w-full"
+    >
+      <div className={`relative h-full w-full ${rotateClassName ?? ""}`.trim()}>
+        <Image
+          src={FEATURE_ICONS[icon]}
+          alt=""
+          fill
+          sizes={sizes}
+          className={className}
+        />
+      </div>
+    </HomeFeatureIconMotion>
+  );
+}
 
 /**
  * Figma 118:1202 artboard 1440×1174 — positions as % of frame.
@@ -97,13 +137,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
               className="relative rounded-[30px] bg-white px-12 pt-16 pb-10"
             >
               <div className="absolute -top-12 right-8 size-[120px]">
-                <Image
-                  src={FEATURE_ICONS[icon]}
-                  alt=""
-                  fill
-                  sizes="120px"
-                  className="object-contain"
-                />
+                <AnimatedFeatureIcon icon={icon} sizes="120px" />
               </div>
               <h3
                 className={`whitespace-pre-line text-2xl leading-8 text-[#1a1c1c] uppercase ${CARDS[icon].align}`}
@@ -164,13 +198,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
               {/* Shield is nested on warranty card in Figma 118:1206 */}
               {icon === "warranty" ? (
                 <div className="pointer-events-none absolute top-[-31.6%] left-[51.03%] z-10 h-[88.78%] w-[44.6%]">
-                  <Image
-                    src={FEATURE_ICONS.warranty}
-                    alt=""
-                    fill
-                    sizes="186px"
-                    className="object-contain"
-                  />
+                  <AnimatedFeatureIcon icon="warranty" sizes="186px" />
                 </div>
               ) : null}
               <h3
@@ -188,36 +216,20 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
         })}
 
         {/* 151:375 bolt — under sink with other cards */}
-        <div className="pointer-events-none absolute top-[14.821%] left-[64.489%] z-0 h-[21.915%] w-[12.321%] rotate-[2.43deg]">
-          <Image
-            src={FEATURE_ICONS.delivery}
-            alt=""
-            fill
+        <div className="pointer-events-none absolute top-[14.821%] left-[64.489%] z-0 h-[21.915%] w-[12.321%]">
+          <AnimatedFeatureIcon
+            icon="delivery"
             sizes="177px"
-            className="object-contain"
+            rotateClassName="rotate-[2.43deg]"
           />
         </div>
 
-        {/* 151:376 card — under sink with other cards */}
         <div className="pointer-events-none absolute top-[30.92%] left-[21.528%] z-0 h-[16.099%] w-[10.486%]">
-          <Image
-            src={FEATURE_ICONS.installment}
-            alt=""
-            fill
-            sizes="151px"
-            className="object-contain"
-          />
+          <AnimatedFeatureIcon icon="installment" sizes="151px" />
         </div>
 
-        {/* 151:377 seal 1068,473 204×204 — above sink with original card */}
         <div className="pointer-events-none absolute top-[40.29%] left-[74.167%] z-[5] h-[17.376%] w-[14.167%]">
-          <Image
-            src={FEATURE_ICONS.original}
-            alt=""
-            fill
-            sizes="204px"
-            className="object-contain"
-          />
+          <AnimatedFeatureIcon icon="original" sizes="204px" />
         </div>
         </div>
       </div>
