@@ -177,37 +177,79 @@ export function CartDrawer({
             </div>
           ) : (
             <ul className="space-y-3">
-              {view.items.map((item) => (
+              {view.items.map((item) => {
+                const productHref = item.productSlug
+                  ? `/${locale}/products/${item.productSlug}`
+                  : null;
+
+                return (
                 <li
                   key={item.id}
                   className="rounded-[20px] border border-gray-200 bg-white p-3 shadow-sm"
                 >
                   <div className="flex items-stretch gap-3">
-                    <div
-                      className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
-                      style={{ width: 96, minHeight: 96 }}
-                    >
-                      {item.imageUrl ? (
-                        <Image
-                          src={item.imageUrl}
-                          alt={item.title}
-                          fill
-                          sizes="96px"
-                          className="object-contain p-0.5"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-                          —
-                        </div>
-                      )}
-                    </div>
+                    {productHref ? (
+                      <AppLink
+                        href={productHref}
+                        prefetchPolicy="intent"
+                        onClick={closeDrawer}
+                        className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
+                        style={{ width: 96, minHeight: 96 }}
+                      >
+                        {item.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.title}
+                            fill
+                            sizes="96px"
+                            className="object-contain p-0.5"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                            —
+                          </div>
+                        )}
+                      </AppLink>
+                    ) : (
+                      <div
+                        className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
+                        style={{ width: 96, minHeight: 96 }}
+                      >
+                        {item.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.title}
+                            fill
+                            sizes="96px"
+                            className="object-contain p-0.5"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                            —
+                          </div>
+                        )}
+                      </div>
+                    )}
 
                     <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="line-clamp-2 text-sm font-medium text-gray-900">
-                            {item.title}
-                          </p>
+                          {productHref ? (
+                            <AppLink
+                              href={productHref}
+                              prefetchPolicy="intent"
+                              onClick={closeDrawer}
+                              className="block transition-colors hover:text-gray-700"
+                            >
+                              <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                                {item.title}
+                              </p>
+                            </AppLink>
+                          ) : (
+                            <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                              {item.title}
+                            </p>
+                          )}
                           <p className="mt-1 text-sm font-semibold text-gray-900">
                             {item.lineTotalFormatted}
                           </p>
@@ -255,7 +297,8 @@ export function CartDrawer({
                     </div>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </div>

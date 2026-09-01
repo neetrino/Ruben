@@ -17,6 +17,7 @@ import { formatMoneyAmount } from "@/lib/money/format";
 export type CartDrawerItemView = {
   id: string;
   title: string;
+  productSlug: string | null;
   quantity: number;
   imageUrl: string | null;
   unitPriceFormatted: string;
@@ -79,6 +80,13 @@ function formatConvertedAmount(
   return formatMoneyAmount(converted.amount, currency, locale);
 }
 
+function resolveProductSlug(
+  translations: Partial<Record<Locale, { slug?: string } | undefined>>,
+  locale: Locale,
+): string | null {
+  return translations[locale]?.slug ?? translations.hy?.slug ?? null;
+}
+
 /** Builds storefront cart-drawer display data for the active cart. */
 export async function getCartDrawerView(
   locale: Locale,
@@ -109,6 +117,7 @@ export async function getCartDrawerView(
     items.push({
       id: item.id,
       title: translation?.title ?? product.sku,
+      productSlug: resolveProductSlug(product.translations, locale),
       quantity: item.quantity,
       imageUrl: images.get(product.id) ?? null,
       unitPriceFormatted: formatConvertedAmount(

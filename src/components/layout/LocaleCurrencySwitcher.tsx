@@ -9,7 +9,7 @@ import { setCurrencyAction } from "@/features/preferences/set-currency-action";
 import type { Locale } from "@/lib/i18n/config";
 import { localeLabels, locales } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
-import { currencies, currencySymbols } from "@/lib/money/currency";
+import { currencies } from "@/lib/money/currency";
 
 const HOVER_CLOSE_DELAY_MS = 140;
 
@@ -182,12 +182,12 @@ export function LocaleCurrencySwitcher({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={menuId}
-        aria-label={`${currencySymbols[currency]} / ${localeShortLabels[locale]}`}
+        aria-label={`${currency} / ${localeShortLabels[locale]}`}
         onClick={() => (open ? closeMenu() : openMenu())}
       >
         {appearance === "navbar" ? (
           <span className="text-base leading-4 tracking-[1.8px] whitespace-nowrap">
-            {currencySymbols[currency]}
+            {currency}
             <span className="mx-1" aria-hidden>
               /
             </span>
@@ -196,7 +196,7 @@ export function LocaleCurrencySwitcher({
         ) : (
           <>
             <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">
-              <span>{currencySymbols[currency]}</span>
+              <span>{currency}</span>
               <span className="inline-block w-[2px]" aria-hidden />
               <span>/</span>
               <span className="inline-block w-[2px]" aria-hidden />
@@ -242,7 +242,7 @@ export function LocaleCurrencySwitcher({
                         className={optionClassName(selected)}
                         onClick={() => selectCurrency(code)}
                       >
-                        {currencySymbols[code]}
+                        {code}
                       </button>
                     </li>
                   );
