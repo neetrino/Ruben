@@ -59,7 +59,6 @@ type CheckoutLabels = {
   discount: string;
   subtotal: string;
   shipping: string;
-  tax: string;
   total: string;
   placeOrder: string;
   processing: string;
@@ -317,11 +316,9 @@ export function CheckoutForm({
             discountLabel={labels.discount}
             subtotalLabel={labels.subtotal}
             shippingLabel={labels.shipping}
-            taxLabel={labels.tax}
             totalLabel={labels.total}
             subtotalFormatted={formatMoney(subtotalAmount)}
             shippingFormatted={shippingFormatted}
-            taxFormatted={formatMoney(0)}
             discountFormatted={
               discountAmount > 0 ? formatMoney(discountAmount) : null
             }

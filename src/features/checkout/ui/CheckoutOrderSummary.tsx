@@ -12,11 +12,9 @@ type CheckoutOrderSummaryProps = {
   discountLabel: string;
   subtotalLabel: string;
   shippingLabel: string;
-  taxLabel: string;
   totalLabel: string;
   subtotalFormatted: string;
   shippingFormatted: string;
-  taxFormatted: string;
   discountFormatted: string | null;
   totalFormatted: string;
   couponDraft: string;
@@ -39,11 +37,9 @@ export function CheckoutOrderSummary({
   discountLabel,
   subtotalLabel,
   shippingLabel,
-  taxLabel,
   totalLabel,
   subtotalFormatted,
   shippingFormatted,
-  taxFormatted,
   discountFormatted,
   totalFormatted,
   couponDraft,
@@ -62,35 +58,37 @@ export function CheckoutOrderSummary({
         <h2 className="mb-6 text-xl font-semibold text-gray-900">{title}</h2>
 
         <div className="mb-6 rounded-xl border border-gray-200 p-4">
-          <p className="mb-3 text-sm text-gray-700">{couponTitle}</p>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              name="couponCodeDraft"
-              value={couponDraft}
-              onChange={(event) => onCouponDraftChange(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  onApplyCoupon();
-                }
-              }}
-              placeholder={couponPlaceholder}
-              autoComplete="off"
-              disabled={isSubmitting || isApplyingCoupon}
-              className="h-11 min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200"
-            />
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-sm text-gray-700">{couponTitle}</p>
             <Button
               type="button"
               variant="secondary"
               size="md"
-              className="h-11 shrink-0 rounded-lg px-4 text-sm"
-              disabled={isSubmitting || isApplyingCoupon || !couponDraft.trim()}
+              className="h-10 shrink-0 rounded-lg px-4 text-sm"
+              disabled={
+                isSubmitting || isApplyingCoupon || !couponDraft.trim()
+              }
               onClick={onApplyCoupon}
             >
               {isApplyingCoupon ? couponApplyingLabel : couponApplyLabel}
             </Button>
           </div>
+          <input
+            type="text"
+            name="couponCodeDraft"
+            value={couponDraft}
+            onChange={(event) => onCouponDraftChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                onApplyCoupon();
+              }
+            }}
+            placeholder={couponPlaceholder}
+            autoComplete="off"
+            disabled={isSubmitting || isApplyingCoupon}
+            className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:opacity-60"
+          />
           {couponError ? (
             <p className="mt-2 text-sm text-red-600" role="alert">
               {couponError}
@@ -112,10 +110,6 @@ export function CheckoutOrderSummary({
           <div className="flex justify-between text-gray-600">
             <span>{shippingLabel}</span>
             <span className="text-right">{shippingFormatted}</span>
-          </div>
-          <div className="flex justify-between text-gray-600">
-            <span>{taxLabel}</span>
-            <span>{taxFormatted}</span>
           </div>
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between text-lg font-bold text-gray-900">
