@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCompareProductIds } from "@/features/compare/queries";
 import { ProductCard } from "@/features/products/ui/ProductCard";
 import { listWishlistProducts } from "@/features/wishlist/queries";
+import { WishlistEmptyState } from "@/features/wishlist/ui/WishlistEmptyState";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -75,7 +76,12 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
       </h1>
 
       {priced.length === 0 ? (
-        <p className="text-gray-600">{dictionary.wishlist.empty}</p>
+        <WishlistEmptyState
+          locale={rawLocale}
+          title={dictionary.wishlist.empty}
+          description={dictionary.wishlist.emptyDescription}
+          ctaLabel={dictionary.wishlist.emptyCta}
+        />
       ) : (
         <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
           {priced.map(

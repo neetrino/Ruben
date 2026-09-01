@@ -1,4 +1,6 @@
 {
   "empty": "Your wishlist is empty.",
+  "emptyDescription": "You haven’t saved any favorites yet. Browse the catalog and keep what you like.",
+  "emptyCta": "Browse catalog",
   "signInPrompt": "Sign in to save products to your wishlist."
 }
