@@ -24,7 +24,7 @@ describe("buildCatalogPriceSliderBounds", () => {
   });
 
   it("formats slider readout values", () => {
-    expect(formatCatalogSliderPrice(12_000, "AMD", "en")).toBe("12\u202f000 ֏");
-    expect(formatCatalogSliderPrice(26, "USD", "en")).toBe("26.00 $");
+    expect(formatCatalogSliderPrice(12_000, "AMD", "en")).toBe("12\u202f000\u00A0֏");
+    expect(formatCatalogSliderPrice(26, "USD", "en")).toBe("26.00\u00A0$");
   });
 });
