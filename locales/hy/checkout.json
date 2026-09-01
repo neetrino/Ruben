@@ -35,8 +35,8 @@
     "selectDeliveryLocation": "Ընտրեք առաքման վայրը"
   },
   "payment": {
-    "cashOnDelivery": "Քեշ վճարում",
-    "cashOnDeliveryDescription": "Վճարեք կանխիկ՝ պատվերը ստանալիս",
+    "cashOnDelivery": "Կանխիկ առաքման պահին",
+    "cashOnDeliveryDescription": "Վճարեք պատվերը ստանալիս:",
     "card": "Քարտային վճարում",
     "cardDescription": "Անվտանգ վճարում բանկային քարտով (ArCa)",
     "fastshift": "FastShift",

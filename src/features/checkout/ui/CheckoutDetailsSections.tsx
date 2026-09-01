@@ -3,14 +3,13 @@
 import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
+import { checkoutOptionClass } from "@/features/checkout/ui/checkout-option-styles";
 import { CheckoutPaymentMethods } from "@/features/checkout/ui/CheckoutPaymentMethods";
+import { CheckoutRadio } from "@/features/checkout/ui/CheckoutRadio";
 import type { CheckoutDeliveryOption } from "@/features/delivery/application/queries";
 
 const FIELD_CLASS =
-  "h-11 w-full rounded-2xl border border-gray-200 px-4 text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 focus:border-gray-300 disabled:bg-gray-50";
-
-const RADIO_SELECTED = "border-gray-900 bg-gray-50";
-const RADIO_IDLE = "border-gray-300 hover:bg-gray-50";
+  "h-11 w-full rounded-[15px] border border-gray-200 px-4 text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 focus:border-gray-300 disabled:bg-gray-50";
 
 type CheckoutDetailsLabels = {
   contactInformation: string;
@@ -78,8 +77,8 @@ export function CheckoutDetailsSections({
   defaultLine1,
 }: CheckoutDetailsSectionsProps) {
   return (
-    <div className="space-y-6">
-      <Card className="rounded-2xl border border-gray-200/80 p-6 shadow-none">
+    <div className="space-y-6 lg:col-span-2">
+      <Card className="rounded-[15px] border-gray-200 p-6 shadow-sm">
         <h2 className="mb-6 text-xl font-semibold text-gray-900">
           {labels.contactInformation}
         </h2>
@@ -138,23 +137,17 @@ export function CheckoutDetailsSections({
         </div>
       </Card>
 
-      <Card className="rounded-2xl border border-gray-200/80 p-6 shadow-none">
+      <Card className="rounded-[15px] border-gray-200 p-6 shadow-sm">
         <h2 className="mb-6 text-xl font-semibold text-gray-900">
           {labels.shippingMethod}
         </h2>
         <div className="space-y-3">
-          <label
-            className={`flex cursor-pointer items-center rounded-lg border-2 p-4 transition-all ${
-              shippingMethod === "pickup" ? RADIO_SELECTED : RADIO_IDLE
-            }`}
-          >
-            <input
-              type="radio"
+          <label className={checkoutOptionClass(shippingMethod === "pickup")}>
+            <CheckoutRadio
               name="shippingMethod"
               value="pickup"
               checked={shippingMethod === "pickup"}
               onChange={() => onShippingMethodChange("pickup")}
-              className="mr-4"
               disabled={pending}
             />
             <div className="flex-1">
@@ -164,18 +157,12 @@ export function CheckoutDetailsSections({
               </div>
             </div>
           </label>
-          <label
-            className={`flex cursor-pointer items-center rounded-lg border-2 p-4 transition-all ${
-              shippingMethod === "delivery" ? RADIO_SELECTED : RADIO_IDLE
-            }`}
-          >
-            <input
-              type="radio"
+          <label className={checkoutOptionClass(shippingMethod === "delivery")}>
+            <CheckoutRadio
               name="shippingMethod"
               value="delivery"
               checked={shippingMethod === "delivery"}
               onChange={() => onShippingMethodChange("delivery")}
-              className="mr-4"
               disabled={pending}
             />
             <div className="flex-1">
@@ -191,7 +178,7 @@ export function CheckoutDetailsSections({
       </Card>
 
       {shippingMethod === "delivery" ? (
-        <Card className="rounded-2xl border border-gray-200/80 p-6 shadow-none">
+        <Card className="rounded-[15px] border-gray-200 p-6 shadow-sm">
           <h2 className="mb-6 text-xl font-semibold text-gray-900">
             {labels.shippingAddress}
           </h2>

@@ -4,9 +4,6 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { useCheckoutSummaryStickyTop } from "@/features/checkout/ui/use-checkout-summary-sticky-top";
 
-const SUMMARY_ALERT_PILL_CLASS =
-  "mb-4 w-full rounded-full bg-red-50 px-4 py-3 text-center text-sm font-medium leading-snug text-red-600";
-
 type CheckoutOrderSummaryProps = {
   title: string;
   couponTitle: string;
@@ -56,25 +53,23 @@ export function CheckoutOrderSummary({
 
   return (
     <div
-      className="lg:sticky xl:self-start"
+      className="lg:sticky lg:self-start"
       style={{
         top: stickyTop,
         maxHeight: `calc(100dvh - ${stickyTop}px - 1rem)`,
       }}
     >
-      <Card className="overflow-y-auto overscroll-contain rounded-2xl border border-gray-200/80 p-6 shadow-none">
-        <h2 className="mb-6 text-xl font-semibold tracking-wide text-gray-900 uppercase">
-          {title}
-        </h2>
+      <Card className="overflow-y-auto overscroll-contain rounded-[15px] border-gray-200 p-6 shadow-sm">
+        <h2 className="mb-6 text-xl font-semibold text-gray-900">{title}</h2>
 
-        <div className="mb-6 rounded-xl border border-gray-200 p-4">
+        <div className="mb-6 rounded-[15px] border border-gray-200 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
             <p className="text-sm text-gray-700">{couponTitle}</p>
             <Button
               type="button"
               variant="secondary"
               size="md"
-              className="h-10 shrink-0 rounded-lg px-4 text-sm"
+              className="h-10 shrink-0 px-4 text-sm"
               disabled={
                 isSubmitting || isApplyingCoupon || !couponDraft.trim()
               }
@@ -97,7 +92,7 @@ export function CheckoutOrderSummary({
             placeholder={couponPlaceholder}
             autoComplete="off"
             disabled={isSubmitting || isApplyingCoupon}
-            className="h-11 w-full rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:opacity-60"
+            className="h-11 w-full rounded-[15px] border border-gray-200 bg-white px-4 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-200 disabled:bg-gray-50 disabled:opacity-60"
           />
           {couponError ? (
             <p className="mt-2 text-sm text-red-600" role="alert">
@@ -124,16 +119,16 @@ export function CheckoutOrderSummary({
         </div>
 
         {error ? (
-          <p className={SUMMARY_ALERT_PILL_CLASS} role="alert">
-            {error}
-          </p>
+          <div className="mb-4 rounded-[15px] border border-red-200 bg-red-50 p-3">
+            <p className="text-sm text-red-600">{error}</p>
+          </div>
         ) : null}
 
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          className="h-12 w-full rounded-full"
+          className="h-12 w-full"
           disabled={isSubmitting}
         >
           {isSubmitting ? processingLabel : placeOrderLabel}

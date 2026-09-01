@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { CheckoutOrderProduct } from "@/features/checkout/ui/checkout-order-product";
 import { previewCouponAction } from "@/features/checkout/application/preview-coupon";
@@ -17,7 +18,7 @@ import type { Locale } from "@/lib/i18n/config";
 import { formatMoneyAmount } from "@/lib/money/format";
 
 const CHECKOUT_PAGE_TITLE =
-  "mb-8 flex min-h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase sm:text-[32px]";
+  "flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase";
 
 type CheckoutLabels = {
   title: string;
@@ -218,18 +219,17 @@ export function CheckoutForm({
 
   if (!hasItems) {
     return (
-      <div className="checkout-page mx-auto max-w-7xl px-0 py-12">
+      <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
         <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
-        <Card className="rounded-2xl border border-gray-200/80 p-6 text-center shadow-none">
-          <p className="mb-4 text-gray-600">{labels.cartEmpty}</p>
-          <Link
-            href={productsHref}
-            className="inline-flex h-11 items-center justify-center rounded-xl bg-gray-900 px-4 text-sm font-medium text-white hover:bg-gray-800"
-          >
-            {labels.continueShopping}
+        <Card className="rounded-[15px] border-gray-200 p-6 text-center shadow-sm">
+          <p className="mb-4 text-[#888]">{labels.cartEmpty}</p>
+          <Link href={productsHref}>
+            <Button variant="primary" size="md">
+              {labels.continueShopping}
+            </Button>
           </Link>
         </Card>
-      </div>
+      </section>
     );
   }
 
@@ -277,7 +277,7 @@ export function CheckoutForm({
   }
 
   return (
-    <div className="checkout-page mx-auto max-w-7xl px-0 py-12">
+    <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
       <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
 
       <CheckoutProductsInOrder
@@ -291,7 +291,7 @@ export function CheckoutForm({
       />
 
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <CheckoutDetailsSections
             labels={labels}
             pending={pending}
@@ -334,6 +334,6 @@ export function CheckoutForm({
           />
         </div>
       </form>
-    </div>
+    </section>
   );
 }

@@ -14,6 +14,7 @@ import { formatMoneyAmount } from "@/lib/money/format";
 const THUMB_SIZE_PX = 96;
 const CARD_MIN_WIDTH_PX = 200;
 const CARD_MAX_WIDTH_PX = 320;
+const TITLE_MAX_WIDTH_PX = 168;
 
 type CheckoutProductsInOrderProps = {
   products: CheckoutOrderProduct[];
@@ -51,7 +52,7 @@ function CheckoutOrderItemCard({
 }: CheckoutOrderItemCardProps) {
   return (
     <article
-      className="w-max shrink-0 overflow-hidden rounded-[20px] border border-gray-200/80 bg-white p-3 shadow-sm"
+      className="w-max shrink-0 rounded-[20px] border border-gray-200 bg-white p-3 shadow-sm"
       style={{
         minWidth: CARD_MIN_WIDTH_PX,
         maxWidth: CARD_MAX_WIDTH_PX,
@@ -71,7 +72,7 @@ function CheckoutOrderItemCard({
               alt={product.title}
               fill
               sizes="96px"
-              className="object-contain p-2"
+              className="object-contain p-0.5"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
@@ -80,9 +81,12 @@ function CheckoutOrderItemCard({
           )}
         </div>
 
-        <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
+        <div className="flex w-max min-w-0 max-w-full flex-1 flex-col justify-between gap-2">
           <div className="flex items-start justify-between gap-2">
-            <div className="min-w-0">
+            <div
+              className="w-max min-w-0 max-w-full"
+              style={{ maxWidth: TITLE_MAX_WIDTH_PX }}
+            >
               <p className="line-clamp-2 text-sm font-medium text-gray-900">
                 {product.title}
               </p>
@@ -100,7 +104,7 @@ function CheckoutOrderItemCard({
             </button>
           </div>
 
-          <span className="inline-flex h-6 w-fit min-w-[24px] items-center justify-center rounded-full border border-gray-200 bg-gray-50 px-2 text-[11px] font-semibold text-gray-900">
+          <span className="inline-flex h-6 w-fit min-w-[24px] shrink-0 items-center justify-center rounded-full border border-gray-200 bg-sky-50/70 px-2 text-[11px] font-semibold text-gray-900">
             ×{product.quantity}
           </span>
         </div>
@@ -156,17 +160,17 @@ export function CheckoutProductsInOrder({
 
   return (
     <section
-      className="mb-6 overflow-hidden rounded-[15px] border border-gray-200/80 bg-white px-5 py-4 sm:px-6 sm:py-5"
+      className="rounded-[15px] border border-gray-200 bg-white px-5 py-4 sm:px-6 sm:py-5"
       aria-labelledby="checkout-order-items-title"
     >
       <div className="flex items-start justify-between gap-4">
         <h2
           id="checkout-order-items-title"
-          className="text-xl font-black tracking-wide text-gray-900 uppercase"
+          className="text-sm font-bold tracking-wide text-gray-900"
         >
           {title}
         </h2>
-        <p className="shrink-0 text-sm text-gray-700">
+        <p className="shrink-0 text-sm text-gray-500">
           {formatItemCount(itemCount, itemsOneLabel, itemsManyLabel)}
         </p>
       </div>
