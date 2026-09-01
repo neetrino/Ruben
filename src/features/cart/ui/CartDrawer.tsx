@@ -182,15 +182,18 @@ export function CartDrawer({
                   key={item.id}
                   className="rounded-[20px] border border-gray-200 bg-white p-3 shadow-sm"
                 >
-                  <div className="flex gap-3">
-                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-50">
+                  <div className="flex items-stretch gap-3">
+                    <div
+                      className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
+                      style={{ width: 96, minHeight: 96 }}
+                    >
                       {item.imageUrl ? (
                         <Image
                           src={item.imageUrl}
                           alt={item.title}
                           fill
                           sizes="96px"
-                          className="object-contain p-1"
+                          className="object-contain p-0.5"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
@@ -199,7 +202,7 @@ export function CartDrawer({
                       )}
                     </div>
 
-                    <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="line-clamp-2 text-sm font-medium text-gray-900">
@@ -207,9 +210,6 @@ export function CartDrawer({
                           </p>
                           <p className="mt-1 text-sm font-semibold text-gray-900">
                             {item.lineTotalFormatted}
-                          </p>
-                          <p className="mt-0.5 text-xs text-gray-500">
-                            {item.unitPriceFormatted} × {item.quantity}
                           </p>
                         </div>
                         <button
@@ -223,20 +223,20 @@ export function CartDrawer({
                         </button>
                       </div>
 
-                      <div className="mt-auto flex justify-end pt-3">
-                        <div className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-sky-50/70 px-1 py-0.5">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div className="ml-auto inline-flex shrink-0 items-center rounded-full border border-gray-200 bg-sky-50/70 px-0.5 py-0.5">
                           <button
                             type="button"
                             onClick={() =>
                               changeQuantity(item.id, item.quantity - 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-white"
+                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-white"
                             aria-label={labels.decreaseQuantity}
                             disabled={pending}
                           >
-                            <Minus className="h-3.5 w-3.5" aria-hidden />
+                            <Minus className="h-4 w-4" aria-hidden />
                           </button>
-                          <span className="min-w-5 text-center text-sm font-medium tabular-nums text-gray-900">
+                          <span className="min-w-5 text-center text-sm font-semibold tabular-nums text-gray-900">
                             {item.quantity}
                           </span>
                           <button
@@ -244,11 +244,11 @@ export function CartDrawer({
                             onClick={() =>
                               changeQuantity(item.id, item.quantity + 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-white"
+                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
                             aria-label={labels.increaseQuantity}
                             disabled={pending}
                           >
-                            <Plus className="h-3.5 w-3.5" aria-hidden />
+                            <Plus className="h-4 w-4" aria-hidden />
                           </button>
                         </div>
                       </div>
