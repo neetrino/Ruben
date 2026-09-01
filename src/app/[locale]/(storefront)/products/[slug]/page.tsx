@@ -6,7 +6,6 @@ import { getEnv } from "@/config/env";
 import { getProductDetailBySlug } from "@/features/products/queries";
 import { ProductDetailView } from "@/features/products/ui/ProductDetailView";
 import { ProductRelatedSection } from "@/features/products/ui/ProductRelatedSection";
-import { isProductInCompare } from "@/features/compare/queries";
 import { isProductInWishlist } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -107,11 +106,10 @@ export default async function ProductPage({ params }: ProductPageProps) {
     notFound();
   }
 
-  const [user, currency, inWishlist, inCompare] = await Promise.all([
+  const [user, currency, inWishlist] = await Promise.all([
     getCurrentUser(),
     getSelectedCurrency(),
     isProductInWishlist(product.id),
-    isProductInCompare(product.id),
   ]);
   const formatPrice = await createDisplayPriceFormatter(locale, currency);
   const price = formatPrice(product.priceAmount);
@@ -141,7 +139,6 @@ export default async function ProductPage({ params }: ProductPageProps) {
       compareAtFormatted={compareAt?.formatted ?? null}
       isSignedIn={isSignedIn}
       inWishlist={inWishlist}
-      inCompare={inCompare}
       dictionary={dictionary}
       jsonLd={jsonLd}
       relatedSlot={

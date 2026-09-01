@@ -1,10 +1,10 @@
 "use client";
 
-import { Minus, Plus } from "lucide-react";
+import Image from "next/image";
 import { useState, useTransition } from "react";
 
 import { addToCart } from "@/features/cart/cart";
-import { CompareButton } from "@/features/compare/ui/CompareButton";
+import { PRODUCT_ASSETS } from "@/features/products/ui/product-assets";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -13,11 +13,8 @@ type ProductPurchaseControlsProps = {
   productId: string;
   stockOnHand: number;
   inWishlist: boolean;
-  inCompare: boolean;
   isSignedIn: boolean;
   wishlistLabel: string;
-  compareLabel: string;
-  compareLimitLabel: string;
   labels: {
     quantity: string;
     decreaseQuantity: string;
@@ -35,11 +32,8 @@ export function ProductPurchaseControls({
   productId,
   stockOnHand,
   inWishlist,
-  inCompare,
   isSignedIn,
   wishlistLabel,
-  compareLabel,
-  compareLimitLabel,
   labels,
 }: ProductPurchaseControlsProps) {
   const maxQty = Math.max(stockOnHand, 0);
@@ -71,20 +65,20 @@ export function ProductPurchaseControls({
   }
 
   return (
-    <div className="mt-auto flex flex-col gap-3 pt-2">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-3">
-        <div className="inline-flex items-center rounded-lg border border-gray-200 bg-white">
+        <div className="inline-flex h-[46px] w-[130px] items-center overflow-hidden rounded-full border border-[#e0e0e0] bg-white">
           <button
             type="button"
             aria-label={labels.decreaseQuantity}
             disabled={disabled || quantity <= 1 || pending}
             onClick={() => changeQuantity(quantity - 1)}
-            className="flex h-11 w-11 items-center justify-center text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
+            className="flex size-11 shrink-0 items-center justify-center text-[20px] leading-none text-[#212121] transition hover:bg-neutral-50 disabled:opacity-40"
           >
-            <Minus className="h-4 w-4" aria-hidden />
+            −
           </button>
           <span
-            className="min-w-10 text-center text-base font-semibold text-gray-900"
+            className="min-w-10 flex-1 text-center text-base font-semibold text-[#212121]"
             aria-label={labels.quantity}
           >
             {quantity}
@@ -94,9 +88,9 @@ export function ProductPurchaseControls({
             aria-label={labels.increaseQuantity}
             disabled={disabled || quantity >= maxQty || pending}
             onClick={() => changeQuantity(quantity + 1)}
-            className="flex h-11 w-11 items-center justify-center text-gray-700 transition hover:bg-gray-50 disabled:opacity-40"
+            className="flex size-11 shrink-0 items-center justify-center text-[20px] leading-none text-[#212121] transition hover:bg-neutral-50 disabled:opacity-40"
           >
-            <Plus className="h-4 w-4" aria-hidden />
+            +
           </button>
         </div>
 
@@ -104,8 +98,20 @@ export function ProductPurchaseControls({
           type="button"
           disabled={disabled || pending}
           onClick={handleAdd}
-          className="inline-flex h-11 flex-1 items-center justify-center rounded-lg bg-gray-900 px-6 text-base font-semibold text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none sm:min-w-[12rem]"
+          className="inline-flex h-11 min-w-[160px] flex-1 items-center justify-center gap-2 rounded-full bg-[#212121] px-6 text-sm font-semibold text-white transition hover:bg-black disabled:cursor-not-allowed disabled:opacity-50"
         >
+          {!disabled ? (
+            <span className="relative size-[18px] shrink-0 overflow-hidden">
+              <Image
+                src={PRODUCT_ASSETS.cartPlus}
+                alt=""
+                width={18}
+                height={18}
+                className="size-full"
+                unoptimized
+              />
+            </span>
+          ) : null}
           {disabled
             ? labels.outOfStock
             : pending
@@ -119,21 +125,13 @@ export function ProductPurchaseControls({
           initialInWishlist={inWishlist}
           isSignedIn={isSignedIn}
           label={wishlistLabel}
-          className="h-11 w-11 border border-gray-200 bg-white hover:bg-gray-50"
-        />
-        <CompareButton
-          locale={locale}
-          productId={productId}
-          initialInCompare={inCompare}
-          isSignedIn={isSignedIn}
-          label={compareLabel}
-          limitReachedLabel={compareLimitLabel}
-          className="h-11 w-11 border border-gray-200 bg-white hover:bg-gray-50"
+          iconVariant="productCard"
+          className="size-11 shrink-0 border border-[#e0e0e0] bg-white text-[#1a1c1c] hover:bg-neutral-50"
         />
       </div>
 
       {message ? (
-        <p className="text-sm text-green-700" role="status">
+        <p className="text-sm text-[#00a63e]" role="status">
           {message}
         </p>
       ) : null}

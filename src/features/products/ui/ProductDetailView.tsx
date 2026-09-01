@@ -1,5 +1,5 @@
-import Link from "next/link";
-
+import { AppLink } from "@/components/ui/AppLink";
+import { ProductDetailTabs } from "@/features/products/ui/ProductDetailTabs";
 import { ProductGallery } from "@/features/products/ui/ProductGallery";
 import { ProductPurchaseControls } from "@/features/products/ui/ProductPurchaseControls";
 import type { ProductDetail } from "@/features/products/types";
@@ -13,11 +13,21 @@ type ProductDetailViewProps = {
   compareAtFormatted: string | null;
   isSignedIn: boolean;
   inWishlist: boolean;
-  inCompare: boolean;
   dictionary: Dictionary;
   jsonLd: Record<string, unknown>;
   relatedSlot: React.ReactNode;
 };
+
+function shortDescription(description: string | undefined): string | null {
+  if (!description) return null;
+  const first = description
+    .split(/\n+/)
+    .map((part) => part.trim())
+    .find((part) => part.length > 0);
+  if (!first) return null;
+  if (first.length <= 280) return first;
+  return `${first.slice(0, 277).trimEnd()}…`;
+}
 
 export function ProductDetailView({
   locale,
@@ -26,87 +36,127 @@ export function ProductDetailView({
   compareAtFormatted,
   isSignedIn,
   inWishlist,
-  inCompare,
   dictionary,
   jsonLd,
   relatedSlot,
 }: ProductDetailViewProps) {
   const labels = dictionary.product;
   const inStock = product.stockOnHand > 0;
+  const primaryCategory = product.categories[0] ?? null;
+  const brandLabel = primaryCategory?.title ?? null;
+  const excerpt = shortDescription(product.translation.description);
+
+  const metaRows: Array<{ label: string; value: string }> = [];
+  if (primaryCategory) {
+    metaRows.push({
+      label: labels.categoryLabel,
+      value: primaryCategory.title,
+    });
+  }
+
+  const specs = [
+    ...metaRows,
+    {
+      label: labels.stockLabel,
+      value: inStock ? labels.inStock : labels.outOfStock,
+    },
+  ];
 
   return (
-    <article className="flex flex-col gap-16 md:gap-20">
-      <p className="text-sm text-gray-600">
-        <Link
+    <article className="product-page-root">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex flex-wrap items-center gap-2 px-6 pt-3 pb-2 text-sm sm:px-10 lg:px-12"
+      >
+        <AppLink
+          href={`/${locale}`}
+          prefetchPolicy="intent"
+          className="text-[#888] hover:text-black"
+        >
+          {dictionary.catalog.breadcrumbHome}
+        </AppLink>
+        <span className="text-[#bbb]" aria-hidden>
+          /
+        </span>
+        <AppLink
           href={`/${locale}/products`}
-          className="font-medium text-gray-900 underline-offset-2 hover:underline"
+          prefetchPolicy="intent"
+          className="text-[#888] hover:text-black"
         >
           {labels.backToProducts}
-        </Link>
-      </p>
+        </AppLink>
+        <span className="text-[#bbb]" aria-hidden>
+          /
+        </span>
+        <span className="font-semibold text-black">
+          {product.translation.title}
+        </span>
+      </nav>
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2 lg:gap-12">
+      <div className="grid grid-cols-1 gap-10 px-6 py-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-10 lg:px-12">
         <ProductGallery
           images={product.images}
           title={product.translation.title}
           discountPercent={product.discountPercent}
+          badgeLabel={product.badgeLabel}
           inStock={inStock}
           outOfStockLabel={labels.outOfStock}
         />
 
-        <div className="flex flex-col gap-6 lg:min-h-full">
-          {product.categories.length > 0 ? (
-            <p className="text-sm font-medium text-gray-500">
-              {product.categories.map((category) => category.title).join(" · ")}
+        <div className="flex flex-col gap-5">
+          {brandLabel ? (
+            <p className="text-[11px] leading-[16.5px] tracking-[1px] text-[#4c4546] uppercase">
+              {brandLabel}
             </p>
           ) : null}
 
-          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
+          <h1 className="text-[28px] leading-10 font-bold tracking-[0.5px] text-black uppercase sm:text-[32px]">
             {product.translation.title}
           </h1>
 
-          <div className="flex flex-wrap items-baseline gap-3">
-            <p className="text-2xl font-semibold text-gray-900">
+          {excerpt ? (
+            <p className="text-[15px] leading-[25.5px] text-[#555]">{excerpt}</p>
+          ) : null}
+
+          <div className="flex flex-wrap items-center gap-4">
+            <p className="text-[32px] leading-8 font-black text-black">
               {priceFormatted}
             </p>
             {compareAtFormatted ? (
-              <p className="text-base text-gray-500 line-through">
+              <p className="pb-1 text-lg leading-[18px] text-black/50 line-through">
                 {compareAtFormatted}
               </p>
             ) : null}
             {product.discountPercent != null ? (
-              <span className="rounded bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
-                -{product.discountPercent}%
+              <span className="inline-flex rounded-full bg-[var(--brand)] px-3 py-1 text-xs font-bold text-black">
+                −{product.discountPercent}%
               </span>
             ) : null}
           </div>
 
-          <div className="flex flex-wrap gap-3 text-sm text-gray-600">
-            <span>
-              {labels.sku}: {product.sku}
-            </span>
-            <span aria-hidden>·</span>
-            <span className={inStock ? "text-green-700" : "text-red-700"}>
+          <div className="flex items-center gap-2">
+            <span
+              className={`size-2.5 rounded-full ${
+                inStock ? "bg-[#00c950]" : "bg-neutral-400"
+              }`}
+              aria-hidden
+            />
+            <span
+              className={`text-sm font-semibold ${
+                inStock ? "text-[#00a63e]" : "text-neutral-500"
+              }`}
+            >
               {inStock ? labels.inStock : labels.outOfStock}
             </span>
           </div>
-
-          {product.translation.description ? (
-            <p className="whitespace-pre-wrap text-base leading-relaxed text-gray-600">
-              {product.translation.description}
-            </p>
-          ) : null}
 
           <ProductPurchaseControls
             locale={locale}
             productId={product.id}
             stockOnHand={product.stockOnHand}
             inWishlist={inWishlist}
-            inCompare={inCompare}
             isSignedIn={isSignedIn}
             wishlistLabel={dictionary.nav.wishlist}
-            compareLabel={dictionary.nav.compare}
-            compareLimitLabel={dictionary.compare.limitReached}
             labels={{
               quantity: labels.quantity,
               decreaseQuantity: dictionary.cartDrawer.decreaseQuantity,
@@ -118,10 +168,36 @@ export function ProductDetailView({
               error: labels.addError,
             }}
           />
+
+          {metaRows.length > 0 ? (
+            <div className="border-t border-[#f0f0f0] pt-4">
+              <dl className="flex flex-col gap-2">
+                {metaRows.map((row) => (
+                  <div key={row.label} className="flex gap-3 text-[13px] leading-[19.5px]">
+                    <dt className="w-28 shrink-0 text-[#888]">{row.label}</dt>
+                    <dd className="font-semibold text-[#212121]">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
+          ) : null}
         </div>
       </div>
 
-      {relatedSlot}
+      <div className="px-6 lg:px-12">
+        <ProductDetailTabs
+          descriptionLabel={labels.tabDescription}
+          specsLabel={labels.tabSpecs}
+          fullDescriptionTitle={labels.fullDescriptionTitle}
+          specsTitle={labels.specsTitle}
+          description={product.translation.description ?? null}
+          specs={specs}
+          emptyDescription={labels.emptyDescription}
+          emptySpecs={labels.emptySpecs}
+        />
+      </div>
+
+      <div className="px-6 pt-4 lg:px-12">{relatedSlot}</div>
 
       <script
         type="application/ld+json"

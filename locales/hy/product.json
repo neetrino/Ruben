@@ -1,5 +1,8 @@
 {
   "sku": "SKU",
+  "skuLabel": "SKU:",
+  "categoryLabel": "Կատեգորիա:",
+  "stockLabel": "Առկայություն:",
   "inStock": "Առկա է",
   "outOfStock": "Առկա չէ",
   "quantity": "Քանակ",
@@ -9,5 +12,11 @@
   "addError": "Չհաջողվեց ավելացնել զամբյուղ։",
   "related": "Նման ապրանքներ",
   "signIn": "Մուտք գործել",
-  "backToProducts": "Ապրանքներ"
+  "backToProducts": "Ապրանքներ",
+  "tabDescription": "Նկարագրություն",
+  "tabSpecs": "Բնութագրեր",
+  "fullDescriptionTitle": "Լիարժեք Նկարագրություն",
+  "specsTitle": "Բնութագրեր",
+  "emptyDescription": "Նկարագրություն առայժմ հասանելի չէ։",
+  "emptySpecs": "Բնութագրեր առայժմ հասանելի չեն։"
 }

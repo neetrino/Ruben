@@ -44,13 +44,15 @@ body {
  * Other storefront pages keep the constrained `storefront-main` shell.
  */
 .storefront-main:has(.home-page-root),
-.storefront-main:has(.shop-page-root) {
+.storefront-main:has(.shop-page-root),
+.storefront-main:has(.product-page-root) {
   max-width: none;
   padding-inline: 0;
   padding-top: 0;
 }
 
-.shop-page-root {
+.shop-page-root,
+.product-page-root {
   margin-inline: auto;
   max-width: 1440px;
   padding-top: 1.25rem;
@@ -58,7 +60,8 @@ body {
 }
 
 @media (min-width: 1024px) {
-  .shop-page-root {
+  .shop-page-root,
+  .product-page-root {
     padding-top: 1.75rem;
   }
 }

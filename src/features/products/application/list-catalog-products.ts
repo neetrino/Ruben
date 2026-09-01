@@ -81,6 +81,10 @@ function toBaseCatalogProduct(
     stockOnHand: product.stockOnHand,
     translation,
     imageUrl,
+    badgeLabel:
+      product.badgeTranslations?.[locale] ??
+      product.badgeTranslations?.hy ??
+      null,
   };
 }
 

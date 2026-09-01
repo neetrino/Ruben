@@ -1,5 +1,8 @@
 {
   "sku": "SKU",
+  "skuLabel": "SKU:",
+  "categoryLabel": "Category:",
+  "stockLabel": "Availability:",
   "inStock": "In stock",
   "outOfStock": "Out of stock",
   "quantity": "Quantity",
@@ -9,5 +12,11 @@
   "addError": "Unable to add this product to the cart.",
   "related": "Related products",
   "signIn": "Sign in",
-  "backToProducts": "Products"
+  "backToProducts": "Products",
+  "tabDescription": "Description",
+  "tabSpecs": "Specifications",
+  "fullDescriptionTitle": "Full description",
+  "specsTitle": "Specifications",
+  "emptyDescription": "No description is available yet.",
+  "emptySpecs": "No specifications are available yet."
 }

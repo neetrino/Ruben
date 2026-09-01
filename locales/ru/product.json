@@ -1,5 +1,8 @@
 {
   "sku": "SKU",
+  "skuLabel": "SKU:",
+  "categoryLabel": "Категория:",
+  "stockLabel": "Наличие:",
   "inStock": "В наличии",
   "outOfStock": "Нет в наличии",
   "quantity": "Количество",
@@ -9,5 +12,11 @@
   "addError": "Не удалось добавить товар в корзину.",
   "related": "Похожие товары",
   "signIn": "Войти",
-  "backToProducts": "Товары"
+  "backToProducts": "Товары",
+  "tabDescription": "Описание",
+  "tabSpecs": "Характеристики",
+  "fullDescriptionTitle": "Полное описание",
+  "specsTitle": "Характеристики",
+  "emptyDescription": "Описание пока недоступно.",
+  "emptySpecs": "Характеристики пока недоступны."
 }
