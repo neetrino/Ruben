@@ -5,6 +5,7 @@ import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState, useTransition } from "react";
 
+import { adjustLocalCartItemCount } from "@/features/cart/cart-client-sync";
 import { addToCart } from "@/features/cart/cart";
 import { flyToCart } from "@/features/cart/ui/fly-to-cart";
 
@@ -43,14 +44,16 @@ export function AddToCartButton({
     if (buttonRef.current) {
       flyToCart({ from: buttonRef.current, imageUrl });
     }
+    adjustLocalCartItemCount(1);
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1500);
 
     startTransition(async () => {
       try {
         await addToCart(productId, 1);
-        setJustAdded(true);
         router.refresh();
-        window.setTimeout(() => setJustAdded(false), 1500);
       } catch {
+        adjustLocalCartItemCount(-1);
         setJustAdded(false);
       }
     });

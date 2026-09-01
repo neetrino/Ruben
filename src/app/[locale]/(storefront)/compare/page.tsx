@@ -80,7 +80,10 @@ export default async function ComparePage({ params }: ComparePageProps) {
           </p>
         </div>
         {priced.length > 0 ? (
-          <ClearCompareButton label={dictionary.compare.clearAll} />
+          <ClearCompareButton
+            label={dictionary.compare.clearAll}
+            itemCount={priced.length}
+          />
         ) : null}
       </div>
 

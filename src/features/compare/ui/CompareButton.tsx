@@ -3,10 +3,14 @@
 import type { MouseEvent } from "react";
 import { GitCompareArrows } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 import { ProductCardCompareIcon } from "@/components/icons/product-card-icons";
 import { toggleCompareAction } from "@/features/compare/actions";
+import {
+  adjustCompareCountDelta,
+  setCompareOverride,
+  useCompareMembership,
+} from "@/features/compare/compare-client-sync";
 import type { Locale } from "@/lib/i18n/config";
 
 type CompareButtonProps = {
@@ -34,10 +38,32 @@ export function CompareButton({
   iconVariant = "default",
 }: CompareButtonProps) {
   const router = useRouter();
-  const [inCompare, setInCompare] = useState(initialInCompare);
-  const [pending, startTransition] = useTransition();
+  const inCompare = useCompareMembership(productId, initialInCompare);
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   const productCardIconClass = size === "sm" ? "h-5 w-[15px]" : "h-6 w-[18px]";
+
+  async function syncCompare(next: boolean): Promise<void> {
+    const result = await toggleCompareAction(productId);
+
+    if (!result.ok) {
+      setCompareOverride(productId, !next);
+      adjustCompareCountDelta(next ? -1 : 1);
+      if (result.error.code === "UNAUTHENTICATED") {
+        router.push(`/${locale}/login`);
+        return;
+      }
+      if (result.error.code === "COMPARE_LIMIT" && limitReachedLabel) {
+        window.alert(limitReachedLabel);
+      }
+      return;
+    }
+
+    if (result.value.inCompare !== next) {
+      setCompareOverride(productId, result.value.inCompare);
+      adjustCompareCountDelta(result.value.inCompare ? 2 : -2);
+    }
+    router.refresh();
+  }
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -51,34 +77,19 @@ export function CompareButton({
       return;
     }
 
-    startTransition(async () => {
-      const previous = inCompare;
-      setInCompare(!previous);
-      const result = await toggleCompareAction(productId);
-      if (!result.ok) {
-        setInCompare(previous);
-        if (result.error.code === "UNAUTHENTICATED") {
-          router.push(`/${locale}/login`);
-          return;
-        }
-        if (result.error.code === "COMPARE_LIMIT" && limitReachedLabel) {
-          window.alert(limitReachedLabel);
-        }
-        return;
-      }
-      setInCompare(result.value.inCompare);
-      router.refresh();
-    });
+    const next = !inCompare;
+    setCompareOverride(productId, next);
+    adjustCompareCountDelta(next ? 1 : -1);
+    void syncCompare(next);
   }
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      disabled={pending}
       aria-label={label}
       aria-pressed={inCompare}
-      className={`inline-flex items-center justify-center rounded-full transition disabled:opacity-60 ${className}`}
+      className={`inline-flex items-center justify-center rounded-full transition ${className}`}
     >
       {iconVariant === "productCard" ? (
         <ProductCardCompareIcon

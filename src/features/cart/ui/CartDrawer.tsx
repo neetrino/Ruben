@@ -6,6 +6,12 @@ import { ArrowRight, Minus, Plus, ShoppingCart, X } from "lucide-react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { SideSheet } from "@/components/ui/SideSheet";
+import {
+  getCartSyncVersion,
+  reconcileLocalCartItemCount,
+  useCartItemCount,
+  useCartSyncVersion,
+} from "@/features/cart/cart-client-sync";
 import { removeItem, updateQuantity } from "@/features/cart/cart";
 import type { CartDrawerView } from "@/features/cart/get-cart-drawer-view";
 import { loadCartDrawerViewAction } from "@/features/cart/load-cart-drawer-view-action";
@@ -49,31 +55,43 @@ export function CartDrawer({
 }: CartDrawerProps) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<CartDrawerView | null>(null);
+  const [viewSyncVersion, setViewSyncVersion] = useState<number | null>(null);
   const [loadingView, setLoadingView] = useState(false);
   const [pending, startTransition] = useTransition();
   const labels = dictionary.cartDrawer;
-  const badgeCount = view?.itemCount ?? itemCount;
+  const badgeCount = useCartItemCount(itemCount);
+  const cartSyncVersion = useCartSyncVersion();
+  const hasCachedView =
+    view !== null &&
+    viewSyncVersion === cartSyncVersion &&
+    (open || view.itemCount === itemCount);
   const hasItems = Boolean(view && view.items.length > 0);
 
+  function applyDrawerView(next: CartDrawerView): void {
+    reconcileLocalCartItemCount(next.itemCount);
+    setView(next);
+    setViewSyncVersion(getCartSyncVersion());
+  }
+
   function prefetchDrawerView(): void {
-    if (view || loadingView || open) {
+    if (hasCachedView || loadingView || open) {
       return;
     }
     setLoadingView(true);
     startTransition(async () => {
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
       setLoadingView(false);
     });
   }
 
   function openDrawer(): void {
     setOpen(true);
-    if (!view) {
+    if (!hasCachedView) {
       setLoadingView(true);
       startTransition(async () => {
         const next = await loadCartDrawerViewAction(locale, currency);
-        setView(next);
+        applyDrawerView(next);
         setLoadingView(false);
       });
     }
@@ -87,7 +105,7 @@ export function CartDrawer({
     startTransition(async () => {
       await updateQuantity(itemId, quantity);
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
     });
   }
 
@@ -95,7 +113,7 @@ export function CartDrawer({
     startTransition(async () => {
       await removeItem(itemId);
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
     });
   }
 

@@ -3,10 +3,14 @@
 import type { MouseEvent } from "react";
 import { Heart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
 
 import { ProductCardHeartIcon } from "@/components/icons/product-card-icons";
 import { toggleWishlistAction } from "@/features/wishlist/actions";
+import {
+  adjustWishlistCountDelta,
+  setWishlistOverride,
+  useWishlistMembership,
+} from "@/features/wishlist/wishlist-client-sync";
 import type { Locale } from "@/lib/i18n/config";
 
 type WishlistButtonProps = {
@@ -32,10 +36,28 @@ export function WishlistButton({
   iconVariant = "default",
 }: WishlistButtonProps) {
   const router = useRouter();
-  const [inWishlist, setInWishlist] = useState(initialInWishlist);
-  const [pending, startTransition] = useTransition();
+  const inWishlist = useWishlistMembership(productId, initialInWishlist);
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   const productCardIconClass = size === "sm" ? "h-5 w-5" : "h-6 w-6";
+
+  async function syncWishlist(next: boolean): Promise<void> {
+    const result = await toggleWishlistAction(productId);
+
+    if (!result.ok) {
+      setWishlistOverride(productId, !next);
+      adjustWishlistCountDelta(next ? -1 : 1);
+      if (result.error.code === "UNAUTHENTICATED") {
+        router.push(`/${locale}/login`);
+      }
+      return;
+    }
+
+    if (result.value.inWishlist !== next) {
+      setWishlistOverride(productId, result.value.inWishlist);
+      adjustWishlistCountDelta(result.value.inWishlist ? 2 : -2);
+    }
+    router.refresh();
+  }
 
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
@@ -49,30 +71,19 @@ export function WishlistButton({
       return;
     }
 
-    startTransition(async () => {
-      const previous = inWishlist;
-      setInWishlist(!previous);
-      const result = await toggleWishlistAction(productId);
-      if (!result.ok) {
-        setInWishlist(previous);
-        if (result.error.code === "UNAUTHENTICATED") {
-          router.push(`/${locale}/login`);
-        }
-        return;
-      }
-      setInWishlist(result.value.inWishlist);
-      router.refresh();
-    });
+    const next = !inWishlist;
+    setWishlistOverride(productId, next);
+    adjustWishlistCountDelta(next ? 1 : -1);
+    void syncWishlist(next);
   }
 
   return (
     <button
       type="button"
       onClick={handleClick}
-      disabled={pending}
       aria-label={label}
       aria-pressed={inWishlist}
-      className={`inline-flex items-center justify-center rounded-full transition disabled:opacity-60 ${className}`}
+      className={`inline-flex items-center justify-center rounded-full transition ${className}`}
     >
       {iconVariant === "productCard" ? (
         inWishlist ? (

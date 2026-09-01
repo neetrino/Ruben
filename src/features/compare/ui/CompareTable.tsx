@@ -36,7 +36,7 @@ type CompareTableProps = {
 
 function CellValue({ children }: { children: React.ReactNode }) {
   return (
-    <td className="min-w-[11rem] border-b border-gray-100 px-4 py-3 align-top text-sm text-gray-800 sm:min-w-[14rem]">
+    <td className="min-w-[10rem] border-b border-gray-100 px-4 py-3 align-top text-sm text-gray-800 sm:min-w-[11rem]">
       {children}
     </td>
   );
@@ -69,7 +69,7 @@ export function CompareTable({ locale, items, labels }: CompareTableProps) {
               <th
                 key={product.id}
                 scope="col"
-                className="min-w-[11rem] px-4 py-3 sm:min-w-[14rem]"
+                className="min-w-[10rem] px-4 py-3 sm:min-w-[11rem]"
               >
                 <div className="relative flex flex-col gap-3">
                   <RemoveFromCompareButton
@@ -80,15 +80,15 @@ export function CompareTable({ locale, items, labels }: CompareTableProps) {
                   <AppLink
                     href={`/${locale}/products/${product.translation.slug}`}
                     prefetchPolicy="intent"
-                    className="relative block aspect-square overflow-hidden rounded-lg bg-gray-50"
+                    className="relative mx-auto block size-28 overflow-hidden rounded-2xl bg-[#eaeaea] sm:size-32"
                   >
                     {product.imageUrl ? (
                       <Image
                         src={product.imageUrl}
                         alt={product.translation.title}
                         fill
-                        sizes="224px"
-                        className="object-cover"
+                        sizes="128px"
+                        className="object-contain p-2"
                       />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
+import { adjustLocalCartItemCount } from "@/features/cart/cart-client-sync";
 import { addToCart } from "@/features/cart/cart";
 import { flyToCart } from "@/features/cart/ui/fly-to-cart";
 import { PRODUCT_ASSETS } from "@/features/products/ui/product-assets";
@@ -60,12 +61,14 @@ export function ProductPurchaseControls({
     if (addButtonRef.current) {
       flyToCart({ from: addButtonRef.current, imageUrl });
     }
+    adjustLocalCartItemCount(quantity);
 
     startTransition(async () => {
       try {
         await addToCart(productId, quantity);
         router.refresh();
       } catch {
+        adjustLocalCartItemCount(-quantity);
         setError(labels.error);
       }
     });
