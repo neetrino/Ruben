@@ -27,16 +27,16 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     getCartWithItems(),
     getCheckoutDeliveryOptions(),
   ]);
-  const [defaultAddress, prices, orderProducts] = await Promise.all([
+  const prices = await resolveProductPrices(
+    items.map(({ product }) => ({
+      id: product.id,
+      priceAmount: product.priceAmount,
+      compareAtAmount: product.compareAtAmount,
+    })),
+  );
+  const [defaultAddress, orderProducts] = await Promise.all([
     user ? getDefaultShippingAddress(user.id) : Promise.resolve(null),
-    resolveProductPrices(
-      items.map(({ product }) => ({
-        id: product.id,
-        priceAmount: product.priceAmount,
-        compareAtAmount: product.compareAtAmount,
-      })),
-    ),
-    getCheckoutOrderProducts(rawLocale, items),
+    getCheckoutOrderProducts(rawLocale, items, prices),
   ]);
   const subtotal = items.reduce((sum, { item, product }) => {
     const unit = prices.get(product.id)?.unitAmount ?? product.priceAmount;
@@ -100,7 +100,6 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         couponPlaceholder: copy.coupon.placeholder,
         couponApply: copy.coupon.apply,
         couponApplying: copy.coupon.applying,
-        discount: copy.summary.discount,
         subtotal: copy.summary.subtotal,
         shipping: copy.summary.shipping,
         total: copy.summary.total,

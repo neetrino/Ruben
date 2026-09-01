@@ -16,6 +16,9 @@ import type { CheckoutDeliveryOption } from "@/features/delivery/application/que
 import type { Locale } from "@/lib/i18n/config";
 import { formatMoneyAmount } from "@/lib/money/format";
 
+const CHECKOUT_PAGE_TITLE =
+  "mb-8 flex min-h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase sm:text-[32px]";
+
 type CheckoutLabels = {
   title: string;
   productsInOrder: string;
@@ -56,7 +59,6 @@ type CheckoutLabels = {
   couponPlaceholder: string;
   couponApply: string;
   couponApplying: string;
-  discount: string;
   subtotal: string;
   shipping: string;
   total: string;
@@ -216,8 +218,8 @@ export function CheckoutForm({
 
   if (!hasItems) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h1 className="mb-8 text-3xl font-bold text-gray-900">{labels.title}</h1>
+      <div className="checkout-page mx-auto max-w-7xl px-0 py-12">
+        <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
         <Card className="rounded-2xl border border-gray-200/80 p-6 text-center shadow-none">
           <p className="mb-4 text-gray-600">{labels.cartEmpty}</p>
           <Link
@@ -275,8 +277,8 @@ export function CheckoutForm({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">{labels.title}</h1>
+    <div className="checkout-page mx-auto max-w-7xl px-0 py-12">
+      <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
 
       <CheckoutProductsInOrder
         products={orderProducts}
@@ -284,11 +286,12 @@ export function CheckoutForm({
         itemsOneLabel={labels.itemsOne}
         itemsManyLabel={labels.itemsMany}
         removeItemLabel={labels.removeItem}
+        locale={locale}
         onCartChanged={clearAppliedCoupon}
       />
 
       <form onSubmit={onSubmit}>
-        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 xl:grid-cols-[minmax(0,1.75fr)_minmax(0,1fr)]">
           <CheckoutDetailsSections
             labels={labels}
             pending={pending}
@@ -313,15 +316,11 @@ export function CheckoutForm({
             couponPlaceholder={labels.couponPlaceholder}
             couponApplyLabel={labels.couponApply}
             couponApplyingLabel={labels.couponApplying}
-            discountLabel={labels.discount}
             subtotalLabel={labels.subtotal}
             shippingLabel={labels.shipping}
             totalLabel={labels.total}
             subtotalFormatted={formatMoney(subtotalAmount)}
             shippingFormatted={shippingFormatted}
-            discountFormatted={
-              discountAmount > 0 ? formatMoney(discountAmount) : null
-            }
             totalFormatted={formatMoney(totalAmount)}
             couponDraft={couponDraft}
             onCouponDraftChange={onCouponDraftChange}

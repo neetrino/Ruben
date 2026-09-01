@@ -78,7 +78,7 @@ export function CheckoutDetailsSections({
   defaultLine1,
 }: CheckoutDetailsSectionsProps) {
   return (
-    <div className="space-y-6 lg:col-span-2">
+    <div className="space-y-6">
       <Card className="rounded-2xl border border-gray-200/80 p-6 shadow-none">
         <h2 className="mb-6 text-xl font-semibold text-gray-900">
           {labels.contactInformation}

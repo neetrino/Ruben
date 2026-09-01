@@ -2,6 +2,10 @@
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { useCheckoutSummaryStickyTop } from "@/features/checkout/ui/use-checkout-summary-sticky-top";
+
+const SUMMARY_ALERT_PILL_CLASS =
+  "mb-4 w-full rounded-full bg-red-50 px-4 py-3 text-center text-sm font-medium leading-snug text-red-600";
 
 type CheckoutOrderSummaryProps = {
   title: string;
@@ -9,13 +13,11 @@ type CheckoutOrderSummaryProps = {
   couponPlaceholder: string;
   couponApplyLabel: string;
   couponApplyingLabel: string;
-  discountLabel: string;
   subtotalLabel: string;
   shippingLabel: string;
   totalLabel: string;
   subtotalFormatted: string;
   shippingFormatted: string;
-  discountFormatted: string | null;
   totalFormatted: string;
   couponDraft: string;
   onCouponDraftChange: (value: string) => void;
@@ -34,13 +36,11 @@ export function CheckoutOrderSummary({
   couponPlaceholder,
   couponApplyLabel,
   couponApplyingLabel,
-  discountLabel,
   subtotalLabel,
   shippingLabel,
   totalLabel,
   subtotalFormatted,
   shippingFormatted,
-  discountFormatted,
   totalFormatted,
   couponDraft,
   onCouponDraftChange,
@@ -52,10 +52,20 @@ export function CheckoutOrderSummary({
   placeOrderLabel,
   processingLabel,
 }: CheckoutOrderSummaryProps) {
+  const stickyTop = useCheckoutSummaryStickyTop();
+
   return (
-    <div>
-      <Card className="sticky top-4 rounded-2xl border border-gray-200/80 p-6 shadow-none">
-        <h2 className="mb-6 text-xl font-semibold text-gray-900">{title}</h2>
+    <div
+      className="lg:sticky xl:self-start"
+      style={{
+        top: stickyTop,
+        maxHeight: `calc(100dvh - ${stickyTop}px - 1rem)`,
+      }}
+    >
+      <Card className="overflow-y-auto overscroll-contain rounded-2xl border border-gray-200/80 p-6 shadow-none">
+        <h2 className="mb-6 text-xl font-semibold tracking-wide text-gray-900 uppercase">
+          {title}
+        </h2>
 
         <div className="mb-6 rounded-xl border border-gray-200 p-4">
           <div className="mb-3 flex items-center justify-between gap-3">
@@ -101,12 +111,6 @@ export function CheckoutOrderSummary({
             <span>{subtotalLabel}</span>
             <span>{subtotalFormatted}</span>
           </div>
-          {discountFormatted ? (
-            <div className="flex justify-between text-gray-600">
-              <span>{discountLabel}</span>
-              <span className="text-emerald-700">-{discountFormatted}</span>
-            </div>
-          ) : null}
           <div className="flex justify-between text-gray-600">
             <span>{shippingLabel}</span>
             <span className="text-right">{shippingFormatted}</span>
@@ -120,16 +124,16 @@ export function CheckoutOrderSummary({
         </div>
 
         {error ? (
-          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 p-3">
-            <p className="text-sm text-red-600">{error}</p>
-          </div>
+          <p className={SUMMARY_ALERT_PILL_CLASS} role="alert">
+            {error}
+          </p>
         ) : null}
 
         <Button
           type="submit"
           variant="primary"
           size="lg"
-          className="h-12 w-full"
+          className="h-12 w-full rounded-full"
           disabled={isSubmitting}
         >
           {isSubmitting ? processingLabel : placeOrderLabel}
