@@ -52,14 +52,8 @@ export function CheckoutOrderSummary({
   const stickyTop = useCheckoutSummaryStickyTop();
 
   return (
-    <div
-      className="lg:sticky lg:self-start"
-      style={{
-        top: stickyTop,
-        maxHeight: `calc(100dvh - ${stickyTop}px - 1rem)`,
-      }}
-    >
-      <Card className="overflow-y-auto overscroll-contain rounded-[15px] border-gray-200 p-6 shadow-sm">
+    <div className="lg:sticky lg:self-start" style={{ top: stickyTop }}>
+      <Card className="rounded-[15px] border-gray-200 p-6 shadow-sm">
         <h2 className="mb-6 text-xl font-semibold text-gray-900">{title}</h2>
 
         <div className="mb-6 rounded-[15px] border border-gray-200 p-4">
