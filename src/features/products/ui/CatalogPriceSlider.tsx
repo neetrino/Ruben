@@ -13,6 +13,8 @@ type CatalogPriceSliderProps = {
   minPrice?: number;
   maxPrice?: number;
   label: string;
+  fromLabel: string;
+  toLabel: string;
   onCommit: (next: {
     minPrice: number | undefined;
     maxPrice: number | undefined;
@@ -41,6 +43,8 @@ export function CatalogPriceSlider({
   minPrice,
   maxPrice,
   label,
+  fromLabel,
+  toLabel,
   onCommit,
 }: CatalogPriceSliderProps) {
   const baseId = useId();
@@ -91,23 +95,29 @@ export function CatalogPriceSlider({
   const rightPercent = ((maxValue - bounds.min) / span) * 100;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between gap-2 text-sm text-gray-700">
-        <span>
-          {formatCatalogSliderPrice(minValue, bounds.currency, locale)}
+    <div className="space-y-0">
+      <div className="flex items-center gap-2 pt-0">
+        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-3 py-2">
+          <span className="text-xs leading-[15px] text-[#999]">{fromLabel}</span>
+          <span className="truncate text-[13px] leading-[19.5px] font-bold text-black">
+            {formatCatalogSliderPrice(minValue, bounds.currency, locale)}
+          </span>
+        </div>
+        <span className="text-base text-[#ccc]" aria-hidden="true">
+          —
         </span>
-        <span className="text-gray-400" aria-hidden="true">
-          –
-        </span>
-        <span>
-          {formatCatalogSliderPrice(maxValue, bounds.currency, locale)}
-        </span>
+        <div className="flex min-w-0 flex-1 flex-col rounded-[12px] border border-[#e0e0e0] bg-transparent px-3 py-2">
+          <span className="text-xs leading-[15px] text-[#999]">{toLabel}</span>
+          <span className="truncate text-[13px] leading-[19.5px] font-bold text-black">
+            {formatCatalogSliderPrice(maxValue, bounds.currency, locale)}
+          </span>
+        </div>
       </div>
 
-      <div className="relative h-8">
-        <div className="absolute top-1/2 right-0 left-0 h-1.5 -translate-y-1/2 rounded-full bg-gray-200" />
+      <div className="relative mt-4 h-5">
+        <div className="absolute top-1/2 right-0 left-0 h-1 -translate-y-1/2 rounded-full bg-[#e0e0e0]" />
         <div
-          className="absolute top-1/2 h-1.5 -translate-y-1/2 rounded-full bg-gray-900"
+          className="absolute top-1/2 h-1 -translate-y-1/2 rounded-full bg-black"
           style={{
             left: `${leftPercent}%`,
             width: `${Math.max(rightPercent - leftPercent, 0)}%`,
@@ -121,8 +131,8 @@ export function CatalogPriceSlider({
           max={bounds.max}
           step={bounds.step}
           value={minValue}
-          aria-label={`${label} min`}
-          className="catalog-price-thumb absolute inset-0 z-20 m-0 w-full appearance-none bg-transparent p-0"
+          aria-label={`${label} ${fromLabel}`}
+          className="catalog-price-thumb catalog-price-thumb-min absolute inset-0 z-20 m-0 w-full appearance-none bg-transparent p-0"
           onChange={(event) => onMinChange(Number(event.target.value))}
         />
         <input
@@ -132,15 +142,10 @@ export function CatalogPriceSlider({
           max={bounds.max}
           step={bounds.step}
           value={maxValue}
-          aria-label={`${label} max`}
-          className="catalog-price-thumb absolute inset-0 z-30 m-0 w-full appearance-none bg-transparent p-0"
+          aria-label={`${label} ${toLabel}`}
+          className="catalog-price-thumb catalog-price-thumb-max absolute inset-0 z-30 m-0 w-full appearance-none bg-transparent p-0"
           onChange={(event) => onMaxChange(Number(event.target.value))}
         />
-      </div>
-
-      <div className="flex justify-between text-xs text-gray-500">
-        <span>{bounds.minLabel}</span>
-        <span>{bounds.maxLabel}</span>
       </div>
     </div>
   );

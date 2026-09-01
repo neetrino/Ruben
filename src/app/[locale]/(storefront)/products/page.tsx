@@ -1,17 +1,19 @@
 import { notFound } from "next/navigation";
+import type { ReactNode } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
-import { catalogHref } from "@/features/products/domain/catalog-url";
 import {
   catalogListFilterSchema,
   DEFAULT_CATALOG_FILTERS,
   type CatalogListFilter,
 } from "@/features/products/schemas/catalog-list";
 import { CatalogActiveFilters } from "@/features/products/ui/CatalogActiveFilters";
+import { CatalogCategoryChips } from "@/features/products/ui/CatalogCategoryChips";
 import { CatalogFilters } from "@/features/products/ui/CatalogFilters";
-import { CatalogSortSelect } from "@/features/products/ui/CatalogSortSelect";
+import { CatalogPagination } from "@/features/products/ui/CatalogPagination";
+import { CatalogSortPills } from "@/features/products/ui/CatalogSortPills";
 import { ProductCard } from "@/features/products/ui/ProductCard";
 import { getCompareProductIds } from "@/features/compare/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
@@ -49,10 +51,10 @@ function parseCatalogFilters(
     inStock: firstParam(raw.inStock),
     sort: firstParam(raw.sort),
     page: firstParam(raw.page),
-    pageSize: firstParam(raw.pageSize),
+    pageSize: firstParam(raw.pageSize) ?? "12",
   });
 
-  return parsed.success ? parsed.data : DEFAULT_CATALOG_FILTERS;
+  return parsed.success ? parsed.data : { ...DEFAULT_CATALOG_FILTERS, pageSize: 12 };
 }
 
 export default async function ProductsPage({
@@ -112,41 +114,69 @@ export default async function ProductsPage({
     locale: rawLocale,
   });
 
-  return (
-    <section className="flex flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-          {dictionary.nav.products}
-        </h1>
-      </div>
+  const resultsLabel = dictionary.catalog.resultsCount.replace(
+    "{count}",
+    String(catalog.total),
+  );
 
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[16.5rem_minmax(0,1fr)]">
-        <CatalogFilters
+  const showingNodes: ReactNode[] = [];
+  for (const [index, part] of dictionary.catalog.showingCount
+    .split("{count}")
+    .entries()) {
+    if (index > 0) {
+      showingNodes.push(
+        <span key={`count-${index}`} className="font-bold text-black">
+          {priced.length}
+        </span>,
+      );
+    }
+    if (part.length > 0) {
+      showingNodes.push(<span key={`text-${index}`}>{part}</span>);
+    }
+  }
+
+  return (
+    <div className="shop-page-root">
+      <nav
+        aria-label="Breadcrumb"
+        className="flex items-center gap-2 px-6 pt-4 pb-6 text-sm sm:px-10 lg:px-12 lg:pb-8"
+      >
+        <AppLink
+          href={`/${rawLocale}`}
+          prefetchPolicy="intent"
+          className="text-[#888] hover:text-black"
+        >
+          {dictionary.catalog.breadcrumbHome}
+        </AppLink>
+        <span className="text-[#bbb]" aria-hidden>
+          /
+        </span>
+        <span className="font-semibold text-black">
+          {dictionary.catalog.breadcrumbShop}
+        </span>
+      </nav>
+
+      <div className="pb-10 lg:pb-14">
+        <CatalogCategoryChips
           locale={rawLocale}
           filters={filters}
           categories={categories}
-          priceBounds={priceBounds}
-          copy={{
-            searchLabel: dictionary.catalog.searchLabel,
-            searchPlaceholder: dictionary.catalog.searchPlaceholder,
-            priceLabel: dictionary.catalog.priceLabel,
-            categoryLabel: dictionary.catalog.categoryLabel,
-            allCategories: dictionary.catalog.allCategories,
-            inStockLabel: dictionary.catalog.inStockLabel,
-            inStockOnly: dictionary.catalog.inStockOnly,
-            filtersTitle: dictionary.catalog.filtersTitle,
-          }}
+          allLabel={dictionary.catalog.allChip}
         />
+      </div>
 
-        <div className="flex min-w-0 flex-col gap-5">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-            <p className="text-sm text-gray-600">
-              {dictionary.catalog.resultsCount.replace(
-                "{count}",
-                String(catalog.total),
-              )}
-            </p>
-            <CatalogSortSelect
+      <div className="px-6 sm:px-10 lg:px-12">
+        <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
+          <div>
+            <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
+              {dictionary.catalog.shopTitle}
+            </h1>
+            <p className="mt-1 text-sm leading-5 text-[#888]">{resultsLabel}</p>
+          </div>
+
+          <div className="flex min-h-[42px] min-w-0 flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-sm leading-none text-[#888]">{showingNodes}</p>
+            <CatalogSortPills
               locale={rawLocale}
               filters={filters}
               copy={{
@@ -159,100 +189,90 @@ export default async function ProductsPage({
             />
           </div>
 
-          <CatalogActiveFilters
-            locale={rawLocale}
-            filters={filters}
-            categoryTitle={categoryTitle}
-            currencyCode={currency}
-            removeFilterLabel={dictionary.catalog.removeFilter}
-            labels={{
-              search: dictionary.catalog.chipSearch,
-              minPrice: dictionary.catalog.chipMinPrice,
-              maxPrice: dictionary.catalog.chipMaxPrice,
-              category: dictionary.catalog.chipCategory,
-              inStock: dictionary.catalog.chipInStock,
-              outOfStock: dictionary.catalog.outOfStock,
-            }}
-          />
+          <div className="lg:sticky lg:top-28 lg:self-start">
+            <CatalogFilters
+              locale={rawLocale}
+              filters={filters}
+              categories={categories}
+              priceBounds={priceBounds}
+              totalCount={catalog.total}
+              copy={{
+                brandLabel: dictionary.catalog.brandLabel,
+                priceLabel: dictionary.catalog.priceLabel,
+                priceFromLabel: dictionary.catalog.priceFromLabel,
+                priceToLabel: dictionary.catalog.priceToLabel,
+                categoryLabel: dictionary.catalog.categoryLabel,
+                allCategories: dictionary.catalog.allCategories,
+                featuresLabel: dictionary.catalog.featuresLabel,
+                moreLabel: dictionary.catalog.moreLabel,
+                lessLabel: dictionary.catalog.lessLabel,
+                filtersTitle: dictionary.catalog.filtersTitle,
+              }}
+            />
+          </div>
 
-          {priced.length === 0 ? (
-            <p className="rounded-lg border border-dashed border-gray-200 px-4 py-12 text-center text-gray-600">
-              {dictionary.catalog.empty}
-            </p>
-          ) : (
-            <div className="grid grid-cols-2 gap-6 xl:grid-cols-3">
-              {priced.map(({ product, price, compareAtFormatted }, index) => (
-                <ProductCard
-                  key={product.id}
-                  href={`/${rawLocale}/products/${product.translation.slug}`}
-                  title={product.translation.title}
-                  priceFormatted={price.formatted}
-                  compareAtFormatted={compareAtFormatted}
-                  discountPercent={product.discountPercent}
-                  imageUrl={product.imageUrl}
-                  inStock={product.stockOnHand > 0}
-                  categoryLabel={product.category?.title ?? null}
-                  badgeLabel={product.badgeLabel}
-                  priority={index < 4}
-                  locale={rawLocale}
-                  productId={product.id}
-                  inWishlist={wishlistIds.has(product.id)}
-                  inCompare={compareIds.has(product.id)}
-                  isSignedIn={Boolean(user)}
-                  wishlistLabel={dictionary.nav.wishlist}
-                  compareLabel={dictionary.nav.compare}
-                  compareLimitLabel={dictionary.compare.limitReached}
-                  addToCartLabel={dictionary.product.addToCart}
-                  outOfStockLabel={dictionary.catalog.outOfStock}
-                />
-              ))}
-            </div>
-          )}
+          <div className="flex min-w-0 flex-col gap-8">
+            <CatalogActiveFilters
+              locale={rawLocale}
+              filters={filters}
+              categoryTitle={categoryTitle}
+              currencyCode={currency}
+              removeFilterLabel={dictionary.catalog.removeFilter}
+              labels={{
+                search: dictionary.catalog.chipSearch,
+                minPrice: dictionary.catalog.chipMinPrice,
+                maxPrice: dictionary.catalog.chipMaxPrice,
+                category: dictionary.catalog.chipCategory,
+                inStock: dictionary.catalog.chipInStock,
+                outOfStock: dictionary.catalog.outOfStock,
+              }}
+            />
 
-          {totalPages > 1 ? (
-            <nav
-              aria-label={dictionary.catalog.paginationLabel}
-              className="flex items-center justify-center gap-4"
-            >
-              {filters.page > 1 ? (
-                <AppLink
-                  href={catalogHref(rawLocale, filters, {
-                    page: filters.page - 1,
-                  })}
-                  prefetchPolicy="intent"
-                  className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  {dictionary.catalog.previousPage}
-                </AppLink>
-              ) : (
-                <span className="rounded-lg border border-transparent px-4 py-2 text-sm text-gray-300">
-                  {dictionary.catalog.previousPage}
-                </span>
-              )}
-              <span className="text-sm text-gray-600">
-                {dictionary.catalog.pageStatus
-                  .replace("{page}", String(filters.page))
-                  .replace("{total}", String(totalPages))}
-              </span>
-              {filters.page < totalPages ? (
-                <AppLink
-                  href={catalogHref(rawLocale, filters, {
-                    page: filters.page + 1,
-                  })}
-                  prefetchPolicy="intent"
-                  className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-                >
-                  {dictionary.catalog.nextPage}
-                </AppLink>
-              ) : (
-                <span className="rounded-lg border border-transparent px-4 py-2 text-sm text-gray-300">
-                  {dictionary.catalog.nextPage}
-                </span>
-              )}
-            </nav>
-          ) : null}
+            {priced.length === 0 ? (
+              <p className="rounded-[24px] border border-dashed border-neutral-200 px-4 py-16 text-center text-[#888]">
+                {dictionary.catalog.empty}
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-x-[30px] gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
+                {priced.map(({ product, price, compareAtFormatted }, index) => (
+                  <ProductCard
+                    key={product.id}
+                    href={`/${rawLocale}/products/${product.translation.slug}`}
+                    title={product.translation.title}
+                    priceFormatted={price.formatted}
+                    compareAtFormatted={compareAtFormatted}
+                    discountPercent={product.discountPercent}
+                    imageUrl={product.imageUrl}
+                    inStock={product.stockOnHand > 0}
+                    categoryLabel={product.category?.title ?? null}
+                    badgeLabel={product.badgeLabel}
+                    priority={index < 4}
+                    locale={rawLocale}
+                    productId={product.id}
+                    inWishlist={wishlistIds.has(product.id)}
+                    inCompare={compareIds.has(product.id)}
+                    isSignedIn={Boolean(user)}
+                    wishlistLabel={dictionary.nav.wishlist}
+                    compareLabel={dictionary.nav.compare}
+                    compareLimitLabel={dictionary.compare.limitReached}
+                    addToCartLabel={dictionary.product.addToCart}
+                    outOfStockLabel={dictionary.catalog.outOfStock}
+                  />
+                ))}
+              </div>
+            )}
+
+            <CatalogPagination
+              locale={rawLocale}
+              filters={filters}
+              totalPages={totalPages}
+              paginationLabel={dictionary.catalog.paginationLabel}
+              previousLabel={dictionary.catalog.previousPage}
+              nextLabel={dictionary.catalog.nextPage}
+            />
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -39,14 +39,28 @@ body {
 }
 
 /**
- * Homepage matches Figma full-bleed 1440 artboard: section backgrounds
+ * Homepage / shop match Figma full-bleed 1440 artboards: section backgrounds
  * span the viewport; inner content keeps its own max-width + gutters.
  * Other storefront pages keep the constrained `storefront-main` shell.
  */
-.storefront-main:has(.home-page-root) {
+.storefront-main:has(.home-page-root),
+.storefront-main:has(.shop-page-root) {
   max-width: none;
   padding-inline: 0;
   padding-top: 0;
+}
+
+.shop-page-root {
+  margin-inline: auto;
+  max-width: 1440px;
+  padding-top: 1.25rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 1024px) {
+  .shop-page-root {
+    padding-top: 1.75rem;
+  }
 }
 
 @layer base {
@@ -365,22 +379,34 @@ body {
   pointer-events: auto;
   -webkit-appearance: none;
   appearance: none;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
   border-radius: 9999px;
-  background: #111827;
+  background: #000000;
   border: 2px solid #ffffff;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.1),
+    0 1px 2px rgb(0 0 0 / 0.1);
   cursor: grab;
 }
 
 .catalog-price-thumb::-moz-range-thumb {
   pointer-events: auto;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid #ffffff;
   border-radius: 9999px;
-  background: #111827;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  background: #000000;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.1),
+    0 1px 2px rgb(0 0 0 / 0.1);
   cursor: grab;
+}
+
+.catalog-price-thumb-max::-webkit-slider-thumb {
+  background: #ffca03;
+}
+
+.catalog-price-thumb-max::-moz-range-thumb {
+  background: #ffca03;
 }

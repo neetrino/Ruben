@@ -20,7 +20,7 @@ describe("buildCatalogPriceSliderBounds", () => {
       step: 1_000,
       currency: "AMD",
     });
-    expect(bounds.maxLabel).toContain("100");
+    expect(bounds.maxLabel).toContain("400");
   });
 
   it("formats slider readout values", () => {

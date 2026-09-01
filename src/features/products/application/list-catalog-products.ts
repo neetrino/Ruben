@@ -51,6 +51,7 @@ export type CatalogListItem = CatalogProduct & {
 export type CatalogCategoryOption = {
   slug: string;
   title: string;
+  productCount: number;
 };
 
 export type CatalogListResult = {
@@ -141,11 +142,21 @@ async function loadCatalogCategoryOptions(
 ): Promise<CatalogCategoryOption[]> {
   const rows = await getDb()
     .select({
+      id: categories.id,
       translations: categories.translations,
       sortOrder: categories.sortOrder,
+      productCount: sql<number>`coalesce(count(${productCategories.productId}) filter (
+        where ${products.status} = 'ACTIVE' and ${products.deletedAt} is null
+      ), 0)::int`,
     })
     .from(categories)
+    .leftJoin(
+      productCategories,
+      eq(productCategories.categoryId, categories.id),
+    )
+    .leftJoin(products, eq(products.id, productCategories.productId))
     .where(and(eq(categories.status, "ACTIVE"), isNull(categories.deletedAt)))
+    .groupBy(categories.id)
     .orderBy(asc(categories.sortOrder), asc(categories.createdAt));
 
   return rows
@@ -155,6 +166,7 @@ async function loadCatalogCategoryOptions(
       return {
         slug: translation.slug,
         title: translation.title,
+        productCount: row.productCount,
       } satisfies CatalogCategoryOption;
     })
     .filter((row): row is CatalogCategoryOption => row !== null);
