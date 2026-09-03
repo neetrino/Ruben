@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import { AccountControls } from "@/components/layout/AccountControls";
 import { HEADER_ASSETS } from "@/components/layout/header-assets";
 import { LocaleCurrencySwitcher } from "@/components/layout/LocaleCurrencySwitcher";
@@ -7,13 +5,31 @@ import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteHeaderCartTrigger } from "@/components/layout/SiteHeaderCartTrigger";
 import { SiteHeaderDesktopNav } from "@/components/layout/SiteHeaderDesktopNav";
 import { SiteHeaderLogoLink } from "@/components/layout/SiteHeaderLogoLink";
-import { AppLink } from "@/components/ui/AppLink";
 import { CompareHeaderLink } from "@/features/compare/ui/CompareHeaderLink";
+import { HeaderSearch } from "@/features/products/ui/HeaderSearch";
 import { WishlistHeaderLink } from "@/features/wishlist/ui/WishlistHeaderLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
 import type { SessionUser } from "@/lib/auth/session";
+
+function headerSearchLabels(header: Dictionary["header"]): {
+  open: string;
+  close: string;
+  placeholder: string;
+  idle: string;
+  empty: string;
+  viewAll: string;
+} {
+  return {
+    open: header.search,
+    close: header.searchClose,
+    placeholder: header.searchPlaceholder,
+    idle: header.searchIdle,
+    empty: header.searchEmpty,
+    viewAll: header.searchViewAll,
+  };
+}
 
 type NavItem = {
   href: string;
@@ -44,7 +60,7 @@ export function SiteHeaderMainNav({
   wishlistCount,
   compareCount,
 }: SiteHeaderMainNavProps) {
-  const searchHref = `/${locale}/products`;
+  const searchLabels = headerSearchLabels(dictionary.header);
 
   return (
     <header className="relative z-40 px-3 pt-2 sm:px-5 lg:px-[38px] lg:pt-[26px]">
@@ -54,21 +70,11 @@ export function SiteHeaderMainNav({
         <SiteHeaderDesktopNav locale={locale} items={navItems} />
 
         <div className="flex items-center gap-2">
-          <AppLink
-            href={searchHref}
-            prefetchPolicy="intent"
-            className={`${ICON_BUTTON} hidden sm:inline-flex`}
-            aria-label={dictionary.catalog.searchLabel}
-          >
-            <Image
-              src={HEADER_ASSETS.search}
-              alt=""
-              width={24}
-              height={24}
-              className="size-6"
-              aria-hidden
-            />
-          </AppLink>
+          <HeaderSearch
+            locale={locale}
+            currency={currency}
+            labels={searchLabels}
+          />
 
           <div className="hidden items-center gap-2 md:flex">
             <WishlistHeaderLink

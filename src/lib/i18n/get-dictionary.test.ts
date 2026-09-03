@@ -22,6 +22,8 @@ describe("getDictionary", () => {
     expect(dictionary.nav.categories).toBe("CATEGORIES");
     expect(dictionary.nav.brands).toBe("BRANDS");
     expect(dictionary.nav.promotions).toBe("SALE");
+    expect(dictionary.header.search).toBe("Search");
+    expect(dictionary.header.searchViewAll).toBe("View all results");
     expect(dictionary.admin.nav.dashboard).toBe("Dashboard");
     expect(dictionary.admin.common.save).toBe("Save");
     expect(dictionary.legal.privacy.title).toBe("Privacy Policy");
