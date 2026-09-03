@@ -10,6 +10,7 @@ import {
   ConfirmDialog,
 } from "@/components/ui/ConfirmDialog";
 import { ADMIN_INPUT } from "@/features/admin/ui/admin-form-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   ADMIN_BADGE,
@@ -56,11 +57,6 @@ function roleFilterHref(
   return query
     ? `/${locale}/admin/users?${query}`
     : `/${locale}/admin/users`;
-}
-
-function formatCreated(value: Date | string): string {
-  const date = new Date(value);
-  return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
 }
 
 function displayName(user: AdminUserListItem): string {
@@ -313,9 +309,7 @@ export function AdminUsersView({
                         </button>
                       </td>
                       <td className={ADMIN_TABLE_TD_CENTER}>
-                        <span className="text-sm text-gray-600">
-                          {formatCreated(user.createdAt)}
-                        </span>
+                        <AdminPlacedStamp value={user.createdAt} />
                       </td>
                     </tr>
                   );

@@ -25,6 +25,7 @@ import {
   ADMIN_TABLE_TH_METRIC,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { bulkArchiveOrdersAction } from "@/features/orders/application/bulk-archive-orders";
 import { AdminInlineStatusSelect } from "@/features/orders/ui/AdminInlineStatusSelect";
@@ -161,7 +162,7 @@ export function BulkChangeOrderStatusForm({
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.status}</th>
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.payment}</th>
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.total}</th>
-                <th className={ADMIN_TABLE_TH}>{t.orders.columns.placed}</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.placed}</th>
               </tr>
             </thead>
             <tbody className={ADMIN_TABLE_TBODY}>
@@ -221,14 +222,8 @@ export function BulkChangeOrderStatusForm({
                       {formatMoney(order.totalAmount, order.baseCurrency)}
                     </span>
                   </td>
-                  <td className={ADMIN_TABLE_TD}>
-                    <span className="text-xs text-gray-500">
-                      {new Date(order.placedAt)
-                        .toISOString()
-                        .slice(0, 16)
-                        .replace("T", " ")}{" "}
-                      {t.common.utc}
-                    </span>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <AdminPlacedStamp value={order.placedAt} />
                   </td>
                 </tr>
               ))}

@@ -146,7 +146,7 @@
         "email": "Email",
         "shippingMethod": "Способ доставки",
         "pickupStore": "Самовывоз",
-        "method": "Способ",
+        "method": "Способ оплаты",
         "amount": "Сумма"
       },
       "freePickup": "Бесплатный самовывоз",

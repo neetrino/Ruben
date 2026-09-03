@@ -146,7 +146,7 @@
         "email": "Email",
         "shippingMethod": "Shipping method",
         "pickupStore": "Pickup store",
-        "method": "Method",
+        "method": "Payment method",
         "amount": "Amount"
       },
       "freePickup": "Free pickup",

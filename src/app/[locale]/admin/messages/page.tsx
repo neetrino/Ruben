@@ -23,6 +23,7 @@ import {
   ADMIN_TABLE_TH_CENTER,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { ADMIN_BADGE } from "@/features/admin/ui/status-badge";
 import { listAdminContactMessages } from "@/features/contact/application/queries";
 import { CONTACT_STATUSES } from "@/features/contact/domain/contact-rules";
@@ -132,7 +133,7 @@ export default async function AdminMessagesPage({
                   <th className={ADMIN_TABLE_TH}>{t.messages.columns.subject}</th>
                   <th className={ADMIN_TABLE_TH}>{t.messages.columns.from}</th>
                   <th className={ADMIN_TABLE_TH_CENTER}>{t.messages.columns.status}</th>
-                  <th className={ADMIN_TABLE_TH}>{t.messages.columns.received}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>{t.messages.columns.received}</th>
                 </tr>
               </thead>
               <tbody className={ADMIN_TABLE_TBODY}>
@@ -162,14 +163,8 @@ export default async function AdminMessagesPage({
                         </p>
                       ) : null}
                     </td>
-                    <td className={ADMIN_TABLE_TD}>
-                      <span className="text-xs text-gray-500">
-                        {message.createdAt
-                          .toISOString()
-                          .slice(0, 16)
-                          .replace("T", " ")}{" "}
-                        {t.common.utc}
-                      </span>
+                    <td className={ADMIN_TABLE_TD_CENTER}>
+                      <AdminPlacedStamp value={message.createdAt} />
                     </td>
                   </tr>
                 ))}

@@ -8,6 +8,7 @@ import {
   ADMIN_TABLE_TD_CHECK,
   ADMIN_TABLE_CHECKBOX,
 } from "@/features/admin/ui/admin-table-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminProductListItem } from "@/features/products/application/list-admin-products";
 import { formatMoneyAmount } from "@/lib/money/format";
@@ -39,8 +40,6 @@ export function AdminProductRow({
 }: AdminProductRowProps) {
   const t = adminCopy(locale);
   const isActive = product.status === "ACTIVE";
-  const created = new Date(product.createdAt);
-  const createdLabel = `${created.getDate()}/${created.getMonth() + 1}/${created.getFullYear()}`;
 
   return (
     <tr className={ADMIN_TABLE_ROW}>
@@ -161,7 +160,7 @@ export function AdminProductRow({
         </div>
       </td>
       <td className={ADMIN_TABLE_TD}>
-        <span className="text-xs text-gray-500">{createdLabel}</span>
+        <AdminPlacedStamp value={product.createdAt} />
       </td>
     </tr>
   );

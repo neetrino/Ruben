@@ -41,7 +41,7 @@ export function SideSheet({
   children,
   panelClassName = "w-full max-w-md",
   side = "right",
-  zIndexClassName = "z-50",
+  zIndexClassName = "z-[200]",
   closeVariant = "circle",
   backdropBlur = false,
   closeClassName = "bg-[var(--brand)] text-black hover:brightness-95",
