@@ -531,3 +531,45 @@ body {
     transition: none;
   }
 }
+
+/* Checkout success — soft entrance */
+@keyframes checkout-success-panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes checkout-success-check-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.checkout-success-panel {
+  animation: 0.45s cubic-bezier(0.22, 1, 0.36, 1) both checkout-success-panel-in;
+}
+
+.checkout-success-check {
+  animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both
+    checkout-success-check-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-success-panel,
+  .checkout-success-check {
+    animation: none;
+  }
+}
