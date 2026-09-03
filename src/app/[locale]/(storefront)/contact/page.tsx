@@ -18,26 +18,41 @@ export default async function ContactPage({ params }: ContactPageProps) {
   }
 
   const dictionary = getDictionary(rawLocale);
+  const copy = dictionary.contact;
 
   return (
-    <div className="-mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <ContactInfo copy={dictionary.contact} />
+    <div className="contact-page-root relative z-0 -mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <header className="mb-10 max-w-2xl sm:mb-14">
+          <p className="text-xs font-semibold tracking-[0.18em] text-[var(--brand-deep)] uppercase">
+            {dictionary.brand}
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            {copy.title}
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">
+            {copy.subtitle}
+          </p>
+          <div className="mt-5 h-1.5 w-16 rounded-full bg-[var(--brand)]" />
+        </header>
+
+        <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-14">
+          <ContactInfo copy={copy} />
           <ContactForm
             copy={{
-              name: dictionary.contact.name,
-              email: dictionary.contact.email,
-              phone: dictionary.contact.phone,
-              message: dictionary.contact.message,
-              submit: dictionary.contact.submit,
-              success: dictionary.contact.success,
-              error: dictionary.contact.error,
+              name: copy.name,
+              email: copy.email,
+              phone: copy.phone,
+              message: copy.message,
+              submit: copy.submit,
+              success: copy.success,
+              error: copy.error,
             }}
           />
         </div>
       </div>
-      <ContactMap title={dictionary.contact.mapTitle} />
+
+      <ContactMap title={copy.mapTitle} />
     </div>
   );
 }
