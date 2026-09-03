@@ -12,6 +12,7 @@ import { HomeCategoriesSection } from "@/features/home/ui/HomeCategoriesSection"
 import { HomeFeaturedSection } from "@/features/home/ui/HomeFeaturedSection";
 import { HomeFeatures } from "@/features/home/ui/HomeFeatures";
 import { HomeHero } from "@/features/home/ui/HomeHero";
+import { HomeMobileHeroSection } from "@/features/home/ui/HomeMobileHeroSection";
 import { HomePartners } from "@/features/home/ui/HomePartners";
 import { HomePromotionsSection } from "@/features/home/ui/HomePromotionsSection";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -37,6 +38,14 @@ export default async function HomePage({ params }: HomePageProps) {
 
   return (
     <div className="home-page-root relative bg-white">
+      <Suspense fallback={<div className="h-[420px] lg:hidden" aria-hidden />}>
+        <HomeMobileHeroSection
+          locale={locale}
+          dictionary={dictionary}
+          slides={heroSlides}
+        />
+      </Suspense>
+
       <HomeHero
         slides={heroSlides}
         brandName={dictionary.home.title}
@@ -45,9 +54,11 @@ export default async function HomePage({ params }: HomePageProps) {
         fallbackCtaHref={productsHref}
       />
 
-      <Suspense fallback={<HomeCategoriesSkeleton />}>
-        <HomeCategoriesSection locale={locale} dictionary={dictionary} />
-      </Suspense>
+      <div className="hidden lg:block">
+        <Suspense fallback={<HomeCategoriesSkeleton />}>
+          <HomeCategoriesSection locale={locale} dictionary={dictionary} />
+        </Suspense>
+      </div>
 
       <Suspense fallback={<HomeProductRailSkeleton />}>
         <HomeFeaturedSection locale={locale} dictionary={dictionary} />
@@ -57,34 +68,36 @@ export default async function HomePage({ params }: HomePageProps) {
         <HomePromotionsSection locale={locale} dictionary={dictionary} />
       </Suspense>
 
-      <LazyWhenVisible fallback={<HomeFeaturesSkeleton />}>
-        <HomeFeatures
-          items={[
-            {
-              icon: "warranty",
-              title: dictionary.home.features.warrantyTitle,
-              description: dictionary.home.features.warrantyDescription,
-            },
-            {
-              icon: "delivery",
-              title: dictionary.home.features.deliveryTitle,
-              description: dictionary.home.features.deliveryDescription,
-            },
-            {
-              icon: "installment",
-              title: dictionary.home.features.installmentTitle,
-              description: dictionary.home.features.installmentDescription,
-            },
-            {
-              icon: "original",
-              title: dictionary.home.features.originalTitle,
-              description: dictionary.home.features.originalDescription,
-            },
-          ]}
-        />
-      </LazyWhenVisible>
+      <div className="hidden lg:block">
+        <LazyWhenVisible fallback={<HomeFeaturesSkeleton />}>
+          <HomeFeatures
+            items={[
+              {
+                icon: "warranty",
+                title: dictionary.home.features.warrantyTitle,
+                description: dictionary.home.features.warrantyDescription,
+              },
+              {
+                icon: "delivery",
+                title: dictionary.home.features.deliveryTitle,
+                description: dictionary.home.features.deliveryDescription,
+              },
+              {
+                icon: "installment",
+                title: dictionary.home.features.installmentTitle,
+                description: dictionary.home.features.installmentDescription,
+              },
+              {
+                icon: "original",
+                title: dictionary.home.features.originalTitle,
+                description: dictionary.home.features.originalDescription,
+              },
+            ]}
+          />
+        </LazyWhenVisible>
 
-      <HomePartners title={dictionary.home.partnersTitle} />
+        <HomePartners title={dictionary.home.partnersTitle} />
+      </div>
     </div>
   );
 }

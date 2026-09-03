@@ -31,7 +31,7 @@ export function HomeHero({
   const ctaHref = active?.copy.buttonUrl ?? fallbackCtaHref;
 
   return (
-    <section className="relative z-0 bg-white pt-0 pb-12 sm:pb-20 lg:min-h-[820px] lg:pb-8">
+    <section className="relative z-0 hidden bg-white pt-0 pb-12 sm:pb-20 lg:block lg:min-h-[820px] lg:pb-8">
       {/*
         Figma Vector 7 — under product, continues under categories.
       */}

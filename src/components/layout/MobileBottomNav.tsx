@@ -1,17 +1,11 @@
 "use client";
 
-import {
-  Heart,
-  Home,
-  ShoppingBag,
-  ShoppingCart,
-  User,
-} from "lucide-react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
-import type { LucideIcon } from "lucide-react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { CartDrawer } from "@/features/cart/ui/CartDrawer";
+import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import { useWishlistCount } from "@/features/wishlist/wishlist-client-sync";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
@@ -26,13 +20,46 @@ type MobileBottomNavProps = {
   isSignedIn: boolean;
 };
 
+type NavIconSize = {
+  width: number;
+  height: number;
+  className: string;
+};
+
 type NavTab = {
   id: string;
   href: string;
   label: string;
-  icon: LucideIcon;
+  iconSrc: string;
+  iconSize: NavIconSize;
   match: (pathname: string) => boolean;
   badge?: number;
+};
+
+const ICON_HOME: NavIconSize = {
+  width: 26,
+  height: 26,
+  className: "size-[26px]",
+};
+const ICON_SHOP: NavIconSize = {
+  width: 24,
+  height: 24,
+  className: "h-5 w-6",
+};
+const ICON_BAG: NavIconSize = {
+  width: 24,
+  height: 24,
+  className: "size-6",
+};
+const ICON_HEART: NavIconSize = {
+  width: 26,
+  height: 26,
+  className: "size-[26px]",
+};
+const ICON_USER: NavIconSize = {
+  width: 20,
+  height: 24,
+  className: "h-6 w-5",
 };
 
 function isHomePath(pathname: string, locale: Locale): boolean {
@@ -43,54 +70,77 @@ function startsWithPath(pathname: string, base: string): boolean {
   return pathname === base || pathname.startsWith(`${base}/`);
 }
 
-function tabClassName(active: boolean): string {
+/** Figma 171:544 — 52px circles; color eases between white and brand. */
+function tabButtonClass(active: boolean): string {
   return [
-    "relative flex min-w-0 flex-1 flex-col items-center justify-center gap-0.5 px-1 py-2 text-[10px] font-medium outline-none transition-colors",
-    active ? "text-gray-900" : "text-gray-500 hover:text-gray-800",
+    "relative inline-flex size-[52px] shrink-0 items-center justify-center rounded-full outline-none",
+    "transition-colors duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+    active ? "bg-[var(--brand)]" : "bg-white",
   ].join(" ");
 }
 
-function NavBadge({ count }: { count: number }) {
+function NavBadge({
+  count,
+  active = false,
+}: {
+  count: number;
+  active?: boolean;
+}) {
   if (count <= 0) {
     return null;
   }
 
   return (
-    <span className="absolute -top-1.5 -right-2.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-gray-900 px-1 text-[9px] font-semibold text-white">
+    <span
+      className={[
+        "absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[9px] font-semibold",
+        "transition-colors duration-300",
+        active
+          ? "bg-white text-black ring-1 ring-black/10"
+          : "bg-[var(--brand)] text-black",
+      ].join(" ")}
+    >
       {count > 99 ? "99+" : count}
     </span>
   );
 }
 
-function LinkTab({
-  tab,
-  active,
-}: {
-  tab: NavTab;
-  active: boolean;
-}) {
-  const Icon = tab.icon;
+function TabIcon({ src, size }: { src: string; size: NavIconSize }) {
+  return (
+    <Image
+      src={src}
+      alt=""
+      width={size.width}
+      height={size.height}
+      className={size.className}
+      unoptimized
+      aria-hidden
+    />
+  );
+}
 
+function LinkTab({ tab, active }: { tab: NavTab; active: boolean }) {
   return (
     <AppLink
       href={tab.href}
       prefetchPolicy="intent"
+      aria-label={tab.label}
       aria-current={active ? "page" : undefined}
-      className={tabClassName(active)}
+      className={tabButtonClass(active)}
     >
-      <span className="relative inline-flex">
-        <Icon
-          className="h-5 w-5"
-          strokeWidth={active ? 2.25 : 1.75}
-          aria-hidden="true"
-        />
-        {tab.badge != null ? <NavBadge count={tab.badge} /> : null}
+      <span className="relative inline-flex items-center justify-center">
+        <TabIcon src={tab.iconSrc} size={tab.iconSize} />
+        {tab.badge != null ? (
+          <NavBadge count={tab.badge} active={active} />
+        ) : null}
       </span>
-      <span className="truncate">{tab.label}</span>
     </AppLink>
   );
 }
 
+/**
+ * Floating pill bottom nav — Figma Home mobile Container (171:543).
+ */
 export function MobileBottomNav({
   locale,
   currency,
@@ -109,7 +159,8 @@ export function MobileBottomNav({
     id: "home",
     href: `/${locale}`,
     label: dictionary.nav.home,
-    icon: Home,
+    iconSrc: HOME_MOBILE_ASSETS.navHome,
+    iconSize: ICON_HOME,
     match: (path) => isHomePath(path, locale),
   };
 
@@ -117,7 +168,8 @@ export function MobileBottomNav({
     id: "shop",
     href: `/${locale}/products`,
     label: dictionary.nav.shop,
-    icon: ShoppingBag,
+    iconSrc: HOME_MOBILE_ASSETS.navShop,
+    iconSize: ICON_SHOP,
     match: (path) => startsWithPath(path, `/${locale}/products`),
   };
 
@@ -125,7 +177,8 @@ export function MobileBottomNav({
     id: "wishlist",
     href: `/${locale}/wishlist`,
     label: dictionary.nav.wishlist,
-    icon: Heart,
+    iconSrc: HOME_MOBILE_ASSETS.navHeart,
+    iconSize: ICON_HEART,
     match: (path) => startsWithPath(path, `/${locale}/wishlist`),
     badge: wishlistBadgeCount,
   };
@@ -134,7 +187,8 @@ export function MobileBottomNav({
     id: "profile",
     href: profileHref,
     label: dictionary.header.profile,
-    icon: User,
+    iconSrc: HOME_MOBILE_ASSETS.navUser,
+    iconSize: ICON_USER,
     match: (path) =>
       startsWithPath(path, `/${locale}/profile`) ||
       startsWithPath(path, `/${locale}/login`),
@@ -143,9 +197,9 @@ export function MobileBottomNav({
   return (
     <nav
       aria-label={dictionary.nav.navigation}
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-sm md:hidden"
+      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-[22px] pb-[max(16px,env(safe-area-inset-bottom))] md:hidden"
     >
-      <div className="mx-auto flex h-14 max-w-7xl items-stretch">
+      <div className="pointer-events-auto flex max-w-[338px] items-center gap-3 rounded-[60px] bg-[rgba(33,33,33,0.71)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-[10px]">
         <LinkTab tab={homeTab} active={homeTab.match(pathname)} />
         <LinkTab tab={shopTab} active={shopTab.match(pathname)} />
 
@@ -168,18 +222,13 @@ export function MobileBottomNav({
               onFocus={prefetchDrawerView}
               aria-label={label}
               aria-expanded={open}
-              className={tabClassName(open)}
+              className={tabButtonClass(open)}
               data-cart-target
             >
-              <span className="relative inline-flex">
-                <ShoppingCart
-                  className="h-5 w-5"
-                  strokeWidth={open ? 2.25 : 1.75}
-                  aria-hidden="true"
-                />
-                <NavBadge count={badgeCount} />
+              <span className="relative inline-flex items-center justify-center">
+                <TabIcon src={HOME_MOBILE_ASSETS.navBag} size={ICON_BAG} />
+                <NavBadge count={badgeCount} active={open} />
               </span>
-              <span className="truncate">{label}</span>
             </button>
           )}
         />

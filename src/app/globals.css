@@ -54,6 +54,17 @@ body {
   padding-top: 0;
 }
 
+/* Home mobile (Figma 171:567): custom top chrome replaces SiteHeader. */
+@media (max-width: 1023px) {
+  .storefront-shell:has(.home-page-root) .site-header {
+    display: none;
+  }
+
+  .storefront-main:has(.home-page-root) {
+    padding-bottom: 0;
+  }
+}
+
 .shop-page-root,
 .product-page-root {
   margin-inline: auto;
@@ -351,8 +362,8 @@ body {
 }
 
 /**
- * Mobile profile: hide storefront header (hub is chrome). Keep footer visible
- * under the hub — do not stretch main / pin footer to the viewport bottom.
+ * Mobile profile: hide storefront header (hub is chrome).
+ * SiteFooter is already hidden below `md` for all storefront pages.
  */
 @media (max-width: 1279px) {
   .storefront-shell:has(.profile-mobile-page) .site-header {
@@ -363,10 +374,6 @@ body {
     flex-grow: 0;
     padding-top: 0.5rem;
     padding-bottom: 0.75rem;
-  }
-
-  .storefront-shell:has(.profile-mobile-page) .storefront-footer {
-    margin-top: 0;
   }
 
   .profile-mobile-tab-sheet-scroll {

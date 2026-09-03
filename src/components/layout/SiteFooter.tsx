@@ -63,7 +63,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   );
 
   return (
-    <footer className="storefront-footer relative z-10 mt-auto overflow-hidden bg-black pb-[calc(3.5rem+env(safe-area-inset-bottom))] text-white md:pb-0">
+    <footer className="storefront-footer relative z-10 mt-auto hidden overflow-hidden bg-black text-white md:block">
       {/* Figma 118:970 — left tile plane */}
       <Image
         src={FOOTER_ASSETS.tiles}

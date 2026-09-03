@@ -13,3 +13,22 @@ export const HOME_ASSETS = {
   arrowYellow: "/assets/home/arrow-circle-yellow.svg",
   arrowGray: "/assets/home/arrow-circle-gray.svg",
 } as const;
+
+/** Figma Home mobile (171:567) chrome icons. */
+export const HOME_MOBILE_ASSETS = {
+  logo: "/assets/home/mobile/logo.svg",
+  search: "/assets/home/mobile/search.svg",
+  filter: "/assets/home/mobile/filter.svg",
+  phone: "/assets/home/mobile/phone.svg",
+  location: "/assets/home/mobile/location.svg",
+  chevron: "/assets/home/mobile/chevron.svg",
+  menuAll: "/assets/home/mobile/menu-all.svg",
+  chipBathtub: "/assets/home/mobile/chip-bathtub.svg",
+  shopBag: "/assets/home/mobile/shop-bag.svg",
+  star: "/assets/home/mobile/star.svg",
+  navHome: "/assets/home/mobile/nav-home.svg",
+  navShop: "/assets/home/mobile/nav-shop.svg",
+  navBag: "/assets/home/mobile/nav-bag.svg",
+  navHeart: "/assets/home/mobile/nav-heart.svg",
+  navUser: "/assets/home/mobile/nav-user.svg",
+} as const;
