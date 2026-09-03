@@ -1,9 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { CSSProperties } from "react";
 
-import { LocaleSwitcher } from "@/components/layout/LocaleSwitcher";
+import {
+  SLIDING_NAV_TRANSITION_MS,
+  useSlidingNavIndicator,
+} from "@/components/ui/useSlidingNavIndicator";
 import {
   getAdminMenuItems,
   isAdminTabActive,
@@ -13,16 +18,13 @@ import { AdminMenuDrawer } from "@/features/admin/ui/AdminMenuDrawer";
 import { AdminSidebarBrand } from "@/features/admin/ui/AdminSidebarBrand";
 import { useAdminSidebarCollapse } from "@/features/admin/ui/AdminSidebarCollapseContext";
 import {
+  ADMIN_BRAND_LOGO_CLASS,
   ADMIN_SIDEBAR_ASIDE,
   ADMIN_SIDEBAR_MOBILE_DRAWER_WRAP,
   ADMIN_SIDEBAR_NAV,
 } from "@/features/admin/ui/admin-shell-classes";
-import {
-  adminCopy,
-  resolveAdminLocale,
-} from "@/features/admin/ui/resolve-admin-locale";
+import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { useAdminProductsSubnavExpanded } from "@/features/admin/ui/useAdminProductsSubnavExpanded";
-import { getDictionary } from "@/lib/i18n/get-dictionary";
 
 type AdminSidebarProps = {
   locale: string;
@@ -41,15 +43,42 @@ function isNestedVisible(
   return productsNestedExpanded;
 }
 
+function navIconClass(active: boolean): string {
+  return active
+    ? "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--brand)] text-black"
+    : "flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white/15 text-white";
+}
+
+function navLabelClass(active: boolean): string {
+  return active ? "text-black" : "text-white";
+}
+
 export function AdminSidebar({ locale }: AdminSidebarProps) {
   const pathname = usePathname() ?? `/${locale}/admin`;
   const t = adminCopy(locale);
-  const resolvedLocale = resolveAdminLocale(locale);
-  const languageLabel = getDictionary(resolvedLocale).header.language;
   const tabs = getAdminMenuItems(locale, t.nav);
   const { collapsed } = useAdminSidebarCollapse();
   const [productsNestedExpanded, toggleProductsNested] =
     useAdminProductsSubnavExpanded(pathname, locale);
+
+  const visibleTabs = tabs.filter((tab) =>
+    isNestedVisible(
+      tab,
+      pathname,
+      locale,
+      collapsed,
+      productsNestedExpanded,
+    ),
+  );
+
+  const activeHref =
+    [...visibleTabs]
+      .filter((tab) => isAdminTabActive(tab.href, pathname, locale))
+      .sort((left, right) => right.href.length - left.href.length)[0]?.href ??
+    "";
+
+  const { navRef, indicator, slideEnabled, registerItem } =
+    useSlidingNavIndicator(activeHref);
 
   const asideWidthClass = collapsed ? "lg:w-16" : "lg:w-64";
 
@@ -59,66 +88,66 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
         <div className="flex items-center justify-between gap-3">
           <Link
             href={`/${locale}`}
-            className="min-w-0 shrink text-sm font-semibold text-gray-900"
+            className={ADMIN_BRAND_LOGO_CLASS}
+            aria-label={t.nav.brand}
           >
-            {t.nav.brand}
+            <Image
+              src="/assets/home/ruben-logo.svg"
+              alt={t.nav.brand}
+              width={72}
+              height={44}
+              priority
+              className="h-full w-full object-contain object-left"
+            />
           </Link>
-          <div className="flex shrink-0 items-center gap-2">
-            <LocaleSwitcher locale={resolvedLocale} label={languageLabel} />
-            <AdminMenuDrawer locale={locale} pathname={pathname} />
-          </div>
+          <AdminMenuDrawer locale={locale} pathname={pathname} />
         </div>
       </div>
       <aside className={`${ADMIN_SIDEBAR_ASIDE} ${asideWidthClass}`}>
         <AdminSidebarBrand locale={locale} />
         <nav
+          ref={navRef}
           className={`${ADMIN_SIDEBAR_NAV} ${collapsed ? "px-1" : "px-2"}`}
+          style={
+            {
+              "--profile-nav-ms": `${SLIDING_NAV_TRANSITION_MS}ms`,
+            } as CSSProperties
+          }
         >
-          {tabs.map((tab) => {
-            if (
-              !isNestedVisible(
-                tab,
-                pathname,
-                locale,
-                collapsed,
-                productsNestedExpanded,
-              )
-            ) {
-              return null;
-            }
+          {indicator ? (
+            <span
+              aria-hidden
+              className={`pointer-events-none absolute right-0 left-0 z-0 rounded-2xl bg-[var(--brand)] shadow-sm ${
+                slideEnabled
+                  ? "profile-nav-indicator"
+                  : "profile-nav-indicator-instant"
+              }`}
+              style={{ top: indicator.top, height: indicator.height }}
+            />
+          ) : null}
 
-            const isActive = isAdminTabActive(tab.href, pathname, locale);
-            const rowClasses = `flex w-full items-center rounded-md text-sm font-medium transition-all ${
-              collapsed ? "justify-center px-0 py-3" : "gap-3 px-4 py-3"
-            } ${tab.isSubCategory && !collapsed ? "pl-12" : ""} ${
-              isActive
-                ? "bg-gray-900 text-white"
-                : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            }`;
+          {visibleTabs.map((tab) => {
+            const isActive = tab.href === activeHref;
 
             if (tab.id === "products" && !collapsed) {
               return (
                 <div
                   key={tab.id}
-                  className={`flex w-full min-w-0 overflow-hidden rounded-md ${
-                    isActive ? "bg-gray-900 text-white" : "bg-transparent"
+                  ref={(node) => registerItem(tab.href, node)}
+                  className={`relative z-10 flex w-full min-w-0 overflow-hidden rounded-2xl ${
+                    isActive ? "" : "hover:bg-white/10"
                   }`}
                 >
                   <Link
                     href={tab.href}
                     title={tab.label}
-                    className={`flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left text-sm font-medium transition-all ${
-                      isActive
-                        ? "text-white hover:bg-gray-800"
-                        : "text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                    }`}
+                    className={`flex min-w-0 flex-1 items-center gap-3 px-3 py-2 text-left text-sm font-semibold tracking-wide uppercase ${navLabelClass(isActive)}`}
+                    aria-current={isActive ? "page" : undefined}
                   >
-                    <span
-                      className={`shrink-0 ${isActive ? "text-white" : "text-gray-500"}`}
-                    >
-                      {tab.icon}
+                    <span className={navIconClass(isActive)}>{tab.icon}</span>
+                    <span className="profile-nav-label min-w-0 flex-1 truncate">
+                      {tab.label}
                     </span>
-                    <span className="min-w-0 truncate">{tab.label}</span>
                   </Link>
                   <button
                     type="button"
@@ -129,10 +158,10 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                       event.preventDefault();
                       toggleProductsNested();
                     }}
-                    className={`shrink-0 border-l px-2 py-3 transition-colors ${
+                    className={`shrink-0 border-l px-2 py-2 transition-colors ${
                       isActive
-                        ? "border-white/25 text-white hover:bg-white/10"
-                        : "border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                        ? "border-black/20 text-black hover:bg-black/5"
+                        : "border-white/20 text-white/80 hover:bg-white/10"
                     }`}
                   >
                     <svg
@@ -159,29 +188,24 @@ export function AdminSidebar({ locale }: AdminSidebarProps) {
                 key={tab.id}
                 href={tab.href}
                 title={tab.label}
-                className={rowClasses}
+                ref={(node) => registerItem(tab.href, node)}
+                className={`relative z-10 flex w-full items-center gap-3 rounded-2xl py-2 text-left text-sm font-semibold tracking-wide uppercase ${
+                  collapsed ? "justify-center px-0" : "px-3"
+                } ${tab.isSubCategory && !collapsed ? "pl-10" : ""} ${
+                  isActive ? "" : "hover:bg-white/10"
+                } ${navLabelClass(isActive)}`}
+                aria-current={isActive ? "page" : undefined}
               >
-                <span
-                  className={`shrink-0 ${isActive ? "text-white" : "text-gray-500"}`}
-                >
-                  {tab.icon}
-                </span>
+                <span className={navIconClass(isActive)}>{tab.icon}</span>
                 {collapsed ? null : (
-                  <span className="min-w-0 truncate">{tab.label}</span>
+                  <span className="profile-nav-label min-w-0 flex-1 truncate">
+                    {tab.label}
+                  </span>
                 )}
               </Link>
             );
           })}
         </nav>
-        {collapsed ? null : (
-          <div className="mt-auto border-t border-gray-200 px-4 py-3">
-            <LocaleSwitcher
-              locale={resolvedLocale}
-              label={languageLabel}
-              menuPlacement="top"
-            />
-          </div>
-        )}
       </aside>
     </>
   );

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
-import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import {
   ConfirmDialog,
@@ -127,20 +126,21 @@ export function AdminProductsTable({
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
-        <p className="text-sm text-gray-700">
-          {t.products.bulk.selected.replace("{count}", String(selected.size))}
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          variant="danger"
-          disabled={isPending || selected.size === 0}
-          onClick={deleteSelected}
-        >
-          {t.products.bulk.deleteSelected}
-        </Button>
-      </Card>
+      {selected.size > 0 ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-[15px] border border-gray-200 bg-white px-4 py-3 shadow-sm">
+          <p className="text-sm text-gray-600">
+            {t.products.bulk.selected.replace("{count}", String(selected.size))}
+          </p>
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={deleteSelected}
+            className="inline-flex items-center justify-center rounded-full bg-[#f88686] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#f06f6f] disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {t.products.bulk.deleteSelected}
+          </button>
+        </div>
+      ) : null}
 
       {error ? <p className="text-sm text-red-700">{error}</p> : null}
 

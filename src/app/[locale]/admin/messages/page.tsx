@@ -114,7 +114,7 @@ export default async function AdminMessagesPage({
               ))}
             </select>
           </label>
-          <Button type="submit" size="sm">
+          <Button type="submit" size="field">
             {t.messages.filter.submit}
           </Button>
         </form>

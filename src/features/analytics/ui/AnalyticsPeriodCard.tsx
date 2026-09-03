@@ -5,10 +5,8 @@ import { useState, useTransition, type FormEvent } from "react";
 
 import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
-import {
-  ADMIN_INPUT,
-  ADMIN_LABEL,
-} from "@/features/admin/ui/admin-form-classes";
+import { AdminDatePickerField } from "@/features/admin/ui/AdminDatePickerField";
+import { ADMIN_LABEL } from "@/features/admin/ui/admin-form-classes";
 import {
   ANALYTICS_PERIOD_PRESETS,
   formatAnalyticsDisplayDate,
@@ -26,7 +24,7 @@ type AnalyticsPeriodCardProps = {
   rangeInvalid: boolean;
 };
 
-export function AnalyticsPeriodCard({
+function AnalyticsPeriodCardForm({
   locale,
   from,
   to,
@@ -44,6 +42,8 @@ export function AnalyticsPeriodCard({
   };
   const [pending, startTransition] = useTransition();
   const [forceCustom, setForceCustom] = useState(preset === "custom");
+  const [customFrom, setCustomFrom] = useState(from);
+  const [customTo, setCustomTo] = useState(to);
   const selectedPreset: AnalyticsPeriodPreset = forceCustom
     ? "custom"
     : preset;
@@ -68,13 +68,10 @@ export function AnalyticsPeriodCard({
 
   function onCustomSubmit(event: FormEvent<HTMLFormElement>): void {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const nextFrom = String(data.get("from") ?? "");
-    const nextTo = String(data.get("to") ?? "");
-    if (!nextFrom || !nextTo) {
+    if (!customFrom || !customTo) {
       return;
     }
-    navigate(nextFrom, nextTo);
+    navigate(customFrom, customTo);
   }
 
   return (
@@ -109,26 +106,30 @@ export function AnalyticsPeriodCard({
         >
           <label className="min-w-[140px] flex-1">
             <span className={ADMIN_LABEL}>{t.analytics.period.from}</span>
-            <input
+            <AdminDatePickerField
               name="from"
-              type="date"
-              defaultValue={from}
-              className={ADMIN_INPUT}
+              value={customFrom}
+              onChange={setCustomFrom}
+              disabled={pending}
+              locale={locale}
+              common={t.common}
             />
           </label>
           <label className="min-w-[140px] flex-1">
             <span className={ADMIN_LABEL}>{t.analytics.period.to}</span>
-            <input
+            <AdminDatePickerField
               name="to"
-              type="date"
-              defaultValue={to}
-              className={ADMIN_INPUT}
+              value={customTo}
+              onChange={setCustomTo}
+              disabled={pending}
+              locale={locale}
+              common={t.common}
             />
           </label>
           <button
             type="submit"
             disabled={pending}
-            className="rounded-md bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-60"
+            className="h-11 shrink-0 rounded-2xl bg-gray-900 px-4 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-60"
           >
             {t.analytics.period.apply}
           </button>
@@ -149,5 +150,14 @@ export function AnalyticsPeriodCard({
         ) : null}
       </div>
     </Card>
+  );
+}
+
+export function AnalyticsPeriodCard(props: AnalyticsPeriodCardProps) {
+  return (
+    <AnalyticsPeriodCardForm
+      key={`${props.from}-${props.to}-${props.preset}`}
+      {...props}
+    />
   );
 }

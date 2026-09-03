@@ -44,7 +44,7 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
         aria-controls="admin-menu-drawer-panel"
         onClick={() => setOpen((prev) => !prev)}
         aria-label={t.nav.menuAria}
-        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-semibold uppercase tracking-wide text-gray-800 shadow-sm"
+        className="inline-flex items-center gap-2 rounded-full bg-black px-4 py-2 text-sm font-semibold tracking-wide text-white uppercase shadow-sm"
       >
         <svg
           className="h-4 w-4"
@@ -68,103 +68,107 @@ export function AdminMenuDrawer({ locale, pathname }: AdminMenuDrawerProps) {
         ariaLabel={t.nav.menu}
         side="left"
         panelClassName="w-1/2 min-w-[16rem] max-w-full"
+        backdropBlur
+        closeClassName="bg-[var(--brand)] text-black hover:brightness-95"
       >
         <div
           id="admin-menu-drawer-panel"
-          className="flex min-h-0 flex-1 flex-col"
+          className="flex min-h-0 flex-1 flex-col bg-black text-white"
         >
-            <div className="border-b border-gray-200 px-4 py-4">
-              <Link
-                href={`/${locale}`}
-                className="text-sm font-semibold text-gray-900"
-                onClick={() => setOpen(false)}
-              >
-                {t.nav.brand}
-              </Link>
-            </div>
+          <div className="border-b border-white/15 px-4 py-4">
+            <Link
+              href={`/${locale}`}
+              className="text-sm font-bold tracking-wide text-white uppercase"
+              onClick={() => setOpen(false)}
+            >
+              {t.nav.brand}
+            </Link>
+          </div>
 
-            <nav className="flex-1 divide-y divide-gray-100 overflow-y-auto">
-              {tabs.map((tab) => {
-                if (
-                  !isNestedVisible(
-                    tab,
-                    pathname,
-                    locale,
-                    productsNestedExpanded,
-                  )
-                ) {
-                  return null;
-                }
+          <nav className="flex-1 overflow-y-auto py-2">
+            {tabs.map((tab) => {
+              if (
+                !isNestedVisible(
+                  tab,
+                  pathname,
+                  locale,
+                  productsNestedExpanded,
+                )
+              ) {
+                return null;
+              }
 
-                const isActive = isAdminTabActive(tab.href, pathname, locale);
+              const isActive = isAdminTabActive(tab.href, pathname, locale);
 
-                if (tab.id === "products") {
-                  return (
-                    <div
-                      key={tab.id}
-                      className={`flex w-full ${isActive ? "bg-gray-900 text-white" : ""}`}
-                    >
-                      <Link
-                        href={tab.href}
-                        onClick={() => setOpen(false)}
-                        className={`flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-sm font-medium ${
-                          isActive
-                            ? "text-white"
-                            : "text-gray-700 hover:bg-gray-50"
-                        } ${tab.isSubCategory ? "pl-10" : ""}`}
-                      >
-                        <span className="shrink-0">{tab.icon}</span>
-                        <span className="truncate">{tab.label}</span>
-                      </Link>
-                      <button
-                        type="button"
-                        aria-expanded={productsNestedExpanded}
-                        aria-label={t.nav.toggleProductSubpages}
-                        onClick={toggleProductsNested}
-                        className={`shrink-0 border-l px-3 py-3 ${
-                          isActive
-                            ? "border-white/25 text-white"
-                            : "border-gray-200 text-gray-600"
-                        }`}
-                      >
-                        <svg
-                          className={`h-5 w-5 transition-transform ${productsNestedExpanded ? "" : "-rotate-90"}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                          aria-hidden
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  );
-                }
-
+              if (tab.id === "products") {
                 return (
-                  <Link
+                  <div
                     key={tab.id}
-                    href={tab.href}
-                    onClick={() => setOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 text-sm font-medium ${
-                      tab.isSubCategory ? "pl-10" : ""
-                    } ${
-                      isActive
-                        ? "bg-gray-900 text-white"
-                        : "text-gray-700 hover:bg-gray-50"
+                    className={`mx-2 flex w-[calc(100%-1rem)] overflow-hidden rounded-2xl ${
+                      isActive ? "bg-[var(--brand)] text-black" : ""
                     }`}
                   >
-                    <span className="shrink-0">{tab.icon}</span>
-                    <span className="truncate">{tab.label}</span>
-                  </Link>
+                    <Link
+                      href={tab.href}
+                      onClick={() => setOpen(false)}
+                      className={`flex min-w-0 flex-1 items-center gap-3 px-3 py-2.5 text-sm font-semibold uppercase ${
+                        isActive
+                          ? "text-black"
+                          : "text-white hover:bg-white/10"
+                      } ${tab.isSubCategory ? "pl-10" : ""}`}
+                    >
+                      <span className="shrink-0">{tab.icon}</span>
+                      <span className="truncate">{tab.label}</span>
+                    </Link>
+                    <button
+                      type="button"
+                      aria-expanded={productsNestedExpanded}
+                      aria-label={t.nav.toggleProductSubpages}
+                      onClick={toggleProductsNested}
+                      className={`shrink-0 border-l px-3 py-2.5 ${
+                        isActive
+                          ? "border-black/20 text-black"
+                          : "border-white/20 text-white/80"
+                      }`}
+                    >
+                      <svg
+                        className={`h-5 w-5 transition-transform ${productsNestedExpanded ? "" : "-rotate-90"}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
+                  </div>
                 );
-              })}
-            </nav>
+              }
+
+              return (
+                <Link
+                  key={tab.id}
+                  href={tab.href}
+                  onClick={() => setOpen(false)}
+                  className={`mx-2 flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-semibold uppercase ${
+                    tab.isSubCategory ? "pl-10" : ""
+                  } ${
+                    isActive
+                      ? "bg-[var(--brand)] text-black"
+                      : "text-white hover:bg-white/10"
+                  }`}
+                >
+                  <span className="shrink-0">{tab.icon}</span>
+                  <span className="truncate">{tab.label}</span>
+                </Link>
+              );
+            })}
+          </nav>
         </div>
       </SideSheet>
     </div>

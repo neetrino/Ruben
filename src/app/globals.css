@@ -498,13 +498,37 @@ body {
   animation: 0.4s cubic-bezier(0.22, 1, 0.36, 1) both profile-page-reveal-in;
 }
 
+@keyframes admin-page-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--admin-reveal-y, 24px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-page-reveal {
+  animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) both admin-page-reveal-in;
+}
+
+@media (min-width: 1024px) {
+  html:has([data-admin-shell]),
+  body:has([data-admin-shell]) {
+    overflow: hidden;
+    height: 100dvh;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html:has(.profile-desktop-page),
   .profile-desktop-content {
     scroll-behavior: auto;
   }
 
-  .profile-page-reveal {
+  .profile-page-reveal,
+  .admin-page-reveal {
     animation: none;
   }
 }

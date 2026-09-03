@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { AdminPageTitle } from "@/features/admin/ui/AdminPageTitle";
 import { ADMIN_PAGE_SUBTITLE } from "@/features/admin/ui/admin-form-classes";
 import { getAnalyticsSummary } from "@/features/analytics/application/queries";
 import {
@@ -60,8 +61,9 @@ export default async function AdminAnalyticsPage({
 
   return (
     <section>
-      <div className="mb-6">
-        <p className={ADMIN_PAGE_SUBTITLE}>{t.analytics.subtitle}</p>
+      <div className="mb-3">
+        <AdminPageTitle>{t.nav.analytics}</AdminPageTitle>
+        <p className={`mt-1 ${ADMIN_PAGE_SUBTITLE}`}>{t.analytics.subtitle}</p>
       </div>
 
       <AnalyticsPeriodCard

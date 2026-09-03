@@ -42,8 +42,14 @@ export function AdminProductRow({
   const isActive = product.status === "ACTIVE";
 
   return (
-    <tr className={ADMIN_TABLE_ROW}>
-      <td className={ADMIN_TABLE_TD_CHECK}>
+    <tr
+      className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+      onClick={onEdit}
+    >
+      <td
+        className={ADMIN_TABLE_TD_CHECK}
+        onClick={(event) => event.stopPropagation()}
+      >
         <input
           type="checkbox"
           className={ADMIN_TABLE_CHECKBOX}
@@ -97,7 +103,10 @@ export function AdminProductRow({
             : "—"}
         </span>
       </td>
-      <td className={ADMIN_TABLE_TD}>
+      <td
+        className={ADMIN_TABLE_TD}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           disabled={disabled}
@@ -112,7 +121,10 @@ export function AdminProductRow({
           />
         </button>
       </td>
-      <td className={ADMIN_TABLE_TD}>
+      <td
+        className={ADMIN_TABLE_TD}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="flex items-center gap-1">
           <button
             type="button"

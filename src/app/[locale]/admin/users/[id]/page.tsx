@@ -5,19 +5,15 @@ import { Card } from "@/components/ui/Card";
 import {
   ADMIN_PAGE_SUBTITLE,
   ADMIN_PAGE_TITLE,
-  ADMIN_SECTION_TITLE,
 } from "@/features/admin/ui/admin-form-classes";
-import {
-  ADMIN_BADGE,
-  orderStatusBadgeClass,
-  paymentStatusBadgeClass,
-} from "@/features/admin/ui/status-badge";
+import { ADMIN_BADGE } from "@/features/admin/ui/status-badge";
 import { getAdminUserById } from "@/features/users/application/queries";
 import {
   getEligibleUserStatuses,
   isUserRole,
   isUserStatus,
 } from "@/features/users/domain/user-lifecycle";
+import { AdminUserRecentOrders } from "@/features/users/ui/AdminUserRecentOrders";
 import { UpdateUserRoleForm } from "@/features/users/ui/UpdateUserRoleForm";
 import { UpdateUserStatusForm } from "@/features/users/ui/UpdateUserStatusForm";
 import { isLocale } from "@/lib/i18n/config";
@@ -150,40 +146,18 @@ export default async function AdminUserDetailPage({
         )}
       </div>
 
-      <Card className="p-6">
-        <h2 className={`mb-4 ${ADMIN_SECTION_TITLE}`}>{t.users.detail.recentOrders}</h2>
-        <div className="space-y-3">
-          {recentOrders.map((order) => (
-            <Link
-              key={order.id}
-              href={`/${locale}/admin/orders/${order.orderNumber}`}
-              className="block rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50"
-            >
-              <div className="flex flex-wrap items-center gap-2">
-                <strong className="text-sm text-gray-900">
-                  {order.orderNumber}
-                </strong>
-                <span
-                  className={`${ADMIN_BADGE} ${orderStatusBadgeClass(order.status)}`}
-                >
-                  {order.status}
-                </span>
-                <span
-                  className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(order.paymentStatus)}`}
-                >
-                  {order.paymentStatus}
-                </span>
-              </div>
-              <p className="mt-1 text-sm text-gray-600">
-                {order.totalAmount.toLocaleString("en-US")} {order.baseCurrency}
-              </p>
-            </Link>
-          ))}
-          {recentOrders.length === 0 ? (
-            <p className="text-sm text-gray-600">{t.users.detail.noOrders}</p>
-          ) : null}
-        </div>
-      </Card>
+      <AdminUserRecentOrders
+        locale={locale}
+        copy={t}
+        orders={recentOrders.map((order) => ({
+          id: order.id,
+          orderNumber: order.orderNumber,
+          status: order.status,
+          paymentStatus: order.paymentStatus,
+          totalAmount: order.totalAmount,
+          baseCurrency: order.baseCurrency,
+        }))}
+      />
     </section>
   );
 }

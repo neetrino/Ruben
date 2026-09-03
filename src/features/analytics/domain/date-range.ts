@@ -109,12 +109,39 @@ export function formatAnalyticsDisplayDate(isoDate: string): string {
 }
 
 /** Formats a short chart/list date (e.g. Jul 13). */
-export function formatAnalyticsShortDate(isoDate: string): string {
+export function formatAnalyticsShortDate(
+  isoDate: string,
+  _locale?: string,
+): string {
   return new Date(`${isoDate}T00:00:00.000Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
     timeZone: "UTC",
   });
+}
+
+const MONTH_NAMES_SHORT = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+] as const;
+
+/** Formats a full month name for chart axis headers (e.g. July). */
+export function formatAnalyticsMonthShort(
+  isoDate: string,
+  _locale?: string,
+): string {
+  const monthIndex = Number(isoDate.slice(5, 7)) - 1;
+  return MONTH_NAMES_SHORT[monthIndex] ?? isoDate;
 }
 
 /** Formats percent delta vs a previous numeric value. */
@@ -125,4 +152,15 @@ export function formatPeriodDelta(current: number, previous: number): string {
   const pct = ((current - previous) / previous) * 100;
   const sign = pct >= 0 ? "+" : "";
   return `${sign}${pct.toFixed(1)}%`;
+}
+
+/** Tailwind text color class for a formatted period delta string. */
+export function periodDeltaToneClass(delta: string): string {
+  if (delta.startsWith("+") && delta !== "+0.0%") {
+    return "text-emerald-600";
+  }
+  if (delta.startsWith("-")) {
+    return "text-red-600";
+  }
+  return "text-gray-500";
 }

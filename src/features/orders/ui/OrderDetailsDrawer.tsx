@@ -153,25 +153,25 @@ function OrderSheetBody({
           <h3 className="text-sm font-semibold tracking-wide text-gray-900 uppercase">
             {labels.sections.customer}
           </h3>
-          <div className="space-y-1.5 text-sm">
-            <p className="flex flex-wrap items-baseline gap-x-1.5">
-              <span className="text-gray-500">{labels.labels.name}</span>
-              <span className="font-medium text-gray-900">
-                {detail.contactName}
-              </span>
-            </p>
-            <p className="flex flex-wrap items-baseline gap-x-1.5">
-              <span className="text-gray-500">{labels.labels.phone}</span>
-              <span className="font-medium text-gray-900">
-                {detail.contactPhone}
-              </span>
-            </p>
-            <p className="flex flex-wrap items-baseline gap-x-1.5">
-              <span className="text-gray-500">{labels.labels.email}</span>
-              <span className="font-medium text-gray-900">
-                {detail.contactEmail}
-              </span>
-            </p>
+          <div className="space-y-2.5 text-sm">
+            <DetailRow
+              label={labels.labels.name}
+              value={detail.contactName}
+            />
+            <DetailRow
+              label={labels.labels.phone}
+              value={detail.contactPhone}
+            />
+            <DetailRow
+              label={labels.labels.email}
+              value={detail.contactEmail}
+            />
+            <div className="pt-1.5">
+              <DetailRow
+                label={labels.labels.method}
+                value={detail.paymentMethod}
+              />
+            </div>
           </div>
         </section>
       ) : null}
@@ -192,12 +192,14 @@ function OrderSheetBody({
             ) : null}
           </div>
         </div>
-        <div className="space-y-1.5 border-t border-gray-100 pt-3 text-sm">
-          <p className="flex flex-wrap items-baseline gap-x-1.5 text-gray-900">
-            <span className="text-gray-500">{labels.labels.method}</span>
-            <span className="font-medium">{detail.paymentMethod}</span>
-          </p>
-        </div>
+        {!includeAdminDetails ? (
+          <div className="space-y-2.5 border-t border-gray-100 pt-3 text-sm">
+            <DetailRow
+              label={labels.labels.method}
+              value={detail.paymentMethod}
+            />
+          </div>
+        ) : null}
       </section>
 
       <section className="space-y-3">
@@ -284,6 +286,21 @@ function OrderSheetTotals({
         </div>
       </dl>
     </div>
+  );
+}
+
+function DetailRow({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <p className="flex flex-wrap items-baseline gap-x-1.5 text-gray-900">
+      <span className="text-gray-500">{label}</span>
+      <span className="font-medium">{value}</span>
+    </p>
   );
 }
 
