@@ -24,7 +24,6 @@ export default async function LoginPage({ params }: LoginPageProps) {
       brandLabel={dictionary.brand}
       title={dictionary.auth.loginTitle}
       subtitle={dictionary.auth.loginSubtitle}
-      wide
     >
       <Suspense
         fallback={
