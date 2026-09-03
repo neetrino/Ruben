@@ -324,11 +324,17 @@ body {
     align-self: flex-start;
   }
 
+  html:has(.profile-desktop-page) {
+    scroll-behavior: smooth;
+  }
+
   .profile-desktop-content {
     min-width: 0;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
     -ms-overflow-style: none;
   }
@@ -473,5 +479,55 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .auth-page-panel {
     animation: none;
+  }
+}
+
+/* Profile section transitions (route change / sheet content) */
+@keyframes profile-page-reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(var(--profile-reveal-y, 18px));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.profile-page-reveal {
+  animation: 0.4s cubic-bezier(0.22, 1, 0.36, 1) both profile-page-reveal-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.profile-desktop-page),
+  .profile-desktop-content {
+    scroll-behavior: auto;
+  }
+
+  .profile-page-reveal {
+    animation: none;
+  }
+}
+
+.profile-nav-indicator {
+  transition-property: top, height;
+  transition-duration: var(--profile-nav-ms, 380ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-nav-indicator-instant {
+  transition-duration: 0ms;
+}
+
+.profile-nav-label {
+  transition-property: color;
+  transition-duration: var(--profile-nav-ms, 380ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-nav-indicator,
+  .profile-nav-label {
+    transition: none;
   }
 }

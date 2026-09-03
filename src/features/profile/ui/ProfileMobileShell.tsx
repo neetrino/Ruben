@@ -10,6 +10,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 import { ProfileMobileHub } from "@/features/profile/ui/ProfileMobileHub";
 import { ProfileMobileTabSheet } from "@/features/profile/ui/ProfileMobileTabSheet";
+import { ProfilePageReveal } from "@/features/profile/ui/ProfilePageReveal";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import { scheduleStateUpdate } from "@/lib/react/schedule-after-paint";
 import type { Locale } from "@/lib/i18n/config";
@@ -92,9 +93,13 @@ export function ProfileMobileShell({
     />
   );
 
+  const revealed = (
+    <ProfilePageReveal y={isDesktop ? 18 : 0}>{children}</ProfilePageReveal>
+  );
+
   const desktopColumn = (
     <div className="profile-desktop-content profile-sticky-band min-w-0 flex-1">
-      {children}
+      {revealed}
     </div>
   );
 
@@ -106,7 +111,7 @@ export function ProfileMobileShell({
       <>
         <div className="profile-mobile-page w-full xl:hidden">{hub}</div>
         <div className="profile-desktop-content profile-sticky-band hidden min-w-0 flex-1 xl:block">
-          {children}
+          {revealed}
         </div>
       </>
     );
@@ -122,7 +127,7 @@ export function ProfileMobileShell({
           onExited={handleSheetExited}
           ariaLabel={dictionary.title}
         >
-          {children}
+          {revealed}
         </ProfileMobileTabSheet>
       </div>
     );

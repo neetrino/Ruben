@@ -94,8 +94,8 @@ export function DeleteAccountForm({ locale, labels }: DeleteAccountFormProps) {
         <div className="pt-1 sm:pt-2">
           <Button
             type="submit"
-            variant="outline"
-            className="h-11 w-full border-red-200 bg-white text-red-700 hover:bg-red-50 hover:text-red-800 focus:ring-red-500 sm:w-auto"
+            variant="danger"
+            className="h-11 w-full sm:w-auto"
             disabled={isPending || !acknowledged}
           >
             {isPending ? labels.deleting : labels.submit}

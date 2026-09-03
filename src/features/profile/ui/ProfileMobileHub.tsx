@@ -170,7 +170,7 @@ export function ProfileMobileHub({
           <AppLink
             href={item.href}
             prefetchPolicy="intent"
-            className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-white px-3 py-3 text-left transition-colors hover:bg-red-50/60"
+            className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-red-50/60 px-3 py-3 text-left transition-colors hover:bg-red-50"
           >
             {content}
           </AppLink>
@@ -233,7 +233,7 @@ export function ProfileMobileHub({
       <form action={logoutWithLocale}>
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2.5 rounded-[var(--radius)] bg-gray-900 py-3.5 text-base font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex w-full items-center justify-center gap-2.5 rounded-[var(--radius)] border border-gray-200 bg-white py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200/70 transition-colors hover:bg-gray-50"
         >
           <LogOut className="h-5 w-5 shrink-0" aria-hidden />
           {dictionary.logout}
