@@ -194,11 +194,12 @@ export function ProfileMobileHub({
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
       <section
-        className="rounded-[var(--radius)] bg-white px-4 py-5 shadow-sm ring-1 ring-gray-200/70"
+        className="overflow-hidden rounded-[var(--radius)] bg-white shadow-sm ring-1 ring-gray-200/70"
         aria-label={dictionary.title}
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-900 text-base font-semibold text-white shadow-[0_0_0_3px_white]">
+        <div className="h-1.5 w-full bg-[var(--brand)]" />
+        <div className="flex items-center gap-3 px-4 py-5">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--brand)] text-base font-semibold text-black shadow-[0_0_0_3px_white]">
             {user.firstName.slice(0, 1).toUpperCase()}
             {user.lastName.slice(0, 1).toUpperCase()}
           </div>

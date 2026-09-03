@@ -19,12 +19,13 @@ export function ProfileSidebar({
 
   return (
     <aside
-      className="flex w-full flex-col rounded-[var(--radius)] border border-gray-300/60 bg-gradient-to-b from-gray-100/95 to-gray-50/90 shadow-inner"
+      className="flex w-full flex-col overflow-hidden rounded-[var(--radius)] border border-gray-300/60 bg-gradient-to-b from-gray-100/95 to-gray-50/90 shadow-inner"
       aria-label={dictionary.title}
     >
+      <div className="h-1.5 w-full shrink-0 bg-[var(--brand)]" />
       <div className="border-b border-gray-300/50 bg-gray-50/50 p-4 sm:p-5">
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-gray-900 text-xl font-semibold text-white shadow-md">
+          <div className="flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full bg-[var(--brand)] text-xl font-semibold text-black shadow-md">
             {user.firstName.slice(0, 1).toUpperCase()}
             {user.lastName.slice(0, 1).toUpperCase()}
           </div>
