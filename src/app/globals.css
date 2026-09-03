@@ -10,6 +10,9 @@
   --brand: #ffca03;
   --brand-deep: #fec604;
   --radius: 15px;
+  /* SiteHeader lg+: pt-[26px] + pill h-[63px] */
+  --storefront-header-offset: calc(26px + 63px);
+  --profile-sticky-gap: 5rem;
 }
 
 @theme inline {
@@ -287,54 +290,88 @@ body {
 }
 
 /**
- * MaMarie-style profile desktop shell:
- * lock viewport height, hide footer, scroll only the content column.
+ * Storefront profile desktop (Kamancha): sticky band under the header.
+ * Equal top/bottom gaps; content column scrolls internally. When that
+ * column reaches its end, page scroll continues so the footer is reachable.
  */
-@media (min-width: 1024px) {
-  .storefront-shell:has(.profile-desktop-page) {
-    height: 100dvh;
-    max-height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
-  }
-
+@media (min-width: 1280px) {
   .storefront-shell:has(.profile-desktop-page) .storefront-main {
     display: flex;
-    flex: 1 1 0%;
+    flex: 1 1 auto;
     flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-    padding-top: 24px;
-    padding-bottom: 20px;
+    padding-top: var(--profile-sticky-gap);
+    padding-bottom: var(--profile-sticky-gap);
   }
 
-  .storefront-shell:has(.profile-desktop-page) .storefront-footer {
+  .profile-desktop-page {
+    flex: 1 1 auto;
+    min-height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    align-items: flex-start;
+  }
+
+  .profile-sticky-band {
+    position: sticky;
+    top: calc(var(--storefront-header-offset) + var(--profile-sticky-gap));
+    z-index: 10;
+    height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    max-height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    align-self: flex-start;
+  }
+
+  .profile-desktop-content {
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-desktop-content::-webkit-scrollbar {
     display: none;
+  }
+
+  .profile-desktop-content > * {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
   }
 }
 
 /**
- * MaMarie-style mobile profile page: slightly cooler canvas behind hub cards.
- * Hide the storefront top header — profile hub is the chrome on mobile.
- * Hide the storefront bottom tab bar — profile has its own hub chrome.
+ * Mobile profile: hide storefront header (hub is chrome). Keep footer visible
+ * under the hub — do not stretch main / pin footer to the viewport bottom.
  */
-@media (max-width: 1023px) {
+@media (max-width: 1279px) {
   .storefront-shell:has(.profile-mobile-page) .site-header {
     display: none;
   }
 
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
+    flex-grow: 0;
     padding-top: 0.5rem;
-    padding-bottom: 2.5rem;
+    padding-bottom: 0.75rem;
   }
 
-  .storefront-shell:has(.profile-mobile-page) .mobile-bottom-nav {
-    display: none;
+  .storefront-shell:has(.profile-mobile-page) .storefront-footer {
+    margin-top: 0;
   }
 
   .profile-mobile-tab-sheet-scroll {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-mobile-tab-sheet-scroll::-webkit-scrollbar {
+    display: none;
   }
 
   /* Dashboard + orders: more inset from the sheet edges. */

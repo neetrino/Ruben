@@ -1,14 +1,16 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronRight,
   LayoutDashboard,
   Lock,
   LogOut,
+  Mail,
   MapPin,
   Package,
+  Phone,
   Trash2,
   User,
 } from "lucide-react";
@@ -43,7 +45,8 @@ const ICON_THEMES = {
 } as const;
 
 /**
- * MaMarie-style mobile profile hub: header card + chevron menu + logout CTA.
+ * Mobile profile hub: header card + chevron menu + logout CTA.
+ * Nested sections open in the profile bottom sheet (Kamancha pattern).
  */
 export function ProfileMobileHub({
   locale,
@@ -52,6 +55,7 @@ export function ProfileMobileHub({
   onOpenDashboard,
 }: ProfileMobileHubProps) {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const logoutWithLocale = logoutAction.bind(null, locale);
   const displayName = `${user.firstName} ${user.lastName}`.trim();
   const hubHref = `/${locale}/profile`;
@@ -99,6 +103,15 @@ export function ProfileMobileHub({
 
   const mainItems = items.filter((item) => !item.danger);
   const dangerItem = items.find((item) => item.danger);
+
+  useEffect(() => {
+    router.prefetch(`/${locale}/profile`);
+    router.prefetch(`/${locale}/profile/orders`);
+    router.prefetch(`/${locale}/profile/personal-information`);
+    router.prefetch(`/${locale}/profile/addresses`);
+    router.prefetch(`/${locale}/profile/password`);
+    router.prefetch(`/${locale}/profile/delete-account`);
+  }, [locale, router]);
 
   function isActive(item: MenuItem): boolean {
     if (item.exact) {
@@ -193,9 +206,16 @@ export function ProfileMobileHub({
             <p className="truncate text-xl font-bold leading-tight text-gray-900">
               {displayName}
             </p>
-            <p className="truncate text-sm leading-snug text-gray-500">
-              {user.email}
+            <p className="flex items-center gap-1.5 truncate text-sm leading-snug text-gray-500">
+              <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span className="truncate">{user.email}</span>
             </p>
+            {user.phone ? (
+              <p className="flex items-center gap-1.5 truncate text-sm leading-snug text-gray-500">
+                <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span className="truncate">{user.phone}</span>
+              </p>
+            ) : null}
           </div>
         </div>
       </section>

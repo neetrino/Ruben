@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useRef,
   useState,
   type AnimationEvent,
@@ -12,6 +13,12 @@ import {
 import { createPortal } from "react-dom";
 
 import { useProfileMobileSheetDrag } from "@/features/profile/ui/use-profile-mobile-sheet-drag";
+import { scheduleStateUpdate } from "@/lib/react/schedule-after-paint";
+import {
+  BODY_SCROLL_LOCK_ALLOW,
+  useBodyScrollLock,
+} from "@/lib/react/use-body-scroll-lock";
+import { useIsClient } from "@/lib/react/use-is-client";
 
 /** Must match `.animate-bottom-sheet-panel-*` duration in globals.css. */
 export const PROFILE_MOBILE_TAB_SHEET_MS = 300;
@@ -30,7 +37,7 @@ type ProfileMobileTabSheetProps = {
 };
 
 /**
- * MaMarie-style mobile profile tab sheet: ~72dvh bottom panel with drag handle.
+ * Storefront mobile profile tab sheet: ~72dvh bottom panel with drag handle.
  * Open/close share 300ms motion; swipe-down dismisses without a mid-close jump.
  */
 export function ProfileMobileTabSheet({
@@ -40,7 +47,7 @@ export function ProfileMobileTabSheet({
   ariaLabel,
   children,
 }: ProfileMobileTabSheetProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [rendered, setRendered] = useState(false);
   const [phase, setPhase] = useState<MotionPhase>("enter");
   const [isDragging, setIsDragging] = useState(false);
@@ -55,8 +62,11 @@ export function ProfileMobileTabSheet({
   const exitNotifiedRef = useRef(false);
   const onExitedRef = useRef(onExited);
   const onCloseRef = useRef(onClose);
-  onExitedRef.current = onExited;
-  onCloseRef.current = onClose;
+
+  useLayoutEffect(() => {
+    onExitedRef.current = onExited;
+    onCloseRef.current = onClose;
+  });
 
   const finishExit = useCallback(() => {
     if (exitNotifiedRef.current) return;
@@ -93,7 +103,6 @@ export function ProfileMobileTabSheet({
   const handleSnapBack = useCallback(() => {
     setIsDragging(false);
     setDragBackdropOpacity(null);
-    // Stay in `idle` — do not re-run the enter keyframe.
   }, []);
 
   const handleOffsetChange = useCallback((offsetY: number) => {
@@ -119,26 +128,36 @@ export function ProfileMobileTabSheet({
 
   const renderedRef = useRef(false);
   const phaseRef = useRef<MotionPhase>("enter");
-  renderedRef.current = rendered;
-  phaseRef.current = phase;
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useLayoutEffect(() => {
+    renderedRef.current = rendered;
+    phaseRef.current = phase;
+  });
 
   useEffect(() => {
     if (!open) return;
-    setDisplayChildren(children);
-    setDisplayAriaLabel(ariaLabel);
+    scheduleStateUpdate(setDisplayChildren, children);
+    scheduleStateUpdate(setDisplayAriaLabel, ariaLabel);
   }, [open, children, ariaLabel]);
+
+  useEffect(() => {
+    if (!open || !rendered) return;
+    const node = scrollAreaRef.current;
+    if (!node) return;
+    node.scrollTop = 0;
+    const frame = window.requestAnimationFrame(() => {
+      node.scrollTop = 0;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, rendered, children]);
 
   useEffect(() => {
     if (open) {
       exitNotifiedRef.current = false;
-      setIsDragging(false);
-      setDragBackdropOpacity(null);
-      setPhase("enter");
-      setRendered(true);
+      scheduleStateUpdate(setIsDragging, false);
+      scheduleStateUpdate(setDragBackdropOpacity, null);
+      scheduleStateUpdate(setPhase, "enter");
+      scheduleStateUpdate(setRendered, true);
       const panel = panelRef.current;
       if (panel) {
         panel.style.transition = "";
@@ -149,7 +168,6 @@ export function ProfileMobileTabSheet({
 
     if (!renderedRef.current) return;
 
-    // Swipe path already set `exit-drag` and started the transform.
     if (phaseRef.current === "exit-drag") {
       const timer = window.setTimeout(() => {
         finishExit();
@@ -157,7 +175,7 @@ export function ProfileMobileTabSheet({
       return () => window.clearTimeout(timer);
     }
 
-    setPhase("exit");
+    scheduleStateUpdate(setPhase, "exit");
     const timer = window.setTimeout(() => {
       finishExit();
     }, PROFILE_MOBILE_TAB_SHEET_MS);
@@ -173,23 +191,17 @@ export function ProfileMobileTabSheet({
     return () => window.clearTimeout(timer);
   }, [rendered, phase]);
 
+  useBodyScrollLock(rendered);
+
   useEffect(() => {
     if (!rendered) return;
 
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key !== "Escape") return;
-      onCloseRef.current();
-      if (document.activeElement instanceof HTMLElement) {
-        document.activeElement.blur();
-      }
+      if (event.key === "Escape") onCloseRef.current();
     }
 
     document.addEventListener("keydown", handleKeyDown);
     return () => {
-      document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [rendered]);
@@ -234,7 +246,7 @@ export function ProfileMobileTabSheet({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[90] flex items-end overscroll-none lg:hidden"
+      className="profile-mobile-tab-sheet fixed inset-0 z-[90] flex items-end overscroll-none xl:hidden"
       role="dialog"
       aria-modal="true"
       aria-label={displayAriaLabel}
@@ -263,19 +275,21 @@ export function ProfileMobileTabSheet({
       />
       <div
         ref={panelRef}
-        className={`relative z-[1] flex w-full flex-col overflow-hidden bg-white shadow-2xl ${panelClass}`}
+        className={`relative z-[1] flex w-full flex-col overflow-hidden bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.18)] ${panelClass}`}
         style={{
           height: `${SHEET_HEIGHT_VH}dvh`,
+          maxHeight: "100%",
           borderTopLeftRadius: "var(--radius)",
           borderTopRightRadius: "var(--radius)",
         }}
+        {...{ [BODY_SCROLL_LOCK_ALLOW]: "" }}
         onClick={(event) => event.stopPropagation()}
         onAnimationEnd={handlePanelAnimationEnd}
         onTransitionEnd={handlePanelTransitionEnd}
         {...panelPointerHandlers}
       >
         <div
-          className="flex h-12 shrink-0 cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing"
+          className="relative z-[2] flex h-12 shrink-0 cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing"
           {...headerPointerHandlers}
         >
           <div
@@ -286,7 +300,7 @@ export function ProfileMobileTabSheet({
         </div>
         <div
           ref={scrollAreaRef}
-          className={`profile-mobile-tab-sheet-scroll min-h-0 flex-1 overscroll-contain px-3 pt-1 ${
+          className={`profile-mobile-tab-sheet-scroll relative z-[2] min-h-0 flex-1 overscroll-contain px-3 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
             isDragging || phase === "exit-drag"
               ? "touch-none overflow-hidden"
               : "overflow-y-auto"
