@@ -4,14 +4,18 @@ import { AdminPageTitle } from "@/features/admin/ui/AdminPageTitle";
 import { ADMIN_PAGE_SUBTITLE } from "@/features/admin/ui/admin-form-classes";
 import { getAnalyticsSummary } from "@/features/analytics/application/queries";
 import {
+  buildAnalyticsTrendSeries,
+  countAnalyticsRangeDays,
+} from "@/features/analytics/domain/dashboard-periods";
+import {
   analyticsDateRangeSchema,
+  formatPeriodDelta,
   matchAnalyticsPeriodPreset,
   rangeForAnalyticsPeriod,
 } from "@/features/analytics/domain/date-range";
 import { AnalyticsMetricCards } from "@/features/analytics/ui/AnalyticsMetricCards";
 import { AnalyticsOrdersByDay } from "@/features/analytics/ui/AnalyticsOrdersByDay";
 import { AnalyticsPeriodCard } from "@/features/analytics/ui/AnalyticsPeriodCard";
-import { AnalyticsSalesInsights } from "@/features/analytics/ui/AnalyticsSalesInsights";
 import { AnalyticsTopRankings } from "@/features/analytics/ui/AnalyticsTopRankings";
 import { isLocale } from "@/lib/i18n/config";
 import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
@@ -42,7 +46,7 @@ export default async function AdminAnalyticsPage({
 
   const t = getAdminDictionary(locale);
   const raw = await searchParams;
-  const defaults = rangeForAnalyticsPeriod("this_month");
+  const defaults = rangeForAnalyticsPeriod("last_7_days");
   const parsed = analyticsDateRangeSchema.safeParse({
     from: firstParam(raw.from) ?? defaults.from,
     to: firstParam(raw.to) ?? defaults.to,
@@ -58,6 +62,13 @@ export default async function AdminAnalyticsPage({
 
   const formatMoney = (amount: number): string =>
     formatMoneyAmount(amount, "AMD", locale);
+
+  const trendPoints = buildAnalyticsTrendSeries(
+    summary.dailyRows,
+    range,
+    locale,
+  );
+  const aggregatedMonthly = countAnalyticsRangeDays(range) > 45;
 
   return (
     <section>
@@ -79,30 +90,32 @@ export default async function AdminAnalyticsPage({
       <AnalyticsMetricCards
         locale={locale}
         orderCount={summary.orderCount}
+        orderDelta={formatPeriodDelta(
+          summary.orderCount,
+          summary.previousOrderCount,
+        )}
         revenueLabel={formatMoney(summary.revenueAmount)}
-        userCount={summary.userCount}
+        revenueDelta={formatPeriodDelta(
+          summary.revenueAmount,
+          summary.previousRevenueAmount,
+        )}
+        averageOrderLabel={formatMoney(summary.averageOrderValue)}
+        averageOrderDelta={formatPeriodDelta(
+          summary.averageOrderValue,
+          summary.previousAverageOrderValue,
+        )}
       />
 
-      <AnalyticsSalesInsights
+      <AnalyticsOrdersByDay
         locale={locale}
-        bestDay={summary.bestDay}
-        bestWeek={summary.bestWeek}
-        bestMonth={summary.bestMonth}
-        bestCustomers={summary.bestCustomers}
-        topBuyers={summary.topBuyers}
-        formatMoney={formatMoney}
+        points={trendPoints}
+        aggregatedMonthly={aggregatedMonthly}
       />
 
       <AnalyticsTopRankings
         locale={locale}
         products={summary.topProducts}
         categories={summary.topCategories}
-        formatMoney={formatMoney}
-      />
-
-      <AnalyticsOrdersByDay
-        locale={locale}
-        rows={summary.dailyRows}
         formatMoney={formatMoney}
       />
     </section>

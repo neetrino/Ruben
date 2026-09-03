@@ -560,55 +560,46 @@
     }
   },
   "analytics": {
-    "subtitle": "Store performance overview",
+    "subtitle": "Track your business performance and statistics",
     "period": {
-      "title": "Period",
-      "label": "Date range",
+      "title": "Time Period",
+      "label": "Period",
+      "aria": "Period",
       "from": "From",
       "to": "To",
-      "apply": "Apply"
+      "apply": "Apply",
+      "downloadCsv": "Download CSV export",
+      "invalidRange": "Invalid date range. Showing defaults.",
+      "last7Days": "Last 7 Days",
+      "last30Days": "Last 30 Days",
+      "last90Days": "Last 90 Days",
+      "thisMonth": "This Month",
+      "customRange": "Custom Range"
     },
-    "presets": {
-      "today": "Today",
-      "thisWeek": "This week",
-      "thisMonth": "This month",
-      "custom": "Custom range"
-    },
-    "export": "Download CSV export",
-    "invalidRange": "Invalid date range. Start must be before end.",
     "metrics": {
-      "orders": "Orders",
-      "revenue": "Revenue",
-      "users": "New users"
+      "totalOrders": "Total Orders",
+      "totalRevenue": "Total Revenue",
+      "averageOrderValue": "Avg. order",
+      "totalUsers": "Total Users"
     },
-    "sales": {
-      "title": "Sales Summary",
-      "subtitle": "Aggregated sales for the selected period.",
-      "bestDay": "Best day",
-      "bestWeek": "Best week",
-      "bestMonth": "Best month",
-      "empty": "No sales data for this period."
+    "topProducts": {
+      "title": "Top Selling Products",
+      "sold": "{quantity} sold",
+      "orders": "{count} orders",
+      "empty": "No product sales in this range."
     },
-    "customers": {
-      "best": "Top Customers",
-      "highestRevenue": "Highest revenue",
-      "mostPurchases": "Most purchases",
-      "mostOrders": "Most orders",
-      "empty": "No customer data for this period."
-    },
-    "products": {
-      "title": "Product Performance",
-      "mostSold": "Most sold products",
-      "mostCategories": "Top categories",
-      "emptyProducts": "No product sales data for this period.",
-      "emptyCategories": "No category data for this period."
+    "topCategories": {
+      "title": "Top Categories",
+      "items": "{count} items",
+      "orders": "{count} orders",
+      "empty": "No category sales in this range."
     },
     "ordersByDay": {
       "title": "Orders by Day",
-      "subtitle": "Daily order and revenue breakdown.",
-      "chartAria": "Orders by day chart",
-      "empty": "No daily data for this period.",
-      "revenueLabel": "Revenue"
+      "subtitle": "Daily order trends and revenue",
+      "chartAria": "Orders by day trend chart",
+      "empty": "No orders in this range.",
+      "peakDay": "Best day"
     }
   },
   "hero": {
