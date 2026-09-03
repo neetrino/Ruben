@@ -7,8 +7,10 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type CSSProperties,
   type ReactNode,
 } from "react";
+import { createPortal } from "react-dom";
 
 import {
   buildPickerMonthCells,
@@ -65,28 +67,50 @@ function isWithinBounds(
 }
 
 const POPOVER_GAP_PX = 8;
+const PANEL_WIDTH_PX = 320;
+const VIEWPORT_PAD_PX = 12;
 
 type PopoverPlacement = "bottom" | "top";
 
-function resolvePopoverPlacement(
+type PanelCoords = {
+  top: number;
+  left: number;
+};
+
+function resolvePanelCoords(
   triggerRect: DOMRect,
   panelHeight: number,
-): PopoverPlacement {
+): PanelCoords {
   const spaceBelow = window.innerHeight - triggerRect.bottom - POPOVER_GAP_PX;
   const spaceAbove = triggerRect.top - POPOVER_GAP_PX;
 
+  let placement: PopoverPlacement = "bottom";
   if (spaceBelow < panelHeight && spaceAbove >= panelHeight) {
-    return "top";
+    placement = "top";
+  } else if (spaceBelow < panelHeight && spaceAbove > spaceBelow) {
+    placement = "top";
   }
 
-  if (spaceBelow < panelHeight && spaceAbove > spaceBelow) {
-    return "top";
-  }
+  const width = Math.min(
+    PANEL_WIDTH_PX,
+    window.innerWidth - VIEWPORT_PAD_PX * 2,
+  );
+  let left = triggerRect.left;
+  left = Math.min(left, window.innerWidth - width - VIEWPORT_PAD_PX);
+  left = Math.max(VIEWPORT_PAD_PX, left);
 
-  return "bottom";
+  const top =
+    placement === "top"
+      ? Math.max(
+          VIEWPORT_PAD_PX,
+          triggerRect.top - POPOVER_GAP_PX - panelHeight,
+        )
+      : triggerRect.bottom + POPOVER_GAP_PX;
+
+  return { top, left };
 }
 
-/** Popover date field — input + dropdown calendar (not inline, not bottom sheet). */
+/** Popover date field — portaled calendar so drawers do not clip it. */
 export function DatePickerField({
   value,
   onChange,
@@ -112,7 +136,8 @@ export function DatePickerField({
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const [openInternal, setOpenInternal] = useState(false);
-  const [placement, setPlacement] = useState<PopoverPlacement>("bottom");
+  const [coords, setCoords] = useState<PanelCoords | null>(null);
+  const [mounted, setMounted] = useState(false);
   const open = openProp ?? openInternal;
   const setOpen = onOpenChange ?? setOpenInternal;
 
@@ -121,6 +146,10 @@ export function DatePickerField({
     : parseYmd(formatYerevanDate(new Date()));
   const [viewYear, setViewYear] = useState(initialParts.year);
   const [viewMonth, setViewMonth] = useState(initialParts.monthIndex);
+
+  useEffect(() => {
+    scheduleStateUpdate(setMounted, true);
+  }, []);
 
   useEffect(() => {
     if (!value) return;
@@ -133,37 +162,49 @@ export function DatePickerField({
     if (!open) return;
 
     function handlePointerDown(event: MouseEvent): void {
-      if (!rootRef.current?.contains(event.target as Node)) {
-        setOpen(false);
-      }
+      const target = event.target as Node;
+      if (rootRef.current?.contains(target)) return;
+      if (panelRef.current?.contains(target)) return;
+      setOpen(false);
+    }
+
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.key === "Escape") setOpen(false);
     }
 
     document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("mousedown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
   }, [open, setOpen]);
 
   useLayoutEffect(() => {
     if (!open) {
-      scheduleStateUpdate(setPlacement, "bottom");
+      scheduleStateUpdate(setCoords, null);
       return;
     }
 
-    function updatePlacement(): void {
+    function updateCoords(): void {
       const root = rootRef.current;
       const panel = panelRef.current;
       if (!root || !panel) return;
 
-      setPlacement(
-        resolvePopoverPlacement(root.getBoundingClientRect(), panel.offsetHeight),
+      setCoords(
+        resolvePanelCoords(
+          root.getBoundingClientRect(),
+          panel.offsetHeight,
+        ),
       );
     }
 
-    updatePlacement();
-    window.addEventListener("resize", updatePlacement);
-    window.addEventListener("scroll", updatePlacement, true);
+    updateCoords();
+    window.addEventListener("resize", updateCoords);
+    window.addEventListener("scroll", updateCoords, true);
     return () => {
-      window.removeEventListener("resize", updatePlacement);
-      window.removeEventListener("scroll", updatePlacement, true);
+      window.removeEventListener("resize", updateCoords);
+      window.removeEventListener("scroll", updateCoords, true);
     };
   }, [open, viewYear, viewMonth, footer, showClearToday]);
 
@@ -194,6 +235,139 @@ export function DatePickerField({
   const cells = buildPickerMonthCells(viewYear, viewMonth);
   const displayValue = value ? formatYmdForDisplay(value) : "";
   const triggerDisabled = disabled;
+
+  const panelWidth = Math.min(
+    PANEL_WIDTH_PX,
+    typeof window !== "undefined"
+      ? window.innerWidth - VIEWPORT_PAD_PX * 2
+      : PANEL_WIDTH_PX,
+  );
+
+  const panelStyle: CSSProperties | undefined = coords
+    ? {
+        position: "fixed",
+        top: coords.top,
+        left: coords.left,
+        width: panelWidth,
+        zIndex: 300,
+      }
+    : {
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: panelWidth,
+        zIndex: 300,
+        visibility: "hidden",
+      };
+
+  const panel =
+    open && mounted ? (
+      <div
+        ref={panelRef}
+        role="dialog"
+        aria-label={labels.placeholder}
+        style={panelStyle}
+        className="rounded-xl border border-gray-200 bg-white p-4 shadow-lg"
+      >
+        <div className="mb-2 flex items-center justify-between gap-2">
+          <p className="text-sm font-medium capitalize text-gray-900">
+            {calendarMonthLabel(viewYear, viewMonth, locale)}
+          </p>
+          <div className="flex items-center gap-0.5">
+            <button
+              type="button"
+              className="rounded p-1 text-gray-600 hover:bg-gray-100"
+              aria-label="Previous month"
+              onClick={() => shiftMonth(-1)}
+            >
+              <ChevronUp className="h-4 w-4" aria-hidden />
+            </button>
+            <button
+              type="button"
+              className="rounded p-1 text-gray-600 hover:bg-gray-100"
+              aria-label="Next month"
+              onClick={() => shiftMonth(1)}
+            >
+              <ChevronDown className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-7 gap-1 text-center text-xs text-gray-500">
+          {labels.weekdays.map((label) => (
+            <div key={label} className="truncate py-1 font-medium">
+              {label}
+            </div>
+          ))}
+          {cells.map((cell) => {
+            const isSelected = value === cell.date;
+            const enabled = isWithinBounds(
+              cell.date,
+              minDate,
+              maxDate,
+              isDateEnabled,
+            );
+            return (
+              <button
+                key={`${cell.date}-${cell.inMonth ? "in" : "out"}`}
+                type="button"
+                disabled={!enabled}
+                onClick={() =>
+                  cell.inMonth
+                    ? selectDate(cell.date)
+                    : selectAdjacentDate(cell.date)
+                }
+                className={`h-10 rounded-md text-sm transition-colors ${
+                  isSelected
+                    ? "bg-brand font-semibold text-gray-900"
+                    : cell.inMonth
+                      ? enabled
+                        ? "text-gray-900 hover:bg-gray-100"
+                        : "cursor-not-allowed text-gray-300"
+                      : enabled
+                        ? "text-gray-400 hover:bg-gray-50"
+                        : "cursor-not-allowed text-gray-300"
+                }`}
+              >
+                {Number(cell.date.slice(-2))}
+              </button>
+            );
+          })}
+        </div>
+
+        {footer ? (
+          <div className="mt-3 border-t border-gray-100 pt-3">{footer}</div>
+        ) : null}
+
+        {showClearToday ? (
+          <div className="mt-2 flex items-center justify-between gap-3 border-t border-gray-100 pt-2 text-sm">
+            <button
+              type="button"
+              className="font-medium text-gray-900 hover:underline"
+              onClick={() => {
+                onChange("");
+                setOpen(false);
+              }}
+            >
+              {labels.clear}
+            </button>
+            <button
+              type="button"
+              className="font-medium text-gray-900 hover:underline"
+              onClick={() => {
+                const today = formatYerevanDate(new Date());
+                selectDate(today);
+                if (closeOnSelect && !footer) {
+                  setOpen(false);
+                }
+              }}
+            >
+              {labels.today}
+            </button>
+          </div>
+        ) : null}
+      </div>
+    ) : null;
 
   return (
     <div ref={rootRef} className={`relative ${className}`.trim()}>
@@ -228,116 +402,7 @@ export function DatePickerField({
 
       {name ? <input type="hidden" name={name} value={value} /> : null}
 
-      {open ? (
-        <div
-          ref={panelRef}
-          role="dialog"
-          aria-label={labels.placeholder}
-          className={`absolute left-0 z-50 w-[min(100%,24rem)] rounded-xl border border-gray-200 bg-white p-3 shadow-lg ${
-            placement === "top"
-              ? "bottom-[calc(100%+0.5rem)]"
-              : "top-[calc(100%+0.5rem)]"
-          }`}
-        >
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <p className="text-sm font-medium capitalize text-gray-900">
-              {calendarMonthLabel(viewYear, viewMonth, locale)}
-            </p>
-            <div className="flex items-center gap-0.5">
-              <button
-                type="button"
-                className="rounded p-1 text-gray-600 hover:bg-gray-100"
-                aria-label="Previous month"
-                onClick={() => shiftMonth(-1)}
-              >
-                <ChevronUp className="h-4 w-4" aria-hidden />
-              </button>
-              <button
-                type="button"
-                className="rounded p-1 text-gray-600 hover:bg-gray-100"
-                aria-label="Next month"
-                onClick={() => shiftMonth(1)}
-              >
-                <ChevronDown className="h-4 w-4" aria-hidden />
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-7 gap-0.5 text-center text-xs text-gray-500">
-            {labels.weekdays.map((label) => (
-              <div key={label} className="py-1 font-medium">
-                {label}
-              </div>
-            ))}
-            {cells.map((cell) => {
-              const isSelected = value === cell.date;
-              const enabled = isWithinBounds(
-                cell.date,
-                minDate,
-                maxDate,
-                isDateEnabled,
-              );
-              return (
-                <button
-                  key={`${cell.date}-${cell.inMonth ? "in" : "out"}`}
-                  type="button"
-                  disabled={!enabled}
-                  onClick={() =>
-                    cell.inMonth
-                      ? selectDate(cell.date)
-                      : selectAdjacentDate(cell.date)
-                  }
-                  className={`h-9 rounded-md text-sm transition-colors ${
-                    isSelected
-                      ? "bg-brand font-semibold text-gray-900"
-                      : cell.inMonth
-                        ? enabled
-                          ? "text-gray-900 hover:bg-gray-100"
-                          : "cursor-not-allowed text-gray-300"
-                        : enabled
-                          ? "text-gray-400 hover:bg-gray-50"
-                          : "cursor-not-allowed text-gray-300"
-                  }`}
-                >
-                  {Number(cell.date.slice(-2))}
-                </button>
-              );
-            })}
-          </div>
-
-          {footer ? (
-            <div className="mt-3 border-t border-gray-100 pt-3">{footer}</div>
-          ) : null}
-
-          {showClearToday ? (
-            <div className="mt-2 flex items-center justify-between gap-3 border-t border-gray-100 pt-2 text-sm">
-              <button
-                type="button"
-                className="font-medium text-gray-900 hover:underline"
-                onClick={() => {
-                  onChange("");
-                  setOpen(false);
-                }}
-              >
-                {labels.clear}
-              </button>
-              <button
-                type="button"
-                className="font-medium text-gray-900 hover:underline"
-                onClick={() => {
-                  const today = formatYerevanDate(new Date());
-                  selectDate(today);
-                  if (closeOnSelect && !footer) {
-                    setOpen(false);
-                  }
-                }}
-              >
-                {labels.today}
-              </button>
-            </div>
-          ) : null}
-        </div>
-      ) : null}
+      {panel ? createPortal(panel, document.body) : null}
     </div>
   );
 }

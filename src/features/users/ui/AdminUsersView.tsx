@@ -173,23 +173,22 @@ export function AdminUsersView({
 
       {error ? <p className="mb-3 text-sm text-red-700">{error}</p> : null}
 
-      <Card className="mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
-        <p className="text-sm text-gray-700">
-          {t.users.bulk.selected.replace("{count}", String(selected.size))}
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          variant="danger"
-          disabled={isPending || selected.size === 0}
-          onClick={() => {
-            if (selected.size === 0) return;
-            setConfirmOpen(true);
-          }}
-        >
-          {t.users.bulk.deleteSelected}
-        </Button>
-      </Card>
+      {selected.size > 0 ? (
+        <Card className="mb-4 flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="text-sm text-gray-700">
+            {t.users.bulk.selected.replace("{count}", String(selected.size))}
+          </p>
+          <Button
+            type="button"
+            size="sm"
+            variant="danger"
+            disabled={isPending}
+            onClick={() => setConfirmOpen(true)}
+          >
+            {t.users.bulk.deleteSelected}
+          </Button>
+        </Card>
+      ) : null}
 
       <Card className={ADMIN_TABLE_CARD}>
         {users.length === 0 ? (
