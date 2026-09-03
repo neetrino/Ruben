@@ -121,6 +121,73 @@ export function GenericPageSkeleton() {
   );
 }
 
+export function HomeCategoriesSkeleton() {
+  return (
+    <div
+      className={`${pulse} mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-8`}
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="flex gap-4 overflow-hidden">
+        <Block className="h-40 w-64 shrink-0 rounded-2xl sm:h-52 sm:w-80" />
+        <Block className="h-40 w-40 shrink-0 rounded-2xl sm:h-52 sm:w-52" />
+        <Block className="h-40 w-64 shrink-0 rounded-2xl sm:h-52 sm:w-80" />
+        <Block className="h-40 w-40 shrink-0 rounded-2xl sm:h-52 sm:w-52" />
+      </div>
+    </div>
+  );
+}
+
+export function HomeProductRailSkeleton() {
+  return (
+    <div
+      className={`${pulse} mx-auto max-w-[1440px] space-y-6 px-4 py-10 sm:px-6 lg:px-8`}
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="flex items-end justify-between gap-4">
+        <Block className="h-9 w-48" />
+        <Block className="h-5 w-24" />
+      </div>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+        <Block className="aspect-[4/5] rounded-xl" />
+        <Block className="aspect-[4/5] rounded-xl" />
+        <Block className="aspect-[4/5] rounded-xl" />
+        <Block className="aspect-[4/5] rounded-xl" />
+      </div>
+    </div>
+  );
+}
+
+export function HomeFeaturesSkeleton() {
+  return (
+    <div
+      className={`${pulse} min-h-[320px] bg-[#f5f5f5] py-16`}
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="mx-auto grid max-w-[1440px] gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <Block className="h-64 w-full rounded-2xl" />
+        <Block className="h-64 w-full rounded-2xl" />
+      </div>
+    </div>
+  );
+}
+
+export function AuthFormSkeleton() {
+  return (
+    <div
+      className={`${pulse} space-y-4`}
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <Block className="h-11 w-full rounded-lg" />
+      <Block className="h-11 w-full rounded-lg" />
+      <Block className="h-11 w-full rounded-full" />
+    </div>
+  );
+}
+
 export function AdminPageSkeleton() {
   return (
     <div className={`${pulse} space-y-6`} aria-busy="true" aria-live="polite">

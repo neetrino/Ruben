@@ -1,10 +1,26 @@
+import dynamic from "next/dynamic";
+
 import { AppLink } from "@/components/ui/AppLink";
-import { ProductDetailTabs } from "@/features/products/ui/ProductDetailTabs";
 import { ProductGallery } from "@/features/products/ui/ProductGallery";
 import { ProductPurchaseControls } from "@/features/products/ui/ProductPurchaseControls";
 import type { ProductDetail } from "@/features/products/types";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+
+const ProductDetailTabs = dynamic(
+  () =>
+    import("@/features/products/ui/ProductDetailTabs").then((mod) => ({
+      default: mod.ProductDetailTabs,
+    })),
+  {
+    loading: () => (
+      <div
+        className="h-40 animate-pulse rounded-lg bg-gray-100"
+        aria-hidden="true"
+      />
+    ),
+  },
+);
 
 type ProductDetailViewProps = {
   locale: Locale;

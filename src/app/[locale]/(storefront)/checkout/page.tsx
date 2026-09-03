@@ -1,14 +1,23 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import { CartCheckoutSkeleton } from "@/components/loading/storefront-skeletons";
 import { getCartWithItems } from "@/features/cart/cart";
 import { getCheckoutDeliveryOptions } from "@/features/checkout/application/get-checkout-delivery";
 import { getCheckoutOrderProducts } from "@/features/checkout/application/get-checkout-order-products";
-import { CheckoutForm } from "@/features/checkout/ui/CheckoutForm";
 import { getDefaultShippingAddress } from "@/features/profile/application/address-queries";
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const CheckoutForm = dynamic(
+  () =>
+    import("@/features/checkout/ui/CheckoutForm").then((mod) => ({
+      default: mod.CheckoutForm,
+    })),
+  { loading: () => <CartCheckoutSkeleton /> },
+);
 
 type CheckoutPageProps = {
   params: Promise<{ locale: string }>;

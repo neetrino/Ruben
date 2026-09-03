@@ -1,9 +1,18 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import { AuthFormSkeleton } from "@/components/loading/storefront-skeletons";
 import { AuthPageShell } from "@/features/auth/ui/AuthPageShell";
-import { ForgotPasswordForm } from "@/features/auth/ui/ForgotPasswordForm";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const ForgotPasswordForm = dynamic(
+  () =>
+    import("@/features/auth/ui/ForgotPasswordForm").then((mod) => ({
+      default: mod.ForgotPasswordForm,
+    })),
+  { loading: () => <AuthFormSkeleton /> },
+);
 
 type ForgotPasswordPageProps = {
   params: Promise<{ locale: string }>;

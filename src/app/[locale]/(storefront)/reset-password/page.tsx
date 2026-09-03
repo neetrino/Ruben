@@ -1,9 +1,18 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import { AuthFormSkeleton } from "@/components/loading/storefront-skeletons";
 import { AuthPageShell } from "@/features/auth/ui/AuthPageShell";
-import { ResetPasswordForm } from "@/features/auth/ui/ResetPasswordForm";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const ResetPasswordForm = dynamic(
+  () =>
+    import("@/features/auth/ui/ResetPasswordForm").then((mod) => ({
+      default: mod.ResetPasswordForm,
+    })),
+  { loading: () => <AuthFormSkeleton /> },
+);
 
 type ResetPasswordPageProps = {
   params: Promise<{ locale: string }>;

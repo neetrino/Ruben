@@ -1,10 +1,27 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
-import { ContactForm } from "@/features/contact/ui/ContactForm";
+import { ContactFormSkeleton } from "@/features/contact/ui/ContactFormSkeleton";
 import { ContactInfo } from "@/features/contact/ui/ContactInfo";
-import { ContactMap } from "@/features/contact/ui/ContactMap";
+import { ContactMapSkeleton } from "@/features/contact/ui/ContactMapSkeleton";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const ContactForm = dynamic(
+  () =>
+    import("@/features/contact/ui/ContactForm").then((mod) => ({
+      default: mod.ContactForm,
+    })),
+  { loading: () => <ContactFormSkeleton /> },
+);
+
+const ContactMap = dynamic(
+  () =>
+    import("@/features/contact/ui/ContactMap").then((mod) => ({
+      default: mod.ContactMap,
+    })),
+  { loading: () => <ContactMapSkeleton /> },
+);
 
 type ContactPageProps = {
   params: Promise<{ locale: string }>;

@@ -1,7 +1,9 @@
-import { Suspense } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
+import { AdminPageSkeleton } from "@/components/loading/storefront-skeletons";
 import { AdminPageTitle } from "@/features/admin/ui/AdminPageTitle";
 import {
   DashboardPeriodOverview,
@@ -10,7 +12,6 @@ import {
 import { DashboardQuickActions } from "@/features/admin/ui/DashboardQuickActions";
 import { DashboardRecentOrders } from "@/features/admin/ui/DashboardRecentOrders";
 import { DashboardStatsGrid } from "@/features/admin/ui/DashboardStatsGrid";
-import { DashboardTrendChart } from "@/features/admin/ui/DashboardTrendChart";
 import {
   ADMIN_CARD_CLASS,
   ADMIN_CARD_HOVER_CLASS,
@@ -26,6 +27,14 @@ import { formatPeriodDelta } from "@/features/analytics/domain/date-range";
 import { getAdminDashboardMetrics } from "@/features/orders/application/queries";
 import { isLocale } from "@/lib/i18n/config";
 import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
+
+const DashboardTrendChart = dynamic(
+  () =>
+    import("@/features/admin/ui/DashboardTrendChart").then((mod) => ({
+      default: mod.DashboardTrendChart,
+    })),
+  { loading: () => <AdminPageSkeleton /> },
+)
 
 type AdminPageProps = {
   params: Promise<{ locale: string }>;
