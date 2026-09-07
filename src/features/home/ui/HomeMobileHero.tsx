@@ -52,7 +52,7 @@ export function HomeMobileHero({
   });
 
   return (
-    <section className="relative bg-white px-[14px] pb-6 lg:hidden">
+    <section className="relative bg-white px-[14px] pt-5 pb-6 lg:hidden">
       <div
         className="flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="list"
