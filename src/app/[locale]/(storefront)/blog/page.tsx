@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
 import { AppLink } from "@/components/ui/AppLink";
 import { listPublishedBlogPosts } from "@/features/blog/application/queries";
 import { isLocale } from "@/lib/i18n/config";
@@ -22,13 +24,16 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
   return (
     <section className="flex flex-col gap-6">
-      <h1 className="text-3xl font-semibold tracking-tight">
-        {dictionary.nav.blog}
-      </h1>
+      <Reveal as="header">
+        <h1 className="text-3xl font-semibold tracking-tight">
+          {dictionary.nav.blog}
+        </h1>
+      </Reveal>
 
-      <div className="flex flex-col gap-4">
+      <RevealList className="flex flex-col gap-4">
         {posts.map((post) => (
-          <article
+          <RevealItem
+            as="article"
             key={post.id}
             className="flex flex-col gap-4 border p-4 sm:flex-row"
           >
@@ -66,12 +71,12 @@ export default async function BlogPage({ params }: BlogPageProps) {
                 <p className="mt-2 text-[var(--muted)]">{post.copy.excerpt}</p>
               ) : null}
             </div>
-          </article>
+          </RevealItem>
         ))}
         {posts.length === 0 ? (
           <p className="text-[var(--muted)]">{dictionary.blog.empty}</p>
         ) : null}
-      </div>
+      </RevealList>
     </section>
   );
 }

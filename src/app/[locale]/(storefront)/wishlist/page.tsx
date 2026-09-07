@@ -95,6 +95,7 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
                 discountPercent={product.discountPercent}
                 imageUrl={product.imageUrl}
                 inStock={product.stockOnHand > 0}
+                appearIndex={index}
                 priority={index < 4}
                 locale={rawLocale}
                 productId={product.id}

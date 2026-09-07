@@ -539,59 +539,6 @@ body {
   background: #ffca03;
 }
 
-/* Auth pages — soft panel entrance */
-@keyframes auth-page-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.auth-page-panel {
-  animation: 0.45s cubic-bezier(0.22, 1, 0.36, 1) both auth-page-panel-in;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .auth-page-panel {
-    animation: none;
-  }
-}
-
-/* Profile section transitions (route change / sheet content) */
-@keyframes profile-page-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--profile-reveal-y, 18px));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.profile-page-reveal {
-  animation: 0.4s cubic-bezier(0.22, 1, 0.36, 1) both profile-page-reveal-in;
-}
-
-@keyframes admin-page-reveal-in {
-  from {
-    opacity: 0;
-    transform: translateY(var(--admin-reveal-y, 24px));
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.admin-page-reveal {
-  animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) both admin-page-reveal-in;
-}
-
 @media (min-width: 1025px) {
   html:has([data-admin-shell]),
   body:has([data-admin-shell]) {
@@ -604,11 +551,6 @@ body {
   html:has(.profile-desktop-page),
   .profile-desktop-content {
     scroll-behavior: auto;
-  }
-
-  .profile-page-reveal,
-  .admin-page-reveal {
-    animation: none;
   }
 }
 
@@ -635,18 +577,7 @@ body {
   }
 }
 
-/* Checkout success — soft entrance */
-@keyframes checkout-success-panel-in {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Checkout success — check mark pop after the Motion panel appear */
 @keyframes checkout-success-check-in {
   0% {
     opacity: 0;
@@ -661,17 +592,12 @@ body {
   }
 }
 
-.checkout-success-panel {
-  animation: 0.45s cubic-bezier(0.22, 1, 0.36, 1) both checkout-success-panel-in;
-}
-
 .checkout-success-check {
   animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both
     checkout-success-check-in;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .checkout-success-panel,
   .checkout-success-check {
     animation: none;
   }

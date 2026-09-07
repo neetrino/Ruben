@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
+
 import { COMPARE_MAX_PRODUCTS } from "@/features/compare/constants";
 import { listCompareProducts } from "@/features/compare/queries";
 import { ClearCompareButton } from "@/features/compare/ui/ClearCompareButton";
@@ -98,6 +100,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
           </Link>
         </p>
       ) : (
+        <Reveal>
         <CompareTable
           locale={rawLocale}
           items={priced}
@@ -116,6 +119,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
             emptyValue: dictionary.compare.emptyValue,
           }}
         />
+        </Reveal>
       )}
     </section>
   );

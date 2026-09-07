@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 
+import { MotionChip, MotionChipRow } from "@/components/motion/MotionChipRow";
 import { AppLink } from "@/components/ui/AppLink";
 import { HOME_ASSETS } from "@/features/home/config/assets";
 
@@ -90,28 +91,29 @@ export function HomeCategories({
       id="categories"
       className="relative z-10 scroll-mt-28 overflow-hidden rounded-t-[40px] bg-[#111] pt-12 pb-14 text-white"
     >
-      <div
-        className="mb-12 flex gap-2 overflow-x-auto px-6 pt-1 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      <MotionChipRow
         aria-label="Categories"
+        className="mb-12 flex gap-2 overflow-x-auto px-6 py-1 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {categories.map((category) => {
           const isActive = category.id === resolvedActiveId;
           return (
-            <AppLink
-              key={category.id}
-              href={category.href}
-              prefetchPolicy="intent"
-              className={
-                isActive
-                  ? "shrink-0 rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
-                  : "shrink-0 rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
-              }
-            >
-              {category.title}
-            </AppLink>
+            <MotionChip key={category.id}>
+              <AppLink
+                href={category.href}
+                prefetchPolicy="intent"
+                className={
+                  isActive
+                    ? "inline-block rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
+                    : "inline-block rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
+                }
+              >
+                {category.title}
+              </AppLink>
+            </MotionChip>
           );
         })}
-      </div>
+      </MotionChipRow>
 
       <div
         ref={scrollerRef}

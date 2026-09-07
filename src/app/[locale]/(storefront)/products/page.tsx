@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { AppLink } from "@/components/ui/AppLink";
 import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
@@ -182,10 +183,12 @@ export default async function ProductsPage({
       <div className="px-[13px] sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
           <div className="hidden lg:block">
+            <Reveal>
             <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
               {dictionary.catalog.shopTitle}
             </h1>
             <p className="mt-1 text-sm leading-5 text-[#888]">{resultsLabel}</p>
+            </Reveal>
           </div>
 
           <div className="flex min-h-[42px] min-w-0 flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -263,6 +266,7 @@ export default async function ProductsPage({
                     inStock={product.stockOnHand > 0}
                     categoryLabel={product.category?.title ?? null}
                     badgeLabel={product.badgeLabel}
+                    appearIndex={index}
                     priority={index < 4}
                     locale={rawLocale}
                     productId={product.id}

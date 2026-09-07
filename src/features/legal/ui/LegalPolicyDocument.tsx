@@ -1,3 +1,5 @@
+import { Reveal } from "@/components/motion/Reveal";
+
 type LegalSection = {
   heading: string;
   paragraphs: readonly string[];
@@ -17,7 +19,7 @@ type LegalPolicyDocumentProps = {
 
 export function LegalPolicyDocument({ policy }: LegalPolicyDocumentProps) {
   return (
-    <article className="mx-auto flex max-w-3xl flex-col gap-8">
+    <Reveal as="article" className="mx-auto flex max-w-3xl flex-col gap-8">
       <header className="flex flex-col gap-3">
         <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
           {policy.title}
@@ -45,6 +47,6 @@ export function LegalPolicyDocument({ policy }: LegalPolicyDocumentProps) {
           </section>
         ))}
       </div>
-    </article>
+    </Reveal>
   );
 }

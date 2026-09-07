@@ -1,23 +1,18 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
+
+import { PageAppear } from "@/components/motion/PageAppear";
 
 type AdminPageRevealProps = {
   children: ReactNode;
 };
 
-/** Soft rise on admin route change (CSS, no motion dependency). */
+/** Soft rise on admin route change. */
 export function AdminPageReveal({ children }: AdminPageRevealProps) {
-  const pathname = usePathname() ?? "";
-
   return (
-    <div
-      key={pathname}
-      className="admin-page-reveal flex min-h-full flex-col"
-      style={{ "--admin-reveal-y": "24px" } as CSSProperties}
-    >
+    <PageAppear className="flex min-h-full flex-col" y={16}>
       {children}
-    </div>
+    </PageAppear>
   );
 }

@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { AppLink } from "@/components/ui/AppLink";
@@ -79,7 +80,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
       />
       <div className="pointer-events-none absolute inset-0 z-[1] bg-black/35" aria-hidden />
 
-      <div className="relative z-10 mx-auto max-w-[1440px] px-[5.56%] pt-24 pb-10 sm:pt-28 lg:pt-32">
+      <Reveal className="relative z-10 mx-auto max-w-[1440px] px-[5.56%] pt-24 pb-10 sm:pt-28 lg:pt-32">
         <div className="flex flex-col gap-12 border-b border-white/12 pb-16 lg:flex-row lg:items-start lg:justify-between lg:gap-12 xl:gap-16">
           <div className="max-w-[469px] shrink-0">
             <Image
@@ -193,7 +194,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
             linkClassName="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
           />
         </div>
-      </div>
+      </Reveal>
     </footer>
   );
 }

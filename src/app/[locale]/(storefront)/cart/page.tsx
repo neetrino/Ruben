@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
 import { AppLink } from "@/components/ui/AppLink";
 import {
   getCartWithItems,
@@ -31,12 +33,15 @@ export default async function CartPage({ params }: CartPageProps) {
 
   return (
     <section className="flex max-w-2xl flex-col gap-4">
-      <h1 className="text-3xl font-semibold">Cart</h1>
+      <Reveal>
+        <h1 className="text-3xl font-semibold">Cart</h1>
+      </Reveal>
+      <RevealList className="flex flex-col gap-4">
       {items.map(({ item, product }) => {
         const unit =
           prices.get(product.id)?.unitAmount ?? product.priceAmount;
         return (
-          <div
+          <RevealItem
             className="flex items-center justify-between border p-3"
             key={item.id}
           >
@@ -72,9 +77,11 @@ export default async function CartPage({ params }: CartPageProps) {
                 <button className="text-red-700">Remove</button>
               </form>
             </div>
-          </div>
+          </RevealItem>
         );
       })}
+      </RevealList>
+      <Reveal>
       <p className="font-medium">Total: {total} AMD</p>
       {items.length ? (
         <AppLink
@@ -87,6 +94,7 @@ export default async function CartPage({ params }: CartPageProps) {
       ) : (
         <p>Your cart is empty.</p>
       )}
+      </Reveal>
     </section>
   );
 }

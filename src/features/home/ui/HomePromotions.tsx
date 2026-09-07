@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion/Reveal";
 import { homeGridItemClass } from "@/features/home/ui/home-grid-visibility";
 import { HomeProductCard } from "@/features/home/ui/HomeProductCard";
 import { HomeSectionHeader } from "@/features/home/ui/HomeSectionHeader";
@@ -54,11 +55,13 @@ export function HomePromotions({
       className="scroll-mt-28 bg-white py-8 sm:py-16 lg:py-20"
     >
       <div className="mx-auto max-w-[1440px] px-[15px] sm:px-10 lg:px-[51px]">
-        <HomeSectionHeader
-          title={title}
-          viewAllLabel={viewAllLabel}
-          viewAllHref={viewAllHref}
-        />
+        <Reveal>
+          <HomeSectionHeader
+            title={title}
+            viewAllLabel={viewAllLabel}
+            viewAllHref={viewAllHref}
+          />
+        </Reveal>
 
         {globalDiscountLabel ? (
           <p className="mb-8 hidden rounded-full bg-black px-4 py-3 text-center text-sm font-semibold text-white sm:text-base lg:block">
@@ -81,6 +84,7 @@ export function HomePromotions({
                   badgeLabel={product.badgeLabel}
                   imageUrl={product.imageUrl}
                   inStock={product.inStock}
+                  appearIndex={index}
                   priority={index < 4}
                   locale={locale}
                   productId={product.id}

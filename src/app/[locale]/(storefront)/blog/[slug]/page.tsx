@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { getEnv } from "@/config/env";
 import { getPublishedBlogPostBySlug } from "@/features/blog/application/queries";
 import { isLocale, type Locale } from "@/lib/i18n/config";
@@ -103,6 +104,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className="flex flex-col gap-6">
+      <Reveal className="flex flex-col gap-6">
       <p className="text-sm text-[var(--muted)]">
         <Link href={`/${rawLocale}/blog`} className="underline">
           {dictionary.nav.blog}
@@ -149,6 +151,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           {dictionary.blog.tags}: {post.tags.join(", ")}
         </p>
       ) : null}
+      </Reveal>
 
       <script
         type="application/ld+json"

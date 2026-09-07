@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { AppLink } from "@/components/ui/AppLink";
 import { ProductGallery } from "@/features/products/ui/ProductGallery";
 import { ProductMobileDetail } from "@/features/products/ui/ProductMobileDetail";
@@ -124,6 +125,7 @@ export function ProductDetailView({
         </nav>
 
         <div className="grid grid-cols-1 gap-8 px-6 py-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-10 lg:px-12">
+          <Reveal>
           <ProductGallery
             images={product.images}
             title={product.translation.title}
@@ -134,8 +136,9 @@ export function ProductDetailView({
             previousImageLabel={labels.previousImage}
             nextImageLabel={labels.nextImage}
           />
+          </Reveal>
 
-          <div className="flex flex-col gap-5">
+          <Reveal className="flex flex-col gap-5" delay={0.08}>
             {brandLabel ? (
               <p className="text-[11px] leading-[16.5px] tracking-[1px] text-[#4c4546] uppercase">
                 {brandLabel}
@@ -223,10 +226,10 @@ export function ProductDetailView({
                 </dl>
               </div>
             ) : null}
-          </div>
+          </Reveal>
         </div>
 
-        <div className="px-6 lg:px-12">
+        <Reveal className="px-6 lg:px-12">
           <ProductDetailTabs
             descriptionLabel={labels.tabDescription}
             specsLabel={labels.tabSpecs}
@@ -237,7 +240,7 @@ export function ProductDetailView({
             emptyDescription={labels.emptyDescription}
             emptySpecs={labels.emptySpecs}
           />
-        </div>
+        </Reveal>
       </div>
 
       <div className="px-5 pt-6 md:pt-4 lg:px-12">{relatedSlot}</div>

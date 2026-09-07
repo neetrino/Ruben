@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { Reveal } from "@/components/motion/Reveal";
 import {
   ABOUT_HERO_IMAGE,
 } from "@/features/about/content/team-members";
@@ -13,7 +14,7 @@ export function AboutHero({ copy }: AboutHeroProps) {
   return (
     <section className="bg-white py-16 md:py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <div className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg md:h-[500px] lg:h-[600px]">
+        <Reveal className="relative h-[400px] w-full overflow-hidden rounded-lg shadow-lg md:h-[500px] lg:h-[600px]">
           <Image
             src={ABOUT_HERO_IMAGE}
             alt={copy.heroImageAlt}
@@ -22,9 +23,9 @@ export function AboutHero({ copy }: AboutHeroProps) {
             className="object-cover"
             priority
           />
-        </div>
+        </Reveal>
 
-        <div className="space-y-6">
+        <Reveal className="space-y-6" delay={0.08}>
           <p className="text-sm font-semibold tracking-wider text-[#7CB342] uppercase md:text-base">
             {copy.eyebrow}
           </p>
@@ -36,7 +37,7 @@ export function AboutHero({ copy }: AboutHeroProps) {
               <p key={index}>{paragraph}</p>
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
     </section>
   );

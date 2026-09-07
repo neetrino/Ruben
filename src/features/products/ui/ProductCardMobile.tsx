@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { HOVER_LIFT_CLASS } from "@/components/motion/motion-classes";
 import { AppLink } from "@/components/ui/AppLink";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
 import { CompareButton } from "@/features/compare/ui/CompareButton";
@@ -69,7 +70,9 @@ export function ProductCardMobile({
     locale != null && productId != null && compareLabel != null;
 
   return (
-    <article className="relative mx-auto flex h-full w-full max-w-[186px] flex-col tablet:max-w-none">
+    <article
+      className={`relative mx-auto flex h-full w-full max-w-[186px] flex-col tablet:max-w-none ${HOVER_LIFT_CLASS}`}
+    >
       <div className="relative mx-auto w-[91%] overflow-visible rounded-[24px] bg-[#eaeaea]">
         <AppLink
           href={href}

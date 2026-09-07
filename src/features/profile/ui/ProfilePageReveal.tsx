@@ -1,7 +1,8 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import type { CSSProperties, ReactNode } from "react";
+import type { ReactNode } from "react";
+
+import { PageAppear } from "@/components/motion/PageAppear";
 
 type ProfilePageRevealProps = {
   children: ReactNode;
@@ -16,19 +17,9 @@ export function ProfilePageReveal({
   children,
   y = 18,
 }: ProfilePageRevealProps) {
-  const pathname = usePathname() ?? "";
-
   return (
-    <div
-      key={pathname}
-      className="profile-page-reveal flex min-h-full flex-col"
-      style={
-        {
-          "--profile-reveal-y": `${y}px`,
-        } as CSSProperties
-      }
-    >
+    <PageAppear className="flex min-h-full flex-col" y={y}>
       {children}
-    </div>
+    </PageAppear>
   );
 }

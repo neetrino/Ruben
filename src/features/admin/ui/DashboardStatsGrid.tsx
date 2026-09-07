@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
+
 import {
   ADMIN_CARD_CLASS,
   ADMIN_CARD_HOVER_CLASS,
@@ -69,7 +71,8 @@ export function DashboardStatsGrid({
   const base = `/${locale}/admin`;
 
   return (
-    <div className="mb-3 grid grid-cols-2 gap-3">
+    <RevealList className="mb-3 grid grid-cols-2 gap-3">
+      <RevealItem>
       <CompactStat
         href={`${base}/users`}
         label={labels.users}
@@ -78,6 +81,8 @@ export function DashboardStatsGrid({
         iconColor={ADMIN_CHIP_BRAND.fg}
         iconPath="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
       />
+      </RevealItem>
+      <RevealItem>
       <CompactStat
         href={`${base}/products`}
         label={labels.activeProducts}
@@ -86,6 +91,7 @@ export function DashboardStatsGrid({
         iconColor={ADMIN_CHIP_MINT.fg}
         iconPath="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
       />
-    </div>
+      </RevealItem>
+    </RevealList>
   );
 }

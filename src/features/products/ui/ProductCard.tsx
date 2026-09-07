@@ -1,5 +1,8 @@
 import Image from "next/image";
 
+import { appearDelay } from "@/components/motion/motion-config";
+import { HOVER_LIFT_CLASS } from "@/components/motion/motion-classes";
+import { Reveal } from "@/components/motion/Reveal";
 import { AppLink } from "@/components/ui/AppLink";
 import { ProductCardPlusIcon } from "@/components/icons/product-card-icons";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
@@ -35,6 +38,8 @@ type ProductCardProps = {
   outOfStockLabel?: string;
   /** Optional rating label for mobile Figma card (e.g. "4.5"). */
   ratingLabel?: string | null;
+  /** Stagger index for appearance animation. */
+  appearIndex?: number;
 };
 
 export function ProductCard({
@@ -60,6 +65,7 @@ export function ProductCard({
   addToCartLabel,
   outOfStockLabel = "Out of stock",
   ratingLabel = null,
+  appearIndex = 0,
 }: ProductCardProps) {
   const metaLabel = brandLabel ?? categoryLabel;
   const showWishlist =
@@ -69,7 +75,7 @@ export function ProductCard({
   const showAddToCart = productId != null && addToCartLabel != null;
 
   return (
-    <>
+    <Reveal className="h-full" delay={appearDelay(appearIndex)}>
       <div className="h-full lg:hidden">
         <ProductCardMobile
           href={href}
@@ -97,7 +103,9 @@ export function ProductCard({
         />
       </div>
 
-      <article className="relative mx-auto hidden w-full max-w-[318px] lg:block">
+      <article
+        className={`relative mx-auto hidden w-full max-w-[318px] lg:block ${HOVER_LIFT_CLASS}`}
+      >
         <div className="relative mx-auto h-[379px] w-[88%] overflow-visible rounded-[60px] bg-[#eaeaea]">
           <AppLink
             href={href}
@@ -214,6 +222,6 @@ export function ProductCard({
           </div>
         </div>
       </article>
-    </>
+    </Reveal>
   );
 }

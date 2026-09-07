@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/motion/Reveal";
 import { homeGridItemClass } from "@/features/home/ui/home-grid-visibility";
 import { HomeProductCard } from "@/features/home/ui/HomeProductCard";
 import { HomeSectionHeader } from "@/features/home/ui/HomeSectionHeader";
@@ -55,11 +56,13 @@ export function HomeFeaturedProducts({
       }`}
     >
       <div className="mx-auto max-w-[1440px] px-[13px] sm:px-10 lg:px-[51px]">
-        <HomeSectionHeader
-          title={title}
-          viewAllLabel={viewAllLabel}
-          viewAllHref={viewAllHref}
-        />
+        <Reveal>
+          <HomeSectionHeader
+            title={title}
+            viewAllLabel={viewAllLabel}
+            viewAllHref={viewAllHref}
+          />
+        </Reveal>
 
         {products.length === 0 ? (
           <p className="text-neutral-600">{emptyLabel}</p>
@@ -78,6 +81,7 @@ export function HomeFeaturedProducts({
                   badgeLabel={product.badgeLabel}
                   imageUrl={product.imageUrl}
                   inStock={product.inStock}
+                  appearIndex={index}
                   priority={index < 4}
                   locale={locale}
                   productId={product.id}

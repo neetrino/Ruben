@@ -1,5 +1,7 @@
 import Image from "next/image";
 
+import { Reveal } from "@/components/motion/Reveal";
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
 import { TEAM_MEMBERS } from "@/features/about/content/team-members";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
@@ -11,7 +13,7 @@ export function AboutTeam({ copy }: AboutTeamProps) {
   return (
     <section className="bg-gray-50 py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
+        <Reveal className="mb-12 text-center">
           <p className="mb-4 text-sm font-semibold tracking-wider text-[#7CB342] uppercase md:text-base">
             {copy.teamEyebrow}
           </p>
@@ -21,11 +23,14 @@ export function AboutTeam({ copy }: AboutTeamProps) {
           <p className="mx-auto max-w-2xl text-base text-gray-600 md:text-lg">
             {copy.teamDescription}
           </p>
-        </div>
+        </Reveal>
 
-        <ul className="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <RevealList
+          as="ul"
+          className="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5"
+        >
           {TEAM_MEMBERS.map((member, index) => (
-            <li key={member.id} className="text-center">
+            <RevealItem as="li" key={member.id} className="text-center">
               <div className="relative mx-auto mb-4 aspect-square w-full max-w-[220px] overflow-hidden rounded-lg bg-gray-200">
                 <Image
                   src={member.imageSrc}
@@ -42,9 +47,9 @@ export function AboutTeam({ copy }: AboutTeamProps) {
               <p className="text-sm tracking-wide text-gray-500 uppercase">
                 {member.position}
               </p>
-            </li>
+            </RevealItem>
           ))}
-        </ul>
+        </RevealList>
       </div>
     </section>
   );

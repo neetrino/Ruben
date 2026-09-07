@@ -4,6 +4,8 @@ import { ChevronRight } from "lucide-react";
 import { useState } from "react";
 
 import { STOREFRONT_PAGE_TITLE_FLUID_CLASS } from "@/components/layout/storefront-page-title";
+import { Reveal } from "@/components/motion/Reveal";
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
 import { SideSheet } from "@/components/ui/SideSheet";
 import {
   LegalPolicyDocument,
@@ -31,11 +33,13 @@ export function LegalPoliciesHub({
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className={STOREFRONT_PAGE_TITLE_FLUID_CLASS}>{title}</h1>
+      <Reveal>
+        <h1 className={STOREFRONT_PAGE_TITLE_FLUID_CLASS}>{title}</h1>
+      </Reveal>
 
-      <ul className="flex max-w-2xl flex-col gap-3">
+      <RevealList as="ul" className="flex max-w-2xl flex-col gap-3">
         {policies.map((policy) => (
-          <li key={policy.key}>
+          <RevealItem as="li" key={policy.key}>
             <button
               type="button"
               onClick={() => setActiveKey(policy.key)}
@@ -49,9 +53,9 @@ export function LegalPoliciesHub({
                 aria-hidden
               />
             </button>
-          </li>
+          </RevealItem>
         ))}
-      </ul>
+      </RevealList>
 
       <SideSheet
         open={active != null}

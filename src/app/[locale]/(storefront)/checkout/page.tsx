@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { CartCheckoutSkeleton } from "@/components/loading/storefront-skeletons";
 import { getCartWithItems } from "@/features/cart/cart";
 import { getCheckoutDeliveryOptions } from "@/features/checkout/application/get-checkout-delivery";
@@ -53,6 +54,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   }, 0);
 
   return (
+    <Reveal>
     <CheckoutForm
       locale={rawLocale}
       productsHref={`/${rawLocale}/products`}
@@ -120,5 +122,6 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         cartEmpty: copy.errors.cartEmpty,
       }}
     />
+    </Reveal>
   );
 }

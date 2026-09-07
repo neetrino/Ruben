@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import { Reveal } from "@/components/motion/Reveal";
 import { HOME_ASSETS } from "@/features/home/config/assets";
 import { HomeFeatureIconMotion } from "@/features/home/ui/HomeFeatureIconMotion";
 import type { HomeFeatureIconMotionKind } from "@/features/home/ui/home-feature-icon-motion";
@@ -132,8 +133,9 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
           const item = byIcon[icon];
           if (!item) return null;
           return (
-            <article
+            <Reveal
               key={icon}
+              as="article"
               className="relative rounded-[30px] bg-white px-12 pt-16 pb-10"
             >
               <div className="absolute -top-12 right-8 size-[120px]">
@@ -149,7 +151,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
               >
                 {item.description}
               </p>
-            </article>
+            </Reveal>
           );
         })}
       </div>
@@ -189,8 +191,9 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
           const card = CARDS[icon];
           const aboveSink = icon === "original";
           return (
-            <article
+            <Reveal
               key={icon}
+              as="article"
               className={`absolute rounded-[30px] bg-white ${card.box} ${
                 aboveSink ? "z-[4]" : "z-0"
               }`}
@@ -211,7 +214,7 @@ export function HomeFeatures({ items }: HomeFeaturesProps) {
               >
                 {item.description}
               </p>
-            </article>
+            </Reveal>
           );
         })}
 
