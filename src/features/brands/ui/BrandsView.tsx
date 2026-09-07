@@ -9,7 +9,7 @@ type BrandsViewProps = {
 };
 
 /**
- * Brands page — logo wordmarks only (Figma partners strip style).
+ * Brands page — title + logo wordmarks in square tiles.
  */
 export function BrandsView({ locale, dictionary }: BrandsViewProps) {
   const copy = dictionary.brands;
@@ -17,19 +17,32 @@ export function BrandsView({ locale, dictionary }: BrandsViewProps) {
 
   return (
     <div className="brands-page-root relative z-0 -mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
-      <div className="relative z-10 mx-auto flex min-h-[50dvh] max-w-7xl flex-col justify-center px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <h1 className="sr-only">{copy.title}</h1>
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <header className="mb-10 max-w-2xl sm:mb-14">
+          <p className="text-xs font-semibold tracking-[0.18em] text-[var(--brand-deep)] uppercase">
+            {dictionary.brand}
+          </p>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+            {copy.title}
+          </h1>
+          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">
+            {copy.subtitle}
+          </p>
+          <div className="mt-5 h-1.5 w-16 rounded-full bg-[var(--brand)]" />
+        </header>
 
-        <ul className="flex w-full flex-wrap items-center justify-center gap-x-12 gap-y-10 sm:gap-x-20 lg:gap-x-24 lg:gap-y-14">
+        <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
           {STOREFRONT_BRANDS.map((brand) => (
-            <li key={brand.id} className="flex items-center">
+            <li key={brand.id}>
               <AppLink
                 href={productsHref}
                 prefetchPolicy="intent"
                 aria-label={brand.name}
-                className="flex h-8 flex-col justify-center text-center text-[28px] leading-none font-bold text-[#111] uppercase transition-opacity hover:opacity-70 sm:h-10 sm:text-[40px] lg:h-14 lg:text-[54px]"
+                className="flex aspect-square w-full items-center justify-center rounded-[24px] border border-gray-200/80 bg-[#f7f7f7] px-3 text-center transition-colors hover:border-gray-300 hover:bg-gray-100"
               >
-                {brand.name}
+                <span className="text-base leading-none font-bold tracking-tight text-[#111] uppercase sm:text-xl lg:text-2xl">
+                  {brand.name}
+                </span>
               </AppLink>
             </li>
           ))}

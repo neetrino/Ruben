@@ -39,7 +39,6 @@ async function SiteHeaderMainNavAsync({
   const navItems = [
     { href: `/${locale}`, label: dictionary.nav.home },
     { href: `/${locale}/products`, label: dictionary.nav.products },
-    { href: `/${locale}#categories`, label: dictionary.nav.categories },
     { href: `/${locale}/brands`, label: dictionary.nav.brands },
     { href: `/${locale}#promotions`, label: dictionary.nav.promotions },
     { href: `/${locale}/contact`, label: dictionary.nav.contact },
