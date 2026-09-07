@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
@@ -17,6 +17,8 @@ type StorefrontMobileTopBarProps = {
   locale: Locale;
   currency: Currency;
   dictionary: Dictionary;
+  /** Server-rendered account CTA for the burger drawer. */
+  accountSlot: ReactNode;
 };
 
 /**
@@ -28,6 +30,7 @@ export function StorefrontMobileTopBar({
   locale,
   currency,
   dictionary,
+  accountSlot,
 }: StorefrontMobileTopBarProps) {
   const pathname = usePathname();
   const homeHref = `/${locale}`;
@@ -129,6 +132,7 @@ export function StorefrontMobileTopBar({
                   currency={currency}
                   dictionary={dictionary}
                   navItems={navItems}
+                  accountSlot={accountSlot}
                   appearance="mobile-top"
                 />
               </div>

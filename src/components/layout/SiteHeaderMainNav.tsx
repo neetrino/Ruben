@@ -1,6 +1,7 @@
 import { AccountControls } from "@/components/layout/AccountControls";
 import { HEADER_ASSETS } from "@/components/layout/header-assets";
 import { LocaleCurrencySwitcher } from "@/components/layout/LocaleCurrencySwitcher";
+import { MobileNavAccountLink } from "@/components/layout/MobileNavAccountAction";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteHeaderCartTrigger } from "@/components/layout/SiteHeaderCartTrigger";
 import { SiteHeaderDesktopNav } from "@/components/layout/SiteHeaderDesktopNav";
@@ -131,6 +132,13 @@ export function SiteHeaderMainNav({
               currency={currency}
               dictionary={dictionary}
               navItems={navItems}
+              accountSlot={
+                <MobileNavAccountLink
+                  locale={locale}
+                  dictionary={dictionary}
+                  isSignedIn={Boolean(user)}
+                />
+              }
               appearance="navbar"
             />
           </div>

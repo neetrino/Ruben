@@ -9,7 +9,7 @@ type SegmentedFieldProps = {
 /** Shared classes for one segment inside a {@link SegmentedField} track. */
 export function segmentedItemClass(selected: boolean): string {
   const base =
-    "flex items-center justify-center rounded-full px-2.5 py-1.5 text-center text-xs transition-colors";
+    "flex flex-1 items-center justify-center rounded-full px-2.5 py-1.5 text-center text-xs transition-colors";
 
   return selected
     ? `${base} bg-[var(--brand)] font-semibold text-gray-900`
@@ -22,14 +22,14 @@ export function segmentedItemClass(selected: boolean): string {
  */
 export function SegmentedField({ label, children }: SegmentedFieldProps) {
   return (
-    <div className="w-fit">
+    <div className="w-full">
       <p className="mb-1.5 px-1 text-xs text-gray-400" aria-hidden>
         {label}
       </p>
       <div
         role="group"
         aria-label={label}
-        className="inline-flex items-center gap-0.5 rounded-full bg-gray-100 p-1"
+        className="flex w-full items-center gap-0.5 rounded-full bg-gray-100 p-1"
       >
         {children}
       </div>

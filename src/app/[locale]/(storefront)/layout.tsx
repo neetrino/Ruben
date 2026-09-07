@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
+import { MobileNavAccountAction } from "@/components/layout/MobileNavAccountAction";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -42,6 +43,9 @@ export default async function StorefrontLayout({
         locale={locale}
         currency={currency}
         dictionary={dictionary}
+        accountSlot={
+          <MobileNavAccountAction locale={locale} dictionary={dictionary} />
+        }
       />
       <SiteHeader
         locale={locale}

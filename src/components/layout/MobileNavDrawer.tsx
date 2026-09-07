@@ -7,6 +7,7 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
@@ -33,6 +34,8 @@ type MobileNavDrawerProps = {
   currency: Currency;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
+  /** Account CTA rendered at the drawer end; depends on the server session. */
+  accountSlot: ReactNode;
   appearance?: "default" | "navbar" | "mobile-top";
 };
 
@@ -55,6 +58,7 @@ export function MobileNavDrawer({
   currency,
   dictionary,
   navItems,
+  accountSlot,
   appearance = "default",
 }: MobileNavDrawerProps) {
   const menuId = useId();
@@ -187,7 +191,6 @@ export function MobileNavDrawer({
     };
   }, [rendered]);
 
-  const loginHref = `/${locale}/login`;
   const homeHref = `/${locale}`;
   const policyHref = `/${locale}/legal`;
   // Highlighted for the hub and for every document opened from it.
@@ -317,7 +320,7 @@ export function MobileNavDrawer({
                     </AppLink>
                   </div>
 
-                  <div className="flex flex-wrap items-start gap-x-4 gap-y-3 border-t border-gray-100 py-4">
+                  <div className="grid grid-cols-2 items-start gap-x-4 border-t border-gray-100 py-4">
                     <MobileLocaleSwitcher
                       locale={locale}
                       label={dictionary.header.language}
@@ -331,14 +334,7 @@ export function MobileNavDrawer({
                   </div>
 
                   <div className="border-t border-gray-100 py-4">
-                    <AppLink
-                      href={loginHref}
-                      prefetchPolicy="intent"
-                      className="flex w-full items-center justify-center rounded-full bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:brightness-95"
-                      onClick={() => setOpen(false)}
-                    >
-                      {dictionary.header.login}
-                    </AppLink>
+                    {accountSlot}
                   </div>
                 </nav>
               </div>
