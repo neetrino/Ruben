@@ -23,7 +23,7 @@ export function CheckoutSuccessView({
   labels,
 }: CheckoutSuccessViewProps) {
   return (
-    <div className="checkout-success-page relative -mx-4 -my-10 overflow-hidden bg-white sm:-mx-6 lg:-mx-8">
+    <div className="checkout-success-page relative -mx-4 -mt-10 overflow-hidden bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
       <div className="relative mx-auto flex min-h-[min(70vh,720px)] max-w-lg flex-col items-center justify-center px-4 py-14 sm:px-6 sm:py-20">
         <div className="checkout-success-panel w-full overflow-hidden rounded-[24px] border border-gray-200/80 bg-white shadow-[0_24px_60px_-32px_rgba(17,24,39,0.35)]">
           <div className="h-1.5 w-full bg-[var(--brand)]" />

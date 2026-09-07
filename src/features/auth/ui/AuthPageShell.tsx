@@ -25,7 +25,7 @@ export function AuthPageShell({
   const panelWidthClass = wide ? "max-w-lg" : "max-w-md";
 
   return (
-    <div className="auth-page-root relative z-0 -mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
+    <div className="auth-page-root relative z-0 -mx-4 -mt-10 bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
       <div className="relative z-10 mx-auto flex min-h-[min(70vh,720px)] max-w-7xl items-center justify-center px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className={`auth-page-panel w-full ${panelWidthClass}`}>
           <div className="overflow-hidden rounded-[20px] border border-gray-200/80 bg-white shadow-[0_18px_50px_-28px_rgba(17,24,39,0.35)]">

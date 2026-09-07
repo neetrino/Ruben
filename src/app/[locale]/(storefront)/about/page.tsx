@@ -29,7 +29,7 @@ export default async function AboutPage({ params }: AboutPageProps) {
   const dictionary = getDictionary(rawLocale);
 
   return (
-    <div className="-mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
+    <div className="-mx-4 -mt-10 bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
       <AboutHero copy={dictionary.about} />
       <LazyWhenVisible fallback={<GenericPageSkeleton />}>
         <AboutTeam copy={dictionary.about} />
