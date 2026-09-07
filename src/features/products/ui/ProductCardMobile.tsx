@@ -48,7 +48,7 @@ export function ProductCardMobile({
   const showAddToCart = productId != null && addToCartLabel != null;
 
   return (
-    <article className="relative mx-auto flex h-full w-full max-w-[186px] flex-col">
+    <article className="relative mx-auto flex h-full w-full max-w-[186px] flex-col tablet:max-w-none">
       <div className="relative mx-auto w-[91%] overflow-hidden rounded-[24px] bg-[#eaeaea]">
         <AppLink
           href={href}
@@ -60,7 +60,7 @@ export function ProductCardMobile({
               src={imageUrl}
               alt={title}
               fill
-              sizes="(max-width: 1024px) 45vw, 170px"
+              sizes="(max-width: 743px) 45vw, (max-width: 1024px) 240px, 170px"
               priority={priority}
               className="object-cover"
             />
