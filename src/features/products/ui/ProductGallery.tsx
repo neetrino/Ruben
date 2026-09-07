@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
 
+import { useSnapCarousel } from "@/features/products/ui/use-snap-carousel";
 import type { ProductGalleryImage } from "@/features/products/types";
 
 const ARROW_CLASS =
@@ -30,33 +30,42 @@ export function ProductGallery({
   previousImageLabel,
   nextImageLabel,
 }: ProductGalleryProps) {
-  const [selectedId, setSelectedId] = useState(images[0]?.id ?? null);
-  const selectedIndex = Math.max(
-    images.findIndex((image) => image.id === selectedId),
-    0,
-  );
-  const selected = images[selectedIndex] ?? null;
+  const { trackRef, activeIndex, handleScroll, scrollToIndex } =
+    useSnapCarousel(images.length);
 
   /** Wraps around so the arrows never dead-end. */
   function step(offset: number): void {
     if (images.length < 2) return;
 
-    const next = (selectedIndex + offset + images.length) % images.length;
-    setSelectedId(images[next]?.id ?? null);
+    scrollToIndex((activeIndex + offset + images.length) % images.length);
   }
 
   return (
     <div className="flex w-full flex-col gap-4">
       <div className="group relative aspect-[717/538] w-full overflow-hidden rounded-[40px] bg-[#eaeaea]">
-        {selected ? (
-          <Image
-            src={selected.url}
-            alt={selected.alt || title}
-            fill
-            sizes="(max-width: 767px) 100vw, 55vw"
-            className="object-contain p-6"
-            priority
-          />
+        {images.length > 0 ? (
+          <div
+            ref={trackRef}
+            onScroll={handleScroll}
+            className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {images.map((image, index) => (
+              <div
+                key={image.id}
+                className="relative h-full w-full shrink-0 snap-center"
+              >
+                <Image
+                  src={image.url}
+                  alt={image.alt || title}
+                  fill
+                  sizes="(max-width: 767px) 100vw, 55vw"
+                  className="object-contain p-6"
+                  priority={index === 0}
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
             No image
@@ -107,13 +116,13 @@ export function ProductGallery({
 
       {images.length > 1 ? (
         <ul className="flex gap-3 overflow-x-auto pb-1" role="list">
-          {images.map((image) => {
-            const isActive = image.id === selected?.id;
+          {images.map((image, index) => {
+            const isActive = index === activeIndex;
             return (
               <li key={image.id} className="shrink-0">
                 <button
                   type="button"
-                  onClick={() => setSelectedId(image.id)}
+                  onClick={() => scrollToIndex(index)}
                   aria-label={image.alt || title}
                   aria-pressed={isActive}
                   className={`relative size-20 overflow-hidden rounded-2xl border-2 bg-[#eaeaea] transition ${

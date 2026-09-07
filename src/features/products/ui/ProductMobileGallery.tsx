@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useRef, useState, type UIEvent } from "react";
 
 import { PRODUCT_MOBILE_ASSETS } from "@/features/products/ui/product-assets";
 import { ProductImageRail } from "@/features/products/ui/ProductImageRail";
+import { useSnapCarousel } from "@/features/products/ui/use-snap-carousel";
 import type { ProductGalleryImage } from "@/features/products/types";
 import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
 import type { Locale } from "@/lib/i18n/config";
@@ -44,8 +44,8 @@ export function ProductMobileGallery({
   wishlistLabel,
 }: ProductMobileGalleryProps) {
   const router = useRouter();
-  const trackRef = useRef<HTMLDivElement | null>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
+  const { trackRef, activeIndex, handleScroll, scrollToIndex } =
+    useSnapCarousel(images.length);
   const slideCount = Math.max(images.length, 1);
   const activeId = (images[activeIndex] ?? images[0])?.id ?? null;
 
@@ -55,25 +55,6 @@ export function ProductMobileGallery({
       return;
     }
     router.push(productsHref);
-  }
-
-  /** Keeps rail and pagination in sync while the finger drags the track. */
-  function handleScroll(event: UIEvent<HTMLDivElement>): void {
-    const track = event.currentTarget;
-    if (track.clientWidth === 0) return;
-
-    const next = Math.round(track.scrollLeft / track.clientWidth);
-    if (next !== activeIndex && next >= 0 && next < images.length) {
-      setActiveIndex(next);
-    }
-  }
-
-  function scrollToIndex(index: number): void {
-    const track = trackRef.current;
-    if (!track) return;
-
-    track.scrollTo({ left: index * track.clientWidth, behavior: "smooth" });
-    setActiveIndex(index);
   }
 
   function selectById(imageId: string): void {
