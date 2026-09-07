@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useId, useState, type FormEvent } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import { DEFAULT_CATALOG_FILTERS } from "@/features/products/schemas/catalog-list";
+import { openCatalogFiltersSheet, prepareCatalogFiltersSheetOpen } from "@/features/products/ui/CatalogFiltersSheet";
 import type { Locale } from "@/lib/i18n/config";
 
 type StorefrontMobileSearchBarProps = {
@@ -19,6 +20,7 @@ type StorefrontMobileSearchBarProps = {
 
 /**
  * Mobile catalog search + filters shortcut (Figma home 171:562).
+ * On `/products`, the filter button opens the catalog filters sheet.
  */
 export function StorefrontMobileSearchBar({
   locale,
@@ -27,9 +29,12 @@ export function StorefrontMobileSearchBar({
   filtersLabel,
 }: StorefrontMobileSearchBarProps) {
   const router = useRouter();
+  const pathname = usePathname() ?? "";
   const searchId = useId();
   const [query, setQuery] = useState("");
   const productsHref = `/${locale}/products`;
+  const onShopPage =
+    pathname === productsHref || pathname === `${productsHref}/`;
 
   function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,6 +45,10 @@ export function StorefrontMobileSearchBar({
         page: 1,
       }),
     );
+  }
+
+  function onFiltersClick(): void {
+    openCatalogFiltersSheet();
   }
 
   return (
@@ -73,21 +82,42 @@ export function StorefrontMobileSearchBar({
         <span className="sr-only">{searchSubmitLabel}</span>
       </label>
 
-      <AppLink
-        href={productsHref}
-        prefetchPolicy="intent"
-        aria-label={filtersLabel}
-        className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
-      >
-        <Image
-          src={HOME_MOBILE_ASSETS.filter}
-          alt=""
-          width={24}
-          height={24}
-          className="size-6"
-          aria-hidden
-        />
-      </AppLink>
+      {onShopPage ? (
+        <button
+          type="button"
+          aria-label={filtersLabel}
+          onClick={onFiltersClick}
+          className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
+        >
+          <Image
+            src={HOME_MOBILE_ASSETS.filter}
+            alt=""
+            width={24}
+            height={24}
+            className="size-6"
+            aria-hidden
+          />
+        </button>
+      ) : (
+        <AppLink
+          href={productsHref}
+          prefetchPolicy="intent"
+          aria-label={filtersLabel}
+          className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
+          onClick={() => {
+            prepareCatalogFiltersSheetOpen();
+          }}
+        >
+          <Image
+            src={HOME_MOBILE_ASSETS.filter}
+            alt=""
+            width={24}
+            height={24}
+            className="size-6"
+            aria-hidden
+          />
+        </AppLink>
+      )}
     </form>
   );
 }

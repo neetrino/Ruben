@@ -42,6 +42,7 @@ type CatalogFiltersProps = {
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
+  className?: string;
 };
 
 const PANEL = "w-full rounded-[24px] bg-[rgba(131,131,131,0.08)] p-6";
@@ -112,6 +113,7 @@ export function CatalogFilters({
   priceBounds,
   totalCount,
   copy,
+  className,
 }: CatalogFiltersProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -140,7 +142,13 @@ export function CatalogFilters({
 
   return (
     <aside
-      className={`flex w-full max-w-[280px] flex-col gap-6 ${isPending ? "opacity-70" : ""}`}
+      className={[
+        "flex w-full flex-col gap-6",
+        className ?? "max-w-[280px]",
+        isPending ? "opacity-70" : "",
+      ]
+        .filter(Boolean)
+        .join(" ")}
       aria-label={copy.filtersTitle}
     >
       <section className={`${PANEL} pt-[19px] pb-6`}>

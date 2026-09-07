@@ -12,6 +12,7 @@ import {
 import { CatalogActiveFilters } from "@/features/products/ui/CatalogActiveFilters";
 import { CatalogCategoryChips } from "@/features/products/ui/CatalogCategoryChips";
 import { CatalogFilters } from "@/features/products/ui/CatalogFilters";
+import { CatalogFiltersSheet } from "@/features/products/ui/CatalogFiltersSheet";
 import { CatalogPagination } from "@/features/products/ui/CatalogPagination";
 import { CatalogSortPills } from "@/features/products/ui/CatalogSortPills";
 import { ProductCard } from "@/features/products/ui/ProductCard";
@@ -135,11 +136,24 @@ export default async function ProductsPage({
     }
   }
 
+  const filterCopy = {
+    brandLabel: dictionary.catalog.brandLabel,
+    priceLabel: dictionary.catalog.priceLabel,
+    priceFromLabel: dictionary.catalog.priceFromLabel,
+    priceToLabel: dictionary.catalog.priceToLabel,
+    categoryLabel: dictionary.catalog.categoryLabel,
+    allCategories: dictionary.catalog.allCategories,
+    featuresLabel: dictionary.catalog.featuresLabel,
+    moreLabel: dictionary.catalog.moreLabel,
+    lessLabel: dictionary.catalog.lessLabel,
+    filtersTitle: dictionary.catalog.filtersTitle,
+  };
+
   return (
     <div className="shop-page-root">
       <nav
         aria-label="Breadcrumb"
-        className="flex items-center gap-2 px-6 pt-4 pb-6 text-sm sm:px-10 lg:px-12 lg:pb-8"
+        className="hidden items-center gap-2 px-6 pt-4 pb-6 text-sm sm:px-10 lg:flex lg:px-12 lg:pb-8"
       >
         <AppLink
           href={`/${rawLocale}`}
@@ -167,7 +181,7 @@ export default async function ProductsPage({
 
       <div className="px-6 sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
-          <div>
+          <div className="hidden lg:block">
             <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
               {dictionary.catalog.shopTitle}
             </h1>
@@ -175,39 +189,42 @@ export default async function ProductsPage({
           </div>
 
           <div className="flex min-h-[42px] min-w-0 flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm leading-none text-[#888]">{showingNodes}</p>
-            <CatalogSortPills
-              locale={rawLocale}
-              filters={filters}
-              copy={{
-                sortLabel: dictionary.catalog.sortLabel,
-                sortNewest: dictionary.catalog.sortNewest,
-                sortPriceAsc: dictionary.catalog.sortPriceAsc,
-                sortPriceDesc: dictionary.catalog.sortPriceDesc,
-                sortPopular: dictionary.catalog.sortPopular,
-              }}
-            />
+            <p className="hidden text-sm leading-none text-[#888] lg:block">
+              {showingNodes}
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <CatalogFiltersSheet
+                locale={rawLocale}
+                filters={filters}
+                categories={categories}
+                priceBounds={priceBounds}
+                totalCount={catalog.total}
+                copy={filterCopy}
+                applyLabel={dictionary.catalog.applyFilters}
+                resultsLabel={resultsLabel}
+              />
+              <CatalogSortPills
+                locale={rawLocale}
+                filters={filters}
+                copy={{
+                  sortLabel: dictionary.catalog.sortLabel,
+                  sortNewest: dictionary.catalog.sortNewest,
+                  sortPriceAsc: dictionary.catalog.sortPriceAsc,
+                  sortPriceDesc: dictionary.catalog.sortPriceDesc,
+                  sortPopular: dictionary.catalog.sortPopular,
+                }}
+              />
+            </div>
           </div>
 
-          <div className="lg:sticky lg:top-28 lg:self-start">
+          <div className="hidden lg:sticky lg:top-28 lg:block lg:self-start">
             <CatalogFilters
               locale={rawLocale}
               filters={filters}
               categories={categories}
               priceBounds={priceBounds}
               totalCount={catalog.total}
-              copy={{
-                brandLabel: dictionary.catalog.brandLabel,
-                priceLabel: dictionary.catalog.priceLabel,
-                priceFromLabel: dictionary.catalog.priceFromLabel,
-                priceToLabel: dictionary.catalog.priceToLabel,
-                categoryLabel: dictionary.catalog.categoryLabel,
-                allCategories: dictionary.catalog.allCategories,
-                featuresLabel: dictionary.catalog.featuresLabel,
-                moreLabel: dictionary.catalog.moreLabel,
-                lessLabel: dictionary.catalog.lessLabel,
-                filtersTitle: dictionary.catalog.filtersTitle,
-              }}
+              copy={filterCopy}
             />
           </div>
 
@@ -233,7 +250,7 @@ export default async function ProductsPage({
                 {dictionary.catalog.empty}
               </p>
             ) : (
-              <div className="grid grid-cols-1 gap-x-[30px] gap-y-12 sm:grid-cols-2 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-[30px] sm:gap-y-12 xl:grid-cols-3">
                 {priced.map(({ product, price, compareAtFormatted }, index) => (
                   <ProductCard
                     key={product.id}
