@@ -30,9 +30,9 @@ export default async function ProfileLayout({
   return (
     <ProfileSessionProvider user={user}>
       {/* Bleed like auth so the hero yellow wave can paint past main padding. */}
-      <div className="profile-desktop-page relative z-0 -mx-4 flex flex-col gap-6 px-4 pb-10 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8 xl:flex-1 xl:flex-row xl:items-start xl:gap-8 xl:pb-0">
-        <div className="relative z-10 contents xl:flex xl:flex-1 xl:flex-row xl:items-start xl:gap-8">
-          <div className="profile-desktop-sidebar profile-sticky-band hidden w-[280px] shrink-0 xl:block">
+      <div className="profile-desktop-page relative z-0 -mx-4 flex flex-col gap-6 px-4 pb-10 sm:-mx-6 sm:px-6 lg:-mx-8 lg:flex-1 lg:flex-row lg:items-start lg:gap-8 lg:px-8 lg:pb-0">
+        <div className="relative z-10 contents lg:flex lg:flex-1 lg:flex-row lg:items-start lg:gap-8">
+          <div className="profile-desktop-sidebar profile-sticky-band hidden w-[280px] shrink-0 lg:block">
             <ProfileSidebar
               locale={rawLocale}
               user={user}
@@ -56,7 +56,7 @@ export default async function ProfileLayout({
          * the layout viewport and offset fixed chrome on iOS.
          */}
         <div
-          className="pointer-events-none absolute inset-0 z-0 hidden xl:block"
+          className="pointer-events-none absolute inset-0 z-0 hidden overflow-x-clip lg:block"
           aria-hidden
         >
           <Image

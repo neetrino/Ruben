@@ -250,7 +250,7 @@ export default async function ProductsPage({
                 {dictionary.catalog.empty}
               </p>
             ) : (
-              <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-[30px] sm:gap-y-12 tablet:grid-cols-3 tablet-lg:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-[30px] sm:gap-y-12 tablet:grid-cols-3 tablet-lg:grid-cols-4 lg:grid-cols-3 wide:grid-cols-4">
                 {priced.map(({ product, price, compareAtFormatted }, index) => (
                   <ProductCard
                     key={product.id}

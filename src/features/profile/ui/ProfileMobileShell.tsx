@@ -16,6 +16,9 @@ import { scheduleStateUpdate } from "@/lib/react/schedule-after-paint";
 import type { Locale } from "@/lib/i18n/config";
 import type { SessionUser } from "@/lib/auth/session";
 
+/** Must stay paired with the `lg` breakpoint used by the profile layout CSS. */
+const PROFILE_DESKTOP_MEDIA_QUERY = "(min-width: 1025px)";
+
 type ProfileMobileShellProps = {
   locale: Locale;
   user: SessionUser;
@@ -47,7 +50,7 @@ export function ProfileMobileShell({
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const media = window.matchMedia("(min-width: 1280px)");
+    const media = window.matchMedia(PROFILE_DESKTOP_MEDIA_QUERY);
     function sync(): void {
       setIsDesktop(media.matches);
     }
@@ -105,12 +108,12 @@ export function ProfileMobileShell({
 
   let content: ReactNode;
 
-  // SSR / pre-hydration: hub on mobile via CSS; content only from xl up.
+  // SSR / pre-hydration: hub on mobile via CSS; content only from lg up.
   if (isDesktop === null) {
     content = (
       <>
-        <div className="profile-mobile-page w-full xl:hidden">{hub}</div>
-        <div className="profile-desktop-content profile-sticky-band hidden min-w-0 flex-1 xl:block">
+        <div className="profile-mobile-page w-full lg:hidden">{hub}</div>
+        <div className="profile-desktop-content profile-sticky-band hidden min-w-0 flex-1 lg:block">
           {revealed}
         </div>
       </>

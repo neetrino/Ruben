@@ -50,7 +50,7 @@ export function AuthPageShell({
 
       {/* Same yellow stroke as home hero — behind form & footer. */}
       <div
-        className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-x-clip md:block"
         aria-hidden
       >
         <Image

@@ -49,6 +49,11 @@
    * Hardcoded media queries below must stay paired with this value.
    */
   --breakpoint-lg: 1025px;
+  /**
+   * Above the widest tablet landscape viewport (iPad Pro 12.9" is 1366px), so
+   * only real desktops get the densest catalog grid.
+   */
+  --breakpoint-wide: 1400px;
 }
 
 body {
@@ -352,7 +357,7 @@ body {
  * Equal top/bottom gaps; content column scrolls internally. When that
  * column reaches its end, page scroll continues so the footer is reachable.
  */
-@media (min-width: 1280px) {
+@media (min-width: 1025px) {
   .storefront-shell:has(.profile-desktop-page) .storefront-main {
     display: flex;
     flex: 1 1 auto;
@@ -414,17 +419,16 @@ body {
  * MobileBottomNav so hub content (logout CTA, last rows) can scroll fully into view.
  * SiteFooter is already hidden below `lg` for all storefront pages.
  */
-@media (max-width: 1279px) {
+@media (max-width: 1024px) {
   .storefront-shell:has(.profile-mobile-page) .storefront-mobile-top-bar,
   .storefront-shell:has(.profile-mobile-page) .site-header {
     display: none;
   }
 
-  /* No floating tab bar between 1025px and 1279px — just a plain page end. */
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
     flex-grow: 0;
     padding-top: 0.5rem;
-    padding-bottom: 1.5rem;
+    padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 
   .profile-mobile-tab-sheet-scroll {
@@ -460,13 +464,6 @@ body {
     box-shadow: none;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
-  }
-}
-
-/* Profile hub where the floating tab bar is visible: clear it, nothing more. */
-@media (max-width: 1024px) {
-  .storefront-shell:has(.profile-mobile-page) .storefront-main {
-    padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 }
 

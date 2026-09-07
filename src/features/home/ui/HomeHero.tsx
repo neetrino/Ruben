@@ -35,8 +35,12 @@ export function HomeHero({
       {/*
         Figma Vector 7 — under product, continues under categories.
       */}
+      {/*
+        `overflow-x-clip` keeps the artwork from widening the layout viewport on
+        narrow desktops (tablet landscape) while the vertical bleed stays visible.
+      */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto hidden max-w-[1440px] md:block"
+        className="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto hidden max-w-[1440px] overflow-x-clip md:block"
         aria-hidden
       >
         <Image
