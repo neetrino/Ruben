@@ -1,24 +1,22 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { DROPDOWN_ANIMATION_MS } from "@/components/ui/SelectDropdown";
-import { setCurrencyAction } from "@/features/preferences/set-currency-action";
+import { useCurrencySelection } from "@/features/preferences/use-currency-selection";
 import type { Locale } from "@/lib/i18n/config";
-import { localeLabels, locales } from "@/lib/i18n/config";
+import {
+  localeLabels,
+  localeShortLabels,
+  locales,
+  replaceLocaleInPath,
+} from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
 import { currencies } from "@/lib/money/currency";
 
 const HOVER_CLOSE_DELAY_MS = 140;
-
-/** Short codes for the navbar trigger (caps in pill: ENG / ՀԱՅ / РУС). */
-const localeShortLabels: Record<Locale, string> = {
-  hy: "ՀԱՅ",
-  en: "ENG",
-  ru: "РУС",
-};
 
 type LocaleCurrencySwitcherProps = {
   locale: Locale;
@@ -27,15 +25,6 @@ type LocaleCurrencySwitcherProps = {
   languageLabel: string;
   appearance?: "default" | "navbar";
 };
-
-function replaceLocaleInPath(pathname: string, nextLocale: Locale): string {
-  const segments = pathname.split("/");
-  if (segments.length > 1) {
-    segments[1] = nextLocale;
-    return segments.join("/") || `/${nextLocale}`;
-  }
-  return `/${nextLocale}`;
-}
 
 function optionClassName(selected: boolean): string {
   return selected
@@ -56,8 +45,7 @@ export function LocaleCurrencySwitcher({
 }: LocaleCurrencySwitcherProps) {
   const router = useRouter();
   const pathname = usePathname() ?? `/${locale}`;
-  const searchParams = useSearchParams();
-  const [pending, startTransition] = useTransition();
+  const { pending, selectCurrency } = useCurrencySelection();
   const [open, setOpen] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -138,22 +126,10 @@ export function LocaleCurrencySwitcher({
     };
   }, [open]);
 
-  function selectCurrency(next: Currency): void {
-    if (next === currency) {
-      closeMenu();
-      return;
-    }
-    startTransition(async () => {
-      await setCurrencyAction(next);
-      closeMenu();
-      // Price filters are display-currency major units — drop them on FX switch.
-      const params = new URLSearchParams(searchParams?.toString() ?? "");
-      params.delete("minPrice");
-      params.delete("maxPrice");
-      const query = params.toString();
-      router.replace(query ? `${pathname}?${query}` : pathname);
-      router.refresh();
-    });
+  function handleCurrency(next: Currency): void {
+    closeMenu();
+    if (next === currency) return;
+    selectCurrency(next);
   }
 
   function selectLocale(next: Locale): void {
@@ -240,7 +216,7 @@ export function LocaleCurrencySwitcher({
                         type="button"
                         disabled={pending}
                         className={optionClassName(selected)}
-                        onClick={() => selectCurrency(code)}
+                        onClick={() => handleCurrency(code)}
                       >
                         {code}
                       </button>

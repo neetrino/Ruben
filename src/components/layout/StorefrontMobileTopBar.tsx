@@ -11,9 +11,11 @@ import { useStorefrontHeaderScrollCollapse } from "@/components/layout/use-store
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import type { Currency } from "@/lib/money/currency";
 
 type StorefrontMobileTopBarProps = {
   locale: Locale;
+  currency: Currency;
   dictionary: Dictionary;
 };
 
@@ -24,6 +26,7 @@ type StorefrontMobileTopBarProps = {
  */
 export function StorefrontMobileTopBar({
   locale,
+  currency,
   dictionary,
 }: StorefrontMobileTopBarProps) {
   const pathname = usePathname();
@@ -123,6 +126,7 @@ export function StorefrontMobileTopBar({
                 </a>
                 <MobileNavDrawer
                   locale={locale}
+                  currency={currency}
                   dictionary={dictionary}
                   navItems={navItems}
                   appearance="mobile-top"

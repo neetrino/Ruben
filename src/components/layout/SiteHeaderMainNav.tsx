@@ -119,13 +119,6 @@ export function SiteHeaderMainNav({
           </div>
 
           <div className="flex items-center gap-2 md:hidden">
-            <LocaleCurrencySwitcher
-              locale={locale}
-              currency={currency}
-              currencyLabel={dictionary.header.currency}
-              languageLabel={dictionary.header.language}
-              appearance="navbar"
-            />
             <SiteHeaderCartTrigger
               locale={locale}
               currency={currency}
@@ -135,6 +128,7 @@ export function SiteHeaderMainNav({
             />
             <MobileNavDrawer
               locale={locale}
+              currency={currency}
               dictionary={dictionary}
               navItems={navItems}
               appearance="navbar"

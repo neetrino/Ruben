@@ -12,9 +12,12 @@ import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
+import { MobileCurrencySwitcher } from "@/components/layout/MobileCurrencySwitcher";
+import { MobileLocaleSwitcher } from "@/components/layout/MobileLocaleSwitcher";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import type { Currency } from "@/lib/money/currency";
 
 const MENU_EXIT_MS = 260;
 const MENU_GAP_PX = 8;
@@ -27,6 +30,7 @@ type NavItem = {
 
 type MobileNavDrawerProps = {
   locale: Locale;
+  currency: Currency;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
   appearance?: "default" | "navbar" | "mobile-top";
@@ -48,6 +52,7 @@ function isNavItemActive(pathname: string, href: string, locale: Locale): boolea
  */
 export function MobileNavDrawer({
   locale,
+  currency,
   dictionary,
   navItems,
   appearance = "default",
@@ -183,6 +188,11 @@ export function MobileNavDrawer({
   }, [rendered]);
 
   const shopHref = `/${locale}/products`;
+  const homeHref = `/${locale}`;
+  // The logo already leads home; the drawer lists only the deeper sections.
+  const drawerNavItems = navItems.filter(
+    (item) => item.href !== homeHref && item.href !== `${homeHref}/`,
+  );
 
   const triggerClass =
     appearance === "navbar"
@@ -264,7 +274,7 @@ export function MobileNavDrawer({
                   className="flex max-h-inherit flex-col overflow-y-auto pb-[max(0.5rem,env(safe-area-inset-bottom))]"
                 >
                   <div className="flex flex-col py-3">
-                    {navItems.map((item) => {
+                    {drawerNavItems.map((item) => {
                       const active = isNavItemActive(
                         pathname,
                         item.href,
@@ -289,11 +299,24 @@ export function MobileNavDrawer({
                     })}
                   </div>
 
-                  <div className="mt-1 border-t border-gray-100 py-4">
+                  <div className="flex flex-wrap items-start gap-x-4 gap-y-3 border-t border-gray-100 py-4">
+                    <MobileLocaleSwitcher
+                      locale={locale}
+                      label={dictionary.header.language}
+                      onSelect={() => setOpen(false)}
+                    />
+                    <MobileCurrencySwitcher
+                      currency={currency}
+                      label={dictionary.header.currency}
+                      onSelect={() => setOpen(false)}
+                    />
+                  </div>
+
+                  <div className="border-t border-gray-100 py-4">
                     <AppLink
                       href={shopHref}
                       prefetchPolicy="intent"
-                      className="flex w-full items-center justify-center rounded-full bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                      className="flex w-full items-center justify-center rounded-full bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:brightness-95"
                       onClick={() => setOpen(false)}
                     >
                       {dictionary.nav.shopNow}
