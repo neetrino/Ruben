@@ -73,22 +73,22 @@ export function HomeMobileHeroCarousel({
 
   return (
     <>
-      <div className="relative mt-6">
-        <div className="relative mx-auto aspect-[344/198] w-full max-w-[344px] overflow-hidden rounded-[10px] bg-neutral-100">
+      <div className="relative mt-6 tablet:mt-12">
+        <div className="relative mx-auto aspect-[344/198] w-full max-w-[344px] overflow-hidden rounded-[10px] bg-neutral-100 tablet:max-w-[720px]">
           <Image
             key={imageSrc}
             src={imageSrc}
             alt={activeSlide?.copy.title ?? brandName}
             fill
             priority
-            sizes="344px"
+            sizes="(max-width: 743px) 344px, 720px"
             className="object-cover"
             onError={handleImageError}
           />
         </div>
 
         {slides.length > 1 ? (
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 flex w-[min(100%,367px)] -translate-x-1/2 items-center justify-between px-0">
+          <div className="pointer-events-none absolute inset-y-0 left-1/2 flex w-[min(100%,367px)] -translate-x-1/2 items-center justify-between px-0 tablet:w-[min(100%,760px)]">
             <HomeMobileChevronButton
               label={prevSlideLabel}
               direction="left"
