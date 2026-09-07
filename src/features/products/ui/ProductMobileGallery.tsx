@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState, type UIEvent } from "react";
 
 import { PRODUCT_MOBILE_ASSETS } from "@/features/products/ui/product-assets";
 import { ProductImageRail } from "@/features/products/ui/ProductImageRail";
@@ -44,11 +44,10 @@ export function ProductMobileGallery({
   wishlistLabel,
 }: ProductMobileGalleryProps) {
   const router = useRouter();
+  const trackRef = useRef<HTMLDivElement | null>(null);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
-  const active = images[activeIndex] ?? images[0] ?? null;
   const slideCount = Math.max(images.length, 1);
-  const activeId = active?.id ?? null;
+  const activeId = (images[activeIndex] ?? images[0])?.id ?? null;
 
   function goBack(): void {
     if (window.history.length > 1) {
@@ -58,44 +57,57 @@ export function ProductMobileGallery({
     router.push(productsHref);
   }
 
-  function goTo(index: number): void {
-    if (images.length === 0) return;
-    const next = ((index % images.length) + images.length) % images.length;
-    setActiveIndex(next);
+  /** Keeps rail and pagination in sync while the finger drags the track. */
+  function handleScroll(event: UIEvent<HTMLDivElement>): void {
+    const track = event.currentTarget;
+    if (track.clientWidth === 0) return;
+
+    const next = Math.round(track.scrollLeft / track.clientWidth);
+    if (next !== activeIndex && next >= 0 && next < images.length) {
+      setActiveIndex(next);
+    }
+  }
+
+  function scrollToIndex(index: number): void {
+    const track = trackRef.current;
+    if (!track) return;
+
+    track.scrollTo({ left: index * track.clientWidth, behavior: "smooth" });
+    setActiveIndex(index);
   }
 
   function selectById(imageId: string): void {
     const index = images.findIndex((image) => image.id === imageId);
     if (index >= 0) {
-      setActiveIndex(index);
+      scrollToIndex(index);
     }
   }
 
   return (
-    <div
-      className="relative aspect-[375/506] w-full overflow-hidden bg-[linear-gradient(154deg,#f0f1f5_8%,#e8eaf0_92%)]"
-      onTouchStart={(event) => {
-        setTouchStartX(event.touches[0]?.clientX ?? null);
-      }}
-      onTouchEnd={(event) => {
-        if (touchStartX == null || images.length < 2) return;
-        const endX = event.changedTouches[0]?.clientX ?? touchStartX;
-        const delta = endX - touchStartX;
-        setTouchStartX(null);
-        if (Math.abs(delta) < 40) return;
-        goTo(activeIndex + (delta < 0 ? 1 : -1));
-      }}
-    >
-      {active ? (
-        <Image
-          src={active.url}
-          alt={active.alt || title}
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-          draggable={false}
-        />
+    <div className="relative aspect-[375/506] w-full overflow-hidden bg-[linear-gradient(154deg,#f0f1f5_8%,#e8eaf0_92%)]">
+      {images.length > 0 ? (
+        <div
+          ref={trackRef}
+          onScroll={handleScroll}
+          className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        >
+          {images.map((image, index) => (
+            <div
+              key={image.id}
+              className="relative h-full w-full shrink-0 snap-center"
+            >
+              <Image
+                src={image.url}
+                alt={image.alt || title}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover"
+                draggable={false}
+              />
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="flex h-full items-center justify-center text-sm text-neutral-400">
           No image
@@ -155,7 +167,7 @@ export function ProductMobileGallery({
               key={image.id}
               type="button"
               aria-label={`${index + 1}`}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => scrollToIndex(index)}
               className={`h-[3px] w-5 rounded-[2px] transition-colors ${
                 index === activeIndex
                   ? "bg-black/35"
