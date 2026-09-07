@@ -192,7 +192,7 @@ export default async function ProductsPage({
             <p className="hidden text-sm leading-none text-[#888] lg:block">
               {showingNodes}
             </p>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 tablet:w-full tablet:flex-row-reverse tablet:justify-between lg:w-auto lg:flex-row lg:justify-start">
               <CatalogFiltersSheet
                 locale={rawLocale}
                 filters={filters}
@@ -250,7 +250,7 @@ export default async function ProductsPage({
                 {dictionary.catalog.empty}
               </p>
             ) : (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-[30px] sm:gap-y-12 xl:grid-cols-3">
+              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-[30px] sm:gap-y-12 tablet:grid-cols-3 tablet-lg:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
                 {priced.map(({ product, price, compareAtFormatted }, index) => (
                   <ProductCard
                     key={product.id}

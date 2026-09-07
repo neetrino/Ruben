@@ -12,6 +12,10 @@
   --radius: 15px;
   /* SiteHeader lg+: pt-[26px] + pill h-[63px] */
   --storefront-header-offset: calc(26px + 63px);
+  /* MobileBottomNav island: 72px pill + its bottom inset + breathing room. */
+  --mobile-bottom-nav-clearance: calc(
+    72px + max(16px, env(safe-area-inset-bottom)) + 16px
+  );
   --profile-sticky-gap: 5rem;
 }
 
@@ -33,6 +37,12 @@
   --radius-2xl: 15px;
   --radius-3xl: 15px;
   --radius-4xl: 15px;
+}
+
+/* Tablet portrait widths: iPad mini is 744px, iPad Air / Pro start at 820px. */
+@theme {
+  --breakpoint-tablet: 744px;
+  --breakpoint-tablet-lg: 820px;
 }
 
 body {
@@ -62,6 +72,11 @@ body {
 
   .storefront-main:has(.product-page-root) {
     padding-bottom: 0;
+  }
+
+  /* The tab bar floats over the page end; reserve room so the last row stays reachable. */
+  .storefront-shell {
+    padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 }
 

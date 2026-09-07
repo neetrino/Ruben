@@ -238,7 +238,7 @@ export function ProductDetailView({
         </div>
       </div>
 
-      <div className="px-5 pt-6 pb-28 lg:px-12 lg:pt-4 lg:pb-0">
+      <div className="px-5 pt-6 lg:px-12 lg:pt-4">
         {relatedSlot}
       </div>
 

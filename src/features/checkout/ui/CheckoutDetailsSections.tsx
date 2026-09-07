@@ -79,7 +79,7 @@ export function CheckoutDetailsSections({
           {labels.contactInformation}
         </h2>
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.firstName}
               <input
@@ -103,7 +103,7 @@ export function CheckoutDetailsSections({
               />
             </label>
           </div>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.phone}
               <input
@@ -178,7 +178,7 @@ export function CheckoutDetailsSections({
           <h2 className="mb-6 text-xl font-semibold text-gray-900">
             {labels.shippingAddress}
           </h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.deliveryLocation}
               <SelectDropdown

@@ -83,7 +83,7 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
           ctaLabel={dictionary.wishlist.emptyCta}
         />
       ) : (
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-6 tablet:grid-cols-3 tablet-lg:grid-cols-4">
           {priced.map(
             ({ product, priceFormatted, compareAtFormatted }, index) => (
               <ProductCard

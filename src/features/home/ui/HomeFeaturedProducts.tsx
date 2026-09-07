@@ -1,3 +1,4 @@
+import { homeGridItemClass } from "@/features/home/ui/home-grid-visibility";
 import { HomeProductCard } from "@/features/home/ui/HomeProductCard";
 import { HomeSectionHeader } from "@/features/home/ui/HomeSectionHeader";
 import type { Locale } from "@/lib/i18n/config";
@@ -62,12 +63,9 @@ export function HomeFeaturedProducts({
         {products.length === 0 ? (
           <p className="text-neutral-600">{emptyLabel}</p>
         ) : (
-          <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 sm:gap-y-10 tablet:grid-cols-3 tablet-lg:grid-cols-4 xl:gap-x-8">
             {products.map((product, index) => (
-              <div
-                key={product.id}
-                className={index >= 4 ? "hidden lg:block" : undefined}
-              >
+              <div key={product.id} className={homeGridItemClass(index, 4)}>
                 <HomeProductCard
                   href={product.href}
                   title={product.title}
