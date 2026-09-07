@@ -49,11 +49,6 @@
    * Hardcoded media queries below must stay paired with this value.
    */
   --breakpoint-lg: 1025px;
-  /**
-   * Above the widest tablet landscape viewport (iPad Pro 12.9" is 1366px), so
-   * only real desktops get the densest catalog grid.
-   */
-  --breakpoint-wide: 1400px;
 }
 
 body {
