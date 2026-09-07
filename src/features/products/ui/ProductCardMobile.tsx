@@ -60,7 +60,7 @@ export function ProductCardMobile({
               src={imageUrl}
               alt={title}
               fill
-              sizes="(max-width: 1023px) 45vw, 170px"
+              sizes="(max-width: 1024px) 45vw, 170px"
               priority={priority}
               className="object-cover"
             />

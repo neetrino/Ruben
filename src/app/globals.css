@@ -43,6 +43,12 @@
 @theme {
   --breakpoint-tablet: 744px;
   --breakpoint-tablet-lg: 820px;
+  /**
+   * Desktop chrome starts above the widest tablet portrait viewport, so the
+   * iPad Pro 12.9" (1024px) keeps the same layout as the iPad Air.
+   * Hardcoded media queries below must stay paired with this value.
+   */
+  --breakpoint-lg: 1025px;
 }
 
 body {
@@ -65,7 +71,7 @@ body {
 }
 
 /* Home / product mobile: full-bleed content under shared mobile top bar. */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .storefront-main:has(.home-page-root) {
     padding-bottom: 0;
   }
@@ -100,7 +106,7 @@ body {
   padding-bottom: 0;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   .shop-page-root,
   .product-page-root {
     padding-top: 1.75rem;
@@ -143,7 +149,7 @@ body {
  * Kept unlayered so it wins over Tailwind `text-sm` / `text-xs` utilities,
  * and scoped to mobile widths so desktop keeps the designed type scale.
  */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
   select,
   textarea {
@@ -406,7 +412,7 @@ body {
  * Mobile profile: hub is the chrome — hide storefront navbar (mobile top bar
  * + SiteHeader). Keep bottom padding large enough to clear the floating
  * MobileBottomNav so hub content (logout CTA, last rows) can scroll fully into view.
- * SiteFooter is already hidden below `md` for all storefront pages.
+ * SiteFooter is already hidden below `lg` for all storefront pages.
  */
 @media (max-width: 1279px) {
   .storefront-shell:has(.profile-mobile-page) .storefront-mobile-top-bar,
@@ -414,7 +420,7 @@ body {
     display: none;
   }
 
-  /* No floating tab bar between 1024px and 1279px — just a plain page end. */
+  /* No floating tab bar between 1025px and 1279px — just a plain page end. */
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
     flex-grow: 0;
     padding-top: 0.5rem;
@@ -458,7 +464,7 @@ body {
 }
 
 /* Profile hub where the floating tab bar is visible: clear it, nothing more. */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
     padding-bottom: var(--mobile-bottom-nav-clearance);
   }
@@ -572,7 +578,7 @@ body {
   animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) both admin-page-reveal-in;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
   html:has([data-admin-shell]),
   body:has([data-admin-shell]) {
     overflow: hidden;
