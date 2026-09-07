@@ -131,7 +131,7 @@ export function ProductCardMobile({
                 limitReachedLabel={compareLimitLabel}
                 size="sm"
                 iconVariant="productCard"
-                className="h-8 w-8 bg-white/55 text-neutral-800 shadow-[0_1px_5px_rgba(0,0,0,0.2)] backdrop-blur-[4px]"
+                className="h-8 w-8 bg-white/90 text-neutral-800 shadow-[0_1px_5px_rgba(0,0,0,0.2)] backdrop-blur-sm"
               />
             ) : null}
           </div>
