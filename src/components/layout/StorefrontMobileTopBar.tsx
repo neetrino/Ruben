@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useRef } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
+import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { StorefrontMobileSearchBar } from "@/components/layout/StorefrontMobileSearchBar";
 import { useStorefrontHeaderScrollCollapse } from "@/components/layout/use-storefront-header-scroll-collapse";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
@@ -18,7 +19,7 @@ type StorefrontMobileTopBarProps = {
 
 /**
  * Mobile storefront sticky chrome — Grill-style hide-on-scroll:
- * logo / location / call collapse on scroll down; search stays pinned.
+ * logo / location / call / burger collapse on scroll down; search stays pinned.
  * Shown below `lg`; desktop keeps {@link SiteHeader}.
  */
 export function StorefrontMobileTopBar({
@@ -31,6 +32,15 @@ export function StorefrontMobileTopBar({
 
   const phoneDigits = dictionary.contact.storePhone.replace(/\s/g, "");
   const mapsQuery = encodeURIComponent(dictionary.contact.storeAddress);
+
+  const navItems = [
+    { href: `/${locale}`, label: dictionary.nav.home },
+    { href: `/${locale}/products`, label: dictionary.nav.products },
+    { href: `/${locale}#categories`, label: dictionary.nav.categories },
+    { href: `/${locale}#partners`, label: dictionary.nav.brands },
+    { href: `/${locale}#promotions`, label: dictionary.nav.promotions },
+    { href: `/${locale}/contact`, label: dictionary.nav.contact },
+  ] as const;
 
   const headerRootRef = useRef<HTMLDivElement>(null);
   const { primaryHidden, allowMotion, scrollHomeToTop } =
@@ -113,6 +123,12 @@ export function StorefrontMobileTopBar({
                     aria-hidden
                   />
                 </a>
+                <MobileNavDrawer
+                  locale={locale}
+                  dictionary={dictionary}
+                  navItems={navItems}
+                  appearance="mobile-top"
+                />
               </div>
             </div>
           </div>

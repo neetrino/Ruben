@@ -29,7 +29,7 @@ type MobileNavDrawerProps = {
   locale: Locale;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
-  appearance?: "default" | "navbar";
+  appearance?: "default" | "navbar" | "mobile-top";
 };
 
 function isNavItemActive(pathname: string, href: string, locale: Locale): boolean {
@@ -72,8 +72,15 @@ export function MobileNavDrawer({
   }, []);
 
   const measureHeader = useCallback(() => {
+    const mobile = document.querySelector<HTMLElement>(
+      "[data-storefront-mobile-top-bar]",
+    );
+    if (mobile && mobile.getClientRects().length > 0) {
+      setPanelTopPx(mobile.getBoundingClientRect().bottom);
+      return;
+    }
     const header = document.querySelector<HTMLElement>("[data-site-header]");
-    if (!header) return;
+    if (!header || header.getClientRects().length === 0) return;
     setPanelTopPx(header.getBoundingClientRect().bottom);
   }, []);
 
@@ -157,8 +164,12 @@ export function MobileNavDrawer({
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (panelRef.current?.contains(target)) return;
-      const header = document.querySelector("[data-site-header]");
-      if (header?.contains(target)) return;
+      const siteHeader = document.querySelector("[data-site-header]");
+      if (siteHeader?.contains(target)) return;
+      const mobileTop = document.querySelector(
+        "[data-storefront-mobile-top-bar]",
+      );
+      if (mobileTop?.contains(target)) return;
       event.preventDefault();
     }
 
@@ -173,22 +184,30 @@ export function MobileNavDrawer({
 
   const shopHref = `/${locale}/products`;
 
+  const triggerClass =
+    appearance === "navbar"
+      ? "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+      : appearance === "mobile-top"
+        ? "relative inline-flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black text-white transition-opacity hover:opacity-80 touch-manipulation"
+        : "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10";
+
+  const iconClass =
+    appearance === "mobile-top"
+      ? "pointer-events-none absolute h-5 w-5 transition-[opacity,transform] duration-[280ms] ease-out"
+      : "pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5";
+
   return (
     <>
       <button
         type="button"
         onClick={toggleMenu}
-        className={
-          appearance === "navbar"
-            ? "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
-            : "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
-        }
+        className={triggerClass}
         aria-label={open ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
         aria-expanded={open}
         aria-controls={menuId}
       >
         <Menu
-          className="pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5"
+          className={iconClass}
           aria-hidden="true"
           style={{
             opacity: open ? 0 : 1,
@@ -198,7 +217,7 @@ export function MobileNavDrawer({
           }}
         />
         <X
-          className="pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5"
+          className={iconClass}
           aria-hidden="true"
           style={{
             opacity: open ? 1 : 0,
@@ -211,7 +230,7 @@ export function MobileNavDrawer({
 
       {mounted && rendered
         ? createPortal(
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <button
                 type="button"
                 aria-label={dictionary.nav.closeMenu}
