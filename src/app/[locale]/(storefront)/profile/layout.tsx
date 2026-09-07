@@ -49,9 +49,14 @@ export default async function ProfileLayout({
           </ProfileMobileShell>
         </div>
 
-        {/* Same yellow stroke as auth / home hero — behind profile chrome. */}
+        {/**
+         * Same yellow stroke as auth / home hero — behind profile chrome.
+         * Desktop-only: the mobile hub wrapper uses `display: contents`, so it
+         * cannot stack above this layer, and the oversized image would widen
+         * the layout viewport and offset fixed chrome on iOS.
+         */}
         <div
-          className="pointer-events-none absolute inset-0 z-0 hidden md:block"
+          className="pointer-events-none absolute inset-0 z-0 hidden xl:block"
           aria-hidden
         >
           <Image

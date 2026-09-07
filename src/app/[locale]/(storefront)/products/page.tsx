@@ -179,7 +179,7 @@ export default async function ProductsPage({
         />
       </div>
 
-      <div className="px-6 sm:px-10 lg:px-12">
+      <div className="px-[13px] sm:px-10 lg:px-12">
         <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
           <div className="hidden lg:block">
             <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
@@ -250,7 +250,7 @@ export default async function ProductsPage({
                 {dictionary.catalog.empty}
               </p>
             ) : (
-              <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-[30px] sm:gap-y-12 tablet:grid-cols-3 tablet-lg:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
+              <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-[30px] sm:gap-y-12 tablet:grid-cols-3 tablet-lg:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4">
                 {priced.map(({ product, price, compareAtFormatted }, index) => (
                   <ProductCard
                     key={product.id}

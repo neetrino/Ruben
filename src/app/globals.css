@@ -74,8 +74,11 @@ body {
     padding-bottom: 0;
   }
 
-  /* The tab bar floats over the page end; reserve room so the last row stays reachable. */
-  .storefront-shell {
+  /**
+   * The tab bar floats over the page end; reserve room so the last row stays
+   * reachable. The profile hub sets its own clearance on `.storefront-main`.
+   */
+  .storefront-shell:not(:has(.profile-mobile-page)) {
     padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 }
@@ -411,13 +414,11 @@ body {
     display: none;
   }
 
+  /* No floating tab bar between 1024px and 1279px — just a plain page end. */
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
     flex-grow: 0;
     padding-top: 0.5rem;
-    padding-bottom: max(
-      7rem,
-      calc(5.5rem + env(safe-area-inset-bottom, 0px))
-    );
+    padding-bottom: 1.5rem;
   }
 
   .profile-mobile-tab-sheet-scroll {
@@ -453,6 +454,13 @@ body {
     box-shadow: none;
     padding-left: 0.75rem;
     padding-right: 0.75rem;
+  }
+}
+
+/* Profile hub where the floating tab bar is visible: clear it, nothing more. */
+@media (max-width: 1023px) {
+  .storefront-shell:has(.profile-mobile-page) .storefront-main {
+    padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 }
 
