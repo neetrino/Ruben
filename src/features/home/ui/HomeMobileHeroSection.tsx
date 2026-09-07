@@ -20,8 +20,6 @@ export async function HomeMobileHeroSection({
 }: HomeMobileHeroSectionProps) {
   const categories = await listStorefrontCategories(locale);
   const productsHref = `/${locale}/products`;
-  const phoneDigits = dictionary.contact.storePhone.replace(/\s/g, "");
-  const mapsQuery = encodeURIComponent(dictionary.contact.storeAddress);
 
   // Drop missing local `/uploads/...` files so Next/Image does not 404.
   const slidesWithExistingMedia = slides.map((slide) => ({
@@ -41,13 +39,6 @@ export async function HomeMobileHeroSection({
         href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
       }))}
       allCategoriesLabel={dictionary.catalog.allChip}
-      searchPlaceholder={dictionary.header.searchPlaceholder}
-      searchSubmitLabel={dictionary.header.search}
-      filtersLabel={dictionary.catalog.filtersTitle}
-      locationLabel={dictionary.contact.mapTitle}
-      callLabel={dictionary.contact.callTitle}
-      phoneHref={`tel:${phoneDigits}`}
-      locationHref={`https://maps.google.com/?q=${mapsQuery}`}
       prevSlideLabel={dictionary.home.categoriesPrev}
       nextSlideLabel={dictionary.home.categoriesNext}
       fallbackImageSrc={HOME_ASSETS.heroProduct}

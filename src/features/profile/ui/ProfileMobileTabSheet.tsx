@@ -307,7 +307,7 @@ export function ProfileMobileTabSheet({
           }`}
           {...scrollAreaPointerHandlers}
         >
-          <div className="pb-[calc(1.75rem+env(safe-area-inset-bottom,0px))]">
+          <div className="pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
             {displayChildren}
           </div>
         </div>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { StorefrontMobileTopBar } from "@/components/layout/StorefrontMobileTopBar";
 import { MaintenanceGate } from "@/components/layout/MaintenanceGate";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -36,6 +37,7 @@ export default async function StorefrontLayout({
 
   return (
     <div className="storefront-shell flex min-h-dvh flex-1 flex-col bg-white">
+      <StorefrontMobileTopBar locale={locale} dictionary={dictionary} />
       <SiteHeader
         locale={locale}
         currency={currency}

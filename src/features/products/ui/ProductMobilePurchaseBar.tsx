@@ -25,8 +25,8 @@ type ProductMobilePurchaseBarProps = {
 };
 
 /**
- * Sticky mobile purchase pill — Figma 122:2985.
- * Sits above the shared MobileBottomNav.
+ * In-flow mobile purchase pill — Figma 122:2985.
+ * Renders under the product description (not sticky / fixed).
  */
 export function ProductMobilePurchaseBar({
   productId,
@@ -68,69 +68,67 @@ export function ProductMobilePurchaseBar({
   }
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-30 px-5 pb-[max(96px,calc(80px+env(safe-area-inset-bottom)))] lg:hidden">
-      <div className="pointer-events-auto relative mx-auto flex w-full max-w-[331px] items-center gap-3 rounded-[60px] bg-[rgba(0,0,0,0.34)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-[8px]">
-        <div className="flex h-[46px] min-w-0 flex-1 items-center justify-center rounded-[30px] bg-white px-3">
-          <p className="truncate text-xl leading-[30px] font-bold tracking-[-0.45px] text-[#1a1a2e]">
-            {priceFormatted}
-          </p>
-        </div>
-
-        <div className="flex h-[46px] shrink-0 items-center gap-3 rounded-[50px] bg-white px-1">
-          <button
-            type="button"
-            aria-label={labels.decreaseQuantity}
-            disabled={disabled || quantity <= 1 || pending}
-            onClick={() => changeQuantity(quantity - 1)}
-            className="inline-flex size-8 items-center justify-center rounded-2xl text-xl leading-5 tracking-[-0.45px] text-[#555] disabled:opacity-40"
-          >
-            –
-          </button>
-          <span
-            className="min-w-5 text-center text-[15px] leading-[22.5px] font-bold tracking-[-0.23px] text-[#1a1a2e]"
-            aria-label={labels.quantity}
-          >
-            {quantity}
-          </span>
-          <button
-            type="button"
-            aria-label={labels.increaseQuantity}
-            disabled={disabled || quantity >= maxQty || pending}
-            onClick={() => changeQuantity(quantity + 1)}
-            className="inline-flex size-8 items-center justify-center rounded-2xl text-xl leading-5 tracking-[-0.45px] text-[#555] disabled:opacity-40"
-          >
-            +
-          </button>
-        </div>
-
-        <button
-          ref={addButtonRef}
-          type="button"
-          aria-label={disabled ? labels.outOfStock : labels.addToCart}
-          disabled={disabled || pending}
-          onClick={handleAdd}
-          className="inline-flex size-[52px] shrink-0 items-center justify-center rounded-full bg-[#1a1c1c] disabled:opacity-50"
-        >
-          <Image
-            src={PRODUCT_MOBILE_ASSETS.shopBag}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6"
-            unoptimized
-            aria-hidden
-          />
-        </button>
-
-        {error ? (
-          <p
-            className="absolute bottom-full left-0 mb-2 rounded-lg bg-white px-3 py-1 text-sm text-red-700 shadow"
-            role="alert"
-          >
-            {error}
-          </p>
-        ) : null}
+    <div className="relative mx-auto flex w-full max-w-[331px] items-center gap-3 rounded-[60px] bg-[rgba(0,0,0,0.34)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-[8px]">
+      <div className="flex h-[46px] min-w-0 flex-1 items-center justify-center rounded-[30px] bg-white px-3">
+        <p className="truncate text-xl leading-[30px] font-bold tracking-[-0.45px] text-[#1a1a2e]">
+          {priceFormatted}
+        </p>
       </div>
+
+      <div className="flex h-[46px] shrink-0 items-center gap-3 rounded-[50px] bg-white px-1">
+        <button
+          type="button"
+          aria-label={labels.decreaseQuantity}
+          disabled={disabled || quantity <= 1 || pending}
+          onClick={() => changeQuantity(quantity - 1)}
+          className="inline-flex size-8 items-center justify-center rounded-2xl text-xl leading-5 tracking-[-0.45px] text-[#555] disabled:opacity-40"
+        >
+          –
+        </button>
+        <span
+          className="min-w-5 text-center text-[15px] leading-[22.5px] font-bold tracking-[-0.23px] text-[#1a1a2e]"
+          aria-label={labels.quantity}
+        >
+          {quantity}
+        </span>
+        <button
+          type="button"
+          aria-label={labels.increaseQuantity}
+          disabled={disabled || quantity >= maxQty || pending}
+          onClick={() => changeQuantity(quantity + 1)}
+          className="inline-flex size-8 items-center justify-center rounded-2xl text-xl leading-5 tracking-[-0.45px] text-[#555] disabled:opacity-40"
+        >
+          +
+        </button>
+      </div>
+
+      <button
+        ref={addButtonRef}
+        type="button"
+        aria-label={disabled ? labels.outOfStock : labels.addToCart}
+        disabled={disabled || pending}
+        onClick={handleAdd}
+        className="inline-flex size-[52px] shrink-0 items-center justify-center rounded-full bg-[#1a1c1c] disabled:opacity-50"
+      >
+        <Image
+          src={PRODUCT_MOBILE_ASSETS.shopBag}
+          alt=""
+          width={24}
+          height={24}
+          className="size-6"
+          unoptimized
+          aria-hidden
+        />
+      </button>
+
+      {error ? (
+        <p
+          className="absolute top-full left-0 mt-2 rounded-lg bg-white px-3 py-1 text-sm text-red-700 shadow"
+          role="alert"
+        >
+          {error}
+        </p>
+      ) : null}
     </div>
   );
 }

@@ -73,7 +73,7 @@ async function SiteHeaderMainNavAsync({
 export function SiteHeader({ locale, currency, dictionary }: SiteHeaderProps) {
   return (
     <div
-      className="site-header sticky top-0 z-[80] shrink-0 bg-transparent"
+      className="site-header sticky top-0 z-[80] hidden shrink-0 bg-transparent lg:block"
       data-site-header
     >
       <Suspense

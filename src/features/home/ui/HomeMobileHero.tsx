@@ -1,8 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useId, useState, type FormEvent } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
@@ -25,13 +21,6 @@ type HomeMobileHeroProps = {
   slides: StorefrontHeroSlide[];
   categories: readonly HomeMobileCategoryChip[];
   allCategoriesLabel: string;
-  searchPlaceholder: string;
-  searchSubmitLabel: string;
-  filtersLabel: string;
-  locationLabel: string;
-  callLabel: string;
-  phoneHref: string;
-  locationHref: string;
   prevSlideLabel: string;
   nextSlideLabel: string;
   fallbackImageSrc: string;
@@ -43,7 +32,8 @@ function chipIconSrc(index: number): string {
 }
 
 /**
- * Mobile home top chrome + hero carousel (Figma 171:562).
+ * Mobile home hero: category chips + carousel (Figma 171:562).
+ * Logo / search chrome lives in {@link StorefrontMobileTopBar}.
  * Shown below `lg`; desktop keeps {@link HomeHero}.
  */
 export function HomeMobileHero({
@@ -52,133 +42,19 @@ export function HomeMobileHero({
   slides,
   categories,
   allCategoriesLabel,
-  searchPlaceholder,
-  searchSubmitLabel,
-  filtersLabel,
-  locationLabel,
-  callLabel,
-  phoneHref,
-  locationHref,
   prevSlideLabel,
   nextSlideLabel,
   fallbackImageSrc,
 }: HomeMobileHeroProps) {
-  const router = useRouter();
-  const searchId = useId();
-  const [query, setQuery] = useState("");
-  const productsHref = `/${locale}/products`;
   const allHref = catalogHref(locale, DEFAULT_CATALOG_FILTERS, {
     category: undefined,
     page: 1,
   });
 
-  function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const trimmed = query.trim();
-    router.push(
-      catalogHref(locale, DEFAULT_CATALOG_FILTERS, {
-        q: trimmed || undefined,
-        page: 1,
-      }),
-    );
-  }
-
   return (
-    <section className="relative bg-white px-[14px] pt-2.5 pb-6 lg:hidden">
-      <div className="flex items-center justify-between gap-3">
-        <AppLink
-          href={`/${locale}`}
-          prefetchPolicy="intent"
-          className="relative block h-[52px] w-[85px] shrink-0"
-          aria-label={brandName}
-        >
-          <Image
-            src={HOME_MOBILE_ASSETS.logo}
-            alt={brandName}
-            fill
-            priority
-            sizes="85px"
-            className="object-contain object-left"
-          />
-        </AppLink>
-
-        <div className="flex items-center gap-[5px]">
-          <a
-            href={locationHref}
-            aria-label={locationLabel}
-            className="inline-flex size-12 items-center justify-center rounded-full bg-[var(--brand)]"
-          >
-            <Image
-              src={HOME_MOBILE_ASSETS.location}
-              alt=""
-              width={22}
-              height={27}
-              className="h-[22px] w-[18px]"
-              aria-hidden
-            />
-          </a>
-          <a href={phoneHref} aria-label={callLabel} className="block size-12">
-            <Image
-              src={HOME_MOBILE_ASSETS.phone}
-              alt=""
-              width={48}
-              height={48}
-              className="size-12"
-              aria-hidden
-            />
-          </a>
-        </div>
-      </div>
-
-      <form
-        onSubmit={onSearchSubmit}
-        className="mt-5 flex items-center gap-3"
-        role="search"
-      >
-        <label
-          htmlFor={searchId}
-          className="flex h-14 min-w-0 flex-1 items-center gap-2 rounded-full bg-[#f3f4f6] px-4"
-        >
-          <Image
-            src={HOME_MOBILE_ASSETS.search}
-            alt=""
-            width={18}
-            height={20}
-            className="h-5 w-[18px] shrink-0 opacity-50"
-            aria-hidden
-          />
-          <input
-            id={searchId}
-            type="search"
-            name="q"
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={searchPlaceholder}
-            className="min-w-0 flex-1 bg-transparent text-base text-neutral-800 outline-none placeholder:text-[#9ca3af]"
-            autoComplete="off"
-          />
-          <span className="sr-only">{searchSubmitLabel}</span>
-        </label>
-
-        <AppLink
-          href={productsHref}
-          prefetchPolicy="intent"
-          aria-label={filtersLabel}
-          className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
-        >
-          <Image
-            src={HOME_MOBILE_ASSETS.filter}
-            alt=""
-            width={24}
-            height={24}
-            className="size-6"
-            aria-hidden
-          />
-        </AppLink>
-      </form>
-
+    <section className="relative bg-white px-[14px] pb-6 lg:hidden">
       <div
-        className="mt-5 flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex gap-3 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         role="list"
         aria-label={allCategoriesLabel}
       >

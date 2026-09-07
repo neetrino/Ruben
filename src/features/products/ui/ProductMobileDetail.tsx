@@ -82,7 +82,7 @@ export function ProductMobileDetail({
         wishlistLabel={dictionary.nav.wishlist}
       />
 
-      <section className="relative z-10 -mt-[86px] rounded-t-[40px] bg-[rgba(255,255,255,0.31)] px-[22px] pt-10 pb-40 backdrop-blur-[10px]">
+      <section className="relative z-10 -mt-[86px] rounded-t-[40px] bg-[rgba(255,255,255,0.31)] px-[22px] pt-10 pb-10 backdrop-blur-[10px]">
         <div className="flex items-start justify-between gap-3">
           <h1 className="max-w-[192px] text-lg leading-[21px] font-bold text-black uppercase">
             {product.translation.title}
@@ -134,22 +134,24 @@ export function ProductMobileDetail({
             ))}
           </ul>
         ) : null}
-      </section>
 
-      <ProductMobilePurchaseBar
-        productId={product.id}
-        stockOnHand={product.stockOnHand}
-        priceFormatted={priceFormatted}
-        imageUrl={product.images[0]?.url ?? product.imageUrl}
-        labels={{
-          quantity: labels.quantity,
-          decreaseQuantity: dictionary.cartDrawer.decreaseQuantity,
-          increaseQuantity: dictionary.cartDrawer.increaseQuantity,
-          addToCart: labels.addToCart,
-          outOfStock: labels.outOfStock,
-          error: labels.addError,
-        }}
-      />
+        <div className="mt-8">
+          <ProductMobilePurchaseBar
+            productId={product.id}
+            stockOnHand={product.stockOnHand}
+            priceFormatted={priceFormatted}
+            imageUrl={product.images[0]?.url ?? product.imageUrl}
+            labels={{
+              quantity: labels.quantity,
+              decreaseQuantity: dictionary.cartDrawer.decreaseQuantity,
+              increaseQuantity: dictionary.cartDrawer.increaseQuantity,
+              addToCart: labels.addToCart,
+              outOfStock: labels.outOfStock,
+              error: labels.addError,
+            }}
+          />
+        </div>
+      </section>
     </div>
   );
 }
