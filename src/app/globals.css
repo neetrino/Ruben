@@ -70,21 +70,19 @@ body {
   padding-top: 0;
 }
 
-/* Home / product mobile: full-bleed content under shared mobile top bar. */
+/* Mobile page end: copyright line, then clearance for the floating tab bar. */
 @media (max-width: 1024px) {
-  .storefront-main:has(.home-page-root) {
-    padding-bottom: 0;
-  }
-
-  .storefront-main:has(.product-page-root) {
-    padding-bottom: 0;
-  }
-
   /**
-   * The tab bar floats over the page end; reserve room so the last row stays
-   * reachable. The profile hub sets its own clearance on `.storefront-main`.
+   * No footer on mobile, so `main` absorbs the leftover height and the
+   * copyright always closes the page at the bottom edge, with no extra
+   * padding of its own above the clearance.
    */
-  .storefront-shell:not(:has(.profile-mobile-page)) {
+  .storefront-main {
+    padding-bottom: 0;
+  }
+
+  /* The tab bar floats over the page end; reserve room below the copyright. */
+  .storefront-shell {
     padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 }
@@ -410,8 +408,8 @@ body {
 
 /**
  * Mobile profile: hub is the chrome — hide storefront navbar (mobile top bar
- * + SiteHeader). Keep bottom padding large enough to clear the floating
- * MobileBottomNav so hub content (logout CTA, last rows) can scroll fully into view.
+ * + SiteHeader). Clearance for the floating MobileBottomNav comes from the
+ * shared `.storefront-shell` rule above.
  * SiteFooter is already hidden below `lg` for all storefront pages.
  */
 @media (max-width: 1024px) {
@@ -423,7 +421,6 @@ body {
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
     flex-grow: 0;
     padding-top: 0.5rem;
-    padding-bottom: var(--mobile-bottom-nav-clearance);
   }
 
   .profile-mobile-tab-sheet-scroll {

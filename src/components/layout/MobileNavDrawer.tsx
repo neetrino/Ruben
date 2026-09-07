@@ -187,7 +187,7 @@ export function MobileNavDrawer({
     };
   }, [rendered]);
 
-  const shopHref = `/${locale}/products`;
+  const loginHref = `/${locale}/login`;
   const homeHref = `/${locale}`;
   const policyHref = `/${locale}/legal`;
   // Highlighted for the hub and for every document opened from it.
@@ -332,12 +332,12 @@ export function MobileNavDrawer({
 
                   <div className="border-t border-gray-100 py-4">
                     <AppLink
-                      href={shopHref}
+                      href={loginHref}
                       prefetchPolicy="intent"
                       className="flex w-full items-center justify-center rounded-full bg-[var(--brand)] px-6 py-3.5 text-sm font-semibold text-black transition-colors hover:brightness-95"
                       onClick={() => setOpen(false)}
                     >
-                      {dictionary.nav.shopNow}
+                      {dictionary.header.login}
                     </AppLink>
                   </div>
                 </nav>

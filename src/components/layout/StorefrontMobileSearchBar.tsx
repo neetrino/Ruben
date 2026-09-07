@@ -59,7 +59,7 @@ export function StorefrontMobileSearchBar({
     >
       <label
         htmlFor={searchId}
-        className="flex h-14 min-w-0 flex-1 items-center gap-2 rounded-full bg-[#f3f4f6] px-4"
+        className="flex h-12 min-w-0 flex-1 items-center gap-2 rounded-full bg-[#f3f4f6] px-4"
       >
         <Image
           src={HOME_MOBILE_ASSETS.search}
@@ -87,7 +87,7 @@ export function StorefrontMobileSearchBar({
           type="button"
           aria-label={filtersLabel}
           onClick={onFiltersClick}
-          className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
+          className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-black"
         >
           <Image
             src={HOME_MOBILE_ASSETS.filter}
@@ -103,7 +103,7 @@ export function StorefrontMobileSearchBar({
           href={productsHref}
           prefetchPolicy="intent"
           aria-label={filtersLabel}
-          className="inline-flex size-14 shrink-0 items-center justify-center rounded-full bg-black"
+          className="inline-flex size-12 shrink-0 items-center justify-center rounded-full bg-black"
           onClick={() => {
             prepareCatalogFiltersSheetOpen();
           }}
