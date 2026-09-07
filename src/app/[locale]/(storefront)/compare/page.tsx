@@ -106,7 +106,6 @@ export default async function ComparePage({ params }: ComparePageProps) {
             price: dictionary.compare.rows.price,
             compareAt: dictionary.compare.rows.compareAt,
             discount: dictionary.compare.rows.discount,
-            sku: dictionary.compare.rows.sku,
             availability: dictionary.compare.rows.availability,
             categories: dictionary.compare.rows.categories,
             description: dictionary.compare.rows.description,

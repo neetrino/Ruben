@@ -11,7 +11,6 @@ type CompareRowLabels = {
   price: string;
   compareAt: string;
   discount: string;
-  sku: string;
   availability: string;
   categories: string;
   description: string;
@@ -171,14 +170,6 @@ export function CompareTable({ locale, items, labels }: CompareTableProps) {
                 ) : (
                   labels.emptyValue
                 )}
-              </ProductCell>
-            ))}
-          </tr>
-          <tr>
-            <RowLabel>{labels.sku}</RowLabel>
-            {items.map(({ product }, index) => (
-              <ProductCell key={`${product.id}-sku`} isLast={index === items.length - 1}>
-                {product.sku}
               </ProductCell>
             ))}
           </tr>
