@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
+import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
@@ -17,7 +18,6 @@ const SOCIAL_CLASS =
   "inline-flex size-9 items-center justify-center rounded-full border border-white/18 text-white transition-colors hover:border-white/40 hover:bg-white/5";
 
 export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
-  const year = new Date().getFullYear();
   const footer = dictionary.footer;
   const contact = dictionary.contact;
 
@@ -56,11 +56,6 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
       size: 20,
     },
   ] as const;
-
-  const copyrightPrefix = footer.copyrightPrefix.replace(
-    "{year}",
-    String(year),
-  );
 
   return (
     <footer className="storefront-footer relative z-10 mt-auto hidden overflow-hidden bg-black text-white lg:block">
@@ -192,20 +187,11 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
         </div>
 
         <div className="flex w-full items-center justify-center pt-8">
-          <p className="max-w-full text-center text-sm leading-5 text-white/40">
-            <span>{copyrightPrefix} </span>
-            <a
-              href="https://neetrino.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
-            >
-              {footer.copyrightCompany}
-            </a>
-            {footer.copyrightSuffix ? (
-              <span> {footer.copyrightSuffix}</span>
-            ) : null}
-          </p>
+          <SiteCopyright
+            dictionary={dictionary}
+            className="max-w-full text-center text-sm leading-5 text-white/40"
+            linkClassName="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
+          />
         </div>
       </div>
     </footer>

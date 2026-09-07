@@ -83,7 +83,14 @@ export function ProductCard({
           brandLabel={brandLabel}
           categoryLabel={categoryLabel}
           priority={priority}
+          locale={locale}
           productId={productId}
+          inWishlist={inWishlist}
+          inCompare={inCompare}
+          isSignedIn={isSignedIn}
+          wishlistLabel={wishlistLabel}
+          compareLabel={compareLabel}
+          compareLimitLabel={compareLimitLabel}
           addToCartLabel={addToCartLabel}
           outOfStockLabel={outOfStockLabel}
           ratingLabel={ratingLabel}

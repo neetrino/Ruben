@@ -2,7 +2,10 @@ import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
+import { CompareButton } from "@/features/compare/ui/CompareButton";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
+import { WishlistButton } from "@/features/wishlist/ui/WishlistButton";
+import type { Locale } from "@/lib/i18n/config";
 
 type ProductCardMobileProps = {
   href: string;
@@ -16,7 +19,14 @@ type ProductCardMobileProps = {
   brandLabel?: string | null;
   categoryLabel?: string | null;
   priority?: boolean;
+  locale?: Locale;
   productId?: string;
+  inWishlist?: boolean;
+  inCompare?: boolean;
+  isSignedIn?: boolean;
+  wishlistLabel?: string;
+  compareLabel?: string;
+  compareLimitLabel?: string;
   addToCartLabel?: string;
   outOfStockLabel?: string;
   /** Optional storefront rating label (e.g. "4.5"). Omitted when null. */
@@ -39,21 +49,32 @@ export function ProductCardMobile({
   brandLabel = null,
   categoryLabel = null,
   priority = false,
+  locale,
   productId,
+  inWishlist = false,
+  inCompare = false,
+  isSignedIn = false,
+  wishlistLabel,
+  compareLabel,
+  compareLimitLabel,
   addToCartLabel,
   outOfStockLabel = "Out of stock",
   ratingLabel = null,
 }: ProductCardMobileProps) {
   const metaLabel = brandLabel ?? categoryLabel;
   const showAddToCart = productId != null && addToCartLabel != null;
+  const showWishlist =
+    locale != null && productId != null && wishlistLabel != null;
+  const showCompare =
+    locale != null && productId != null && compareLabel != null;
 
   return (
     <article className="relative mx-auto flex h-full w-full max-w-[186px] flex-col tablet:max-w-none">
-      <div className="relative mx-auto w-[91%] overflow-hidden rounded-[24px] bg-[#eaeaea]">
+      <div className="relative mx-auto w-[91%] overflow-visible rounded-[24px] bg-[#eaeaea]">
         <AppLink
           href={href}
           prefetchPolicy={priority ? "intent" : "auto"}
-          className="relative block aspect-[169/181] w-full"
+          className="relative block aspect-[169/181] w-full overflow-hidden rounded-[24px]"
         >
           {imageUrl ? (
             <Image
@@ -82,6 +103,36 @@ export function ProductCardMobile({
               <span className="inline-flex h-[22px] items-center justify-center rounded-full bg-black px-2 text-[10px] font-bold text-white uppercase">
                 {badgeLabel}
               </span>
+            ) : null}
+          </div>
+        ) : null}
+
+        {showWishlist || showCompare ? (
+          <div className="absolute top-2 right-0 z-10 flex w-8 translate-x-1/2 flex-col items-center gap-1.5">
+            {showWishlist ? (
+              <WishlistButton
+                locale={locale}
+                productId={productId}
+                initialInWishlist={inWishlist}
+                isSignedIn={isSignedIn}
+                label={wishlistLabel}
+                size="sm"
+                iconVariant="productCard"
+                className="h-8 w-8 bg-white/90 text-neutral-800 shadow-[0_1px_5px_rgba(0,0,0,0.2)] backdrop-blur-sm"
+              />
+            ) : null}
+            {showCompare ? (
+              <CompareButton
+                locale={locale}
+                productId={productId}
+                initialInCompare={inCompare}
+                isSignedIn={isSignedIn}
+                label={compareLabel}
+                limitReachedLabel={compareLimitLabel}
+                size="sm"
+                iconVariant="productCard"
+                className="h-8 w-8 bg-white/55 text-neutral-800 shadow-[0_1px_5px_rgba(0,0,0,0.2)] backdrop-blur-[4px]"
+              />
             ) : null}
           </div>
         ) : null}

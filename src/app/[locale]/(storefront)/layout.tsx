@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
+import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { StorefrontMobileTopBar } from "@/components/layout/StorefrontMobileTopBar";
@@ -49,6 +50,12 @@ export default async function StorefrontLayout({
       />
       <main className="storefront-main mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <MaintenanceGate>{children}</MaintenanceGate>
+        {/* Footer is desktop-only, so mobile keeps the copyright at the page end. */}
+        <SiteCopyright
+          dictionary={dictionary}
+          className="mt-10 text-center text-xs leading-5 text-neutral-500 lg:hidden"
+          linkClassName="font-medium text-neutral-700 underline-offset-2 hover:underline"
+        />
       </main>
       <SiteFooter dictionary={dictionary} locale={locale} />
       <MobileBottomNavIsland
