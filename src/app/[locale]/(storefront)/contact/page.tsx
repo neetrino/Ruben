@@ -1,6 +1,10 @@
 import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import {
+  STOREFRONT_PAGE_SUBTITLE_CLASS,
+  STOREFRONT_PAGE_TITLE_CLASS,
+} from "@/components/layout/storefront-page-title";
 import { ContactFormSkeleton } from "@/features/contact/ui/ContactFormSkeleton";
 import { ContactInfo } from "@/features/contact/ui/ContactInfo";
 import { ContactMapSkeleton } from "@/features/contact/ui/ContactMapSkeleton";
@@ -40,17 +44,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
   return (
     <div className="contact-page-root relative z-0 -mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-        <header className="mb-10 max-w-2xl sm:mb-14">
-          <p className="text-xs font-semibold tracking-[0.18em] text-[var(--brand-deep)] uppercase">
-            {dictionary.brand}
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-            {copy.title}
-          </h1>
-          <p className="mt-3 text-sm leading-relaxed text-gray-600 sm:text-base">
-            {copy.subtitle}
-          </p>
-          <div className="mt-5 h-1.5 w-16 rounded-full bg-[var(--brand)]" />
+        <header className="mb-10 flex max-w-2xl flex-col gap-2 sm:mb-14">
+          <h1 className={STOREFRONT_PAGE_TITLE_CLASS}>{copy.title}</h1>
+          <p className={STOREFRONT_PAGE_SUBTITLE_CLASS}>{copy.subtitle}</p>
         </header>
 
         <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-14">
