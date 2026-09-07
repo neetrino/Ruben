@@ -189,6 +189,10 @@ export function MobileNavDrawer({
 
   const shopHref = `/${locale}/products`;
   const homeHref = `/${locale}`;
+  const policyHref = `/${locale}/legal`;
+  // Highlighted for the hub and for every document opened from it.
+  const policyActive =
+    pathname === policyHref || pathname.startsWith(`${policyHref}/`);
   // The logo already leads home; the drawer lists only the deeper sections.
   const drawerNavItems = navItems.filter(
     (item) => item.href !== homeHref && item.href !== `${homeHref}/`,
@@ -297,6 +301,20 @@ export function MobileNavDrawer({
                         </AppLink>
                       );
                     })}
+
+                    <AppLink
+                      href={policyHref}
+                      prefetchPolicy="intent"
+                      aria-current={policyActive ? "page" : undefined}
+                      className={`rounded-xl px-1 py-3.5 text-base font-semibold transition-colors ${
+                        policyActive
+                          ? "text-gray-900"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                      onClick={() => setOpen(false)}
+                    >
+                      {dictionary.nav.policy}
+                    </AppLink>
                   </div>
 
                   <div className="flex flex-wrap items-start gap-x-4 gap-y-3 border-t border-gray-100 py-4">

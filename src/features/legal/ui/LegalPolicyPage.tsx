@@ -4,7 +4,7 @@ import { LegalPolicyDocument } from "@/features/legal/ui/LegalPolicyDocument";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-type LegalPolicyKey = "privacy" | "terms" | "refund" | "delivery";
+export type LegalPolicyKey = "privacy" | "terms" | "refund" | "delivery";
 
 type LegalPolicyPageProps = {
   params: Promise<{ locale: string }>;
