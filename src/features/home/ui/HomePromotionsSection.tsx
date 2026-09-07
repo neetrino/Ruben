@@ -1,7 +1,10 @@
 import { getCompareProductIds } from "@/features/compare/queries";
 import { HomePromotions } from "@/features/home/ui/HomePromotions";
 import { toHomeProductCard } from "@/features/home/ui/to-home-product-card";
-import { getOnSaleProducts } from "@/features/products/queries";
+import {
+  getOnSaleProducts,
+  getPrimaryCategoriesByProductIds,
+} from "@/features/products/queries";
 import { getStoreGlobalDiscount } from "@/features/settings/application/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
@@ -30,14 +33,23 @@ export async function HomePromotionsSection({
   ]);
 
   const productIds = onSaleProducts.map((product) => product.id);
-  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
-    getWishlistProductIds(productIds),
-    getCompareProductIds(productIds),
-    createDisplayPriceFormatter(locale, currency),
-  ]);
+  const [wishlistIds, compareIds, formatPrice, categoriesByProduct] =
+    await Promise.all([
+      getWishlistProductIds(productIds),
+      getCompareProductIds(productIds),
+      createDisplayPriceFormatter(locale, currency),
+      getPrimaryCategoriesByProductIds(productIds, locale),
+    ]);
 
   const products = onSaleProducts.map((product) =>
-    toHomeProductCard(product, locale, formatPrice, wishlistIds, compareIds),
+    toHomeProductCard({
+      product,
+      locale,
+      formatPrice,
+      categoryLabel: categoriesByProduct.get(product.id)?.title ?? null,
+      wishlistIds,
+      compareIds,
+    }),
   );
 
   const globalDiscountLabel =

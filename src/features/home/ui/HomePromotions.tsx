@@ -8,6 +8,7 @@ type PromoProduct = {
   href: string;
   title: string;
   brandLabel?: string | null;
+  categoryLabel?: string | null;
   priceFormatted: string;
   compareAtFormatted?: string | null;
   discountPercent?: number | null;
@@ -73,6 +74,7 @@ export function HomePromotions({
                   href={product.href}
                   title={product.title}
                   brandLabel={product.brandLabel}
+                  categoryLabel={product.categoryLabel}
                   priceFormatted={product.priceFormatted}
                   compareAtFormatted={product.compareAtFormatted}
                   discountPercent={product.discountPercent}

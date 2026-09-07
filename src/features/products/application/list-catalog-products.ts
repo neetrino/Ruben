@@ -24,6 +24,7 @@ import {
   productCategories,
   products,
 } from "@/db/schema";
+import { getPrimaryCategoriesByProductIds } from "@/features/products/queries";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
 import type {
@@ -208,49 +209,6 @@ async function loadPrimaryImages(
   return map;
 }
 
-async function loadPrimaryCategories(
-  productIds: string[],
-  locale: Locale,
-): Promise<Map<string, ProductCategoryRef>> {
-  const map = new Map<string, ProductCategoryRef>();
-  if (productIds.length === 0) return map;
-
-  const rows = await getDb()
-    .select({
-      productId: productCategories.productId,
-      id: categories.id,
-      translations: categories.translations,
-      isPrimary: productCategories.isPrimary,
-      sortOrder: productCategories.sortOrder,
-    })
-    .from(productCategories)
-    .innerJoin(categories, eq(productCategories.categoryId, categories.id))
-    .where(
-      and(
-        inArray(productCategories.productId, productIds),
-        eq(categories.status, "ACTIVE"),
-        isNull(categories.deletedAt),
-      ),
-    )
-    .orderBy(
-      desc(productCategories.isPrimary),
-      asc(productCategories.sortOrder),
-    );
-
-  for (const row of rows) {
-    if (map.has(row.productId)) continue;
-    const translation = row.translations[locale] ?? row.translations.hy;
-    if (!translation) continue;
-    map.set(row.productId, {
-      id: row.id,
-      title: translation.title,
-      slug: translation.slug,
-    });
-  }
-
-  return map;
-}
-
 function buildWhere(
   locale: Locale,
   filters: CatalogListFilter,
@@ -374,7 +332,7 @@ async function loadCatalogProductsPage(
         compareAtAmount: row.compareAtAmount,
       })),
     ),
-    loadPrimaryCategories(productIds, locale),
+    getPrimaryCategoriesByProductIds(productIds, locale),
   ]);
 
   const enriched = rows

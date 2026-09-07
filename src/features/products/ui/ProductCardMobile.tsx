@@ -87,7 +87,7 @@ export function ProductCardMobile({
         ) : null}
       </div>
 
-      <div className="relative z-10 -mt-[40px] flex min-h-[142px] flex-1 flex-col rounded-[20px] border border-white bg-[rgba(213,213,213,0.36)] px-[11px] pt-[11px] pb-3 backdrop-blur-[8px]">
+      <div className="relative z-10 -mt-[40px] flex flex-1 flex-col rounded-[20px] border border-white bg-[rgba(213,213,213,0.36)] px-[11px] pt-[11px] pb-3 backdrop-blur-[8px]">
         {metaLabel ? (
           <p className="text-[10px] leading-[15px] tracking-[1px] text-black uppercase">
             {metaLabel}

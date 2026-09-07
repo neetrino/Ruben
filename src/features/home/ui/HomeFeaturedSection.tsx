@@ -1,7 +1,10 @@
 import { getCompareProductIds } from "@/features/compare/queries";
 import { HomeFeaturedProducts } from "@/features/home/ui/HomeFeaturedProducts";
 import { toHomeProductCard } from "@/features/home/ui/to-home-product-card";
-import { getFeaturedProducts } from "@/features/products/queries";
+import {
+  getFeaturedProducts,
+  getPrimaryCategoriesByProductIds,
+} from "@/features/products/queries";
 import { getWishlistProductIds } from "@/features/wishlist/queries";
 import { getCurrentUser } from "@/lib/auth/session";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
@@ -28,14 +31,23 @@ export async function HomeFeaturedSection({
   ]);
 
   const productIds = featuredProducts.map((product) => product.id);
-  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
-    getWishlistProductIds(productIds),
-    getCompareProductIds(productIds),
-    createDisplayPriceFormatter(locale, currency),
-  ]);
+  const [wishlistIds, compareIds, formatPrice, categoriesByProduct] =
+    await Promise.all([
+      getWishlistProductIds(productIds),
+      getCompareProductIds(productIds),
+      createDisplayPriceFormatter(locale, currency),
+      getPrimaryCategoriesByProductIds(productIds, locale),
+    ]);
 
   const products = featuredProducts.map((product) =>
-    toHomeProductCard(product, locale, formatPrice, wishlistIds, compareIds),
+    toHomeProductCard({
+      product,
+      locale,
+      formatPrice,
+      categoryLabel: categoriesByProduct.get(product.id)?.title ?? null,
+      wishlistIds,
+      compareIds,
+    }),
   );
 
   return (

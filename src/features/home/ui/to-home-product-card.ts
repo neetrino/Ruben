@@ -17,6 +17,7 @@ export type HomeProductCardModel = {
   href: string;
   title: string;
   brandLabel: string | null;
+  categoryLabel: string | null;
   priceFormatted: string;
   compareAtFormatted: string | null;
   discountPercent: number | null;
@@ -26,13 +27,24 @@ export type HomeProductCardModel = {
   inCompare: boolean;
 };
 
-export function toHomeProductCard(
-  product: SourceProduct,
-  locale: Locale,
-  formatPrice: FormatPrice,
-  wishlistIds: ReadonlySet<string>,
-  compareIds: ReadonlySet<string>,
-): HomeProductCardModel {
+type ToHomeProductCardInput = {
+  product: SourceProduct;
+  locale: Locale;
+  formatPrice: FormatPrice;
+  /** Meta line above the card title; null hides it. */
+  categoryLabel: string | null;
+  wishlistIds: ReadonlySet<string>;
+  compareIds: ReadonlySet<string>;
+};
+
+export function toHomeProductCard({
+  product,
+  locale,
+  formatPrice,
+  categoryLabel,
+  wishlistIds,
+  compareIds,
+}: ToHomeProductCardInput): HomeProductCardModel {
   const price = formatPrice(product.priceAmount);
   const compareAt =
     product.compareAtAmount != null
@@ -44,6 +56,7 @@ export function toHomeProductCard(
     href: `/${locale}/products/${product.translation.slug}`,
     title: product.translation.title,
     brandLabel: null,
+    categoryLabel,
     priceFormatted: price.formatted,
     compareAtFormatted: compareAt?.formatted ?? null,
     discountPercent: product.discountPercent,
