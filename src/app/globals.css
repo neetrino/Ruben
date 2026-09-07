@@ -430,6 +430,14 @@ body {
     padding-top: 0.5rem;
   }
 
+  /**
+   * The hub `main` does not grow, so the copyright claims the leftover height
+   * itself and closes the page at the bottom edge, as on the other pages.
+   */
+  .storefront-shell:has(.profile-mobile-page) .storefront-mobile-copyright {
+    margin-top: auto;
+  }
+
   .profile-mobile-tab-sheet-scroll {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
