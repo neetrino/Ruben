@@ -358,6 +358,16 @@ body {
  * column reaches its end, page scroll continues so the footer is reachable.
  */
 @media (min-width: 1025px) {
+  /**
+   * The hero wave overflows the constrained profile shell on purpose, so it is
+   * clipped here — at the viewport-wide shell — and not inside the page gutter.
+   * `clip` (not `hidden`) keeps this from becoming a scroll container, so the
+   * sticky header and the sticky profile bands keep working.
+   */
+  .storefront-shell:has(.profile-desktop-page) {
+    overflow-x: clip;
+  }
+
   .storefront-shell:has(.profile-desktop-page) .storefront-main {
     display: flex;
     flex: 1 1 auto;

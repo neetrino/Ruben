@@ -51,12 +51,15 @@ export default async function ProfileLayout({
 
         {/**
          * Same yellow stroke as auth / home hero — behind profile chrome.
+         * Not clipped here: the shell clips it at the viewport instead, so the
+         * stroke runs off the screen edges rather than being cut at the gutter
+         * of the constrained profile shell.
          * Desktop-only: the mobile hub wrapper uses `display: contents`, so it
          * cannot stack above this layer, and the oversized image would widen
          * the layout viewport and offset fixed chrome on iOS.
          */}
         <div
-          className="pointer-events-none absolute inset-0 z-0 hidden overflow-x-clip lg:block"
+          className="pointer-events-none absolute inset-0 z-0 hidden lg:block"
           aria-hidden
         >
           <Image
