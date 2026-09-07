@@ -37,7 +37,6 @@ export function StorefrontMobileTopBar({
     { href: `/${locale}`, label: dictionary.nav.home },
     { href: `/${locale}/products`, label: dictionary.nav.products },
     { href: `/${locale}/brands`, label: dictionary.nav.brands },
-    { href: `/${locale}#promotions`, label: dictionary.nav.promotions },
     { href: `/${locale}/contact`, label: dictionary.nav.contact },
   ] as const;
 

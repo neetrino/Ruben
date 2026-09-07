@@ -9,7 +9,7 @@ type BrandsViewProps = {
 };
 
 /**
- * Brands page — title + logo wordmarks in square tiles.
+ * Brands page — title + logo wordmarks in rectangular tiles.
  */
 export function BrandsView({ locale, dictionary }: BrandsViewProps) {
   const copy = dictionary.brands;
@@ -38,7 +38,7 @@ export function BrandsView({ locale, dictionary }: BrandsViewProps) {
                 href={productsHref}
                 prefetchPolicy="intent"
                 aria-label={brand.name}
-                className="flex aspect-square w-full items-center justify-center rounded-[24px] border border-gray-200/80 bg-[#f7f7f7] px-3 text-center transition-colors hover:border-gray-300 hover:bg-gray-100"
+                className="flex aspect-[16/9] w-full items-center justify-center rounded-[24px] border border-gray-200/80 bg-[#f7f7f7] px-4 text-center transition-colors hover:border-gray-300 hover:bg-gray-100"
               >
                 <span className="text-base leading-none font-bold tracking-tight text-[#111] uppercase sm:text-xl lg:text-2xl">
                   {brand.name}
