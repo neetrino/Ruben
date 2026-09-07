@@ -63,6 +63,20 @@ body {
   .storefront-main:has(.home-page-root) {
     padding-bottom: 0;
   }
+
+  /* Product mobile (Figma 171:345): gallery chrome replaces SiteHeader. */
+  .storefront-shell:has(.product-page-root) .site-header {
+    display: none;
+  }
+
+  .storefront-main:has(.product-page-root) {
+    padding-bottom: 0;
+  }
+
+  .product-page-root {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 }
 
 .shop-page-root,

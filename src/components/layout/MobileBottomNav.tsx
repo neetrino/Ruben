@@ -242,7 +242,7 @@ export function MobileBottomNav({
   return (
     <nav
       aria-label={dictionary.nav.navigation}
-      className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-[22px] pb-[max(16px,env(safe-area-inset-bottom))] md:hidden"
+      className="mobile-bottom-nav pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-[22px] pb-[max(16px,env(safe-area-inset-bottom))] md:hidden"
     >
       <div className="pointer-events-auto relative flex max-w-[338px] items-center gap-3 rounded-[60px] bg-[rgba(33,33,33,0.71)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-[10px]">
         <span

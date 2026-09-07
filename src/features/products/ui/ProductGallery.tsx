@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
+import { ProductImageRail } from "@/features/products/ui/ProductImageRail";
 import type { ProductGalleryImage } from "@/features/products/types";
 
 type ProductGalleryProps = {
@@ -63,6 +64,14 @@ export function ProductGallery({
             ) : null}
           </div>
         ) : null}
+
+        <ProductImageRail
+          images={images}
+          activeId={selected?.id ?? null}
+          title={title}
+          onSelect={setSelectedId}
+          className="absolute top-1/2 right-0 z-20 -translate-y-1/2"
+        />
       </div>
 
       {images.length > 1 ? (
