@@ -1,10 +1,13 @@
 "use client";
 
 import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 
-import { ProductImageRail } from "@/features/products/ui/ProductImageRail";
 import type { ProductGalleryImage } from "@/features/products/types";
+
+const ARROW_CLASS =
+  "absolute top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-opacity duration-200 group-hover:opacity-100 hover:bg-white focus-visible:opacity-100";
 
 type ProductGalleryProps = {
   images: ProductGalleryImage[];
@@ -13,6 +16,8 @@ type ProductGalleryProps = {
   badgeLabel?: string | null;
   inStock: boolean;
   outOfStockLabel: string;
+  previousImageLabel: string;
+  nextImageLabel: string;
 };
 
 export function ProductGallery({
@@ -22,14 +27,27 @@ export function ProductGallery({
   badgeLabel = null,
   inStock,
   outOfStockLabel,
+  previousImageLabel,
+  nextImageLabel,
 }: ProductGalleryProps) {
   const [selectedId, setSelectedId] = useState(images[0]?.id ?? null);
-  const selected =
-    images.find((image) => image.id === selectedId) ?? images[0] ?? null;
+  const selectedIndex = Math.max(
+    images.findIndex((image) => image.id === selectedId),
+    0,
+  );
+  const selected = images[selectedIndex] ?? null;
+
+  /** Wraps around so the arrows never dead-end. */
+  function step(offset: number): void {
+    if (images.length < 2) return;
+
+    const next = (selectedIndex + offset + images.length) % images.length;
+    setSelectedId(images[next]?.id ?? null);
+  }
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="relative aspect-[717/538] w-full overflow-hidden rounded-[40px] bg-[#eaeaea]">
+      <div className="group relative aspect-[717/538] w-full overflow-hidden rounded-[40px] bg-[#eaeaea]">
         {selected ? (
           <Image
             src={selected.url}
@@ -65,13 +83,26 @@ export function ProductGallery({
           </div>
         ) : null}
 
-        <ProductImageRail
-          images={images}
-          activeId={selected?.id ?? null}
-          title={title}
-          onSelect={setSelectedId}
-          className="absolute top-1/2 right-0 z-20 -translate-y-1/2"
-        />
+        {images.length > 1 ? (
+          <>
+            <button
+              type="button"
+              aria-label={previousImageLabel}
+              onClick={() => step(-1)}
+              className={`${ARROW_CLASS} left-4`}
+            >
+              <ChevronLeft className="size-5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              aria-label={nextImageLabel}
+              onClick={() => step(1)}
+              className={`${ARROW_CLASS} right-4`}
+            >
+              <ChevronRight className="size-5" aria-hidden />
+            </button>
+          </>
+        ) : null}
       </div>
 
       {images.length > 1 ? (

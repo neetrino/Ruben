@@ -131,6 +131,8 @@ export function ProductDetailView({
             badgeLabel={product.badgeLabel}
             inStock={inStock}
             outOfStockLabel={labels.outOfStock}
+            previousImageLabel={labels.previousImage}
+            nextImageLabel={labels.nextImage}
           />
 
           <div className="flex flex-col gap-5">

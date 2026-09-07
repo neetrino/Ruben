@@ -6,6 +6,8 @@
   "inStock": "In stock",
   "inStockBadge": "Available",
   "outOfStock": "Out of stock",
+  "previousImage": "Previous image",
+  "nextImage": "Next image",
   "readMore": "More",
   "ratings": "Ratings",
   "quantity": "Quantity",

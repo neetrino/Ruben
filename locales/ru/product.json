@@ -6,6 +6,8 @@
   "inStock": "В наличии",
   "inStockBadge": "В наличии",
   "outOfStock": "Нет в наличии",
+  "previousImage": "Предыдущее изображение",
+  "nextImage": "Следующее изображение",
   "readMore": "Ещё",
   "ratings": "Оценки",
   "quantity": "Количество",
