@@ -21,6 +21,7 @@ describe("getDictionary", () => {
     expect(dictionary.nav.compare).toBe("Compare");
     expect(dictionary.nav.categories).toBe("CATEGORIES");
     expect(dictionary.nav.brands).toBe("BRANDS");
+    expect(dictionary.brands.title).toBe("Our brands");
     expect(dictionary.nav.promotions).toBe("SALE");
     expect(dictionary.header.search).toBe("Search");
     expect(dictionary.header.searchViewAll).toBe("View all results");

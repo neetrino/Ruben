@@ -4,6 +4,7 @@ import enAbout from "@/locales/en/about.json";
 import enAdmin from "@/locales/en/admin.json";
 import enAuth from "@/locales/en/auth.json";
 import enBlog from "@/locales/en/blog.json";
+import enBrands from "@/locales/en/brands.json";
 import enCart from "@/locales/en/cart.json";
 import enCatalog from "@/locales/en/catalog.json";
 import enCheckout from "@/locales/en/checkout.json";
@@ -20,6 +21,7 @@ import hyAbout from "@/locales/hy/about.json";
 import hyAdmin from "@/locales/hy/admin.json";
 import hyAuth from "@/locales/hy/auth.json";
 import hyBlog from "@/locales/hy/blog.json";
+import hyBrands from "@/locales/hy/brands.json";
 import hyCart from "@/locales/hy/cart.json";
 import hyCatalog from "@/locales/hy/catalog.json";
 import hyCheckout from "@/locales/hy/checkout.json";
@@ -36,6 +38,7 @@ import ruAbout from "@/locales/ru/about.json";
 import ruAdmin from "@/locales/ru/admin.json";
 import ruAuth from "@/locales/ru/auth.json";
 import ruBlog from "@/locales/ru/blog.json";
+import ruBrands from "@/locales/ru/brands.json";
 import ruCart from "@/locales/ru/cart.json";
 import ruCatalog from "@/locales/ru/catalog.json";
 import ruCheckout from "@/locales/ru/checkout.json";
@@ -54,6 +57,7 @@ type LocaleNamespaces = {
   home: typeof hyHome;
   contact: typeof hyContact;
   about: typeof hyAbout;
+  brands: typeof hyBrands;
   auth: typeof hyAuth;
   profile: typeof hyProfile;
   checkout: typeof hyCheckout;
@@ -76,6 +80,7 @@ function buildDictionary(namespaces: LocaleNamespaces) {
     home: namespaces.home,
     contact: namespaces.contact,
     about: namespaces.about,
+    brands: namespaces.brands,
     auth: namespaces.auth,
     profile: namespaces.profile,
     checkout: namespaces.checkout,
@@ -96,6 +101,7 @@ const dictionaries = {
     home: hyHome,
     contact: hyContact,
     about: hyAbout,
+    brands: hyBrands,
     auth: hyAuth,
     profile: hyProfile,
     checkout: hyCheckout,
@@ -113,6 +119,7 @@ const dictionaries = {
     home: enHome,
     contact: enContact,
     about: enAbout,
+    brands: enBrands,
     auth: enAuth,
     profile: enProfile,
     checkout: enCheckout,
@@ -130,6 +137,7 @@ const dictionaries = {
     home: ruHome,
     contact: ruContact,
     about: ruAbout,
+    brands: ruBrands,
     auth: ruAuth,
     profile: ruProfile,
     checkout: ruCheckout,
