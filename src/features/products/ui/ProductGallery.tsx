@@ -53,7 +53,7 @@ export function ProductGallery({
             src={selected.url}
             alt={selected.alt || title}
             fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
+            sizes="(max-width: 767px) 100vw, 55vw"
             className="object-contain p-6"
             priority
           />

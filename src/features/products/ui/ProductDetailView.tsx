@@ -93,7 +93,7 @@ export function ProductDetailView({
         dictionary={dictionary}
       />
 
-      <div className="hidden lg:block">
+      <div className="hidden md:block">
         <nav
           aria-label="Breadcrumb"
           className="flex flex-wrap items-center gap-2 px-6 pt-3 pb-2 text-sm sm:px-10 lg:px-12"
@@ -123,7 +123,7 @@ export function ProductDetailView({
           </span>
         </nav>
 
-        <div className="grid grid-cols-1 gap-10 px-6 py-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-10 lg:px-12">
+        <div className="grid grid-cols-1 gap-8 px-6 py-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] lg:gap-10 lg:px-12">
           <ProductGallery
             images={product.images}
             title={product.translation.title}
@@ -142,7 +142,7 @@ export function ProductDetailView({
               </p>
             ) : null}
 
-            <h1 className="text-[28px] leading-10 font-bold tracking-[0.5px] text-black uppercase sm:text-[32px]">
+            <h1 className="text-[28px] leading-10 font-bold tracking-[0.5px] text-black uppercase lg:text-[32px]">
               {product.translation.title}
             </h1>
 
@@ -240,9 +240,7 @@ export function ProductDetailView({
         </div>
       </div>
 
-      <div className="px-5 pt-6 lg:px-12 lg:pt-4">
-        {relatedSlot}
-      </div>
+      <div className="px-5 pt-6 md:pt-4 lg:px-12">{relatedSlot}</div>
 
       <script
         type="application/ld+json"

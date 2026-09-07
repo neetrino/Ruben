@@ -66,7 +66,7 @@ export function ProductMobileDetail({
   const productsHref = `/${locale}/products`;
 
   return (
-    <div className="product-mobile-detail relative bg-[#f0f1f5] lg:hidden">
+    <div className="product-mobile-detail relative bg-[#f0f1f5] md:hidden">
       <ProductMobileGallery
         locale={locale}
         productId={product.id}

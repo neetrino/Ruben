@@ -104,9 +104,16 @@ body {
   padding-bottom: 0;
 }
 
-@media (min-width: 1025px) {
-  .shop-page-root,
+/* Tablet and up: the product page switches to the desktop layout at `md`. */
+@media (min-width: 768px) {
   .product-page-root {
+    padding-top: 1.75rem;
+    padding-bottom: 4rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .shop-page-root {
     padding-top: 1.75rem;
     padding-bottom: 4rem;
   }
