@@ -48,7 +48,7 @@ export function ProductCardMobile({
   const showAddToCart = productId != null && addToCartLabel != null;
 
   return (
-    <article className="relative mx-auto w-full max-w-[186px]">
+    <article className="relative mx-auto flex h-full w-full max-w-[186px] flex-col">
       <div className="relative mx-auto w-[91%] overflow-hidden rounded-[24px] bg-[#eaeaea]">
         <AppLink
           href={href}
@@ -87,7 +87,7 @@ export function ProductCardMobile({
         ) : null}
       </div>
 
-      <div className="relative z-10 -mt-[55px] min-h-[142px] rounded-[20px] border border-white bg-[rgba(213,213,213,0.36)] px-[11px] pt-[11px] pb-3 backdrop-blur-[8px]">
+      <div className="relative z-10 -mt-[40px] flex min-h-[142px] flex-1 flex-col rounded-[20px] border border-white bg-[rgba(213,213,213,0.36)] px-[11px] pt-[11px] pb-3 backdrop-blur-[8px]">
         {metaLabel ? (
           <p className="text-[10px] leading-[15px] tracking-[1px] text-black uppercase">
             {metaLabel}
@@ -120,41 +120,43 @@ export function ProductCardMobile({
           </div>
         ) : null}
 
-        <div className={`pr-14 ${ratingLabel ? "mt-0.5" : "mt-2"}`}>
-          <p className="text-base leading-normal font-black text-black">
-            {priceFormatted}
-          </p>
-          {compareAtFormatted ? (
-            <p className="text-xs leading-normal text-black/60 line-through">
-              {compareAtFormatted}
+        <div className="mt-auto flex items-center justify-between gap-2 pt-2">
+          <div className="min-w-0">
+            <p className="text-base leading-normal font-black text-black">
+              {priceFormatted}
             </p>
-          ) : null}
-          {!inStock ? (
-            <p className="mt-1 text-[11px] font-semibold text-neutral-600">
-              {outOfStockLabel}
-            </p>
+            {compareAtFormatted ? (
+              <p className="text-xs leading-normal text-black/60 line-through">
+                {compareAtFormatted}
+              </p>
+            ) : null}
+            {!inStock ? (
+              <p className="mt-1 text-[11px] font-semibold text-neutral-600">
+                {outOfStockLabel}
+              </p>
+            ) : null}
+          </div>
+
+          {showAddToCart ? (
+            <AddToCartButton
+              productId={productId}
+              label={addToCartLabel}
+              disabled={!inStock}
+              size="sm"
+              imageUrl={imageUrl}
+              className="h-[52px] w-[52px] shrink-0 rounded-full bg-[#1a1c1c] text-white shadow-[0_2px_5px_rgba(0,0,0,0.25)] hover:bg-neutral-800"
+            >
+              <Image
+                src={HOME_MOBILE_ASSETS.shopBag}
+                alt=""
+                width={24}
+                height={24}
+                className="size-6"
+                aria-hidden
+              />
+            </AddToCartButton>
           ) : null}
         </div>
-
-        {showAddToCart ? (
-          <AddToCartButton
-            productId={productId}
-            label={addToCartLabel}
-            disabled={!inStock}
-            size="sm"
-            imageUrl={imageUrl}
-            className="absolute right-[5px] bottom-[8px] h-[52px] w-[52px] shrink-0 rounded-full bg-[#1a1c1c] text-white shadow-[0_2px_5px_rgba(0,0,0,0.25)] hover:bg-neutral-800"
-          >
-            <Image
-              src={HOME_MOBILE_ASSETS.shopBag}
-              alt=""
-              width={24}
-              height={24}
-              className="size-6"
-              aria-hidden
-            />
-          </AddToCartButton>
-        ) : null}
       </div>
     </article>
   );

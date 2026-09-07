@@ -70,7 +70,7 @@ export function ProductCard({
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className="h-full lg:hidden">
         <ProductCardMobile
           href={href}
           title={title}
