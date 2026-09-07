@@ -54,7 +54,8 @@ export default async function StorefrontLayout({
         <SiteCopyright
           dictionary={dictionary}
           className="mt-10 text-center text-xs leading-5 text-neutral-500 lg:hidden"
-          linkClassName="font-medium text-neutral-700 underline-offset-2 hover:underline"
+          linkClassName="text-neutral-700 underline-offset-2 hover:underline"
+          createdByOnNewLine
         />
       </main>
       <SiteFooter dictionary={dictionary} locale={locale} />

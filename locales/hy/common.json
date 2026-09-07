@@ -51,8 +51,9 @@
     "social": "Սոցիալական ցանցեր",
     "map": "Քարտեզ",
     "hours": "Երկ–Կիր: 12:00 – 00:00",
-    "copyrightPrefix": "Copyright © {year} | Բոլոր իրավունքները պաշտպանված են | Ստեղծվել է",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
     "copyrightCompany": "Neetrino IT Company",
-    "copyrightSuffix": "կողմից"
+    "copyrightSuffix": ""
   }
 }

@@ -51,7 +51,8 @@
     "social": "Social",
     "map": "Map",
     "hours": "Mon–Sun: 12:00 – 00:00",
-    "copyrightPrefix": "Copyright © {year} | All rights reserved | Created by",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
     "copyrightCompany": "Neetrino IT Company",
     "copyrightSuffix": ""
   }

@@ -159,7 +159,7 @@ export function ProductMobileGallery({
 
       {slideCount > 1 ? (
         <div
-          className="absolute bottom-[132px] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1"
+          className="absolute bottom-[110px] left-1/2 z-20 flex -translate-x-1/2 items-center gap-1"
           aria-hidden
         >
           {images.map((image, index) => (
@@ -178,7 +178,7 @@ export function ProductMobileGallery({
         </div>
       ) : (
         <div
-          className="absolute bottom-[132px] left-1/2 z-20 flex h-[3px] w-[60px] -translate-x-1/2 overflow-hidden rounded-[2px] bg-black/12"
+          className="absolute bottom-[110px] left-1/2 z-20 flex h-[3px] w-[60px] -translate-x-1/2 overflow-hidden rounded-[2px] bg-black/12"
           aria-hidden
         >
           <span className="h-full w-5 rounded-[2px] bg-black/35" />

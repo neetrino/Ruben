@@ -51,7 +51,8 @@
     "social": "Соцсети",
     "map": "Карта",
     "hours": "Пн–Вс: 12:00 – 00:00",
-    "copyrightPrefix": "Copyright © {year} | Все права защищены | Создано",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
     "copyrightCompany": "Neetrino IT Company",
     "copyrightSuffix": ""
   }

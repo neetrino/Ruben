@@ -8,6 +8,8 @@ type SiteCopyrightProps = {
   className?: string;
   /** Classes for the company link. */
   linkClassName?: string;
+  /** Puts the "Created by …" credit on its own line (narrow viewports). */
+  createdByOnNewLine?: boolean;
 };
 
 /**
@@ -18,6 +20,7 @@ export function SiteCopyright({
   dictionary,
   className = "",
   linkClassName = "",
+  createdByOnNewLine = false,
 }: SiteCopyrightProps) {
   const footer = dictionary.footer;
   const prefix = footer.copyrightPrefix.replace(
@@ -28,15 +31,20 @@ export function SiteCopyright({
   return (
     <p className={className}>
       <span>{prefix} </span>
-      <a
-        href={COPYRIGHT_COMPANY_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={linkClassName}
-      >
-        {footer.copyrightCompany}
-      </a>
-      {footer.copyrightSuffix ? <span> {footer.copyrightSuffix}</span> : null}
+      <span className={createdByOnNewLine ? "block" : undefined}>
+        <span>{footer.copyrightCreatedBy} </span>
+        <a
+          href={COPYRIGHT_COMPANY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`font-bold ${linkClassName}`}
+        >
+          {footer.copyrightCompany}
+        </a>
+        {footer.copyrightSuffix ? (
+          <span> {footer.copyrightSuffix}</span>
+        ) : null}
+      </span>
     </p>
   );
 }
