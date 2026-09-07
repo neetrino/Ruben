@@ -1,19 +1,19 @@
 import {
-  HOME_PARTNER_BRANDS,
-  type HomePartnerBrand,
-} from "@/features/home/config/partners";
+  STOREFRONT_BRANDS,
+  type StorefrontBrand,
+} from "@/features/brands/config/brands";
 
 type HomePartnersProps = {
-  brands?: readonly HomePartnerBrand[];
+  brands?: readonly StorefrontBrand[];
   title?: string;
 };
 
 /**
  * Figma 118:1233 — white partners strip with rounded top over the yellow block.
- * Four bold wordmarks centered in a wide row (LOGO placeholders in the file).
+ * Four bold brand wordmarks centered in a wide row.
  */
 export function HomePartners({
-  brands = HOME_PARTNER_BRANDS,
+  brands = STOREFRONT_BRANDS,
   title,
 }: HomePartnersProps) {
   const marks = brands.slice(0, 4);
@@ -27,8 +27,8 @@ export function HomePartners({
         {title ? <h2 className="sr-only">{title}</h2> : null}
         <ul className="flex w-full flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24 lg:justify-evenly lg:gap-x-0">
           {marks.map((brand) => (
-            <li key={brand.id} className="flex h-7 shrink-0 items-center">
-              <span className="flex h-7 flex-col justify-center text-center text-[28px] leading-7 font-bold text-[#111] uppercase sm:text-[40px] lg:text-[54px]">
+            <li key={brand.id} className="flex shrink-0 items-center">
+              <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
                 {brand.name}
               </span>
             </li>
