@@ -38,7 +38,7 @@ export async function ProductRelatedSection({
   const labels = dictionary.product;
 
   return (
-    <section className="flex flex-col gap-6 border-t border-[#f0f0f0] pt-10 pb-4">
+    <section className="flex flex-col gap-6 pt-10 pb-6 lg:pt-10 lg:pb-4">
       <h2 className="text-xl font-bold tracking-[0.5px] text-black uppercase">
         {labels.related}
       </h2>

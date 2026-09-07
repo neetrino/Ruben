@@ -69,22 +69,24 @@ body {
 .product-page-root {
   margin-inline: auto;
   max-width: 1440px;
-  padding-bottom: 4rem;
 }
 
 .shop-page-root {
   padding-top: 1.25rem;
+  padding-bottom: 4rem;
 }
 
 /* Mobile product: flush under storefront top bar (no gap above gallery). */
 .product-page-root {
   padding-top: 0;
+  padding-bottom: 0;
 }
 
 @media (min-width: 1024px) {
   .shop-page-root,
   .product-page-root {
     padding-top: 1.75rem;
+    padding-bottom: 4rem;
   }
 }
 

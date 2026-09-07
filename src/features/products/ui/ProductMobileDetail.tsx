@@ -82,7 +82,7 @@ export function ProductMobileDetail({
         wishlistLabel={dictionary.nav.wishlist}
       />
 
-      <section className="relative z-10 -mt-[86px] rounded-t-[40px] bg-[rgba(255,255,255,0.31)] px-[22px] pt-10 pb-10 backdrop-blur-[10px]">
+      <section className="relative z-10 -mt-[86px] rounded-t-[40px] bg-[rgba(255,255,255,0.31)] px-[22px] pt-10 pb-6 backdrop-blur-[10px]">
         <div className="flex items-start justify-between gap-3">
           <h1 className="max-w-[192px] text-lg leading-[21px] font-bold text-black uppercase">
             {product.translation.title}
