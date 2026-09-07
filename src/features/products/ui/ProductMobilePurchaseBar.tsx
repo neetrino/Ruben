@@ -68,14 +68,14 @@ export function ProductMobilePurchaseBar({
   }
 
   return (
-    <div className="relative mx-auto flex w-full max-w-[331px] items-center gap-3 rounded-[60px] bg-[rgba(0,0,0,0.34)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-[8px]">
+    <div className="relative flex w-full items-center gap-3 rounded-[60px] bg-[rgba(0,0,0,0.34)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.12)] backdrop-blur-[8px]">
       <div className="flex h-[46px] min-w-0 flex-1 items-center justify-center rounded-[30px] bg-white px-3">
         <p className="truncate text-xl leading-[30px] font-bold tracking-[-0.45px] text-[#1a1a2e]">
           {priceFormatted}
         </p>
       </div>
 
-      <div className="flex h-[46px] shrink-0 items-center gap-3 rounded-[50px] bg-white px-1">
+      <div className="flex h-[46px] shrink-0 items-center gap-0.5 rounded-[50px] bg-white px-0.5">
         <button
           type="button"
           aria-label={labels.decreaseQuantity}
@@ -86,7 +86,7 @@ export function ProductMobilePurchaseBar({
           –
         </button>
         <span
-          className="min-w-5 text-center text-[15px] leading-[22.5px] font-bold tracking-[-0.23px] text-[#1a1a2e]"
+          className="min-w-4 text-center text-[15px] leading-[22.5px] font-bold tracking-[-0.23px] text-[#1a1a2e]"
           aria-label={labels.quantity}
         >
           {quantity}
