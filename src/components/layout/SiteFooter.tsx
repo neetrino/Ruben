@@ -3,9 +3,11 @@ import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
+import { SiteFooterContact } from "@/components/layout/SiteFooterContact";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import type { StoreBranch } from "@/lib/store/branches";
 
 type SiteFooterProps = {
   dictionary: Dictionary;
@@ -21,6 +23,7 @@ const SOCIAL_CLASS =
 export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   const footer = dictionary.footer;
   const contact = dictionary.contact;
+  const branches: readonly StoreBranch[] = contact.branches;
 
   const navLinks = [
     { href: `/${locale}/products`, label: footer.shop },
@@ -161,28 +164,13 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
               <h3 className={`${HEADING_CLASS} whitespace-nowrap`}>
                 {footer.contactInfo}
               </h3>
-              <ul className="mt-6 space-y-3 text-sm leading-5 text-white/50">
-                <li>{contact.storeAddress}</li>
-                <li>
-                  <a
-                    href={`tel:${contact.storePhone.replace(/\s/g, "")}`}
-                    className="transition-colors hover:text-white"
-                  >
-                    {contact.storePhone}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${contact.storeEmail}`}
-                    className="transition-colors hover:text-white"
-                  >
-                    {contact.storeEmail}
-                  </a>
-                </li>
-                <li className="border-t border-white/10 pt-4">
-                  {footer.hours}
-                </li>
-              </ul>
+              <SiteFooterContact
+                branches={branches}
+                email={contact.storeEmail}
+                hours={[footer.hours, footer.hoursSunday]}
+                phonesLabel={contact.callTitle}
+                addressesLabel={contact.branchesTitle}
+              />
             </div>
           </div>
         </div>

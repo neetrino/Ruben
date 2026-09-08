@@ -11,6 +11,8 @@ type IconDropdownProps = {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   children: React.ReactNode;
   triggerClassName?: string;
+  /** Menu surface styling; override for non-default (e.g. dark) surfaces. */
+  menuClassName?: string;
   /** Where the menu opens relative to the trigger. Default: below. */
   menuPlacement?: "bottom" | "top";
   /** Open on pointer hover (click still toggles; needed for touch). */
@@ -20,11 +22,15 @@ type IconDropdownProps = {
 const DEFAULT_TRIGGER_CLASS =
   "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm outline-none transition-colors hover:border-gray-300";
 
+const DEFAULT_MENU_CLASS =
+  "w-full overflow-hidden rounded-2xl border border-gray-100 bg-white";
+
 export function IconDropdown({
   label,
   trigger,
   children,
   triggerClassName,
+  menuClassName,
   menuPlacement = "bottom",
   openOnHover = false,
 }: IconDropdownProps) {
@@ -133,7 +139,7 @@ export function IconDropdown({
             id={menuId}
             role="menu"
             aria-label={label}
-            className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white"
+            className={menuClassName ?? DEFAULT_MENU_CLASS}
           >
             <div
               className="flex w-full flex-col"

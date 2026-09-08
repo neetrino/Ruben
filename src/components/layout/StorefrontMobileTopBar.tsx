@@ -12,6 +12,7 @@ import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
+import { toTelHref } from "@/lib/store/phone";
 
 type StorefrontMobileTopBarProps = {
   locale: Locale;
@@ -36,7 +37,7 @@ export function StorefrontMobileTopBar({
   const homeHref = `/${locale}`;
   const isHomePage = pathname === homeHref || pathname === `${homeHref}/`;
 
-  const phoneDigits = dictionary.contact.storePhone.replace(/\s/g, "");
+  const phoneHref = toTelHref(dictionary.contact.storePhone);
   const mapsQuery = encodeURIComponent(dictionary.contact.storeAddress);
 
   const navItems = [
@@ -114,7 +115,7 @@ export function StorefrontMobileTopBar({
                   />
                 </a>
                 <a
-                  href={`tel:${phoneDigits}`}
+                  href={phoneHref}
                   aria-label={dictionary.contact.callTitle}
                   className="block size-12"
                 >
