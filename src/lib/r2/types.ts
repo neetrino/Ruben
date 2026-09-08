@@ -10,6 +10,13 @@ export type PutObjectInput = {
   contentType: string;
 };
 
+export type StoredObject = {
+  body: ReadableStream<Uint8Array>;
+  contentType: string;
+  contentLength: number | null;
+  etag: string | null;
+};
+
 export type ObjectStorageAdapter = {
   readonly name: string;
   createPresignedUpload(input: {
@@ -18,6 +25,8 @@ export type ObjectStorageAdapter = {
     maxBytes: number;
   }): Promise<PresignedUpload>;
   putObject(input: PutObjectInput): Promise<void>;
+  /** Streams a stored object, or `null` when the key does not exist. */
+  getObject(objectKey: string): Promise<StoredObject | null>;
   buildPublicUrl(objectKey: string): string;
   deleteObject(objectKey: string): Promise<void>;
 };

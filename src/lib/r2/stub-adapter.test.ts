@@ -29,7 +29,6 @@ describe("isR2Configured", () => {
         accessKeyId: "b",
         secretAccessKey: "c",
         bucketName: "d",
-        publicBaseUrl: "https://cdn.example.com",
       }),
     ).toBe(true);
 
@@ -38,7 +37,6 @@ describe("isR2Configured", () => {
         accountId: "a",
         accessKeyId: "b",
         secretAccessKey: "c",
-        bucketName: "d",
       }),
     ).toBe(false);
   });

@@ -1,6 +1,7 @@
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 
+import { imageMimeForExtension } from "@/lib/media/image-file";
 import type { ObjectStorageAdapter } from "@/lib/r2/types";
 
 /**
@@ -24,6 +25,20 @@ export function createStubObjectStorageAdapter(
       const absolute = path.join(process.cwd(), "public", objectKey);
       await mkdir(path.dirname(absolute), { recursive: true });
       await writeFile(absolute, body);
+    },
+    async getObject(objectKey) {
+      const absolute = path.join(process.cwd(), "public", objectKey);
+      try {
+        const file = await readFile(absolute);
+        return {
+          body: new Blob([file]).stream(),
+          contentType: imageMimeForExtension(path.extname(absolute)),
+          contentLength: file.byteLength,
+          etag: null,
+        };
+      } catch {
+        return null;
+      }
     },
     buildPublicUrl(objectKey) {
       const key = objectKey.replace(/^\//, "");
