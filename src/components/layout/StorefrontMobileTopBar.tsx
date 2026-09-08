@@ -38,11 +38,15 @@ export function StorefrontMobileTopBar({
   const homeHref = `/${locale}`;
   const isHomePage = pathname === homeHref || pathname === `${homeHref}/`;
 
-  const phoneHref = toTelHref(dictionary.contact.storePhone);
-  const mapsHref = storeMapsSearchHref(
-    dictionary.brand,
-    dictionary.contact.storeAddress,
-  );
+  // Same source as the footer and the contact page: the first branch is the
+  // primary one, so the header never drifts from the published store data.
+  const [primaryBranch] = dictionary.contact.branches;
+  const phoneHref = primaryBranch?.phone
+    ? toTelHref(primaryBranch.phone)
+    : null;
+  const mapsHref = primaryBranch
+    ? storeMapsSearchHref(dictionary.brand, primaryBranch.address)
+    : null;
 
   const navItems = [
     { href: `/${locale}`, label: dictionary.nav.home },
@@ -104,34 +108,38 @@ export function StorefrontMobileTopBar({
               </AppLink>
 
               <div className="flex items-center gap-[5px]">
-                <a
-                  href={mapsHref}
-                  aria-label={dictionary.contact.mapTitle}
-                  className="inline-flex size-12 items-center justify-center rounded-full bg-[var(--brand)]"
-                >
-                  <Image
-                    src={HOME_MOBILE_ASSETS.location}
-                    alt=""
-                    width={22}
-                    height={27}
-                    className="h-[22px] w-[18px]"
-                    aria-hidden
-                  />
-                </a>
-                <a
-                  href={phoneHref}
-                  aria-label={dictionary.contact.callTitle}
-                  className="block size-12"
-                >
-                  <Image
-                    src={HOME_MOBILE_ASSETS.phone}
-                    alt=""
-                    width={48}
-                    height={48}
-                    className="size-12"
-                    aria-hidden
-                  />
-                </a>
+                {mapsHref ? (
+                  <a
+                    href={mapsHref}
+                    aria-label={dictionary.contact.mapTitle}
+                    className="inline-flex size-12 items-center justify-center rounded-full bg-[var(--brand)]"
+                  >
+                    <Image
+                      src={HOME_MOBILE_ASSETS.location}
+                      alt=""
+                      width={22}
+                      height={27}
+                      className="h-[22px] w-[18px]"
+                      aria-hidden
+                    />
+                  </a>
+                ) : null}
+                {phoneHref ? (
+                  <a
+                    href={phoneHref}
+                    aria-label={dictionary.contact.callTitle}
+                    className="block size-12"
+                  >
+                    <Image
+                      src={HOME_MOBILE_ASSETS.phone}
+                      alt=""
+                      width={48}
+                      height={48}
+                      className="size-12"
+                      aria-hidden
+                    />
+                  </a>
+                ) : null}
                 <MobileNavDrawer
                   locale={locale}
                   currency={currency}
