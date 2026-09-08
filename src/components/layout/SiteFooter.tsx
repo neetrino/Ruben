@@ -173,6 +173,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
               </h3>
               <SiteFooterContact
                 branches={branches}
+                storeName={dictionary.brand}
                 email={contact.storeEmail}
                 hours={[footer.hours, footer.hoursSunday]}
                 phonesLabel={contact.callTitle}

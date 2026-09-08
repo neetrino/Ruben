@@ -12,6 +12,7 @@ import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
+import { storeMapsSearchHref } from "@/lib/store/maps";
 import { toTelHref } from "@/lib/store/phone";
 
 type StorefrontMobileTopBarProps = {
@@ -38,7 +39,10 @@ export function StorefrontMobileTopBar({
   const isHomePage = pathname === homeHref || pathname === `${homeHref}/`;
 
   const phoneHref = toTelHref(dictionary.contact.storePhone);
-  const mapsQuery = encodeURIComponent(dictionary.contact.storeAddress);
+  const mapsHref = storeMapsSearchHref(
+    dictionary.brand,
+    dictionary.contact.storeAddress,
+  );
 
   const navItems = [
     { href: `/${locale}`, label: dictionary.nav.home },
@@ -101,7 +105,7 @@ export function StorefrontMobileTopBar({
 
               <div className="flex items-center gap-[5px]">
                 <a
-                  href={`https://maps.google.com/?q=${mapsQuery}`}
+                  href={mapsHref}
                   aria-label={dictionary.contact.mapTitle}
                   className="inline-flex size-12 items-center justify-center rounded-full bg-[var(--brand)]"
                 >

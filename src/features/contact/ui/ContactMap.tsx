@@ -5,7 +5,7 @@ import { MapPin } from "lucide-react";
 
 import { LazyWhenVisible } from "@/components/loading/LazyWhenVisible";
 import { formatBranchAddress, type StoreBranch } from "@/lib/store/branches";
-import { storeMapEmbedSrc } from "@/lib/store/map-embed";
+import { storeMapEmbedSrc } from "@/lib/store/maps";
 
 type ContactMapProps = {
   title: string;

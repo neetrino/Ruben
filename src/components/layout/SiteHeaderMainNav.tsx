@@ -4,6 +4,10 @@ import { LocaleCurrencySwitcher } from "@/components/layout/LocaleCurrencySwitch
 import { MobileNavAccountLink } from "@/components/layout/MobileNavAccountAction";
 import { MobileNavDrawer } from "@/components/layout/MobileNavDrawer";
 import { SiteHeaderCartTrigger } from "@/components/layout/SiteHeaderCartTrigger";
+import {
+  SiteHeaderCategoriesMenu,
+  type CategoryNavItem,
+} from "@/components/layout/SiteHeaderCategoriesMenu";
 import { SiteHeaderDesktopNav } from "@/components/layout/SiteHeaderDesktopNav";
 import { SiteHeaderLogoLink } from "@/components/layout/SiteHeaderLogoLink";
 import { CompareHeaderLink } from "@/features/compare/ui/CompareHeaderLink";
@@ -43,6 +47,7 @@ type SiteHeaderMainNavProps = {
   dictionary: Dictionary;
   user: SessionUser | null;
   navItems: readonly NavItem[];
+  categories: readonly CategoryNavItem[];
   cartItemCount: number;
   wishlistCount: number;
   compareCount: number;
@@ -57,6 +62,7 @@ export function SiteHeaderMainNav({
   dictionary,
   user,
   navItems,
+  categories,
   cartItemCount,
   wishlistCount,
   compareCount,
@@ -68,7 +74,19 @@ export function SiteHeaderMainNav({
       <div className="mx-auto flex h-14 max-w-[1364px] items-center justify-between rounded-[70px] bg-[#212121] px-4 sm:h-[63px] sm:px-6 lg:px-[69px]">
         <SiteHeaderLogoLink locale={locale} brandLabel={dictionary.brand} />
 
-        <SiteHeaderDesktopNav locale={locale} items={navItems} />
+        <SiteHeaderDesktopNav
+          locale={locale}
+          items={navItems}
+          inlineMenu={{
+            afterHref: `/${locale}`,
+            node: (
+              <SiteHeaderCategoriesMenu
+                label={dictionary.nav.categories}
+                categories={categories}
+              />
+            ),
+          }}
+        />
 
         <div className="flex items-center gap-2">
           <HeaderSearch

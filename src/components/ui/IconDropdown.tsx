@@ -15,6 +15,8 @@ type IconDropdownProps = {
   menuClassName?: string;
   /** Where the menu opens relative to the trigger. Default: below. */
   menuPlacement?: "bottom" | "top";
+  /** Trigger edge the menu is aligned to. Default: right. */
+  menuAlign?: "left" | "right";
   /** Open on pointer hover (click still toggles; needed for touch). */
   openOnHover?: boolean;
 };
@@ -32,6 +34,7 @@ export function IconDropdown({
   triggerClassName,
   menuClassName,
   menuPlacement = "bottom",
+  menuAlign = "right",
   openOnHover = false,
 }: IconDropdownProps) {
   const [open, setOpen] = useState(false);
@@ -126,7 +129,7 @@ export function IconDropdown({
       </button>
 
       <div
-        className={`absolute right-0 z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
+        className={`absolute ${menuAlign === "left" ? "left-0" : "right-0"} z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
           open
             ? "translate-y-0 grid-rows-[1fr] opacity-100"
             : `pointer-events-none grid-rows-[0fr] opacity-0 ${placementClosedTransform}`

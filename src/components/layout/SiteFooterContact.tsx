@@ -4,10 +4,13 @@ import { ChevronDown, Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import { IconDropdown } from "@/components/ui/IconDropdown";
 import { formatBranchAddress, type StoreBranch } from "@/lib/store/branches";
+import { storeMapsSearchHref } from "@/lib/store/maps";
 import { toTelHref } from "@/lib/store/phone";
 
 type SiteFooterContactProps = {
   branches: readonly StoreBranch[];
+  /** Store name used in the Google Maps queries. */
+  storeName: string;
   email: string;
   /** Working hours, one entry per rendered line. */
   hours: readonly string[];
@@ -45,6 +48,7 @@ function Chevron({ open }: { open: boolean }) {
  */
 export function SiteFooterContact({
   branches,
+  storeName,
   email,
   hours,
   phonesLabel,
@@ -100,29 +104,36 @@ export function SiteFooterContact({
 
       <li className={ROW_CLASS}>
         <MapPin className={ICON_CLASS} aria-hidden />
-        {otherBranches.length > 0 ? (
-          <IconDropdown
-            label={addressesLabel}
-            triggerClassName={`${CHEVRON_TRIGGER_CLASS} gap-2`}
-            menuClassName={MENU_CLASS}
-            trigger={(open) => (
-              <>
-                <span className={TEXT_CLASS}>
-                  {formatBranchAddress(primary)}
-                </span>
-                <Chevron open={open} />
-              </>
-            )}
+        <div className="flex min-w-0 items-center gap-2">
+          <a
+            href={storeMapsSearchHref(storeName, primary.address)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={LINK_CLASS}
           >
-            {otherBranches.map((branch) => (
-              <span key={branch.address} className={MENU_ITEM_CLASS}>
-                {formatBranchAddress(branch)}
-              </span>
-            ))}
-          </IconDropdown>
-        ) : (
-          <span className={TEXT_CLASS}>{formatBranchAddress(primary)}</span>
-        )}
+            {formatBranchAddress(primary)}
+          </a>
+          {otherBranches.length > 0 ? (
+            <IconDropdown
+              label={addressesLabel}
+              triggerClassName={CHEVRON_TRIGGER_CLASS}
+              menuClassName={MENU_CLASS}
+              trigger={(open) => <Chevron open={open} />}
+            >
+              {otherBranches.map((branch) => (
+                <a
+                  key={branch.address}
+                  href={storeMapsSearchHref(storeName, branch.address)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={MENU_ITEM_CLASS}
+                >
+                  {formatBranchAddress(branch)}
+                </a>
+              ))}
+            </IconDropdown>
+          ) : null}
+        </div>
       </li>
 
       <li className={ROW_CLASS}>
