@@ -1,7 +1,9 @@
-/** Main branch used for the shared map embed (contact page + footer). */
-const PRIMARY_BRANCH_QUERY = "Adonts 19, Yerevan, Armenia";
+const MAP_ZOOM_LEVEL = 17;
+const MAP_CITY = "Yerevan, Armenia";
 
-/** Shared Google Maps embed for store location (contact + footer). */
-export const STORE_MAP_EMBED_SRC = `https://www.google.com/maps?q=${encodeURIComponent(
-  PRIMARY_BRANCH_QUERY,
-)}&z=17&hl=en&output=embed`;
+/** Keyless Google Maps embed for a store address (contact page map). */
+export function storeMapEmbedSrc(address: string): string {
+  const query = encodeURIComponent(`${address}, ${MAP_CITY}`);
+
+  return `https://www.google.com/maps?q=${query}&z=${MAP_ZOOM_LEVEL}&hl=en&output=embed`;
+}

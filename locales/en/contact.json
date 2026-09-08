@@ -19,9 +19,7 @@
     "whatsapp": "https://wa.me/37455102009"
   },
   "callTitle": "Call Us:",
-  "writeTitle": "Write to Us:",
-  "writeDescription": "Fill out our form and we will contact you within 24 hours.",
-  "emailLabel": "Email:",
+  "writeTitle": "Write to us",
   "branchesTitle": "Our addresses:",
   "branches": [
     {
@@ -53,5 +51,6 @@
   "hoursTitle": "Working hours:",
   "hoursWeekdays": "Monday–Saturday: 09:30–19:00",
   "hoursSunday": "Sunday: 10:00–18:00",
-  "mapTitle": "Store location"
+  "mapTitle": "Store location",
+  "mapTabsTitle": "Our addresses on the map"
 }

@@ -167,7 +167,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
               </ul>
             </div>
 
-            <div>
+            <div className="translate-x-6">
               <h3 className={`${HEADING_CLASS} whitespace-nowrap`}>
                 {footer.contactInfo}
               </h3>

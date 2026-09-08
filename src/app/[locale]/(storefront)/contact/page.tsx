@@ -46,11 +46,14 @@ export default async function ContactPage({ params }: ContactPageProps) {
     <div className="contact-page-root relative z-0 -mx-4 -mt-10 bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
       <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <Reveal as="header" className="mb-10 flex max-w-2xl flex-col gap-2 sm:mb-14">
+          <p className="text-[11px] font-bold tracking-[0.08em] text-gray-500 uppercase">
+            {copy.writeTitle}
+          </p>
           <h1 className={STOREFRONT_PAGE_TITLE_CLASS}>{copy.title}</h1>
           <p className={STOREFRONT_PAGE_SUBTITLE_CLASS}>{copy.subtitle}</p>
         </Reveal>
 
-        <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-14">
+        <div className="grid grid-cols-1 items-start gap-10 lg:grid-cols-2 lg:gap-14">
           <Reveal>
             <ContactInfo copy={copy} />
           </Reveal>
@@ -71,7 +74,11 @@ export default async function ContactPage({ params }: ContactPageProps) {
       </div>
 
       <Reveal>
-        <ContactMap title={copy.mapTitle} />
+        <ContactMap
+          title={copy.mapTitle}
+          tabsTitle={copy.mapTabsTitle}
+          branches={copy.branches}
+        />
       </Reveal>
     </div>
   );

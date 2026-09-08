@@ -19,9 +19,7 @@
     "whatsapp": "https://wa.me/37455102009"
   },
   "callTitle": "Զանգահարեք մեզ՝",
-  "writeTitle": "Գրեք մեզ՝",
-  "writeDescription": "Լրացրեք ձևը, և մենք կկապվենք ձեզ հետ 24 ժամվա ընթացքում։",
-  "emailLabel": "Էլ. փոստ՝",
+  "writeTitle": "Գրեք մեզ",
   "branchesTitle": "Մեր հասցեները՝",
   "branches": [
     {
@@ -53,5 +51,6 @@
   "hoursTitle": "Աշխատանքային ժամեր՝",
   "hoursWeekdays": "Երկուշաբթի–շաբաթ՝ 09:30–19:00",
   "hoursSunday": "Կիրակի՝ 10:00–18:00",
-  "mapTitle": "Խանութի գտնվելու վայրը"
+  "mapTitle": "Խանութի գտնվելու վայրը",
+  "mapTabsTitle": "Մեր հասցեները քարտեզում"
 }
