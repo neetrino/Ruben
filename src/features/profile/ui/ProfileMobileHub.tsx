@@ -1,14 +1,16 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { usePathname } from "next/navigation";
+import { useEffect, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronRight,
   LayoutDashboard,
   Lock,
   LogOut,
+  Mail,
   MapPin,
   Package,
+  Phone,
   Trash2,
   User,
 } from "lucide-react";
@@ -43,7 +45,8 @@ const ICON_THEMES = {
 } as const;
 
 /**
- * MaMarie-style mobile profile hub: header card + chevron menu + logout CTA.
+ * Mobile profile hub: header card + chevron menu + logout CTA.
+ * Nested sections open in the profile bottom sheet (Kamancha pattern).
  */
 export function ProfileMobileHub({
   locale,
@@ -52,6 +55,7 @@ export function ProfileMobileHub({
   onOpenDashboard,
 }: ProfileMobileHubProps) {
   const pathname = usePathname() ?? "";
+  const router = useRouter();
   const logoutWithLocale = logoutAction.bind(null, locale);
   const displayName = `${user.firstName} ${user.lastName}`.trim();
   const hubHref = `/${locale}/profile`;
@@ -99,6 +103,15 @@ export function ProfileMobileHub({
 
   const mainItems = items.filter((item) => !item.danger);
   const dangerItem = items.find((item) => item.danger);
+
+  useEffect(() => {
+    router.prefetch(`/${locale}/profile`);
+    router.prefetch(`/${locale}/profile/orders`);
+    router.prefetch(`/${locale}/profile/personal-information`);
+    router.prefetch(`/${locale}/profile/addresses`);
+    router.prefetch(`/${locale}/profile/password`);
+    router.prefetch(`/${locale}/profile/delete-account`);
+  }, [locale, router]);
 
   function isActive(item: MenuItem): boolean {
     if (item.exact) {
@@ -157,7 +170,7 @@ export function ProfileMobileHub({
           <AppLink
             href={item.href}
             prefetchPolicy="intent"
-            className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-white px-3 py-3 text-left transition-colors hover:bg-red-50/60"
+            className="flex w-full items-center justify-between rounded-xl border border-red-200 bg-red-50/60 px-3 py-3 text-left transition-colors hover:bg-red-50"
           >
             {content}
           </AppLink>
@@ -181,11 +194,12 @@ export function ProfileMobileHub({
   return (
     <div className="mx-auto flex w-full max-w-md flex-col gap-4">
       <section
-        className="rounded-[var(--radius)] bg-white px-4 py-5 shadow-sm ring-1 ring-gray-200/70"
+        className="overflow-hidden rounded-[var(--radius)] bg-white shadow-sm ring-1 ring-gray-200/70"
         aria-label={dictionary.title}
       >
-        <div className="flex items-center gap-3">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-gray-900 text-base font-semibold text-white shadow-[0_0_0_3px_white]">
+        <div className="h-1.5 w-full bg-[var(--brand)]" />
+        <div className="flex items-center gap-3 px-4 py-5">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[var(--brand)] text-base font-semibold text-black shadow-[0_0_0_3px_white]">
             {user.firstName.slice(0, 1).toUpperCase()}
             {user.lastName.slice(0, 1).toUpperCase()}
           </div>
@@ -193,9 +207,16 @@ export function ProfileMobileHub({
             <p className="truncate text-xl font-bold leading-tight text-gray-900">
               {displayName}
             </p>
-            <p className="truncate text-sm leading-snug text-gray-500">
-              {user.email}
+            <p className="flex items-center gap-1.5 truncate text-sm leading-snug text-gray-500">
+              <Mail className="h-3.5 w-3.5 shrink-0" aria-hidden />
+              <span className="truncate">{user.email}</span>
             </p>
+            {user.phone ? (
+              <p className="flex items-center gap-1.5 truncate text-sm leading-snug text-gray-500">
+                <Phone className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span className="truncate">{user.phone}</span>
+              </p>
+            ) : null}
           </div>
         </div>
       </section>
@@ -213,7 +234,7 @@ export function ProfileMobileHub({
       <form action={logoutWithLocale}>
         <button
           type="submit"
-          className="flex w-full items-center justify-center gap-2.5 rounded-[var(--radius)] bg-gray-900 py-3.5 text-base font-semibold text-white transition-opacity hover:opacity-90"
+          className="flex w-full items-center justify-center gap-2.5 rounded-[var(--radius)] border border-gray-200 bg-white py-3.5 text-base font-semibold text-gray-900 shadow-sm ring-1 ring-gray-200/70 transition-colors hover:bg-gray-50"
         >
           <LogOut className="h-5 w-5 shrink-0" aria-hidden />
           {dictionary.logout}

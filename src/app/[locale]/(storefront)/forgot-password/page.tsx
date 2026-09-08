@@ -1,8 +1,18 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
-import { ForgotPasswordForm } from "@/features/auth/ui/ForgotPasswordForm";
+import { AuthFormSkeleton } from "@/components/loading/storefront-skeletons";
+import { AuthPageShell } from "@/features/auth/ui/AuthPageShell";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const ForgotPasswordForm = dynamic(
+  () =>
+    import("@/features/auth/ui/ForgotPasswordForm").then((mod) => ({
+      default: mod.ForgotPasswordForm,
+    })),
+  { loading: () => <AuthFormSkeleton /> },
+);
 
 type ForgotPasswordPageProps = {
   params: Promise<{ locale: string }>;
@@ -20,16 +30,12 @@ export default async function ForgotPasswordPage({
   const dictionary = getDictionary(rawLocale);
 
   return (
-    <section className="mx-auto max-w-lg px-0 py-2 sm:py-4">
-      <div className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm">
-        <h1 className="mb-2 text-3xl font-bold tracking-tight text-gray-900">
-          {dictionary.auth.forgotPasswordTitle}
-        </h1>
-        <p className="mb-8 text-gray-600">
-          {dictionary.auth.forgotPasswordSubtitle}
-        </p>
-        <ForgotPasswordForm locale={rawLocale} dictionary={dictionary.auth} />
-      </div>
-    </section>
+    <AuthPageShell
+      brandLabel={dictionary.brand}
+      title={dictionary.auth.forgotPasswordTitle}
+      subtitle={dictionary.auth.forgotPasswordSubtitle}
+    >
+      <ForgotPasswordForm locale={rawLocale} dictionary={dictionary.auth} />
+    </AuthPageShell>
   );
 }

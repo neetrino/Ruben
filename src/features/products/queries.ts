@@ -64,6 +64,10 @@ function toCatalogProduct(
     stockOnHand: product.stockOnHand,
     translation,
     imageUrl,
+    badgeLabel:
+      product.badgeTranslations?.[locale] ??
+      product.badgeTranslations?.hy ??
+      null,
   };
 }
 
@@ -344,6 +348,53 @@ async function loadProductGallery(
       isPrimary: row.isPrimary,
     }))
     .sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary));
+}
+
+/**
+ * Primary category per product (falls back to the first sorted one), batched
+ * for the meta line above product card titles.
+ */
+export async function getPrimaryCategoriesByProductIds(
+  productIds: readonly string[],
+  locale: Locale,
+): Promise<Map<string, ProductCategoryRef>> {
+  const map = new Map<string, ProductCategoryRef>();
+  if (productIds.length === 0) {
+    return map;
+  }
+
+  const rows = await getDb()
+    .select({
+      productId: productCategories.productId,
+      id: categories.id,
+      translations: categories.translations,
+    })
+    .from(productCategories)
+    .innerJoin(categories, eq(productCategories.categoryId, categories.id))
+    .where(
+      and(
+        inArray(productCategories.productId, [...productIds]),
+        eq(categories.status, "ACTIVE"),
+        isNull(categories.deletedAt),
+      ),
+    )
+    .orderBy(
+      desc(productCategories.isPrimary),
+      asc(productCategories.sortOrder),
+    );
+
+  for (const row of rows) {
+    if (map.has(row.productId)) continue;
+    const translation = row.translations[locale] ?? row.translations.hy;
+    if (!translation) continue;
+    map.set(row.productId, {
+      id: row.id,
+      title: translation.title,
+      slug: translation.slug,
+    });
+  }
+
+  return map;
 }
 
 async function loadProductCategories(

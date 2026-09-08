@@ -1,7 +1,15 @@
 {
   "sku": "SKU",
+  "skuLabel": "SKU:",
+  "categoryLabel": "Category:",
+  "stockLabel": "Availability:",
   "inStock": "In stock",
+  "inStockBadge": "Available",
   "outOfStock": "Out of stock",
+  "previousImage": "Previous image",
+  "nextImage": "Next image",
+  "readMore": "More",
+  "ratings": "Ratings",
   "quantity": "Quantity",
   "addToCart": "Add to cart",
   "adding": "Adding…",
@@ -9,5 +17,11 @@
   "addError": "Unable to add this product to the cart.",
   "related": "Related products",
   "signIn": "Sign in",
-  "backToProducts": "Products"
+  "backToProducts": "Products",
+  "tabDescription": "Description",
+  "tabSpecs": "Specifications",
+  "fullDescriptionTitle": "Full description",
+  "specsTitle": "Specifications",
+  "emptyDescription": "No description is available yet.",
+  "emptySpecs": "No specifications are available yet."
 }

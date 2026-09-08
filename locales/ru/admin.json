@@ -1,6 +1,6 @@
 {
   "nav": {
-    "brand": "White Shop",
+    "brand": "Ruben",
     "brandHome": "Перейти на главную",
     "menu": "Меню",
     "menuAria": "Открыть меню навигации",
@@ -34,6 +34,7 @@
     "create": "Создать",
     "creating": "Создание…",
     "cancel": "Отмена",
+    "clear": "Очистить",
     "delete": "Удалить",
     "deleting": "Удаление…",
     "edit": "Редактировать",
@@ -47,6 +48,21 @@
     "soldCount": "{count} продано",
     "ordersCount": "{count} заказов",
     "itemsCount": "{count} товаров",
+    "datePicker": {
+      "placeholder": "ДД.ММ.ГГГГ",
+      "dateTimePlaceholder": "ДД.ММ.ГГГГ ЧЧ:ММ",
+      "today": "Сегодня",
+      "time": "Время",
+      "weekdaysShort": [
+        "Пн",
+        "Вт",
+        "Ср",
+        "Чт",
+        "Пт",
+        "Сб",
+        "Вс"
+      ]
+    },
     "confirmDelete": "Вы уверены, что хотите удалить {entity} \"{name}\"? Это действие нельзя отменить.",
     "entity": {
       "product": "товар",
@@ -58,13 +74,47 @@
     }
   },
   "dashboard": {
+    "welcomeLead": "Добро пожаловать в",
+    "welcomeAccent": "панель управления",
     "welcome": "С возвращением",
+    "users": "Пользователи",
+    "activeProducts": "Активные товары",
     "vsPrev": "{delta} по сравнению с предыдущим",
+    "periodsTitle": "Продажи по периодам",
+    "viewAnalytics": "Полная аналитика",
+    "periodToday": "Сегодня",
+    "periodWeek": "Неделя",
+    "periodMonth": "Месяц",
+    "periodQuarter": "Квартал",
+    "aov": "Средний чек",
+    "chartTitle": "Динамика выручки и заказов",
+    "chartSubtitle": "Помесячная динамика за выбранный период",
+    "chartRangeLabel": "Период графика",
+    "chartRange6Months": "6 месяцев",
+    "chartRangeYear": "Год",
+    "chartRevenue": "Выручка",
+    "chartOrders": "Заказы",
+    "chartAria": "График помесячной выручки и заказов",
+    "chartEmpty": "В этом периоде пока нет заказов.",
+    "chartEmptyShort": "—",
+    "chartBestMonth": "Лучший месяц",
     "recentOrders": "Последние заказы",
-    "topProducts": "Топ товары",
-    "quickActions": "Быстрые действия",
+    "topProducts": "Популярные товары",
+    "viewAll": "Показать все",
+    "noRecentOrders": "Нет последних заказов.",
+    "noProductSales": "В этом периоде нет продаж товаров.",
+    "soldCount": "Продано: {quantity}",
     "emptyRecentOrders": "Нет последних заказов.",
     "emptyTopProducts": "Данные о продажах товаров ещё отсутствуют.",
+    "quickActions": "Быстрые действия",
+    "addProduct": "Добавить товар",
+    "addProductHint": "Создать новый товар",
+    "manageOrders": "Управление заказами",
+    "manageOrdersHint": "Посмотреть все заказы",
+    "manageUsers": "Управление пользователями",
+    "manageUsersHint": "Посмотреть всех пользователей",
+    "settings": "Настройки",
+    "settingsHint": "Настроить магазин",
     "quick": {
       "addProduct": "Добавить товар",
       "addProductHint": "Создать новый товар",
@@ -137,17 +187,17 @@
         "items": "Товары"
       },
       "labels": {
-        "orderNumber": "Заказ №",
-        "total": "Итого",
-        "status": "Статус",
-        "payment": "Оплата",
-        "name": "Имя",
-        "phone": "Телефон",
-        "email": "Email",
-        "shippingMethod": "Способ доставки",
-        "pickupStore": "Самовывоз",
-        "method": "Способ",
-        "amount": "Сумма"
+        "orderNumber": "Заказ №:",
+        "total": "Итого:",
+        "status": "Статус:",
+        "payment": "Оплата:",
+        "name": "Имя:",
+        "phone": "Телефон:",
+        "email": "Email:",
+        "shippingMethod": "Способ доставки:",
+        "pickupStore": "Самовывоз:",
+        "method": "Способ оплаты:",
+        "amount": "Сумма:"
       },
       "freePickup": "Бесплатный самовывоз",
       "totals": {
@@ -510,55 +560,46 @@
     }
   },
   "analytics": {
-    "subtitle": "Обзор показателей магазина",
+    "subtitle": "Отслеживайте эффективность и статистику бизнеса",
     "period": {
-      "title": "Период",
-      "label": "Диапазон дат",
+      "title": "Период времени",
+      "label": "Период",
+      "aria": "Период",
       "from": "С",
       "to": "По",
-      "apply": "Применить"
+      "apply": "Применить",
+      "downloadCsv": "Скачать CSV-экспорт",
+      "invalidRange": "Некорректный диапазон дат. Показаны значения по умолчанию.",
+      "last7Days": "Последние 7 дней",
+      "last30Days": "Последние 30 дней",
+      "last90Days": "Последние 90 дней",
+      "thisMonth": "Этот месяц",
+      "customRange": "Произвольный период"
     },
-    "presets": {
-      "today": "Сегодня",
-      "thisWeek": "На этой неделе",
-      "thisMonth": "В этом месяце",
-      "custom": "Произвольный период"
-    },
-    "export": "Скачать CSV-экспорт",
-    "invalidRange": "Некорректный диапазон дат. Начало должно быть раньше конца.",
     "metrics": {
-      "orders": "Заказы",
-      "revenue": "Выручка",
-      "users": "Новые пользователи"
+      "totalOrders": "Всего заказов",
+      "totalRevenue": "Общая выручка",
+      "averageOrderValue": "Средний чек",
+      "totalUsers": "Всего пользователей"
     },
-    "sales": {
-      "title": "Сводка продаж",
-      "subtitle": "Суммарные продажи за выбранный период.",
-      "bestDay": "Лучший день",
-      "bestWeek": "Лучшая неделя",
-      "bestMonth": "Лучший месяц",
-      "empty": "Нет данных о продажах за этот период."
+    "topProducts": {
+      "title": "Самые продаваемые товары",
+      "sold": "Продано: {quantity}",
+      "orders": "{count} заказов",
+      "empty": "В этом периоде нет продаж товаров."
     },
-    "customers": {
-      "best": "Лучшие клиенты",
-      "highestRevenue": "Наибольшая выручка",
-      "mostPurchases": "Больше всего покупок",
-      "mostOrders": "Больше всего заказов",
-      "empty": "Нет данных о клиентах за этот период."
-    },
-    "products": {
-      "title": "Результаты по товарам",
-      "mostSold": "Самые продаваемые товары",
-      "mostCategories": "Топ категории",
-      "emptyProducts": "Нет данных о продажах товаров за этот период.",
-      "emptyCategories": "Нет данных по категориям за этот период."
+    "topCategories": {
+      "title": "Популярные категории",
+      "items": "{count} товаров",
+      "orders": "{count} заказов",
+      "empty": "В этом периоде нет продаж по категориям."
     },
     "ordersByDay": {
       "title": "Заказы по дням",
-      "subtitle": "Разбивка заказов и выручки по дням.",
-      "chartAria": "График заказов по дням",
-      "empty": "Нет данных за этот период.",
-      "revenueLabel": "Выручка"
+      "subtitle": "Динамика заказов и выручки по дням",
+      "chartAria": "График динамики заказов по дням",
+      "empty": "В этом периоде нет заказов.",
+      "peakDay": "Лучший день"
     }
   },
   "hero": {

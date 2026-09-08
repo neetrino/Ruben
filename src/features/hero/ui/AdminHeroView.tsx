@@ -70,10 +70,14 @@ export function AdminHeroView({
         </h2>
       </div>
 
-      <div className="space-y-3">
-        {slides.map((slide) => (
-          <Card key={slide.id} className="p-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+      {slides.length === 0 ? (
+        <Card className="p-6">
+          <p className="text-center text-sm text-gray-600">{t.hero.empty}</p>
+        </Card>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {slides.map((slide) => (
+            <Card key={slide.id} className="flex h-full flex-col p-4">
               <div className="flex min-w-0 flex-1 gap-3">
                 {slide.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail
@@ -87,7 +91,7 @@ export function AdminHeroView({
                     {t.hero.noImage}
                   </div>
                 )}
-                <div className="min-w-0">
+                <div className="min-w-0 flex-1">
                   <p>
                     <button
                       type="button"
@@ -112,28 +116,25 @@ export function AdminHeroView({
                     </span>
                   </div>
                   {slide.subtitle ? (
-                    <p className="mt-1 text-sm text-gray-600">{slide.subtitle}</p>
+                    <p className="mt-1 line-clamp-2 text-sm text-gray-600">
+                      {slide.subtitle}
+                    </p>
                   ) : null}
                 </div>
               </div>
-              <HeroSlideControls
-                locale={locale}
-                slideId={slide.id}
-                slideTitle={slide.title}
-                isActive={slide.isActive}
-                onEdit={() => openEdit(slide)}
-              />
-            </div>
-          </Card>
-        ))}
-        {slides.length === 0 ? (
-          <Card className="p-6">
-            <p className="text-center text-sm text-gray-600">
-              {t.hero.empty}
-            </p>
-          </Card>
-        ) : null}
-      </div>
+              <div className="mt-3 flex justify-end">
+                <HeroSlideControls
+                  locale={locale}
+                  slideId={slide.id}
+                  slideTitle={slide.title}
+                  isActive={slide.isActive}
+                  onEdit={() => openEdit(slide)}
+                />
+              </div>
+            </Card>
+          ))}
+        </div>
+      )}
 
       <HeroSlideModal
         locale={locale}

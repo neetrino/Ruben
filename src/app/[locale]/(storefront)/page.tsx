@@ -1,42 +1,25 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 
+import { LazyWhenVisible } from "@/components/loading/LazyWhenVisible";
+import {
+  HomeCategoriesSkeleton,
+  HomeFeaturesSkeleton,
+  HomeProductRailSkeleton,
+} from "@/components/loading/storefront-skeletons";
 import { listActiveHeroSlides } from "@/features/hero/application/queries";
-import { HomeAboutTeaser } from "@/features/home/ui/HomeAboutTeaser";
-import { HomeFeaturedProducts } from "@/features/home/ui/HomeFeaturedProducts";
+import { HomeCategoriesSection } from "@/features/home/ui/HomeCategoriesSection";
+import { HomeFeaturedSection } from "@/features/home/ui/HomeFeaturedSection";
 import { HomeFeatures } from "@/features/home/ui/HomeFeatures";
 import { HomeHero } from "@/features/home/ui/HomeHero";
+import { HomeMobileHeroSection } from "@/features/home/ui/HomeMobileHeroSection";
 import { HomePartners } from "@/features/home/ui/HomePartners";
-import { HomePromotions } from "@/features/home/ui/HomePromotions";
-import {
-  getFeaturedProducts,
-  getOnSaleProducts,
-} from "@/features/products/queries";
-import { getStoreGlobalDiscount } from "@/features/settings/application/queries";
-import { getCompareProductIds } from "@/features/compare/queries";
-import { getWishlistProductIds } from "@/features/wishlist/queries";
-import { getCurrentUser } from "@/lib/auth/session";
+import { HomePromotionsSection } from "@/features/home/ui/HomePromotionsSection";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import {
-  createDisplayPriceFormatter,
-  getSelectedCurrency,
-} from "@/lib/money/display-price";
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
-};
-
-type PricedCard = {
-  id: string;
-  href: string;
-  title: string;
-  priceFormatted: string;
-  compareAtFormatted: string | null;
-  discountPercent: number | null;
-  imageUrl: string | null;
-  inStock: boolean;
-  inWishlist: boolean;
-  inCompare: boolean;
 };
 
 export default async function HomePage({ params }: HomePageProps) {
@@ -48,164 +31,73 @@ export default async function HomePage({ params }: HomePageProps) {
 
   const locale: Locale = rawLocale;
   const dictionary = getDictionary(locale);
-  const [
-    heroSlides,
-    featuredProducts,
-    onSaleProducts,
-    globalDiscount,
-    currency,
-    user,
-  ] = await Promise.all([
-    listActiveHeroSlides(locale),
-    getFeaturedProducts(locale),
-    getOnSaleProducts(locale),
-    getStoreGlobalDiscount(),
-    getSelectedCurrency(),
-    getCurrentUser(),
-  ]);
-
-  const productIds = [
-    ...new Set([
-      ...featuredProducts.map((product) => product.id),
-      ...onSaleProducts.map((product) => product.id),
-    ]),
-  ];
-
-  const [wishlistIds, compareIds, formatPrice] = await Promise.all([
-    getWishlistProductIds(productIds),
-    getCompareProductIds(productIds),
-    createDisplayPriceFormatter(locale, currency),
-  ]);
-
-  function toCard(
-    product: (typeof featuredProducts)[number],
-  ): PricedCard {
-    const price = formatPrice(product.priceAmount);
-    const compareAt =
-      product.compareAtAmount != null
-        ? formatPrice(product.compareAtAmount)
-        : null;
-
-    return {
-      id: product.id,
-      href: `/${locale}/products/${product.translation.slug}`,
-      title: product.translation.title,
-      priceFormatted: price.formatted,
-      compareAtFormatted: compareAt?.formatted ?? null,
-      discountPercent: product.discountPercent,
-      imageUrl: product.imageUrl,
-      inStock: product.stockOnHand > 0,
-      inWishlist: wishlistIds.has(product.id),
-      inCompare: compareIds.has(product.id),
-    };
-  }
-
-  const featuredCards = featuredProducts.map(toCard);
-  const promoCards = onSaleProducts.map(toCard);
   const productsHref = `/${locale}/products`;
-  const globalDiscountLabel =
-    globalDiscount.percentage != null
-      ? dictionary.home.globalDiscountLabel.replace(
-          "{percent}",
-          String(globalDiscount.percentage),
-        )
-      : null;
+
+  // Critical path only — below-fold rails stream via Suspense.
+  const heroSlides = await listActiveHeroSlides(locale);
 
   return (
-    <div className="-mx-4 -my-10 sm:-mx-6 lg:-mx-8">
+    <div className="home-page-root relative bg-white">
+      <Suspense fallback={<div className="h-[420px] lg:hidden" aria-hidden />}>
+        <HomeMobileHeroSection
+          locale={locale}
+          dictionary={dictionary}
+          slides={heroSlides}
+        />
+      </Suspense>
+
       <HomeHero
         slides={heroSlides}
-        fallbackTitle={dictionary.home.title}
+        brandName={dictionary.home.title}
         fallbackSubtitle={dictionary.home.subtitle}
         fallbackCtaLabel={dictionary.home.cta}
         fallbackCtaHref={productsHref}
       />
 
-      <HomeFeaturedProducts
-        locale={locale}
-        title={dictionary.home.featuredTitle}
-        viewAllLabel={dictionary.home.viewAll}
-        viewAllHref={productsHref}
-        emptyLabel={dictionary.home.emptyFeatured}
-        wishlistLabel={dictionary.nav.wishlist}
-        compareLabel={dictionary.nav.compare}
-        compareLimitLabel={dictionary.compare.limitReached}
-        addToCartLabel={dictionary.product.addToCart}
-        isSignedIn={Boolean(user)}
-        products={featuredCards}
-      />
+      <div className="hidden lg:block">
+        <Suspense fallback={<HomeCategoriesSkeleton />}>
+          <HomeCategoriesSection locale={locale} dictionary={dictionary} />
+        </Suspense>
+      </div>
 
-      <HomePromotions
-        locale={locale}
-        title={dictionary.home.promotionsTitle}
-        subtitle={dictionary.home.promotionsSubtitle}
-        viewAllLabel={dictionary.home.viewAll}
-        viewAllHref={productsHref}
-        emptyLabel={dictionary.home.emptyPromotions}
-        globalDiscountLabel={globalDiscountLabel}
-        wishlistLabel={dictionary.nav.wishlist}
-        compareLabel={dictionary.nav.compare}
-        compareLimitLabel={dictionary.compare.limitReached}
-        addToCartLabel={dictionary.product.addToCart}
-        isSignedIn={Boolean(user)}
-        products={promoCards}
-        offers={[
-          {
-            title: dictionary.home.offers.saleTitle,
-            description: dictionary.home.offers.saleDescription,
-            href: productsHref,
-          },
-          {
-            title: dictionary.home.offers.installmentTitle,
-            description: dictionary.home.offers.installmentDescription,
-            href: productsHref,
-          },
-          {
-            title: dictionary.home.offers.deliveryTitle,
-            description: dictionary.home.offers.deliveryDescription,
-            href: `/${locale}/contact`,
-          },
-        ]}
-      />
+      <Suspense fallback={<HomeProductRailSkeleton />}>
+        <HomeFeaturedSection locale={locale} dictionary={dictionary} />
+      </Suspense>
 
-      <HomeFeatures
-        title={dictionary.home.whyTitle}
-        items={[
-          {
-            icon: "warranty",
-            title: dictionary.home.features.warrantyTitle,
-            description: dictionary.home.features.warrantyDescription,
-          },
-          {
-            icon: "delivery",
-            title: dictionary.home.features.deliveryTitle,
-            description: dictionary.home.features.deliveryDescription,
-          },
-          {
-            icon: "installment",
-            title: dictionary.home.features.installmentTitle,
-            description: dictionary.home.features.installmentDescription,
-          },
-          {
-            icon: "original",
-            title: dictionary.home.features.originalTitle,
-            description: dictionary.home.features.originalDescription,
-          },
-        ]}
-      />
+      <Suspense fallback={<HomeProductRailSkeleton />}>
+        <HomePromotionsSection locale={locale} dictionary={dictionary} />
+      </Suspense>
 
-      <HomePartners
-        title={dictionary.home.partnersTitle}
-        subtitle={dictionary.home.partnersSubtitle}
-      />
+      <div className="hidden lg:block">
+        <LazyWhenVisible fallback={<HomeFeaturesSkeleton />}>
+          <HomeFeatures
+            items={[
+              {
+                icon: "warranty",
+                title: dictionary.home.features.warrantyTitle,
+                description: dictionary.home.features.warrantyDescription,
+              },
+              {
+                icon: "delivery",
+                title: dictionary.home.features.deliveryTitle,
+                description: dictionary.home.features.deliveryDescription,
+              },
+              {
+                icon: "installment",
+                title: dictionary.home.features.installmentTitle,
+                description: dictionary.home.features.installmentDescription,
+              },
+              {
+                icon: "original",
+                title: dictionary.home.features.originalTitle,
+                description: dictionary.home.features.originalDescription,
+              },
+            ]}
+          />
+        </LazyWhenVisible>
 
-      <HomeAboutTeaser
-        eyebrow={dictionary.home.aboutEyebrow}
-        title={dictionary.home.aboutTitle}
-        description={dictionary.home.aboutDescription}
-        ctaLabel={dictionary.home.aboutCta}
-        ctaHref={`/${locale}/about`}
-      />
+        <HomePartners title={dictionary.home.partnersTitle} />
+      </div>
     </div>
   );
 }

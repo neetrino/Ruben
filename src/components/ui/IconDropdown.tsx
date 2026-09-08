@@ -18,7 +18,7 @@ type IconDropdownProps = {
 };
 
 const DEFAULT_TRIGGER_CLASS =
-  "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm transition-colors hover:border-gray-300";
+  "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm outline-none transition-colors hover:border-gray-300";
 
 export function IconDropdown({
   label,
@@ -77,7 +77,11 @@ export function IconDropdown({
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("mousedown", handlePointerDown);
@@ -99,7 +103,7 @@ export function IconDropdown({
   return (
     <div
       ref={rootRef}
-      className={elevated ? "relative z-[210]" : "relative z-0"}
+      className={`inline-flex items-center ${elevated ? "relative z-[210]" : "relative z-0"}`}
       onMouseEnter={openOnHover ? openMenu : undefined}
       onMouseLeave={openOnHover ? scheduleClose : undefined}
     >
@@ -129,7 +133,7 @@ export function IconDropdown({
             id={menuId}
             role="menu"
             aria-label={label}
-            className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white py-1"
+            className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white"
           >
             <div
               className="flex w-full flex-col"

@@ -1,44 +1,34 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState, useTransition } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { DROPDOWN_ANIMATION_MS } from "@/components/ui/SelectDropdown";
-import { setCurrencyAction } from "@/features/preferences/set-currency-action";
+import { useCurrencySelection } from "@/features/preferences/use-currency-selection";
 import type { Locale } from "@/lib/i18n/config";
-import { localeLabels, locales } from "@/lib/i18n/config";
+import {
+  localeLabels,
+  localeShortLabels,
+  locales,
+  replaceLocaleInPath,
+} from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
 import { currencies } from "@/lib/money/currency";
 
 const HOVER_CLOSE_DELAY_MS = 140;
-
-/** Short codes for the navbar trigger (MaMarie-style `AMD / HY`). */
-const localeShortLabels: Record<Locale, string> = {
-  hy: "HY",
-  en: "EN",
-  ru: "RU",
-};
 
 type LocaleCurrencySwitcherProps = {
   locale: Locale;
   currency: Currency;
   currencyLabel: string;
   languageLabel: string;
+  appearance?: "default" | "navbar";
 };
-
-function replaceLocaleInPath(pathname: string, nextLocale: Locale): string {
-  const segments = pathname.split("/");
-  if (segments.length > 1) {
-    segments[1] = nextLocale;
-    return segments.join("/") || `/${nextLocale}`;
-  }
-  return `/${nextLocale}`;
-}
 
 function optionClassName(selected: boolean): string {
   return selected
-    ? "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm font-semibold text-gray-900 bg-gray-100 transition-colors"
+    ? "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm font-semibold text-gray-900 bg-[var(--brand)] transition-colors"
     : "flex w-full justify-center whitespace-nowrap rounded-lg px-2.5 py-1.5 text-center text-sm text-gray-500 transition-colors hover:bg-gray-50 hover:text-gray-900";
 }
 
@@ -51,10 +41,11 @@ export function LocaleCurrencySwitcher({
   currency,
   currencyLabel,
   languageLabel,
+  appearance = "default",
 }: LocaleCurrencySwitcherProps) {
   const router = useRouter();
   const pathname = usePathname() ?? `/${locale}`;
-  const [pending, startTransition] = useTransition();
+  const { pending, selectCurrency } = useCurrencySelection();
   const [open, setOpen] = useState(false);
   const [rendered, setRendered] = useState(false);
   const [entered, setEntered] = useState(false);
@@ -120,7 +111,11 @@ export function LocaleCurrencySwitcher({
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") closeMenu();
+      if (event.key !== "Escape") return;
+      closeMenu();
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     document.addEventListener("mousedown", handlePointerDown);
@@ -131,16 +126,10 @@ export function LocaleCurrencySwitcher({
     };
   }, [open]);
 
-  function selectCurrency(next: Currency): void {
-    if (next === currency) {
-      closeMenu();
-      return;
-    }
-    startTransition(async () => {
-      await setCurrencyAction(next);
-      closeMenu();
-      router.refresh();
-    });
+  function handleCurrency(next: Currency): void {
+    closeMenu();
+    if (next === currency) return;
+    selectCurrency(next);
   }
 
   function selectLocale(next: Locale): void {
@@ -161,24 +150,40 @@ export function LocaleCurrencySwitcher({
     >
       <button
         type="button"
-        className="flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 transition-colors hover:bg-gray-50"
+        className={
+          appearance === "navbar"
+            ? "flex h-[37px] min-w-[106px] shrink-0 items-center justify-center gap-2 rounded-[21px] border border-white py-0 pr-3.5 pl-2.5 text-white outline-none transition-colors hover:bg-white/10"
+            : "flex h-9 w-[calc(2.75rem*3+0.5rem*2-0.75rem)] shrink-0 items-center rounded-full border border-gray-200 bg-white py-0 pr-3 pl-3 text-gray-700 outline-none transition-colors hover:bg-gray-50"
+        }
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-controls={menuId}
         aria-label={`${currency} / ${localeShortLabels[locale]}`}
         onClick={() => (open ? closeMenu() : openMenu())}
       >
-        <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">
-          <span>{currency}</span>
-          <span className="inline-block w-[2px]" aria-hidden />
-          <span>/</span>
-          <span className="inline-block w-[2px]" aria-hidden />
-          <span>{localeShortLabels[locale]}</span>
-        </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : ""}`}
-          aria-hidden
-        />
+        {appearance === "navbar" ? (
+          <span className="text-base leading-4 tracking-[1.8px] whitespace-nowrap">
+            {currency}
+            <span className="mx-1" aria-hidden>
+              /
+            </span>
+            {localeShortLabels[locale]}
+          </span>
+        ) : (
+          <>
+            <span className="flex min-w-0 flex-1 items-center justify-center whitespace-nowrap text-[15px] font-bold leading-none tabular-nums">
+              <span>{currency}</span>
+              <span className="inline-block w-[2px]" aria-hidden />
+              <span>/</span>
+              <span className="inline-block w-[2px]" aria-hidden />
+              <span>{localeShortLabels[locale]}</span>
+            </span>
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 text-gray-500 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${open ? "rotate-180" : ""}`}
+              aria-hidden
+            />
+          </>
+        )}
       </button>
 
       {rendered ? (
@@ -211,7 +216,7 @@ export function LocaleCurrencySwitcher({
                         type="button"
                         disabled={pending}
                         className={optionClassName(selected)}
-                        onClick={() => selectCurrency(code)}
+                        onClick={() => handleCurrency(code)}
                       >
                         {code}
                       </button>

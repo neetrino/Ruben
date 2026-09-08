@@ -1,19 +1,22 @@
 {
-  "brand": "White-Shop",
+  "brand": "RUBEN",
   "nav": {
-    "home": "Главная",
-    "products": "Товары",
+    "home": "ГЛАВНАЯ",
+    "products": "ТОВАРЫ",
+    "categories": "КАТЕГОРИИ",
+    "brands": "БРЕНДЫ",
+    "promotions": "АКЦИИ",
     "shop": "Магазин",
     "blog": "Блог",
     "cart": "Корзина",
     "about": "О нас",
-    "contact": "Контакты",
+    "contact": "КОНТАКТЫ",
+    "policy": "ПОЛИТИКА",
     "wishlist": "Избранное",
     "compare": "Сравнение",
     "openMenu": "Открыть меню",
     "closeMenu": "Закрыть меню",
-    "navigation": "Навигация",
-    "shopNow": "В магазин"
+    "navigation": "Навигация"
   },
   "header": {
     "language": "Язык",
@@ -22,19 +25,35 @@
     "logout": "Выход",
     "profile": "Профиль",
     "admin": "Админ",
-    "createAccount": "Создать аккаунт"
+    "createAccount": "Создать аккаунт",
+    "search": "Поиск",
+    "searchClose": "Закрыть поиск",
+    "searchPlaceholder": "Поиск",
+    "searchIdle": "Введите название товара",
+    "searchEmpty": "Товары не найдены",
+    "searchViewAll": "Смотреть все результаты"
   },
   "footer": {
     "shop": "Магазин",
-    "description": "Профессиональный интернет-магазин для повседневных покупок.",
+    "description": "«Армянская кухня, музыка и гостеприимство — в новом звучании».",
+    "navigation": "Навигация",
+    "support": "Поддержка",
     "legal": "Правовая информация",
     "privacyPolicy": "Политика конфиденциальности",
     "terms": "Условия использования",
     "refundPolicy": "Политика возврата",
     "deliveryPolicy": "Политика доставки",
-    "contactInfo": "Контактная информация",
+    "deliveryReturns": "Доставка и возврат",
+    "faq": "Частые вопросы",
+    "specialOffers": "Специальные предложения",
+    "gallery": "Галерея",
+    "contactInfo": "Контакты",
     "social": "Соцсети",
     "map": "Карта",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Пн–Вс: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": ""
   }
 }

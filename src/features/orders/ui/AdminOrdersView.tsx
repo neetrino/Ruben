@@ -67,6 +67,7 @@ export function AdminOrdersView({ locale, orders }: AdminOrdersViewProps) {
         detail={detail}
         error={error}
         isLoading={isPending}
+        includeAdminDetails
       />
     </>
   );

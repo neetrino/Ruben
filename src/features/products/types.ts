@@ -18,6 +18,8 @@ export type CatalogProduct = {
   stockOnHand: number;
   translation: LocaleTranslation;
   imageUrl: string | null;
+  /** Localized promo badge when set (e.g. ԹՈՓ). */
+  badgeLabel: string | null;
 };
 
 export type ProductGalleryImage = {

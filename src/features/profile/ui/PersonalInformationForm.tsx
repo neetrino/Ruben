@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -8,26 +8,26 @@ import {
   updateProfileAction,
   type UpdateProfileActionState,
 } from "@/features/auth/update-profile-action";
+import { useProfileSession } from "@/features/profile/ui/ProfileSessionContext";
 
 const FIELD_CLASS =
   "h-11 w-full rounded-lg border border-gray-200 px-3 text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-200";
 
 type PersonalInformationFormProps = {
   locale: string;
-  firstName: string;
-  lastName: string;
-  email: string;
   labels: {
     title: string;
     firstName: string;
     lastName: string;
     email: string;
+    phone: string;
     cancel: string;
     save: string;
     saving: string;
     firstNamePlaceholder: string;
     lastNamePlaceholder: string;
     emailPlaceholder: string;
+    phonePlaceholder: string;
   };
 };
 
@@ -35,29 +35,28 @@ const initialState: UpdateProfileActionState = {};
 
 export function PersonalInformationForm({
   locale,
-  firstName,
-  lastName,
-  email,
   labels,
 }: PersonalInformationFormProps) {
+  const user = useProfileSession();
+  const firstName = user.firstName;
+  const lastName = user.lastName;
+  const email = user.email;
+  const phone = user.phone ?? "";
   const action = updateProfileAction.bind(null, locale);
   const [state, formAction, isPending] = useActionState(action, initialState);
   const [values, setValues] = useState({
     firstName,
     lastName,
     email,
+    phone,
   });
 
-  useEffect(() => {
-    setValues({ firstName, lastName, email });
-  }, [firstName, lastName, email]);
-
   function resetToSaved(): void {
-    setValues({ firstName, lastName, email });
+    setValues({ firstName, lastName, email, phone });
   }
 
   return (
-    <Card className="rounded-2xl border border-gray-200/80 p-5 shadow-none sm:p-7 lg:p-8">
+    <Card className="rounded-2xl border border-gray-200/80 p-5 shadow-none sm:p-7 xl:p-8">
       <div className="mb-8 border-b border-gray-100 pb-5 sm:mb-10 sm:pb-6">
         <h1 className="text-lg font-bold tracking-tight text-gray-900 sm:text-xl">
           {labels.title}
@@ -66,7 +65,7 @@ export function PersonalInformationForm({
 
       <form
         action={formAction}
-        className="mx-auto max-w-xl space-y-6 lg:mx-0 lg:max-w-2xl"
+        className="mx-auto max-w-xl space-y-6 xl:mx-0 xl:max-w-2xl"
       >
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
           <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
@@ -105,21 +104,38 @@ export function PersonalInformationForm({
           </label>
         </div>
 
-        <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
-          {labels.email}
-          <input
-            name="email"
-            type="email"
-            required
-            value={values.email}
-            onChange={(event) =>
-              setValues((prev) => ({ ...prev, email: event.target.value }))
-            }
-            placeholder={labels.emailPlaceholder}
-            className={FIELD_CLASS}
-            autoComplete="email"
-          />
-        </label>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8">
+          <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+            {labels.email}
+            <input
+              name="email"
+              type="email"
+              required
+              value={values.email}
+              onChange={(event) =>
+                setValues((prev) => ({ ...prev, email: event.target.value }))
+              }
+              placeholder={labels.emailPlaceholder}
+              className={FIELD_CLASS}
+              autoComplete="email"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+            {labels.phone}
+            <input
+              name="phone"
+              type="tel"
+              required
+              value={values.phone}
+              onChange={(event) =>
+                setValues((prev) => ({ ...prev, phone: event.target.value }))
+              }
+              placeholder={labels.phonePlaceholder}
+              className={FIELD_CLASS}
+              autoComplete="tel"
+            />
+          </label>
+        </div>
 
         {state.error ? (
           <p className="text-sm text-red-700" role="alert">

@@ -4,8 +4,8 @@ import { defaultCurrency } from "@/lib/money/currency";
 import { getCurrencyMeta } from "@/lib/money/currency-meta";
 import { formatMoneyAmount } from "@/lib/money/format";
 
-/** Inclusive catalog price slider ceiling in AMD (covers seeded catalog + headroom). */
-export const CATALOG_PRICE_SLIDER_MAX_AMD = 100_000;
+/** Inclusive catalog price slider ceiling in AMD (Figma shop filter max). */
+export const CATALOG_PRICE_SLIDER_MAX_AMD = 400_000;
 
 export type CatalogPriceSliderBounds = {
   min: number;

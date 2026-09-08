@@ -1,32 +1,35 @@
 import { describe, expect, it } from "vitest";
 
 import {
-  formatAnalyticsDisplayDate,
   matchAnalyticsPeriodPreset,
   rangeForAnalyticsPeriod,
 } from "@/features/analytics/domain/date-range";
 
 describe("rangeForAnalyticsPeriod", () => {
-  it("returns a single-day window for today", () => {
-    const range = rangeForAnalyticsPeriod("today");
-    expect(range.from).toBe(range.to);
-  });
-
-  it("returns an inclusive this-week window starting on Monday", () => {
-    const range = rangeForAnalyticsPeriod("this_week");
+  it("returns a 7-day window for last_7_days", () => {
+    const range = rangeForAnalyticsPeriod("last_7_days");
     const start = new Date(`${range.from}T00:00:00.000Z`);
-    expect(start.getUTCDay()).toBe(1);
+    const end = new Date(`${range.to}T00:00:00.000Z`);
+    const days =
+      Math.floor((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+    expect(days).toBe(7);
     expect(range.from <= range.to).toBe(true);
   });
 
-  it("matches preset detection for generated ranges", () => {
+  it("returns a 30-day window for last_30_days", () => {
+    const range = rangeForAnalyticsPeriod("last_30_days");
+    const start = new Date(`${range.from}T00:00:00.000Z`);
+    const end = new Date(`${range.to}T00:00:00.000Z`);
+    const days =
+      Math.floor((end.getTime() - start.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+    expect(days).toBe(30);
+  });
+
+  it("returns month-to-date for this_month", () => {
     const range = rangeForAnalyticsPeriod("this_month");
     expect(matchAnalyticsPeriodPreset(range)).toBe("this_month");
-  });
-});
-
-describe("formatAnalyticsDisplayDate", () => {
-  it("formats UTC ISO dates for headers", () => {
-    expect(formatAnalyticsDisplayDate("2026-07-12")).toBe("Jul 12, 2026");
+    expect(range.from.endsWith("-01") || range.from.slice(8) === "01").toBe(
+      true,
+    );
   });
 });

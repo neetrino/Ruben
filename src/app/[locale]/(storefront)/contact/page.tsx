@@ -1,10 +1,32 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
-import { ContactForm } from "@/features/contact/ui/ContactForm";
+import {
+  STOREFRONT_PAGE_SUBTITLE_CLASS,
+  STOREFRONT_PAGE_TITLE_CLASS,
+} from "@/components/layout/storefront-page-title";
+import { Reveal } from "@/components/motion/Reveal";
+import { ContactFormSkeleton } from "@/features/contact/ui/ContactFormSkeleton";
 import { ContactInfo } from "@/features/contact/ui/ContactInfo";
-import { ContactMap } from "@/features/contact/ui/ContactMap";
+import { ContactMapSkeleton } from "@/features/contact/ui/ContactMapSkeleton";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const ContactForm = dynamic(
+  () =>
+    import("@/features/contact/ui/ContactForm").then((mod) => ({
+      default: mod.ContactForm,
+    })),
+  { loading: () => <ContactFormSkeleton /> },
+);
+
+const ContactMap = dynamic(
+  () =>
+    import("@/features/contact/ui/ContactMap").then((mod) => ({
+      default: mod.ContactMap,
+    })),
+  { loading: () => <ContactMapSkeleton /> },
+);
 
 type ContactPageProps = {
   params: Promise<{ locale: string }>;
@@ -18,26 +40,39 @@ export default async function ContactPage({ params }: ContactPageProps) {
   }
 
   const dictionary = getDictionary(rawLocale);
+  const copy = dictionary.contact;
 
   return (
-    <div className="-mx-4 -my-10 bg-white sm:-mx-6 lg:-mx-8">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-          <ContactInfo copy={dictionary.contact} />
-          <ContactForm
-            copy={{
-              name: dictionary.contact.name,
-              email: dictionary.contact.email,
-              phone: dictionary.contact.phone,
-              message: dictionary.contact.message,
-              submit: dictionary.contact.submit,
-              success: dictionary.contact.success,
-              error: dictionary.contact.error,
-            }}
-          />
+    <div className="contact-page-root relative z-0 -mx-4 -mt-10 bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <Reveal as="header" className="mb-10 flex max-w-2xl flex-col gap-2 sm:mb-14">
+          <h1 className={STOREFRONT_PAGE_TITLE_CLASS}>{copy.title}</h1>
+          <p className={STOREFRONT_PAGE_SUBTITLE_CLASS}>{copy.subtitle}</p>
+        </Reveal>
+
+        <div className="grid grid-cols-1 items-stretch gap-10 lg:grid-cols-2 lg:gap-14">
+          <Reveal>
+            <ContactInfo copy={copy} />
+          </Reveal>
+          <Reveal delay={0.08}>
+            <ContactForm
+              copy={{
+                name: copy.name,
+                email: copy.email,
+                phone: copy.phone,
+                message: copy.message,
+                submit: copy.submit,
+                success: copy.success,
+                error: copy.error,
+              }}
+            />
+          </Reveal>
         </div>
       </div>
-      <ContactMap title={dictionary.contact.mapTitle} />
+
+      <Reveal>
+        <ContactMap title={copy.mapTitle} />
+      </Reveal>
     </div>
   );
 }

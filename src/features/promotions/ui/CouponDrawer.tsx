@@ -7,6 +7,7 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { SideSheet } from "@/components/ui/SideSheet";
+import { AdminDateTimePickerField } from "@/features/admin/ui/AdminDateTimePickerField";
 import {
   ADMIN_INPUT,
   ADMIN_LABEL,
@@ -219,12 +220,12 @@ export function CouponDrawer({
               </label>
               <label>
                 <span className={ADMIN_LABEL}>{t.coupons.drawer.expires}</span>
-                <input
-                  type="datetime-local"
+                <AdminDateTimePickerField
                   value={expiresAt}
-                  onChange={(event) => setExpiresAt(event.target.value)}
-                  className={ADMIN_INPUT}
+                  onChange={setExpiresAt}
                   disabled={isPending}
+                  locale={locale}
+                  common={t.common}
                 />
               </label>
             </div>
@@ -246,7 +247,14 @@ export function CouponDrawer({
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
 
-          <div className="flex items-center gap-4 border-t border-gray-200 px-5 py-4">
+          <div className="flex items-center justify-end gap-4 border-t border-gray-200 px-5 py-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              {t.common.cancel}
+            </button>
             <Button type="submit" disabled={isPending}>
               {isPending
                 ? isEdit
@@ -256,13 +264,6 @@ export function CouponDrawer({
                   ? t.common.save
                   : t.common.create}
             </Button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
-              {t.common.cancel}
-            </button>
           </div>
         </form>
     </SideSheet>

@@ -262,7 +262,14 @@ export function AddCategoryDrawer({
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
 
-          <div className="flex items-center gap-4 border-t border-gray-200 px-5 py-4">
+          <div className="flex items-center justify-end gap-4 border-t border-gray-200 px-5 py-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="whitespace-nowrap text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              {t.common.cancel}
+            </button>
             <Button type="submit" disabled={isPending || !title.trim()}>
               {isPending
                 ? isEdit
@@ -272,13 +279,6 @@ export function AddCategoryDrawer({
                   ? t.common.save
                   : t.categories.drawer.create}
             </Button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="whitespace-nowrap text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
-              {t.common.cancel}
-            </button>
           </div>
         </form>
     </SideSheet>

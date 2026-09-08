@@ -38,10 +38,12 @@ export async function ProductRelatedSection({
   const labels = dictionary.product;
 
   return (
-    <section className="flex flex-col gap-6">
-      <h2 className="text-2xl font-semibold text-gray-900">{labels.related}</h2>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {related.map((item) => {
+    <section className="flex flex-col gap-6 pt-10 pb-6 lg:pt-10 lg:pb-4">
+      <h2 className="text-xl font-bold tracking-[0.5px] text-black uppercase">
+        {labels.related}
+      </h2>
+      <div className="grid grid-cols-2 gap-3 sm:gap-6 tablet:grid-cols-3 tablet-lg:grid-cols-4">
+        {related.map((item, index) => {
           const price = formatPrice(item.priceAmount);
           const compareAt =
             item.compareAtAmount != null
@@ -56,8 +58,10 @@ export async function ProductRelatedSection({
               priceFormatted={price.formatted}
               compareAtFormatted={compareAt?.formatted ?? null}
               discountPercent={item.discountPercent}
+              badgeLabel={item.badgeLabel}
               imageUrl={item.imageUrl}
               inStock={item.stockOnHand > 0}
+              appearIndex={index}
               locale={locale}
               productId={item.id}
               inWishlist={wishlistIds.has(item.id)}

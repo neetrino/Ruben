@@ -8,6 +8,7 @@ import {
   ADMIN_TABLE_TD_CHECK,
   ADMIN_TABLE_CHECKBOX,
 } from "@/features/admin/ui/admin-table-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { AdminProductListItem } from "@/features/products/application/list-admin-products";
 import { formatMoneyAmount } from "@/lib/money/format";
@@ -39,12 +40,16 @@ export function AdminProductRow({
 }: AdminProductRowProps) {
   const t = adminCopy(locale);
   const isActive = product.status === "ACTIVE";
-  const created = new Date(product.createdAt);
-  const createdLabel = `${created.getDate()}/${created.getMonth() + 1}/${created.getFullYear()}`;
 
   return (
-    <tr className={ADMIN_TABLE_ROW}>
-      <td className={ADMIN_TABLE_TD_CHECK}>
+    <tr
+      className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+      onClick={onEdit}
+    >
+      <td
+        className={ADMIN_TABLE_TD_CHECK}
+        onClick={(event) => event.stopPropagation()}
+      >
         <input
           type="checkbox"
           className={ADMIN_TABLE_CHECKBOX}
@@ -98,7 +103,10 @@ export function AdminProductRow({
             : "—"}
         </span>
       </td>
-      <td className={ADMIN_TABLE_TD}>
+      <td
+        className={ADMIN_TABLE_TD}
+        onClick={(event) => event.stopPropagation()}
+      >
         <button
           type="button"
           disabled={disabled}
@@ -113,7 +121,10 @@ export function AdminProductRow({
           />
         </button>
       </td>
-      <td className={ADMIN_TABLE_TD}>
+      <td
+        className={ADMIN_TABLE_TD}
+        onClick={(event) => event.stopPropagation()}
+      >
         <div className="flex items-center gap-1">
           <button
             type="button"
@@ -161,7 +172,7 @@ export function AdminProductRow({
         </div>
       </td>
       <td className={ADMIN_TABLE_TD}>
-        <span className="text-xs text-gray-500">{createdLabel}</span>
+        <AdminPlacedStamp value={product.createdAt} />
       </td>
     </tr>
   );

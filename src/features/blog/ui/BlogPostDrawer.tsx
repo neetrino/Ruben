@@ -5,6 +5,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { SideSheet } from "@/components/ui/SideSheet";
+import { AdminDatePickerField } from "@/features/admin/ui/AdminDatePickerField";
 import {
   ADMIN_INPUT,
   ADMIN_LABEL,
@@ -299,12 +300,12 @@ export function BlogPostDrawer({
               <div className="space-y-4">
                 <label className="block">
                   <span className={ADMIN_LABEL}>{t.blog.drawer.publicationDate}</span>
-                  <input
-                    type="date"
+                  <AdminDatePickerField
                     value={publishedAt}
-                    onChange={(event) => setPublishedAt(event.target.value)}
-                    className={ADMIN_INPUT}
+                    onChange={setPublishedAt}
                     disabled={isPending}
+                    locale={locale}
+                    common={t.common}
                   />
                   <span className="mt-1 block text-xs text-gray-500">
                     {t.blog.drawer.publicationHint}
@@ -399,8 +400,8 @@ export function BlogPostDrawer({
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
 
-          <div className="border-t border-gray-200 px-5 py-4">
-            <Button type="submit" className="w-full" disabled={isPending}>
+          <div className="flex justify-end border-t border-gray-200 px-5 py-4">
+            <Button type="submit" disabled={isPending}>
               {isPending ? t.common.saving : t.common.save}
             </Button>
           </div>

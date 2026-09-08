@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getCompareProductIds } from "@/features/compare/queries";
 import { ProductCard } from "@/features/products/ui/ProductCard";
 import { listWishlistProducts } from "@/features/wishlist/queries";
+import { WishlistEmptyState } from "@/features/wishlist/ui/WishlistEmptyState";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -32,9 +33,9 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
 
   if (!user) {
     return (
-      <section className="flex flex-col gap-4">
-        <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-          {dictionary.nav.wishlist}
+      <section className="flex flex-col gap-4 sm:pt-8 lg:pt-10">
+        <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
+          {dictionary.wishlist.title}
         </h1>
         <p className="text-gray-600">
           <Link
@@ -69,15 +70,20 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
   });
 
   return (
-    <section className="flex flex-col gap-8">
-      <h1 className="text-3xl font-semibold tracking-tight text-gray-900">
-        {dictionary.nav.wishlist}
+    <section className="flex flex-col gap-8 sm:pt-8 lg:pt-10">
+      <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
+        {dictionary.wishlist.title}
       </h1>
 
       {priced.length === 0 ? (
-        <p className="text-gray-600">{dictionary.wishlist.empty}</p>
+        <WishlistEmptyState
+          locale={rawLocale}
+          title={dictionary.wishlist.empty}
+          description={dictionary.wishlist.emptyDescription}
+          ctaLabel={dictionary.wishlist.emptyCta}
+        />
       ) : (
-        <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-6 tablet:grid-cols-3 tablet-lg:grid-cols-4">
           {priced.map(
             ({ product, priceFormatted, compareAtFormatted }, index) => (
               <ProductCard
@@ -89,6 +95,7 @@ export default async function WishlistPage({ params }: WishlistPageProps) {
                 discountPercent={product.discountPercent}
                 imageUrl={product.imageUrl}
                 inStock={product.stockOnHand > 0}
+                appearIndex={index}
                 priority={index < 4}
                 locale={rawLocale}
                 productId={product.id}

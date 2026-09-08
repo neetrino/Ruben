@@ -24,6 +24,7 @@ import {
   productCategories,
   products,
 } from "@/db/schema";
+import { getPrimaryCategoriesByProductIds } from "@/features/products/queries";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
 import type {
@@ -51,6 +52,7 @@ export type CatalogListItem = CatalogProduct & {
 export type CatalogCategoryOption = {
   slug: string;
   title: string;
+  productCount: number;
 };
 
 export type CatalogListResult = {
@@ -80,6 +82,10 @@ function toBaseCatalogProduct(
     stockOnHand: product.stockOnHand,
     translation,
     imageUrl,
+    badgeLabel:
+      product.badgeTranslations?.[locale] ??
+      product.badgeTranslations?.hy ??
+      null,
   };
 }
 
@@ -141,11 +147,21 @@ async function loadCatalogCategoryOptions(
 ): Promise<CatalogCategoryOption[]> {
   const rows = await getDb()
     .select({
+      id: categories.id,
       translations: categories.translations,
       sortOrder: categories.sortOrder,
+      productCount: sql<number>`coalesce(count(${productCategories.productId}) filter (
+        where ${products.status} = 'ACTIVE' and ${products.deletedAt} is null
+      ), 0)::int`,
     })
     .from(categories)
+    .leftJoin(
+      productCategories,
+      eq(productCategories.categoryId, categories.id),
+    )
+    .leftJoin(products, eq(products.id, productCategories.productId))
     .where(and(eq(categories.status, "ACTIVE"), isNull(categories.deletedAt)))
+    .groupBy(categories.id)
     .orderBy(asc(categories.sortOrder), asc(categories.createdAt));
 
   return rows
@@ -155,6 +171,7 @@ async function loadCatalogCategoryOptions(
       return {
         slug: translation.slug,
         title: translation.title,
+        productCount: row.productCount,
       } satisfies CatalogCategoryOption;
     })
     .filter((row): row is CatalogCategoryOption => row !== null);
@@ -187,49 +204,6 @@ async function loadPrimaryImages(
   for (const row of rows) {
     if (!row.productId || map.has(row.productId)) continue;
     map.set(row.productId, mediaPublicUrl(row.objectKey));
-  }
-
-  return map;
-}
-
-async function loadPrimaryCategories(
-  productIds: string[],
-  locale: Locale,
-): Promise<Map<string, ProductCategoryRef>> {
-  const map = new Map<string, ProductCategoryRef>();
-  if (productIds.length === 0) return map;
-
-  const rows = await getDb()
-    .select({
-      productId: productCategories.productId,
-      id: categories.id,
-      translations: categories.translations,
-      isPrimary: productCategories.isPrimary,
-      sortOrder: productCategories.sortOrder,
-    })
-    .from(productCategories)
-    .innerJoin(categories, eq(productCategories.categoryId, categories.id))
-    .where(
-      and(
-        inArray(productCategories.productId, productIds),
-        eq(categories.status, "ACTIVE"),
-        isNull(categories.deletedAt),
-      ),
-    )
-    .orderBy(
-      desc(productCategories.isPrimary),
-      asc(productCategories.sortOrder),
-    );
-
-  for (const row of rows) {
-    if (map.has(row.productId)) continue;
-    const translation = row.translations[locale] ?? row.translations.hy;
-    if (!translation) continue;
-    map.set(row.productId, {
-      id: row.id,
-      title: translation.title,
-      slug: translation.slug,
-    });
   }
 
   return map;
@@ -358,7 +332,7 @@ async function loadCatalogProductsPage(
         compareAtAmount: row.compareAtAmount,
       })),
     ),
-    loadPrimaryCategories(productIds, locale),
+    getPrimaryCategoriesByProductIds(productIds, locale),
   ]);
 
   const enriched = rows

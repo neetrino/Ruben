@@ -9,13 +9,14 @@
   "submit": "Send message",
   "success": "Thank you — your message was sent.",
   "error": "Unable to send your message.",
-  "storePhone": "+374 XX XXX XXX",
-  "storeEmail": "info@shop.am",
-  "storeAddress": "Yerevan, Abovyan 10",
+  "storePhone": "+374 10 123 456",
+  "storeEmail": "info@kamancha.am",
+  "storeAddress": "Abovyan 23, Yerevan, Armenia",
   "social": {
     "instagram": "https://instagram.com",
     "facebook": "https://facebook.com",
-    "linkedin": "https://linkedin.com"
+    "linkedin": "https://linkedin.com",
+    "whatsapp": "https://wa.me/37410123456"
   },
   "callTitle": "Call Us:",
   "callDescription": "We are available 24/7, 7 days a week.",

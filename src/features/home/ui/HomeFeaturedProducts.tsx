@@ -1,14 +1,19 @@
-import { AppLink } from "@/components/ui/AppLink";
-import { ProductCard } from "@/features/products/ui/ProductCard";
+import { Reveal } from "@/components/motion/Reveal";
+import { homeGridItemClass } from "@/features/home/ui/home-grid-visibility";
+import { HomeProductCard } from "@/features/home/ui/HomeProductCard";
+import { HomeSectionHeader } from "@/features/home/ui/HomeSectionHeader";
 import type { Locale } from "@/lib/i18n/config";
 
 type FeaturedItem = {
   id: string;
   href: string;
   title: string;
+  brandLabel?: string | null;
+  categoryLabel?: string | null;
   priceFormatted: string;
   compareAtFormatted?: string | null;
   discountPercent?: number | null;
+  badgeLabel?: string | null;
   imageUrl: string | null;
   inStock: boolean;
   inWishlist?: boolean;
@@ -27,6 +32,7 @@ type HomeFeaturedProductsProps = {
   addToCartLabel: string;
   isSignedIn: boolean;
   products: readonly FeaturedItem[];
+  roundedTop?: boolean;
 };
 
 export function HomeFeaturedProducts({
@@ -41,48 +47,53 @@ export function HomeFeaturedProducts({
   addToCartLabel,
   isSignedIn,
   products,
+  roundedTop = true,
 }: HomeFeaturedProductsProps) {
   return (
-    <section className="bg-gray-50 py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-8 flex items-end justify-between gap-4">
-          <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-            {title}
-          </h2>
-          <AppLink
-            href={viewAllHref}
-            prefetchPolicy="intent"
-            className="text-sm font-semibold text-gray-700 underline-offset-2 hover:underline"
-          >
-            {viewAllLabel}
-          </AppLink>
-        </div>
+    <section
+      className={`bg-white py-8 sm:py-16 lg:py-20 ${
+        roundedTop ? "lg:rounded-t-[40px]" : ""
+      }`}
+    >
+      <div className="mx-auto max-w-[1440px] px-[13px] sm:px-10 lg:px-[51px]">
+        <Reveal>
+          <HomeSectionHeader
+            title={title}
+            viewAllLabel={viewAllLabel}
+            viewAllHref={viewAllHref}
+          />
+        </Reveal>
 
         {products.length === 0 ? (
-          <p className="text-gray-600">{emptyLabel}</p>
+          <p className="text-neutral-600">{emptyLabel}</p>
         ) : (
-          <div className="grid grid-cols-2 gap-6 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 sm:gap-y-10 tablet:grid-cols-3 tablet-lg:grid-cols-4 xl:gap-x-8">
             {products.map((product, index) => (
-              <ProductCard
-                key={product.id}
-                href={product.href}
-                title={product.title}
-                priceFormatted={product.priceFormatted}
-                compareAtFormatted={product.compareAtFormatted}
-                discountPercent={product.discountPercent}
-                imageUrl={product.imageUrl}
-                inStock={product.inStock}
-                priority={index < 4}
-                locale={locale}
-                productId={product.id}
-                inWishlist={product.inWishlist ?? false}
-                inCompare={product.inCompare ?? false}
-                isSignedIn={isSignedIn}
-                wishlistLabel={wishlistLabel}
-                compareLabel={compareLabel}
-                compareLimitLabel={compareLimitLabel}
-                addToCartLabel={addToCartLabel}
-              />
+              <div key={product.id} className={homeGridItemClass(index, 4)}>
+                <HomeProductCard
+                  href={product.href}
+                  title={product.title}
+                  brandLabel={product.brandLabel}
+                  categoryLabel={product.categoryLabel}
+                  priceFormatted={product.priceFormatted}
+                  compareAtFormatted={product.compareAtFormatted}
+                  discountPercent={product.discountPercent}
+                  badgeLabel={product.badgeLabel}
+                  imageUrl={product.imageUrl}
+                  inStock={product.inStock}
+                  appearIndex={index}
+                  priority={index < 4}
+                  locale={locale}
+                  productId={product.id}
+                  inWishlist={product.inWishlist ?? false}
+                  inCompare={product.inCompare ?? false}
+                  isSignedIn={isSignedIn}
+                  wishlistLabel={wishlistLabel}
+                  compareLabel={compareLabel}
+                  compareLimitLabel={compareLimitLabel}
+                  addToCartLabel={addToCartLabel}
+                />
+              </div>
             ))}
           </div>
         )}

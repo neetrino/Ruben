@@ -332,7 +332,14 @@ export function ProductDrawer({
             {error ? <p className="text-sm text-red-700">{error}</p> : null}
           </div>
 
-          <div className="sticky bottom-0 flex items-center gap-4 border-t border-gray-200 bg-white px-5 py-4">
+          <div className="sticky bottom-0 flex items-center justify-end gap-4 border-t border-gray-200 bg-white px-5 py-4">
+            <button
+              type="button"
+              onClick={onClose}
+              className="text-sm font-medium text-gray-600 hover:text-gray-900"
+            >
+              {t.common.cancel}
+            </button>
             <Button type="submit" disabled={isPending}>
               {isPending
                 ? isEdit
@@ -342,13 +349,6 @@ export function ProductDrawer({
                   ? t.common.save
                   : t.common.create}
             </Button>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-sm font-medium text-gray-600 hover:text-gray-900"
-            >
-              {t.common.cancel}
-            </button>
           </div>
         </form>
     </SideSheet>

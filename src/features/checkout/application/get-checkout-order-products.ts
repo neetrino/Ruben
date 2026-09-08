@@ -5,6 +5,7 @@ import { and, asc, eq, inArray, or } from "drizzle-orm";
 import { getDb } from "@/db/client";
 import { cartItems, mediaAssets, products } from "@/db/schema";
 import type { CheckoutOrderProduct } from "@/features/checkout/ui/checkout-order-product";
+import type { ResolvedCatalogPrice } from "@/features/promotions/domain/resolve-automatic-discount";
 import type { Locale } from "@/lib/i18n/config";
 import { mediaPublicUrl } from "@/lib/media/public-url";
 
@@ -52,6 +53,7 @@ async function loadPrimaryProductImages(
 export async function getCheckoutOrderProducts(
   locale: Locale,
   rows: CartItemWithProduct[],
+  prices: ReadonlyMap<string, ResolvedCatalogPrice>,
 ): Promise<CheckoutOrderProduct[]> {
   const images = await loadPrimaryProductImages(
     rows.map(({ product }) => product.id),
@@ -60,11 +62,14 @@ export async function getCheckoutOrderProducts(
   return rows.map(({ item, product }) => {
     const translation =
       product.translations[locale] ?? product.translations.hy;
+    const unitAmount =
+      prices.get(product.id)?.unitAmount ?? product.priceAmount;
     return {
       id: item.id,
       title: translation?.title ?? product.sku,
       quantity: item.quantity,
       imageUrl: images.get(product.id) ?? null,
+      lineTotalAmount: item.quantity * unitAmount,
     };
   });
 }

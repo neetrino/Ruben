@@ -1,14 +1,24 @@
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 
+import { Reveal } from "@/components/motion/Reveal";
+import { CartCheckoutSkeleton } from "@/components/loading/storefront-skeletons";
 import { getCartWithItems } from "@/features/cart/cart";
 import { getCheckoutDeliveryOptions } from "@/features/checkout/application/get-checkout-delivery";
 import { getCheckoutOrderProducts } from "@/features/checkout/application/get-checkout-order-products";
-import { CheckoutForm } from "@/features/checkout/ui/CheckoutForm";
 import { getDefaultShippingAddress } from "@/features/profile/application/address-queries";
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+
+const CheckoutForm = dynamic(
+  () =>
+    import("@/features/checkout/ui/CheckoutForm").then((mod) => ({
+      default: mod.CheckoutForm,
+    })),
+  { loading: () => <CartCheckoutSkeleton /> },
+);
 
 type CheckoutPageProps = {
   params: Promise<{ locale: string }>;
@@ -27,16 +37,16 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
     getCartWithItems(),
     getCheckoutDeliveryOptions(),
   ]);
-  const [defaultAddress, prices, orderProducts] = await Promise.all([
+  const prices = await resolveProductPrices(
+    items.map(({ product }) => ({
+      id: product.id,
+      priceAmount: product.priceAmount,
+      compareAtAmount: product.compareAtAmount,
+    })),
+  );
+  const [defaultAddress, orderProducts] = await Promise.all([
     user ? getDefaultShippingAddress(user.id) : Promise.resolve(null),
-    resolveProductPrices(
-      items.map(({ product }) => ({
-        id: product.id,
-        priceAmount: product.priceAmount,
-        compareAtAmount: product.compareAtAmount,
-      })),
-    ),
-    getCheckoutOrderProducts(rawLocale, items),
+    getCheckoutOrderProducts(rawLocale, items, prices),
   ]);
   const subtotal = items.reduce((sum, { item, product }) => {
     const unit = prices.get(product.id)?.unitAmount ?? product.priceAmount;
@@ -44,6 +54,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   }, 0);
 
   return (
+    <Reveal>
     <CheckoutForm
       locale={rawLocale}
       productsHref={`/${rawLocale}/products`}
@@ -92,7 +103,9 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         selectDeliveryLocation: copy.shipping.selectDeliveryLocation,
         cashOnDelivery: copy.payment.cashOnDelivery,
         cashOnDeliveryDescription: copy.payment.cashOnDeliveryDescription,
+        cashPickup: copy.payment.cashPickup,
         card: copy.payment.card,
+        cardShort: copy.payment.cardShort,
         cardDescription: copy.payment.cardDescription,
         fastshift: copy.payment.fastshift,
         fastshiftDescription: copy.payment.fastshiftDescription,
@@ -100,10 +113,8 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         couponPlaceholder: copy.coupon.placeholder,
         couponApply: copy.coupon.apply,
         couponApplying: copy.coupon.applying,
-        discount: copy.summary.discount,
         subtotal: copy.summary.subtotal,
         shipping: copy.summary.shipping,
-        tax: copy.summary.tax,
         total: copy.summary.total,
         placeOrder: copy.buttons.placeOrder,
         processing: copy.buttons.processing,
@@ -111,5 +122,6 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         cartEmpty: copy.errors.cartEmpty,
       }}
     />
+    </Reveal>
   );
 }

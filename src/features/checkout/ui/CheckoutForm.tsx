@@ -4,17 +4,22 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition, type FormEvent } from "react";
 
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { CheckoutOrderProduct } from "@/features/checkout/ui/checkout-order-product";
 import { previewCouponAction } from "@/features/checkout/application/preview-coupon";
 import { createOrderAction } from "@/features/checkout/create-order";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
+import { CHECKOUT_PAYMENT_WALLET_LOGO_SRC } from "@/features/checkout/ui/checkout-payment-ui";
 import { CheckoutDetailsSections } from "@/features/checkout/ui/CheckoutDetailsSections";
 import { CheckoutOrderSummary } from "@/features/checkout/ui/CheckoutOrderSummary";
 import { CheckoutProductsInOrder } from "@/features/checkout/ui/CheckoutProductsInOrder";
 import type { CheckoutDeliveryOption } from "@/features/delivery/application/queries";
 import type { Locale } from "@/lib/i18n/config";
 import { formatMoneyAmount } from "@/lib/money/format";
+
+const CHECKOUT_PAGE_TITLE =
+  "flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase";
 
 type CheckoutLabels = {
   title: string;
@@ -48,7 +53,9 @@ type CheckoutLabels = {
   selectDeliveryLocation: string;
   cashOnDelivery: string;
   cashOnDeliveryDescription: string;
+  cashPickup: string;
   card: string;
+  cardShort: string;
   cardDescription: string;
   fastshift: string;
   fastshiftDescription: string;
@@ -56,10 +63,8 @@ type CheckoutLabels = {
   couponPlaceholder: string;
   couponApply: string;
   couponApplying: string;
-  discount: string;
   subtotal: string;
   shipping: string;
-  tax: string;
   total: string;
   placeOrder: string;
   processing: string;
@@ -134,33 +139,45 @@ export function CheckoutForm({
   );
 
   const paymentOptions = useMemo(
-    () => [
+    () => {
+      const isPickup = shippingMethod === "pickup";
+
+      return [
+        {
+          id: "cash_on_delivery" as const,
+          name: isPickup ? labels.cashPickup : labels.cashOnDelivery,
+          shortName: isPickup ? labels.cashPickup : labels.cashOnDelivery,
+          description: isPickup ? "" : labels.cashOnDeliveryDescription,
+          iconKind: "cash" as const,
+        },
       {
-        id: "cash_on_delivery" as const,
-        name: labels.cashOnDelivery,
-        description: labels.cashOnDeliveryDescription,
-        logoSrc: null,
+        id: "fastshift" as const,
+        name: labels.fastshift,
+        shortName: labels.fastshift,
+        description: labels.fastshiftDescription,
+        iconKind: "wallet" as const,
+        walletLogoSrc: CHECKOUT_PAYMENT_WALLET_LOGO_SRC,
+        walletAlt: "FastShift",
       },
       {
         id: "card" as const,
         name: labels.card,
+        shortName: labels.cardShort,
         description: labels.cardDescription,
-        logoSrc: "/assets/payments/arca.svg",
+        iconKind: "card-badges" as const,
       },
-      {
-        id: "fastshift" as const,
-        name: labels.fastshift,
-        description: labels.fastshiftDescription,
-        logoSrc: "/assets/payments/fastshift.svg",
-      },
-    ],
+    ];
+    },
     [
       labels.card,
       labels.cardDescription,
+      labels.cardShort,
       labels.cashOnDelivery,
       labels.cashOnDeliveryDescription,
+      labels.cashPickup,
       labels.fastshift,
       labels.fastshiftDescription,
+      shippingMethod,
     ],
   );
 
@@ -217,18 +234,17 @@ export function CheckoutForm({
 
   if (!hasItems) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <h1 className="mb-8 text-3xl font-bold text-gray-900">{labels.title}</h1>
-        <Card className="rounded-2xl border border-gray-200/80 p-6 text-center shadow-none">
-          <p className="mb-4 text-gray-600">{labels.cartEmpty}</p>
-          <Link
-            href={productsHref}
-            className="inline-flex h-11 items-center justify-center rounded-xl bg-gray-900 px-4 text-sm font-medium text-white hover:bg-gray-800"
-          >
-            {labels.continueShopping}
+      <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
+        <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
+        <Card className="rounded-[15px] border-gray-200 p-6 text-center shadow-sm">
+          <p className="mb-4 text-[#888]">{labels.cartEmpty}</p>
+          <Link href={productsHref}>
+            <Button variant="primary" size="md">
+              {labels.continueShopping}
+            </Button>
           </Link>
         </Card>
-      </div>
+      </section>
     );
   }
 
@@ -276,8 +292,8 @@ export function CheckoutForm({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">{labels.title}</h1>
+    <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
+      <h1 className={CHECKOUT_PAGE_TITLE}>{labels.title}</h1>
 
       <CheckoutProductsInOrder
         products={orderProducts}
@@ -285,6 +301,7 @@ export function CheckoutForm({
         itemsOneLabel={labels.itemsOne}
         itemsManyLabel={labels.itemsMany}
         removeItemLabel={labels.removeItem}
+        locale={locale}
         onCartChanged={clearAppliedCoupon}
       />
 
@@ -314,17 +331,11 @@ export function CheckoutForm({
             couponPlaceholder={labels.couponPlaceholder}
             couponApplyLabel={labels.couponApply}
             couponApplyingLabel={labels.couponApplying}
-            discountLabel={labels.discount}
             subtotalLabel={labels.subtotal}
             shippingLabel={labels.shipping}
-            taxLabel={labels.tax}
             totalLabel={labels.total}
             subtotalFormatted={formatMoney(subtotalAmount)}
             shippingFormatted={shippingFormatted}
-            taxFormatted={formatMoney(0)}
-            discountFormatted={
-              discountAmount > 0 ? formatMoney(discountAmount) : null
-            }
             totalFormatted={formatMoney(totalAmount)}
             couponDraft={couponDraft}
             onCouponDraftChange={onCouponDraftChange}
@@ -338,6 +349,6 @@ export function CheckoutForm({
           />
         </div>
       </form>
-    </div>
+    </section>
   );
 }

@@ -1,19 +1,22 @@
 {
-  "brand": "White-Shop",
+  "brand": "RUBEN",
   "nav": {
-    "home": "Home",
-    "products": "Products",
+    "home": "HOME",
+    "products": "PRODUCTS",
+    "categories": "CATEGORIES",
+    "brands": "BRANDS",
+    "promotions": "SALE",
     "shop": "Shop",
     "blog": "Blog",
     "cart": "Cart",
     "about": "About",
-    "contact": "Contact",
+    "contact": "CONTACT",
+    "policy": "POLICY",
     "wishlist": "Wishlist",
     "compare": "Compare",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
-    "navigation": "Navigation",
-    "shopNow": "Shop now"
+    "navigation": "Navigation"
   },
   "header": {
     "language": "Language",
@@ -22,19 +25,35 @@
     "logout": "Logout",
     "profile": "Profile",
     "admin": "Admin",
-    "createAccount": "Create account"
+    "createAccount": "Create account",
+    "search": "Search",
+    "searchClose": "Close search",
+    "searchPlaceholder": "Search",
+    "searchIdle": "Type a product name",
+    "searchEmpty": "No products found",
+    "searchViewAll": "View all results"
   },
   "footer": {
     "shop": "Shop",
-    "description": "Professional e-commerce storefront for everyday shopping.",
+    "description": "«Armenian cuisine, music and hospitality — with a new sound».",
+    "navigation": "Navigation",
+    "support": "Support",
     "legal": "Legal",
     "privacyPolicy": "Privacy Policy",
     "terms": "Terms & Conditions",
     "refundPolicy": "Refund Policy",
     "deliveryPolicy": "Delivery Policy",
-    "contactInfo": "Contact Information",
+    "deliveryReturns": "Delivery and Returns",
+    "faq": "FAQ",
+    "specialOffers": "Special offers",
+    "gallery": "Gallery",
+    "contactInfo": "Contact",
     "social": "Social",
     "map": "Map",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Mon–Sun: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": ""
   }
 }

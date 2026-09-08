@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
-import { AppLink } from "@/components/ui/AppLink";
 import { getProfileDashboard } from "@/features/profile/application/dashboard-queries";
+import { ProfileRecentOrders } from "@/features/profile/ui/ProfileRecentOrders";
 import { ProfileStatCard } from "@/features/profile/ui/ProfileStatCard";
 import { requireUser } from "@/lib/auth/policies";
 import { isLocale } from "@/lib/i18n/config";
@@ -22,6 +22,15 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   const dictionary = getDictionary(locale);
   const { stats, recentOrders } = await getProfileDashboard(user.id);
 
+  const recentOrdersForClient = recentOrders.map((order) => ({
+    id: order.id,
+    orderNumber: order.orderNumber,
+    status: order.status,
+    totalAmount: order.totalAmount,
+    itemsCount: order.itemsCount,
+    placedAt: order.placedAt.toISOString(),
+  }));
+
   return (
     <section className="profile-sheet-keep-frame space-y-8">
       <div>
@@ -33,7 +42,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4">
         <ProfileStatCard
           label={dictionary.profile.totalOrders}
           value={String(stats.totalOrders)}
@@ -52,45 +61,12 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
         />
       </div>
 
-      <div className="rounded-2xl border border-gray-200/80 bg-white p-5 sm:p-7">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-900">
-            {dictionary.profile.recentOrders}
-          </h2>
-          <AppLink
-            href={`/${locale}/profile/orders`}
-            prefetchPolicy="intent"
-            className="text-sm font-semibold text-gray-700 underline-offset-2 hover:underline"
-          >
-            {dictionary.profile.viewAllOrders}
-          </AppLink>
-        </div>
-
-        {recentOrders.length === 0 ? (
-          <p className="text-sm text-gray-600">{dictionary.profile.noOrders}</p>
-        ) : (
-          <ul className="divide-y divide-gray-100">
-            {recentOrders.map((order) => (
-              <li
-                key={order.id}
-                className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div>
-                  <p className="font-medium text-gray-900">
-                    {dictionary.profile.orderNumber} {order.orderNumber}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {dictionary.profile.status}: {order.status}
-                  </p>
-                </div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {formatMoneyAmount(order.totalAmount, "AMD", locale)}
-                </p>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      <ProfileRecentOrders
+        locale={locale}
+        orders={recentOrdersForClient}
+        dictionary={dictionary.profile}
+        statusLabels={dictionary.admin.orders.status}
+      />
     </section>
   );
 }

@@ -1,11 +1,13 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import type { MouseEvent, ReactNode } from "react";
 import { ShoppingCart } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 
+import { adjustLocalCartItemCount } from "@/features/cart/cart-client-sync";
 import { addToCart } from "@/features/cart/cart";
+import { flyToCart } from "@/features/cart/ui/fly-to-cart";
 
 type AddToCartButtonProps = {
   productId: string;
@@ -13,6 +15,10 @@ type AddToCartButtonProps = {
   disabled?: boolean;
   className?: string;
   size?: "sm" | "md";
+  /** Product image used for the fly-to-cart mini preview. */
+  imageUrl?: string | null;
+  /** Replaces the default cart icon when provided. */
+  children?: ReactNode;
 };
 
 export function AddToCartButton({
@@ -21,8 +27,11 @@ export function AddToCartButton({
   disabled = false,
   className = "",
   size = "md",
+  imageUrl = null,
+  children,
 }: AddToCartButtonProps) {
   const router = useRouter();
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const [pending, startTransition] = useTransition();
   const [justAdded, setJustAdded] = useState(false);
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
@@ -32,13 +41,19 @@ export function AddToCartButton({
     event.stopPropagation();
     if (disabled || pending) return;
 
+    if (buttonRef.current) {
+      flyToCart({ from: buttonRef.current, imageUrl });
+    }
+    adjustLocalCartItemCount(1);
+    setJustAdded(true);
+    window.setTimeout(() => setJustAdded(false), 1500);
+
     startTransition(async () => {
       try {
         await addToCart(productId, 1);
-        setJustAdded(true);
         router.refresh();
-        window.setTimeout(() => setJustAdded(false), 1500);
       } catch {
+        adjustLocalCartItemCount(-1);
         setJustAdded(false);
       }
     });
@@ -46,18 +61,21 @@ export function AddToCartButton({
 
   return (
     <button
+      ref={buttonRef}
       type="button"
       onClick={handleClick}
       disabled={disabled || pending}
       aria-label={label}
       className={`inline-flex items-center justify-center rounded-full transition disabled:cursor-not-allowed disabled:opacity-40 ${className}`}
     >
-      <ShoppingCart
-        className={`${iconClass} ${
-          justAdded ? "fill-gray-900 text-gray-900" : "text-gray-700"
-        }`}
-        aria-hidden
-      />
+      {children ?? (
+        <ShoppingCart
+          className={`${iconClass} ${
+            justAdded ? "fill-gray-900 text-gray-900" : "text-gray-700"
+          }`}
+          aria-hidden
+        />
+      )}
     </button>
   );
 }

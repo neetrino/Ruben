@@ -9,13 +9,14 @@
   "submit": "Ուղարկել",
   "success": "Շնորհակալություն — հաղորդագրությունն ուղարկված է։",
   "error": "Չհաջողվեց ուղարկել հաղորդագրությունը։",
-  "storePhone": "+374 XX XXX XXX",
-  "storeEmail": "info@shop.am",
-  "storeAddress": "Երևան, Աբովյան 10",
+  "storePhone": "+374 10 123 456",
+  "storeEmail": "info@kamancha.am",
+  "storeAddress": "Աբովյան 23, Երևան, Հայաստան",
   "social": {
     "instagram": "https://instagram.com",
     "facebook": "https://facebook.com",
-    "linkedin": "https://linkedin.com"
+    "linkedin": "https://linkedin.com",
+    "whatsapp": "https://wa.me/37410123456"
   },
   "callTitle": "Զանգահարեք մեզ՝",
   "callDescription": "Մենք հասանելի ենք 24/7, շաբաթը 7 օր։",

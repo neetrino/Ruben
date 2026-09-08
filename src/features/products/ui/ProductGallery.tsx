@@ -1,80 +1,141 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
+import { useSnapCarousel } from "@/features/products/ui/use-snap-carousel";
 import type { ProductGalleryImage } from "@/features/products/types";
+
+const ARROW_CLASS =
+  "absolute top-1/2 z-20 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-neutral-800 opacity-0 shadow-[0_2px_8px_rgba(0,0,0,0.12)] transition-opacity duration-200 group-hover:opacity-100 hover:bg-white focus-visible:opacity-100";
 
 type ProductGalleryProps = {
   images: ProductGalleryImage[];
   title: string;
   discountPercent?: number | null;
+  badgeLabel?: string | null;
   inStock: boolean;
   outOfStockLabel: string;
+  previousImageLabel: string;
+  nextImageLabel: string;
 };
 
 export function ProductGallery({
   images,
   title,
   discountPercent = null,
+  badgeLabel = null,
   inStock,
   outOfStockLabel,
+  previousImageLabel,
+  nextImageLabel,
 }: ProductGalleryProps) {
-  const [selectedId, setSelectedId] = useState(images[0]?.id ?? null);
-  const selected =
-    images.find((image) => image.id === selectedId) ?? images[0] ?? null;
+  const { trackRef, activeIndex, handleScroll, scrollToIndex } =
+    useSnapCarousel(images.length);
+
+  /** Wraps around so the arrows never dead-end. */
+  function step(offset: number): void {
+    if (images.length < 2) return;
+
+    scrollToIndex((activeIndex + offset + images.length) % images.length);
+  }
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="relative flex h-80 w-full items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-100 sm:h-[28rem] lg:h-[32rem]">
-        {selected ? (
-          <Image
-            src={selected.url}
-            alt={selected.alt || title}
-            fill
-            sizes="(max-width: 1024px) 100vw, 50vw"
-            className="object-contain p-4"
-            priority
-          />
+    <div className="flex w-full flex-col gap-4">
+      <div className="group relative aspect-[717/538] w-full overflow-hidden rounded-[40px] bg-[#eaeaea]">
+        {images.length > 0 ? (
+          <div
+            ref={trackRef}
+            onScroll={handleScroll}
+            className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {images.map((image, index) => (
+              <div
+                key={image.id}
+                className="relative h-full w-full shrink-0 snap-center"
+              >
+                <Image
+                  src={image.url}
+                  alt={image.alt || title}
+                  fill
+                  sizes="(max-width: 767px) 100vw, 55vw"
+                  className="object-contain p-6"
+                  priority={index === 0}
+                  draggable={false}
+                />
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">
+          <div className="flex h-full w-full items-center justify-center text-sm text-neutral-400">
             No image
           </div>
         )}
-        {discountPercent != null ? (
-          <span className="absolute top-3 right-3 z-10 rounded bg-red-600 px-2 py-1 text-xs font-semibold text-white">
-            -{discountPercent}%
-          </span>
+
+        {discountPercent != null || badgeLabel || !inStock ? (
+          <div className="absolute top-4 left-4 z-10 flex flex-col items-start gap-2">
+            {discountPercent != null ? (
+              <span className="inline-flex rounded-full bg-[var(--brand)] px-3 py-1 text-[10px] leading-[15px] font-bold text-white">
+                -{discountPercent}%
+              </span>
+            ) : null}
+            {badgeLabel ? (
+              <span className="inline-flex rounded-full bg-black px-3 py-1 text-[10px] leading-[15px] font-bold text-white uppercase">
+                {badgeLabel}
+              </span>
+            ) : null}
+            {!inStock ? (
+              <span className="inline-flex rounded-full bg-neutral-800/90 px-3 py-1 text-[10px] leading-[15px] font-bold text-white">
+                {outOfStockLabel}
+              </span>
+            ) : null}
+          </div>
         ) : null}
-        {!inStock ? (
-          <span className="absolute top-3 left-3 z-10 rounded bg-gray-900/90 px-2 py-1 text-xs font-semibold text-white">
-            {outOfStockLabel}
-          </span>
+
+        {images.length > 1 ? (
+          <>
+            <button
+              type="button"
+              aria-label={previousImageLabel}
+              onClick={() => step(-1)}
+              className={`${ARROW_CLASS} left-4`}
+            >
+              <ChevronLeft className="size-5" aria-hidden />
+            </button>
+            <button
+              type="button"
+              aria-label={nextImageLabel}
+              onClick={() => step(1)}
+              className={`${ARROW_CLASS} right-4`}
+            >
+              <ChevronRight className="size-5" aria-hidden />
+            </button>
+          </>
         ) : null}
       </div>
 
       {images.length > 1 ? (
-        <ul className="flex flex-wrap gap-2" role="list">
-          {images.map((image) => {
-            const isActive = image.id === selected?.id;
+        <ul className="flex gap-3 overflow-x-auto pb-1" role="list">
+          {images.map((image, index) => {
+            const isActive = index === activeIndex;
             return (
-              <li key={image.id}>
+              <li key={image.id} className="shrink-0">
                 <button
                   type="button"
-                  onClick={() => setSelectedId(image.id)}
+                  onClick={() => scrollToIndex(index)}
                   aria-label={image.alt || title}
                   aria-pressed={isActive}
-                  className={`relative h-16 w-16 overflow-hidden rounded-md border bg-gray-100 transition ${
+                  className={`relative size-20 overflow-hidden rounded-2xl border-2 bg-[#eaeaea] transition ${
                     isActive
-                      ? "border-gray-900 ring-2 ring-gray-900/20"
-                      : "border-gray-200 hover:border-gray-400"
+                      ? "border-[#212121]"
+                      : "border-[#e0e0e0] hover:border-neutral-400"
                   }`}
                 >
                   <Image
                     src={image.url}
                     alt=""
                     fill
-                    sizes="64px"
+                    sizes="80px"
                     className="object-cover"
                   />
                 </button>

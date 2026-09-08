@@ -90,7 +90,13 @@ export default async function OrdersPage({
         q={filters.q}
       />
 
-      <CustomerOrdersView locale={locale} orders={rows} />
+      <CustomerOrdersView
+        locale={locale}
+        orders={rows}
+        emptyLabel={dictionary.profile.noOrders}
+        statusLabels={dictionary.admin.orders.status}
+        paymentLabels={dictionary.admin.orders.payment}
+      />
 
       {totalPages > 1 ? (
         <nav className="flex items-center gap-3 text-sm text-gray-700">

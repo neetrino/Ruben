@@ -1,41 +1,47 @@
+import { RevealItem, RevealList } from "@/components/motion/RevealList";
 import {
-  HOME_PARTNER_BRANDS,
-  type HomePartnerBrand,
-} from "@/features/home/config/partners";
+  STOREFRONT_BRANDS,
+  type StorefrontBrand,
+} from "@/features/brands/config/brands";
 
 type HomePartnersProps = {
-  title: string;
-  subtitle: string;
-  brands?: readonly HomePartnerBrand[];
+  brands?: readonly StorefrontBrand[];
+  title?: string;
 };
 
+/**
+ * Figma 118:1233 — white partners strip with rounded top over the yellow block.
+ * Four bold brand wordmarks centered in a wide row.
+ */
 export function HomePartners({
+  brands = STOREFRONT_BRANDS,
   title,
-  subtitle,
-  brands = HOME_PARTNER_BRANDS,
 }: HomePartnersProps) {
-  return (
-    <section className="border-y border-gray-200 bg-gray-50 py-14">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">
-            {title}
-          </h2>
-          <p className="mt-2 text-base text-gray-600">{subtitle}</p>
-        </div>
+  const marks = brands.slice(0, 4);
 
-        <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {brands.map((brand) => (
-            <li
+  return (
+    <section
+      id="partners"
+      className="relative z-10 -mt-12 flex min-h-[200px] flex-col items-center justify-center rounded-t-[40px] bg-white sm:-mt-16 sm:min-h-[280px] lg:min-h-[400px]"
+    >
+      <div className="mx-auto flex w-full max-w-[1440px] items-center justify-center px-6 sm:px-10 lg:px-[138px]">
+        {title ? <h2 className="sr-only">{title}</h2> : null}
+        <RevealList
+          as="ul"
+          className="flex w-full flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24 lg:justify-evenly lg:gap-x-0"
+        >
+          {marks.map((brand) => (
+            <RevealItem
+              as="li"
               key={brand.id}
-              className="flex h-20 items-center justify-center border border-gray-200 bg-white px-4"
+              className="flex shrink-0 items-center"
             >
-              <span className="text-lg font-semibold tracking-wide text-gray-700">
+              <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
                 {brand.name}
               </span>
-            </li>
+            </RevealItem>
           ))}
-        </ul>
+        </RevealList>
       </div>
     </section>
   );

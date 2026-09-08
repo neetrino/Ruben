@@ -198,15 +198,7 @@ export function ProductDrawerCategories({
               disabled={disabled || isPending}
             />
           </label>
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              disabled={disabled || isPending || !newTitle.trim()}
-              onClick={createCategory}
-              className="rounded-lg bg-gray-900 px-3 py-1.5 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
-            >
-              {isPending ? t.products.categories.adding : t.products.categories.add}
-            </button>
+          <div className="flex items-center justify-end gap-3">
             <button
               type="button"
               disabled={isPending}
@@ -218,6 +210,14 @@ export function ProductDrawerCategories({
               className="text-sm font-medium text-gray-600 hover:text-gray-900"
             >
               {t.common.cancel}
+            </button>
+            <button
+              type="button"
+              disabled={disabled || isPending || !newTitle.trim()}
+              onClick={createCategory}
+              className="rounded-lg bg-[var(--brand)] px-3 py-1.5 text-sm font-medium text-black hover:brightness-95 disabled:opacity-50"
+            >
+              {isPending ? t.products.categories.adding : t.products.categories.add}
             </button>
           </div>
           {error ? <p className="text-sm text-red-700">{error}</p> : null}

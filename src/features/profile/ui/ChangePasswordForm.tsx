@@ -8,6 +8,7 @@ import {
   changePasswordAction,
   type ChangePasswordActionState,
 } from "@/features/auth/change-password-action";
+import { scheduleStateUpdate } from "@/lib/react/schedule-after-paint";
 
 const FIELD_CLASS =
   "h-11 w-full rounded-lg border border-gray-200 px-3 text-gray-900 outline-none transition focus:border-gray-400 focus:ring-2 focus:ring-gray-200";
@@ -42,7 +43,7 @@ export function ChangePasswordForm({ locale, labels }: ChangePasswordFormProps) 
 
   useEffect(() => {
     if (state.success) {
-      setValues(emptyForm);
+      scheduleStateUpdate(setValues, emptyForm);
     }
   }, [state.success]);
 

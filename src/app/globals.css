@@ -1,13 +1,22 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f9fafb;
+  --background: #ffffff;
   --foreground: #111827;
   --muted: #4b5563;
   --border: #e5e7eb;
   --accent: #111827;
   --accent-foreground: #f9fafb;
+  --brand: #ffca03;
+  --brand-deep: #fec604;
   --radius: 15px;
+  /* SiteHeader lg+: pt-[26px] + pill h-[63px] */
+  --storefront-header-offset: calc(26px + 63px);
+  /* MobileBottomNav island: 72px pill + its bottom inset + breathing room. */
+  --mobile-bottom-nav-clearance: calc(
+    72px + max(16px, env(safe-area-inset-bottom)) + 16px
+  );
+  --profile-sticky-gap: 5rem;
 }
 
 @theme inline {
@@ -17,6 +26,8 @@
   --color-border: var(--border);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-brand: var(--brand);
+  --color-brand-deep: var(--brand-deep);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --radius-sm: 15px;
@@ -28,10 +39,84 @@
   --radius-4xl: 15px;
 }
 
+/* Tablet portrait widths: iPad mini is 744px, iPad Air / Pro start at 820px. */
+@theme {
+  --breakpoint-tablet: 744px;
+  --breakpoint-tablet-lg: 820px;
+  /**
+   * Desktop chrome starts above the widest tablet portrait viewport, so the
+   * iPad Pro 12.9" (1024px) keeps the same layout as the iPad Air.
+   * Hardcoded media queries below must stay paired with this value.
+   */
+  --breakpoint-lg: 1025px;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, sans-serif;
+}
+
+/**
+ * Homepage / shop match Figma full-bleed 1440 artboards: section backgrounds
+ * span the viewport; inner content keeps its own max-width + gutters.
+ * Other storefront pages keep the constrained `storefront-main` shell.
+ */
+.storefront-main:has(.home-page-root),
+.storefront-main:has(.shop-page-root),
+.storefront-main:has(.product-page-root) {
+  max-width: none;
+  padding-inline: 0;
+  padding-top: 0;
+}
+
+/* Mobile page end: copyright line, then clearance for the floating tab bar. */
+@media (max-width: 1024px) {
+  /**
+   * No footer on mobile, so `main` absorbs the leftover height and the
+   * copyright always closes the page at the bottom edge, with no extra
+   * padding of its own above the clearance.
+   */
+  .storefront-main {
+    padding-bottom: 0;
+  }
+
+  /* The tab bar floats over the page end; reserve room below the copyright. */
+  .storefront-shell {
+    padding-bottom: var(--mobile-bottom-nav-clearance);
+  }
+}
+
+.shop-page-root,
+.product-page-root {
+  margin-inline: auto;
+  max-width: 1440px;
+}
+
+.shop-page-root {
+  padding-top: 1.25rem;
+  padding-bottom: 4rem;
+}
+
+/* Mobile product: flush under storefront top bar (no gap above gallery). */
+.product-page-root {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Tablet and up: the product page switches to the desktop layout at `md`. */
+@media (min-width: 768px) {
+  .product-page-root {
+    padding-top: 1.75rem;
+    padding-bottom: 4rem;
+  }
+}
+
+@media (min-width: 1025px) {
+  .shop-page-root {
+    padding-top: 1.75rem;
+    padding-bottom: 4rem;
+  }
 }
 
 @layer base {
@@ -55,6 +140,25 @@ body {
   input:disabled,
   [aria-disabled="true"] {
     cursor: not-allowed;
+  }
+
+  /* No browser default blue focus ring (ESC / keyboard leave a flashy outline). */
+  :focus,
+  :focus-visible {
+    outline: none;
+  }
+}
+
+/**
+ * iOS Safari auto-zooms the page when a focused control renders below 16px.
+ * Kept unlayered so it wins over Tailwind `text-sm` / `text-xs` utilities,
+ * and scoped to mobile widths so desktop keeps the designed type scale.
+ */
+@media (max-width: 1024px) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  select,
+  textarea {
+    font-size: 16px;
   }
 }
 
@@ -249,54 +353,110 @@ body {
 }
 
 /**
- * MaMarie-style profile desktop shell:
- * lock viewport height, hide footer, scroll only the content column.
+ * Storefront profile desktop (Kamancha): sticky band under the header.
+ * Equal top/bottom gaps; content column scrolls internally. When that
+ * column reaches its end, page scroll continues so the footer is reachable.
  */
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
+  /**
+   * The hero wave overflows the constrained profile shell on purpose, so it is
+   * clipped here — at the viewport-wide shell — and not inside the page gutter.
+   * `clip` (not `hidden`) keeps this from becoming a scroll container, so the
+   * sticky header and the sticky profile bands keep working.
+   */
   .storefront-shell:has(.profile-desktop-page) {
-    height: 100dvh;
-    max-height: 100dvh;
-    min-height: 0;
-    overflow: hidden;
+    overflow-x: clip;
   }
 
   .storefront-shell:has(.profile-desktop-page) .storefront-main {
     display: flex;
-    flex: 1 1 0%;
+    flex: 1 1 auto;
     flex-direction: column;
-    min-height: 0;
-    overflow: hidden;
-    padding-top: 24px;
-    padding-bottom: 20px;
+    padding-top: var(--profile-sticky-gap);
+    padding-bottom: var(--profile-sticky-gap);
   }
 
-  .storefront-shell:has(.profile-desktop-page) .storefront-footer {
+  .profile-desktop-page {
+    flex: 1 1 auto;
+    min-height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    align-items: flex-start;
+  }
+
+  .profile-sticky-band {
+    position: sticky;
+    top: calc(var(--storefront-header-offset) + var(--profile-sticky-gap));
+    z-index: 10;
+    height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    max-height: calc(
+      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
+    );
+    align-self: flex-start;
+  }
+
+  html:has(.profile-desktop-page) {
+    scroll-behavior: smooth;
+  }
+
+  .profile-desktop-content {
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-desktop-content::-webkit-scrollbar {
     display: none;
+  }
+
+  .profile-desktop-content > * {
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
   }
 }
 
 /**
- * MaMarie-style mobile profile page: slightly cooler canvas behind hub cards.
- * Hide the storefront top header — profile hub is the chrome on mobile.
- * Hide the storefront bottom tab bar — profile has its own hub chrome.
+ * Mobile profile: hub is the chrome — hide storefront navbar (mobile top bar
+ * + SiteHeader). Clearance for the floating MobileBottomNav comes from the
+ * shared `.storefront-shell` rule above.
+ * SiteFooter is already hidden below `lg` for all storefront pages.
  */
-@media (max-width: 1023px) {
+@media (max-width: 1024px) {
+  .storefront-shell:has(.profile-mobile-page) .storefront-mobile-top-bar,
   .storefront-shell:has(.profile-mobile-page) .site-header {
     display: none;
   }
 
   .storefront-shell:has(.profile-mobile-page) .storefront-main {
+    flex-grow: 0;
     padding-top: 0.5rem;
-    padding-bottom: 2.5rem;
   }
 
-  .storefront-shell:has(.profile-mobile-page) .mobile-bottom-nav {
-    display: none;
+  /**
+   * The hub `main` does not grow, so the copyright claims the leftover height
+   * itself and closes the page at the bottom edge, as on the other pages.
+   */
+  .storefront-shell:has(.profile-mobile-page) .storefront-mobile-copyright {
+    margin-top: auto;
   }
 
   .profile-mobile-tab-sheet-scroll {
     -webkit-overflow-scrolling: touch;
     touch-action: pan-y;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .profile-mobile-tab-sheet-scroll::-webkit-scrollbar {
+    display: none;
   }
 
   /* Dashboard + orders: more inset from the sheet edges. */
@@ -327,39 +487,118 @@ body {
 /* Dual-thumb catalog price range: track clicks pass through; thumbs stay interactive. */
 .catalog-price-thumb {
   pointer-events: none;
+  height: 1.25rem;
 }
 
+/* Full-height transparent track so native thumbs sit on the visual midline. */
 .catalog-price-thumb::-webkit-slider-runnable-track {
   background: transparent;
-  height: 0.375rem;
+  height: 1.25rem;
 }
 
 .catalog-price-thumb::-moz-range-track {
   background: transparent;
   border: none;
-  height: 0.375rem;
+  height: 1.25rem;
 }
 
 .catalog-price-thumb::-webkit-slider-thumb {
   pointer-events: auto;
   -webkit-appearance: none;
   appearance: none;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0;
   border-radius: 9999px;
-  background: #111827;
+  background: #000000;
   border: 2px solid #ffffff;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.1),
+    0 1px 2px rgb(0 0 0 / 0.1);
   cursor: grab;
 }
 
 .catalog-price-thumb::-moz-range-thumb {
   pointer-events: auto;
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1rem;
+  height: 1rem;
   border: 2px solid #ffffff;
   border-radius: 9999px;
-  background: #111827;
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.2);
+  background: #000000;
+  box-shadow:
+    0 1px 3px rgb(0 0 0 / 0.1),
+    0 1px 2px rgb(0 0 0 / 0.1);
   cursor: grab;
+}
+
+.catalog-price-thumb-max::-webkit-slider-thumb {
+  background: #ffca03;
+}
+
+.catalog-price-thumb-max::-moz-range-thumb {
+  background: #ffca03;
+}
+
+@media (min-width: 1025px) {
+  html:has([data-admin-shell]),
+  body:has([data-admin-shell]) {
+    overflow: hidden;
+    height: 100dvh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:has(.profile-desktop-page),
+  .profile-desktop-content {
+    scroll-behavior: auto;
+  }
+}
+
+.profile-nav-indicator {
+  transition-property: top, height;
+  transition-duration: var(--profile-nav-ms, 380ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.profile-nav-indicator-instant {
+  transition-duration: 0ms;
+}
+
+.profile-nav-label {
+  transition-property: color;
+  transition-duration: var(--profile-nav-ms, 380ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .profile-nav-indicator,
+  .profile-nav-label {
+    transition: none;
+  }
+}
+
+/* Checkout success — check mark pop after the Motion panel appear */
+@keyframes checkout-success-check-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.checkout-success-check {
+  animation: 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.12s both
+    checkout-success-check-in;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .checkout-success-check {
+    animation: none;
+  }
 }

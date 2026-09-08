@@ -10,7 +10,7 @@ describe("hero rules", () => {
   it("accepts a valid slide copy", () => {
     expect(
       validateHeroLocaleCopy({
-        title: "White Shop",
+        title: "Ruben",
         subtitle: "New collection",
         buttonLabel: "Shop",
         buttonUrl: "/en/products",

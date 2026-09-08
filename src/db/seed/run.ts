@@ -411,19 +411,19 @@ async function seed(): Promise<void> {
       id: seedIds.heroHome,
       translations: {
         hy: {
-          title: "White Shop",
+          title: "Ruben",
           subtitle: "New collection",
           buttonLabel: "Browse",
           buttonUrl: "/hy/products",
         },
         en: {
-          title: "White Shop",
+          title: "Ruben",
           subtitle: "New collection",
           buttonLabel: "Shop now",
           buttonUrl: "/en/products",
         },
         ru: {
-          title: "White Shop",
+          title: "Ruben",
           subtitle: "New collection",
           buttonLabel: "Browse",
           buttonUrl: "/ru/products",
@@ -475,22 +475,22 @@ async function seed(): Promise<void> {
       publishedAt: now,
       translations: {
         hy: {
-          title: "Welcome to White Shop",
+          title: "Welcome to Ruben",
           slug: "bari-galust",
           excerpt: "Store launch",
-          content: "<p>White Shop is ready.</p>",
+          content: "<p>Ruben is ready.</p>",
         },
         en: {
-          title: "Welcome to White Shop",
+          title: "Welcome to Ruben",
           slug: "welcome",
           excerpt: "Store launch note",
-          content: "<p>White Shop is ready.</p>",
+          content: "<p>Ruben is ready.</p>",
         },
         ru: {
-          title: "Welcome to White Shop",
+          title: "Welcome to Ruben",
           slug: "dobro-pozhalovat",
           excerpt: "Store launch",
-          content: "<p>White Shop is ready.</p>",
+          content: "<p>Ruben is ready.</p>",
         },
       },
       tags: ["news", "launch"],
@@ -510,7 +510,7 @@ async function seed(): Promise<void> {
         key: "store.identity",
         value: {
           version: 1,
-          name: "White Shop",
+          name: "Ruben",
           defaultLocale: "hy",
           defaultCurrency: "AMD",
         },

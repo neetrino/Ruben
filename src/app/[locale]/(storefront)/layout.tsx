@@ -1,9 +1,13 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
+import { PageAppear } from "@/components/motion/PageAppear";
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
+import { MobileNavAccountAction } from "@/components/layout/MobileNavAccountAction";
+import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { StorefrontMobileTopBar } from "@/components/layout/StorefrontMobileTopBar";
 import { MaintenanceGate } from "@/components/layout/MaintenanceGate";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -35,15 +39,32 @@ export default async function StorefrontLayout({
   );
 
   return (
-    <div className="storefront-shell flex min-h-dvh flex-1 flex-col bg-gray-50">
+    <div className="storefront-shell flex min-h-dvh flex-1 flex-col bg-white">
+      <StorefrontMobileTopBar
+        locale={locale}
+        currency={currency}
+        dictionary={dictionary}
+        accountSlot={
+          <MobileNavAccountAction locale={locale} dictionary={dictionary} />
+        }
+      />
       <SiteHeader
         locale={locale}
         currency={currency}
         dictionary={dictionary}
       />
-      <main className="storefront-main mx-auto w-full max-w-7xl flex-1 px-4 py-10 pb-24 sm:px-6 md:pb-10 lg:px-8">
-        <MaintenanceGate>{children}</MaintenanceGate>
+      <main className="storefront-main mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+        <MaintenanceGate>
+          <PageAppear>{children}</PageAppear>
+        </MaintenanceGate>
       </main>
+      {/* Footer is desktop-only, so mobile keeps the copyright at the page end. */}
+      <SiteCopyright
+        dictionary={dictionary}
+        className="storefront-mobile-copyright px-4 pt-8 text-center text-xs leading-5 text-neutral-500 sm:px-6 lg:hidden"
+        linkClassName="text-neutral-700 underline-offset-2 hover:underline"
+        createdByOnNewLine
+      />
       <SiteFooter dictionary={dictionary} locale={locale} />
       <MobileBottomNavIsland
         locale={locale}

@@ -1,6 +1,7 @@
 "use client";
 
 import { Card } from "@/components/ui/Card";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import {
   ADMIN_BADGE,
   orderStatusBadgeClass,
@@ -15,13 +16,14 @@ import {
   ADMIN_TABLE_STATE_INSET,
   ADMIN_TABLE_TBODY,
   ADMIN_TABLE_TD,
+  ADMIN_TABLE_TD_METRIC,
   ADMIN_TABLE_TH,
+  ADMIN_TABLE_TH_METRIC,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
-import {
-  formatOrderDrawerMoney,
-  formatOrderStatusLabel,
-} from "@/features/orders/ui/order-drawer-format";
+import { orderStatusLabel } from "@/features/orders/domain/order-status";
+import { formatOrderDrawerMoney } from "@/features/orders/ui/order-drawer-format";
+import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 type CustomerOrderRow = {
   id: string;
@@ -35,11 +37,56 @@ type CustomerOrderRow = {
 
 type CustomerOrdersTableProps = {
   orders: CustomerOrderRow[];
+  emptyLabel: string;
+  statusLabels: Dictionary["admin"]["orders"]["status"];
+  paymentLabels: Dictionary["admin"]["orders"]["payment"];
   onOpenOrder: (orderNumber: string) => void;
 };
 
+function localizeOrderStatus(
+  status: string,
+  labels: Dictionary["admin"]["orders"]["status"],
+): string {
+  switch (orderStatusLabel(status)) {
+    case "Pending":
+      return labels.pending;
+    case "Processing":
+      return labels.processing;
+    case "Completed":
+      return labels.completed;
+    case "Cancelled":
+      return labels.cancelled;
+    default:
+      return orderStatusLabel(status);
+  }
+}
+
+function localizePaymentStatus(
+  status: string,
+  labels: Dictionary["admin"]["orders"]["payment"],
+): string {
+  const normalized = status.toUpperCase();
+  if (normalized === "PAID" || normalized === "CAPTURED") {
+    return labels.paid;
+  }
+  if (normalized === "PENDING" || normalized === "AUTHORIZED") {
+    return labels.pending;
+  }
+  if (
+    normalized === "FAILED" ||
+    normalized === "CANCELLED" ||
+    normalized === "REFUNDED"
+  ) {
+    return labels.failed;
+  }
+  return status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+}
+
 export function CustomerOrdersTable({
   orders,
+  emptyLabel,
+  statusLabels,
+  paymentLabels,
   onOpenOrder,
 }: CustomerOrdersTableProps) {
   return (
@@ -49,54 +96,48 @@ export function CustomerOrdersTable({
           <thead className={ADMIN_TABLE_THEAD}>
             <tr>
               <th className={ADMIN_TABLE_TH}>Order</th>
-              <th className={ADMIN_TABLE_TH}>Status</th>
-              <th className={ADMIN_TABLE_TH}>Payment</th>
-              <th className={ADMIN_TABLE_TH}>Total</th>
-              <th className={ADMIN_TABLE_TH}>Placed</th>
+              <th className={ADMIN_TABLE_TH_METRIC}>Status</th>
+              <th className={ADMIN_TABLE_TH_METRIC}>Payment</th>
+              <th className={ADMIN_TABLE_TH_METRIC}>Total</th>
+              <th className={ADMIN_TABLE_TH_METRIC}>Placed</th>
             </tr>
           </thead>
           <tbody className={ADMIN_TABLE_TBODY}>
             {orders.map((order) => (
-              <tr key={order.id} className={ADMIN_TABLE_ROW}>
+              <tr
+                key={order.id}
+                className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+                onClick={() => onOpenOrder(order.orderNumber)}
+              >
                 <td className={ADMIN_TABLE_TD}>
-                  <button
-                    type="button"
-                    onClick={() => onOpenOrder(order.orderNumber)}
-                    className="font-medium text-gray-900 hover:underline"
-                  >
+                  <span className="font-medium text-gray-900">
                     {order.orderNumber}
-                  </button>
+                  </span>
                 </td>
-                <td className={ADMIN_TABLE_TD}>
+                <td className={ADMIN_TABLE_TD_METRIC}>
                   <span
                     className={`${ADMIN_BADGE} ${orderStatusBadgeClass(order.status)}`}
                   >
-                    {formatOrderStatusLabel(order.status)}
+                    {localizeOrderStatus(order.status, statusLabels)}
                   </span>
                 </td>
-                <td className={ADMIN_TABLE_TD}>
+                <td className={ADMIN_TABLE_TD_METRIC}>
                   <span
                     className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(order.paymentStatus)}`}
                   >
-                    {formatOrderStatusLabel(order.paymentStatus)}
+                    {localizePaymentStatus(order.paymentStatus, paymentLabels)}
                   </span>
                 </td>
-                <td className={ADMIN_TABLE_TD}>
-                  <span className="font-medium text-gray-900">
+                <td className={ADMIN_TABLE_TD_METRIC}>
+                  <span className="font-semibold text-gray-900">
                     {formatOrderDrawerMoney(
                       order.totalAmount,
                       order.baseCurrency,
                     )}
                   </span>
                 </td>
-                <td className={ADMIN_TABLE_TD}>
-                  <span className="text-xs text-gray-500">
-                    {new Date(order.placedAt)
-                      .toISOString()
-                      .slice(0, 16)
-                      .replace("T", " ")}{" "}
-                    UTC
-                  </span>
+                <td className={ADMIN_TABLE_TD_METRIC}>
+                  <AdminPlacedStamp value={order.placedAt} />
                 </td>
               </tr>
             ))}
@@ -105,7 +146,7 @@ export function CustomerOrdersTable({
       </div>
       {orders.length === 0 ? (
         <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
-          No orders match these filters.
+          {emptyLabel}
         </p>
       ) : (
         <div className={ADMIN_TABLE_FOOTER_ROUNDED_B}>

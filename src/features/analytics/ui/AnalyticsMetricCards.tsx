@@ -1,101 +1,97 @@
+import { Banknote, ClipboardList, Receipt, type LucideIcon } from "lucide-react";
+
 import {
-  ClipboardList,
-  DollarSign,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
-
-import { Card } from "@/components/ui/Card";
+  ADMIN_CARD_CLASS,
+  ADMIN_CARD_HOVER_CLASS,
+  ADMIN_CHIP_BRAND,
+  ADMIN_CHIP_MINT,
+  ADMIN_CHIP_SURFACE,
+} from "@/features/admin/ui/admin-ui";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
-
-type MetricTone = "blue" | "green" | "purple";
+import { periodDeltaToneClass } from "@/features/analytics/domain/date-range";
 
 type MetricCard = {
   label: string;
   value: string;
-  tone: MetricTone;
+  delta: string;
   icon: LucideIcon;
-};
-
-const TONE_CLASSES: Record<
-  MetricTone,
-  { card: string; iconWrap: string; icon: string; value: string }
-> = {
-  blue: {
-    card: "border-blue-100 bg-gradient-to-br from-blue-50 to-sky-50",
-    iconWrap: "bg-blue-100 text-blue-600",
-    icon: "text-blue-600",
-    value: "text-blue-700",
-  },
-  green: {
-    card: "border-emerald-100 bg-gradient-to-br from-emerald-50 to-green-50",
-    iconWrap: "bg-emerald-100 text-emerald-600",
-    icon: "text-emerald-600",
-    value: "text-emerald-600",
-  },
-  purple: {
-    card: "border-violet-100 bg-gradient-to-br from-violet-50 to-purple-50",
-    iconWrap: "bg-violet-100 text-violet-600",
-    icon: "text-violet-600",
-    value: "text-violet-700",
-  },
+  chip: { bg: string; fg: string };
 };
 
 type AnalyticsMetricCardsProps = {
   locale: string;
   orderCount: number;
+  orderDelta: string;
   revenueLabel: string;
-  userCount: number;
+  revenueDelta: string;
+  averageOrderLabel: string;
+  averageOrderDelta: string;
 };
 
 export function AnalyticsMetricCards({
   locale,
   orderCount,
+  orderDelta,
   revenueLabel,
-  userCount,
+  revenueDelta,
+  averageOrderLabel,
+  averageOrderDelta,
 }: AnalyticsMetricCardsProps) {
   const t = adminCopy(locale);
   const metrics: MetricCard[] = [
     {
-      label: t.analytics.metrics.orders,
+      label: t.analytics.metrics.totalOrders,
       value: String(orderCount),
-      tone: "blue",
+      delta: orderDelta,
       icon: ClipboardList,
+      chip: ADMIN_CHIP_BRAND,
     },
     {
-      label: t.analytics.metrics.revenue,
+      label: t.analytics.metrics.totalRevenue,
       value: revenueLabel,
-      tone: "green",
-      icon: DollarSign,
+      delta: revenueDelta,
+      icon: Banknote,
+      chip: ADMIN_CHIP_MINT,
     },
     {
-      label: t.analytics.metrics.users,
-      value: String(userCount),
-      tone: "purple",
-      icon: Users,
+      label: t.analytics.metrics.averageOrderValue,
+      value: averageOrderLabel,
+      delta: averageOrderDelta,
+      icon: Receipt,
+      chip: ADMIN_CHIP_SURFACE,
     },
   ];
 
   return (
-    <div className="mb-6 grid gap-4 sm:grid-cols-3">
+    <div className="mb-3 grid gap-3 sm:grid-cols-3">
       {metrics.map((metric) => {
-        const tone = TONE_CLASSES[metric.tone];
         const Icon = metric.icon;
         return (
-          <Card
+          <div
             key={metric.label}
-            className={`rounded-2xl border p-5 shadow-sm ${tone.card}`}
+            className={`${ADMIN_CARD_CLASS} ${ADMIN_CARD_HOVER_CLASS} px-4 py-3.5`}
           >
-            <div
-              className={`mb-4 flex h-10 w-10 items-center justify-center rounded-xl ${tone.iconWrap}`}
-            >
-              <Icon className={`h-5 w-5 ${tone.icon}`} aria-hidden />
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <div className="flex min-w-0 items-center gap-2.5">
+                <div
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${metric.chip.bg}`}
+                >
+                  <Icon className={`h-4 w-4 ${metric.chip.fg}`} aria-hidden />
+                </div>
+                <p className="truncate text-xs font-medium text-gray-500">
+                  {metric.label}
+                </p>
+              </div>
+              <span
+                className={`shrink-0 text-[11px] font-semibold ${periodDeltaToneClass(metric.delta)}`}
+              >
+                {metric.delta}
+              </span>
             </div>
-            <p className="text-sm font-medium text-gray-600">{metric.label}</p>
-            <p className={`mt-1 text-3xl font-bold tracking-tight ${tone.value}`}>
+            <p className="break-words text-2xl font-bold tracking-tight text-gray-900">
               {metric.value}
             </p>
-          </Card>
+          </div>
         );
       })}
     </div>

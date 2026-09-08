@@ -1,19 +1,22 @@
 {
-  "brand": "White-Shop",
+  "brand": "RUBEN",
   "nav": {
-    "home": "Գլխավոր",
-    "products": "Ապրանքներ",
+    "home": "ԳԼԽԱՎՈՐ",
+    "products": "ԱՊՐԱՆՔՆԵՐ",
+    "categories": "ԿԱՏԵԳՈՐԻԱՆԵՐ",
+    "brands": "ԲՐԵՆԴՆԵՐ",
+    "promotions": "ԱԿՑԻԱՆԵՐ",
     "shop": "Խանութ",
     "blog": "Բլոգ",
     "cart": "Զամբյուղ",
     "about": "Մեր մասին",
-    "contact": "Կապ",
+    "contact": "ԿԱՊ",
+    "policy": "ՔԱՂԱՔԱԿԱՆՈՒԹՅՈՒՆ",
     "wishlist": "Ցանկեր",
     "compare": "Համեմատել",
     "openMenu": "Բացել մենյուն",
     "closeMenu": "Փակել մենյուն",
-    "navigation": "Նավիգացիա",
-    "shopNow": "Գնել հիմա"
+    "navigation": "Նավիգացիա"
   },
   "header": {
     "language": "Լեզու",
@@ -22,19 +25,35 @@
     "logout": "Ելք",
     "profile": "Պրոֆիլ",
     "admin": "Ադմին",
-    "createAccount": "Գրանցվել"
+    "createAccount": "Գրանցվել",
+    "search": "Որոնում",
+    "searchClose": "Փակել որոնումը",
+    "searchPlaceholder": "Որոնել",
+    "searchIdle": "Գրեք ապրանքի անունը",
+    "searchEmpty": "Ապրանքներ չեն գտնվել",
+    "searchViewAll": "Տեսնել բոլոր արդյունքները"
   },
   "footer": {
     "shop": "Խանութ",
-    "description": "Պրոֆեսիոնալ առցանց խանութ ամենօրյա գնումների համար։",
+    "description": "«Հայկական խոհանոց, երաժշտություն եւ հյուրընկալություն՝ նոր հնչողությամբ»։",
+    "navigation": "Նավիգացիա",
+    "support": "Աջակցություն",
     "legal": "Իրավական",
     "privacyPolicy": "Գաղտնիության քաղաքականություն",
     "terms": "Պայմաններ և դրույթներ",
     "refundPolicy": "Վերադարձի քաղաքականություն",
     "deliveryPolicy": "Առաքման քաղաքականություն",
-    "contactInfo": "Կապի տվյալներ",
+    "deliveryReturns": "Առաքում և Վերադարձ",
+    "faq": "Հաճախ տրվող հարցեր",
+    "specialOffers": "Հատուկ առաջարկներ",
+    "gallery": "Պատկերասրահ",
+    "contactInfo": "Կոնտակտ",
     "social": "Սոցիալական ցանցեր",
     "map": "Քարտեզ",
-    "copyright": "Copyright © {year} Neetrino IT Company. All Rights Reserved."
+    "hours": "Երկ–Կիր: 12:00 – 00:00",
+    "copyrightPrefix": "Copyright © {year} | All rights reserved |",
+    "copyrightCreatedBy": "Created by",
+    "copyrightCompany": "Neetrino IT Company",
+    "copyrightSuffix": ""
   }
 }

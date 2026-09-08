@@ -6,6 +6,12 @@ import { ArrowRight, Minus, Plus, ShoppingCart, X } from "lucide-react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { SideSheet } from "@/components/ui/SideSheet";
+import {
+  getCartSyncVersion,
+  reconcileLocalCartItemCount,
+  useCartItemCount,
+  useCartSyncVersion,
+} from "@/features/cart/cart-client-sync";
 import { removeItem, updateQuantity } from "@/features/cart/cart";
 import type { CartDrawerView } from "@/features/cart/get-cart-drawer-view";
 import { loadCartDrawerViewAction } from "@/features/cart/load-cart-drawer-view-action";
@@ -49,31 +55,43 @@ export function CartDrawer({
 }: CartDrawerProps) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState<CartDrawerView | null>(null);
+  const [viewSyncVersion, setViewSyncVersion] = useState<number | null>(null);
   const [loadingView, setLoadingView] = useState(false);
   const [pending, startTransition] = useTransition();
   const labels = dictionary.cartDrawer;
-  const badgeCount = view?.itemCount ?? itemCount;
+  const badgeCount = useCartItemCount(itemCount);
+  const cartSyncVersion = useCartSyncVersion();
+  const hasCachedView =
+    view !== null &&
+    viewSyncVersion === cartSyncVersion &&
+    (open || view.itemCount === itemCount);
   const hasItems = Boolean(view && view.items.length > 0);
 
+  function applyDrawerView(next: CartDrawerView): void {
+    reconcileLocalCartItemCount(next.itemCount);
+    setView(next);
+    setViewSyncVersion(getCartSyncVersion());
+  }
+
   function prefetchDrawerView(): void {
-    if (view || loadingView || open) {
+    if (hasCachedView || loadingView || open) {
       return;
     }
     setLoadingView(true);
     startTransition(async () => {
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
       setLoadingView(false);
     });
   }
 
   function openDrawer(): void {
     setOpen(true);
-    if (!view) {
+    if (!hasCachedView) {
       setLoadingView(true);
       startTransition(async () => {
         const next = await loadCartDrawerViewAction(locale, currency);
-        setView(next);
+        applyDrawerView(next);
         setLoadingView(false);
       });
     }
@@ -87,7 +105,7 @@ export function CartDrawer({
     startTransition(async () => {
       await updateQuantity(itemId, quantity);
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
     });
   }
 
@@ -95,7 +113,7 @@ export function CartDrawer({
     startTransition(async () => {
       await removeItem(itemId);
       const next = await loadCartDrawerViewAction(locale, currency);
-      setView(next);
+      applyDrawerView(next);
     });
   }
 
@@ -135,61 +153,105 @@ export function CartDrawer({
               <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gray-100 text-gray-400">
                 <ShoppingCart className="h-12 w-12" aria-hidden />
               </div>
-              <p className="mt-5 text-xl font-bold text-gray-900">
-                {labels.empty}
-              </p>
-              <p className="mt-2 max-w-[20rem] text-sm leading-relaxed text-gray-500">
-                {labels.emptyDescription}
-              </p>
-              <AppLink
-                href={`/${locale}/products`}
-                prefetchPolicy="intent"
-                onClick={closeDrawer}
-                className="relative mt-6 inline-flex min-h-[50px] w-full max-w-sm items-center rounded-full bg-gray-900 py-1.5 pr-1.5 pl-5 text-sm font-semibold text-white transition-colors hover:bg-black"
-              >
-                <span className="pointer-events-none absolute inset-0 flex items-center justify-center px-12">
-                  {labels.emptyCta}
-                </span>
-                <span className="relative ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/15">
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </span>
-              </AppLink>
+              <div className="mt-5 inline-grid max-w-full grid-cols-[auto] justify-items-stretch">
+                <p className="text-xl font-bold whitespace-nowrap text-gray-900">
+                  {labels.empty}
+                </p>
+                <p className="mt-2 w-0 min-w-full text-sm leading-relaxed text-gray-500">
+                  {labels.emptyDescription}
+                </p>
+                <AppLink
+                  href={`/${locale}/products`}
+                  prefetchPolicy="intent"
+                  onClick={closeDrawer}
+                  className="mt-6 inline-flex h-11 w-full items-center gap-3 rounded-full bg-[var(--brand)] py-1.5 pr-1.5 pl-5 text-sm font-semibold text-black transition-colors hover:brightness-95"
+                >
+                  <span className="min-w-0 flex-1 text-center">
+                    {labels.emptyCta}
+                  </span>
+                  <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-black/10">
+                    <ArrowRight className="h-4 w-4" aria-hidden />
+                  </span>
+                </AppLink>
+              </div>
             </div>
           ) : (
             <ul className="space-y-3">
-              {view.items.map((item) => (
+              {view.items.map((item) => {
+                const productHref = item.productSlug
+                  ? `/${locale}/products/${item.productSlug}`
+                  : null;
+
+                return (
                 <li
                   key={item.id}
                   className="rounded-[20px] border border-gray-200 bg-white p-3 shadow-sm"
                 >
-                  <div className="flex gap-3">
-                    <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-50">
-                      {item.imageUrl ? (
-                        <Image
-                          src={item.imageUrl}
-                          alt={item.title}
-                          fill
-                          sizes="96px"
-                          className="object-contain p-1"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
-                          —
-                        </div>
-                      )}
-                    </div>
+                  <div className="flex items-stretch gap-3">
+                    {productHref ? (
+                      <AppLink
+                        href={productHref}
+                        prefetchPolicy="intent"
+                        onClick={closeDrawer}
+                        className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
+                        style={{ width: 96, minHeight: 96 }}
+                      >
+                        {item.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.title}
+                            fill
+                            sizes="96px"
+                            className="object-contain p-0.5"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                            —
+                          </div>
+                        )}
+                      </AppLink>
+                    ) : (
+                      <div
+                        className="relative block shrink-0 self-stretch overflow-hidden rounded-2xl bg-[#eaeaea]"
+                        style={{ width: 96, minHeight: 96 }}
+                      >
+                        {item.imageUrl ? (
+                          <Image
+                            src={item.imageUrl}
+                            alt={item.title}
+                            fill
+                            sizes="96px"
+                            className="object-contain p-0.5"
+                          />
+                        ) : (
+                          <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                            —
+                          </div>
+                        )}
+                      </div>
+                    )}
 
-                    <div className="flex min-w-0 flex-1 flex-col">
+                    <div className="flex min-w-0 flex-1 flex-col justify-between gap-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
-                          <p className="line-clamp-2 text-sm font-medium text-gray-900">
-                            {item.title}
-                          </p>
+                          {productHref ? (
+                            <AppLink
+                              href={productHref}
+                              prefetchPolicy="intent"
+                              onClick={closeDrawer}
+                              className="block transition-colors hover:text-gray-700"
+                            >
+                              <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                                {item.title}
+                              </p>
+                            </AppLink>
+                          ) : (
+                            <p className="line-clamp-2 text-sm font-medium text-gray-900">
+                              {item.title}
+                            </p>
+                          )}
                           <p className="mt-1 text-sm font-semibold text-gray-900">
                             {item.lineTotalFormatted}
-                          </p>
-                          <p className="mt-0.5 text-xs text-gray-500">
-                            {item.unitPriceFormatted} × {item.quantity}
                           </p>
                         </div>
                         <button
@@ -203,20 +265,20 @@ export function CartDrawer({
                         </button>
                       </div>
 
-                      <div className="mt-auto flex justify-end pt-3">
-                        <div className="inline-flex items-center gap-1 rounded-full border border-gray-200 bg-sky-50/70 px-1 py-0.5">
+                      <div className="flex min-w-0 items-center gap-2">
+                        <div className="ml-auto inline-flex shrink-0 items-center rounded-full border border-gray-200 bg-sky-50/70 px-0.5 py-0.5">
                           <button
                             type="button"
                             onClick={() =>
                               changeQuantity(item.id, item.quantity - 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-white"
+                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-white"
                             aria-label={labels.decreaseQuantity}
                             disabled={pending}
                           >
-                            <Minus className="h-3.5 w-3.5" aria-hidden />
+                            <Minus className="h-4 w-4" aria-hidden />
                           </button>
-                          <span className="min-w-5 text-center text-sm font-medium tabular-nums text-gray-900">
+                          <span className="min-w-5 text-center text-sm font-semibold tabular-nums text-gray-900">
                             {item.quantity}
                           </span>
                           <button
@@ -224,18 +286,19 @@ export function CartDrawer({
                             onClick={() =>
                               changeQuantity(item.id, item.quantity + 1)
                             }
-                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-700 transition-colors hover:bg-white"
+                            className="flex h-7 w-7 items-center justify-center rounded-full text-gray-600 transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
                             aria-label={labels.increaseQuantity}
                             disabled={pending}
                           >
-                            <Plus className="h-3.5 w-3.5" aria-hidden />
+                            <Plus className="h-4 w-4" aria-hidden />
                           </button>
                         </div>
                       </div>
                     </div>
                   </div>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           )}
         </div>
@@ -248,12 +311,6 @@ export function CartDrawer({
                 {view?.subtotalFormatted ?? "—"}
               </dd>
             </div>
-            <div className="flex items-center justify-between text-gray-600">
-              <dt>{labels.shipping}</dt>
-              <dd className="tabular-nums text-gray-900">
-                {view?.shippingFormatted ?? "—"}
-              </dd>
-            </div>
             <div className="flex items-center justify-between pt-1 text-base font-bold text-gray-900">
               <dt>{labels.total}</dt>
               <dd className="tabular-nums">{view?.totalFormatted ?? "—"}</dd>
@@ -264,7 +321,7 @@ export function CartDrawer({
             <AppLink
               href={`/${locale}/checkout`}
               prefetchPolicy="intent"
-              className="mt-5 flex min-h-[50px] w-full items-center justify-center rounded-full bg-gray-900 px-4 text-sm font-semibold text-white transition-colors hover:bg-black"
+              className="mt-5 flex min-h-[50px] w-full items-center justify-center rounded-full bg-[var(--brand)] px-4 text-sm font-semibold text-black transition-colors hover:brightness-95"
               onClick={closeDrawer}
             >
               {labels.checkout}

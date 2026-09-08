@@ -25,6 +25,7 @@ import {
   ADMIN_TABLE_TH_METRIC,
   ADMIN_TABLE_THEAD,
 } from "@/features/admin/ui/admin-table-classes";
+import { AdminPlacedStamp } from "@/features/admin/ui/AdminPlacedStamp";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { bulkArchiveOrdersAction } from "@/features/orders/application/bulk-archive-orders";
 import { AdminInlineStatusSelect } from "@/features/orders/ui/AdminInlineStatusSelect";
@@ -120,26 +121,35 @@ export function BulkChangeOrderStatusForm({
 
   return (
     <div className="flex flex-col gap-4">
-      <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
-        <p className="text-sm text-gray-700">
-          {t.orders.bulk.selected.replace("{count}", String(selected.size))}
-        </p>
-        <Button
-          type="button"
-          size="sm"
-          variant="danger"
-          disabled={isPending || selected.size === 0}
-          onClick={deleteSelected}
-        >
-          {isPending ? t.orders.bulk.deleting : t.orders.bulk.deleteSelected}
-        </Button>
-        {error ? (
-          <p className="w-full text-sm text-red-700">{error}</p>
-        ) : null}
-        {message ? (
-          <p className="w-full text-sm text-green-700">{message}</p>
-        ) : null}
-      </Card>
+      {selected.size > 0 ? (
+        <Card className="flex flex-wrap items-center justify-between gap-3 p-4">
+          <p className="text-sm text-gray-700">
+            {t.orders.bulk.selected.replace("{count}", String(selected.size))}
+          </p>
+          <Button
+            type="button"
+            size="sm"
+            variant="danger"
+            disabled={isPending}
+            onClick={deleteSelected}
+          >
+            {isPending ? t.orders.bulk.deleting : t.orders.bulk.deleteSelected}
+          </Button>
+          {error ? (
+            <p className="w-full text-sm text-red-700">{error}</p>
+          ) : null}
+          {message ? (
+            <p className="w-full text-sm text-green-700">{message}</p>
+          ) : null}
+        </Card>
+      ) : null}
+
+      {selected.size === 0 && error ? (
+        <p className="text-sm text-red-700">{error}</p>
+      ) : null}
+      {selected.size === 0 && message ? (
+        <p className="text-sm text-green-700">{message}</p>
+      ) : null}
 
       <Card className={ADMIN_TABLE_CARD}>
         <div className={ADMIN_TABLE_OUTER_SCROLL}>
@@ -161,13 +171,20 @@ export function BulkChangeOrderStatusForm({
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.status}</th>
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.payment}</th>
                 <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.total}</th>
-                <th className={ADMIN_TABLE_TH}>{t.orders.columns.placed}</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>{t.orders.columns.placed}</th>
               </tr>
             </thead>
             <tbody className={ADMIN_TABLE_TBODY}>
               {orders.map((order) => (
-                <tr key={order.id} className={ADMIN_TABLE_ROW}>
-                  <td className={ADMIN_TABLE_TD_CHECK}>
+                <tr
+                  key={order.id}
+                  className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+                  onClick={() => onOpenOrder(order.orderNumber)}
+                >
+                  <td
+                    className={ADMIN_TABLE_TD_CHECK}
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <input
                       type="checkbox"
                       className={ADMIN_TABLE_CHECKBOX}
@@ -181,13 +198,9 @@ export function BulkChangeOrderStatusForm({
                     />
                   </td>
                   <td className={ADMIN_TABLE_TD}>
-                    <button
-                      type="button"
-                      onClick={() => onOpenOrder(order.orderNumber)}
-                      className="font-medium text-gray-900 hover:underline"
-                    >
+                    <span className="font-medium text-gray-900">
                       {order.orderNumber}
-                    </button>
+                    </span>
                     {order.isArchived ? (
                       <span className="ml-2 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-medium uppercase text-gray-600">
                         {t.orders.archived}
@@ -198,7 +211,10 @@ export function BulkChangeOrderStatusForm({
                     <p className="text-sm text-gray-900">{order.contactName}</p>
                     <p className="text-xs text-gray-500">{order.contactEmail}</p>
                   </td>
-                  <td className={ADMIN_TABLE_TD_METRIC}>
+                  <td
+                    className={ADMIN_TABLE_TD_METRIC}
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <AdminInlineStatusSelect
                       locale={locale}
                       orderNumber={order.orderNumber}
@@ -207,7 +223,10 @@ export function BulkChangeOrderStatusForm({
                       disabled={isPending || order.isArchived}
                     />
                   </td>
-                  <td className={ADMIN_TABLE_TD_METRIC}>
+                  <td
+                    className={ADMIN_TABLE_TD_METRIC}
+                    onClick={(event) => event.stopPropagation()}
+                  >
                     <AdminInlineStatusSelect
                       locale={locale}
                       orderNumber={order.orderNumber}
@@ -217,18 +236,12 @@ export function BulkChangeOrderStatusForm({
                     />
                   </td>
                   <td className={ADMIN_TABLE_TD_METRIC}>
-                    <span className="font-medium text-gray-900">
+                    <span className="font-semibold text-gray-900">
                       {formatMoney(order.totalAmount, order.baseCurrency)}
                     </span>
                   </td>
-                  <td className={ADMIN_TABLE_TD}>
-                    <span className="text-xs text-gray-500">
-                      {new Date(order.placedAt)
-                        .toISOString()
-                        .slice(0, 16)
-                        .replace("T", " ")}{" "}
-                      {t.common.utc}
-                    </span>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <AdminPlacedStamp value={order.placedAt} />
                   </td>
                 </tr>
               ))}

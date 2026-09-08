@@ -4,7 +4,7 @@ import { LegalPolicyDocument } from "@/features/legal/ui/LegalPolicyDocument";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 
-type LegalPolicyKey = "privacy" | "terms" | "refund" | "delivery";
+export type LegalPolicyKey = "privacy" | "terms" | "refund" | "delivery";
 
 type LegalPolicyPageProps = {
   params: Promise<{ locale: string }>;
@@ -24,7 +24,7 @@ export async function LegalPolicyPage({
   const dictionary = getDictionary(rawLocale);
 
   return (
-    <div className="-mx-4 -my-10 bg-white px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div className="-mx-4 -mt-10 bg-white px-4 py-12 sm:-mx-6 sm:px-6 lg:-mx-8 lg:-mb-10 lg:px-8">
       <LegalPolicyDocument policy={dictionary.legal[policyKey]} />
     </div>
   );

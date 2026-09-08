@@ -37,8 +37,10 @@
   "payment": {
     "cashOnDelivery": "Наличными",
     "cashOnDeliveryDescription": "Оплатите наличными при получении заказа",
+    "cashPickup": "Наличная оплата",
     "card": "Оплата картой",
-    "cardDescription": "Безопасная оплата банковской картой (ArCa)",
+    "cardShort": "Картой",
+    "cardDescription": "Безопасная оплата банковской картой (ArCa, Visa, Mastercard)",
     "fastshift": "FastShift",
     "fastshiftDescription": "Оплата через кошелёк FastShift"
   },
@@ -65,7 +67,7 @@
   },
   "success": {
     "title": "Заказ подтверждён",
-    "body": "Заказ {orderNumber} успешно оформлен. Корзина очищена.",
+    "body": "Заказ #{orderNumber} успешно оформлен.",
     "total": "Итого: {amount}",
     "continueShopping": "Продолжить покупки",
     "viewOrders": "Мои заказы"

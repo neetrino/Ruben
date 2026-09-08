@@ -7,14 +7,18 @@ import {
   useLayoutEffect,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
+import { MobileCurrencySwitcher } from "@/components/layout/MobileCurrencySwitcher";
+import { MobileLocaleSwitcher } from "@/components/layout/MobileLocaleSwitcher";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import type { Currency } from "@/lib/money/currency";
 
 const MENU_EXIT_MS = 260;
 const MENU_GAP_PX = 8;
@@ -27,11 +31,18 @@ type NavItem = {
 
 type MobileNavDrawerProps = {
   locale: Locale;
+  currency: Currency;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
+  /** Account CTA rendered at the drawer end; depends on the server session. */
+  accountSlot: ReactNode;
+  appearance?: "default" | "navbar" | "mobile-top";
 };
 
 function isNavItemActive(pathname: string, href: string, locale: Locale): boolean {
+  if (href.includes("#")) {
+    return false;
+  }
   if (href === `/${locale}` || href === `/${locale}/`) {
     return pathname === `/${locale}` || pathname === `/${locale}/`;
   }
@@ -44,8 +55,11 @@ function isNavItemActive(pathname: string, href: string, locale: Locale): boolea
  */
 export function MobileNavDrawer({
   locale,
+  currency,
   dictionary,
   navItems,
+  accountSlot,
+  appearance = "default",
 }: MobileNavDrawerProps) {
   const menuId = useId();
   const pathname = usePathname() ?? "";
@@ -67,8 +81,15 @@ export function MobileNavDrawer({
   }, []);
 
   const measureHeader = useCallback(() => {
+    const mobile = document.querySelector<HTMLElement>(
+      "[data-storefront-mobile-top-bar]",
+    );
+    if (mobile && mobile.getClientRects().length > 0) {
+      setPanelTopPx(mobile.getBoundingClientRect().bottom);
+      return;
+    }
     const header = document.querySelector<HTMLElement>("[data-site-header]");
-    if (!header) return;
+    if (!header || header.getClientRects().length === 0) return;
     setPanelTopPx(header.getBoundingClientRect().bottom);
   }, []);
 
@@ -141,15 +162,23 @@ export function MobileNavDrawer({
     document.body.style.overflow = "hidden";
 
     function handleKeyDown(event: KeyboardEvent): void {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
     }
 
     function handleTouchMove(event: TouchEvent): void {
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (panelRef.current?.contains(target)) return;
-      const header = document.querySelector("[data-site-header]");
-      if (header?.contains(target)) return;
+      const siteHeader = document.querySelector("[data-site-header]");
+      if (siteHeader?.contains(target)) return;
+      const mobileTop = document.querySelector(
+        "[data-storefront-mobile-top-bar]",
+      );
+      if (mobileTop?.contains(target)) return;
       event.preventDefault();
     }
 
@@ -162,20 +191,40 @@ export function MobileNavDrawer({
     };
   }, [rendered]);
 
-  const shopHref = `/${locale}/products`;
+  const homeHref = `/${locale}`;
+  const policyHref = `/${locale}/legal`;
+  // Highlighted for the hub and for every document opened from it.
+  const policyActive =
+    pathname === policyHref || pathname.startsWith(`${policyHref}/`);
+  // The logo already leads home; the drawer lists only the deeper sections.
+  const drawerNavItems = navItems.filter(
+    (item) => item.href !== homeHref && item.href !== `${homeHref}/`,
+  );
+
+  const triggerClass =
+    appearance === "navbar"
+      ? "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+      : appearance === "mobile-top"
+        ? "relative inline-flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-full bg-black text-white transition-opacity hover:opacity-80 touch-manipulation"
+        : "relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10";
+
+  const iconClass =
+    appearance === "mobile-top"
+      ? "pointer-events-none absolute h-5 w-5 transition-[opacity,transform] duration-[280ms] ease-out"
+      : "pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5";
 
   return (
     <>
       <button
         type="button"
         onClick={toggleMenu}
-        className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gray-900 text-white transition-opacity hover:opacity-80 touch-manipulation sm:h-10 sm:w-10"
+        className={triggerClass}
         aria-label={open ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
         aria-expanded={open}
         aria-controls={menuId}
       >
         <Menu
-          className="pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5"
+          className={iconClass}
           aria-hidden="true"
           style={{
             opacity: open ? 0 : 1,
@@ -185,7 +234,7 @@ export function MobileNavDrawer({
           }}
         />
         <X
-          className="pointer-events-none absolute h-4 w-4 transition-[opacity,transform] duration-[280ms] ease-out sm:h-5 sm:w-5"
+          className={iconClass}
           aria-hidden="true"
           style={{
             opacity: open ? 1 : 0,
@@ -198,7 +247,7 @@ export function MobileNavDrawer({
 
       {mounted && rendered
         ? createPortal(
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <button
                 type="button"
                 aria-label={dictionary.nav.closeMenu}
@@ -232,7 +281,7 @@ export function MobileNavDrawer({
                   className="flex max-h-inherit flex-col overflow-y-auto pb-[max(0.5rem,env(safe-area-inset-bottom))]"
                 >
                   <div className="flex flex-col py-3">
-                    {navItems.map((item) => {
+                    {drawerNavItems.map((item) => {
                       const active = isNavItemActive(
                         pathname,
                         item.href,
@@ -240,7 +289,7 @@ export function MobileNavDrawer({
                       );
                       return (
                         <AppLink
-                          key={item.href}
+                          key={`${item.href}-${item.label}`}
                           href={item.href}
                           prefetchPolicy="intent"
                           aria-current={active ? "page" : undefined}
@@ -255,17 +304,37 @@ export function MobileNavDrawer({
                         </AppLink>
                       );
                     })}
-                  </div>
 
-                  <div className="mt-1 border-t border-gray-100 py-4">
                     <AppLink
-                      href={shopHref}
+                      href={policyHref}
                       prefetchPolicy="intent"
-                      className="flex w-full items-center justify-center rounded-full bg-gray-900 px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                      aria-current={policyActive ? "page" : undefined}
+                      className={`rounded-xl px-1 py-3.5 text-base font-semibold transition-colors ${
+                        policyActive
+                          ? "text-gray-900"
+                          : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
                       onClick={() => setOpen(false)}
                     >
-                      {dictionary.nav.shopNow}
+                      {dictionary.nav.policy}
                     </AppLink>
+                  </div>
+
+                  <div className="grid grid-cols-2 items-start gap-x-4 border-t border-gray-100 py-4">
+                    <MobileLocaleSwitcher
+                      locale={locale}
+                      label={dictionary.header.language}
+                      onSelect={() => setOpen(false)}
+                    />
+                    <MobileCurrencySwitcher
+                      currency={currency}
+                      label={dictionary.header.currency}
+                      onSelect={() => setOpen(false)}
+                    />
+                  </div>
+
+                  <div className="border-t border-gray-100 py-4">
+                    {accountSlot}
                   </div>
                 </nav>
               </div>

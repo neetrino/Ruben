@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 import { ChevronDown } from "lucide-react";
 
@@ -25,6 +25,8 @@ export function CurrencySwitcher({
   menuPlacement = "bottom",
 }: CurrencySwitcherProps) {
   const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [pending, startTransition] = useTransition();
 
   return (
@@ -57,6 +59,14 @@ export function CurrencySwitcher({
             onClick={() => {
               startTransition(async () => {
                 await setCurrencyAction(item);
+                const params = new URLSearchParams(
+                  searchParams?.toString() ?? "",
+                );
+                params.delete("minPrice");
+                params.delete("maxPrice");
+                const query = params.toString();
+                const path = pathname ?? "/";
+                router.replace(query ? `${path}?${query}` : path);
                 router.refresh();
               });
             }}

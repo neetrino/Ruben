@@ -1,28 +1,31 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
 
 import { clearCompareAction } from "@/features/compare/actions";
+import { adjustCompareCountDelta } from "@/features/compare/compare-client-sync";
 
 type ClearCompareButtonProps = {
   label: string;
+  itemCount: number;
   className?: string;
 };
 
 export function ClearCompareButton({
   label,
+  itemCount,
   className = "",
 }: ClearCompareButtonProps) {
   const router = useRouter();
-  const [pending, startTransition] = useTransition();
 
   function handleClick(): void {
-    startTransition(async () => {
-      const result = await clearCompareAction();
-      if (result.ok) {
-        router.refresh();
+    adjustCompareCountDelta(-itemCount);
+    void clearCompareAction().then((result) => {
+      if (!result.ok) {
+        adjustCompareCountDelta(itemCount);
+        return;
       }
+      router.refresh();
     });
   }
 
@@ -30,8 +33,7 @@ export function ClearCompareButton({
     <button
       type="button"
       onClick={handleClick}
-      disabled={pending}
-      className={`text-sm font-medium text-gray-700 underline-offset-2 hover:underline disabled:opacity-60 ${className}`}
+      className={`text-sm font-medium text-gray-700 underline-offset-2 hover:underline ${className}`}
     >
       {label}
     </button>
