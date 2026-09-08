@@ -15,8 +15,8 @@ type IconDropdownProps = {
   menuClassName?: string;
   /** Where the menu opens relative to the trigger. Default: below. */
   menuPlacement?: "bottom" | "top";
-  /** Trigger edge the menu is aligned to. Default: right. */
-  menuAlign?: "left" | "right";
+  /** Trigger edge the menu is aligned to, or centered. Default: right. */
+  menuAlign?: "left" | "center" | "right";
   /** Open on pointer hover (click still toggles; needed for touch). */
   openOnHover?: boolean;
   /** Close the menu when the page scrolls (menu-internal scrolling is kept). */
@@ -28,6 +28,12 @@ const DEFAULT_TRIGGER_CLASS =
 
 const DEFAULT_MENU_CLASS =
   "w-full overflow-hidden rounded-2xl border border-gray-100 bg-white";
+
+const ALIGN_CLASS: Record<"left" | "center" | "right", string> = {
+  left: "left-0",
+  center: "left-1/2 -translate-x-1/2",
+  right: "right-0",
+};
 
 export function IconDropdown({
   label,
@@ -123,6 +129,7 @@ export function IconDropdown({
   const placementGap = menuPlacement === "top" ? "pb-2" : "pt-2";
   const placementClosedTransform =
     menuPlacement === "top" ? "translate-y-1" : "-translate-y-1";
+  const alignClass = ALIGN_CLASS[menuAlign];
 
   return (
     <div
@@ -144,7 +151,7 @@ export function IconDropdown({
       </button>
 
       <div
-        className={`absolute ${menuAlign === "left" ? "left-0" : "right-0"} z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
+        className={`absolute ${alignClass} z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
           open
             ? "translate-y-0 grid-rows-[1fr] opacity-100"
             : `pointer-events-none grid-rows-[0fr] opacity-0 ${placementClosedTransform}`

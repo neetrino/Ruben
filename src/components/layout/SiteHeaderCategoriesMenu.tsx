@@ -27,7 +27,7 @@ const MENU_CLASS =
 const ITEM_CLASS =
   "flex items-center gap-3 rounded-xl px-3 py-2 text-sm leading-5 text-white/70 transition-colors hover:bg-white/10 hover:text-white";
 const THUMBNAIL_CLASS =
-  "relative size-8 shrink-0 overflow-hidden rounded-lg bg-white/5";
+  "relative size-8 shrink-0 overflow-hidden rounded-[4px] bg-white/5";
 
 /** Navbar category picker — opens the active categories on click. */
 export function SiteHeaderCategoriesMenu({
@@ -41,7 +41,7 @@ export function SiteHeaderCategoriesMenu({
   return (
     <IconDropdown
       label={label}
-      menuAlign="left"
+      menuAlign="center"
       closeOnScroll
       triggerClassName={TRIGGER_CLASS}
       menuClassName={MENU_CLASS}
@@ -72,7 +72,7 @@ export function SiteHeaderCategoriesMenu({
                 width={THUMBNAIL_SIZE_PX}
                 height={THUMBNAIL_SIZE_PX}
                 sizes={`${THUMBNAIL_SIZE_PX}px`}
-                className="size-full object-cover"
+                className="size-full object-contain"
               />
             ) : null}
           </span>
