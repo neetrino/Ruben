@@ -1,3 +1,4 @@
+import { CircleDot, Mail, Phone, Shield } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -22,6 +23,10 @@ import { getAdminDictionary } from "@/lib/i18n/get-dictionary";
 type AdminUserDetailPageProps = {
   params: Promise<{ locale: string; id: string }>;
 };
+
+const ADMIN_DETAIL_ROW = "flex items-center gap-2 text-gray-700";
+
+const ADMIN_DETAIL_ICON = "h-4 w-4 shrink-0 text-gray-400";
 
 function userStatusBadgeClass(status: string): string {
   const normalized = status.toUpperCase();
@@ -84,7 +89,8 @@ export default async function AdminUserDetailPage({
 
       <Card className="mb-6 p-6">
         <div className="grid gap-3 text-sm md:grid-cols-2">
-          <p className="text-gray-700">
+          <p className={ADMIN_DETAIL_ROW}>
+            <Shield className={ADMIN_DETAIL_ICON} aria-hidden />
             {t.users.detail.role}:{" "}
             <span
               className={`${ADMIN_BADGE} ${userRoleBadgeClass(user.role)}`}
@@ -92,7 +98,12 @@ export default async function AdminUserDetailPage({
               {user.role}
             </span>
           </p>
-          <p className="text-gray-700">
+          <p className={ADMIN_DETAIL_ROW}>
+            <Mail className={ADMIN_DETAIL_ICON} aria-hidden />
+            {t.users.detail.email}: {user.email}
+          </p>
+          <p className={ADMIN_DETAIL_ROW}>
+            <CircleDot className={ADMIN_DETAIL_ICON} aria-hidden />
             {t.users.detail.status}:{" "}
             <span
               className={`${ADMIN_BADGE} ${userStatusBadgeClass(user.status)}`}
@@ -100,25 +111,9 @@ export default async function AdminUserDetailPage({
               {user.status}
             </span>
           </p>
-          <p className="text-gray-700">
+          <p className={ADMIN_DETAIL_ROW}>
+            <Phone className={ADMIN_DETAIL_ICON} aria-hidden />
             {t.users.detail.phone}: {user.phone ?? "—"}
-          </p>
-          <p className="text-gray-700">
-            {t.users.detail.emailVerified}:{" "}
-            {user.emailVerifiedAt
-              ? user.emailVerifiedAt.toISOString().slice(0, 10)
-              : t.users.detail.no}
-          </p>
-          <p className="text-gray-700">
-            {t.users.detail.lastLogin}:{" "}
-            {user.lastLoginAt
-              ? user.lastLoginAt.toISOString().slice(0, 16).replace("T", " ")
-              : t.users.detail.never}{" "}
-            {t.common.utc}
-          </p>
-          <p className="text-gray-700">
-            {t.users.detail.created}:{" "}
-            {user.createdAt.toISOString().slice(0, 10)}
           </p>
         </div>
       </Card>
