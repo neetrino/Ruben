@@ -2,11 +2,13 @@ import "server-only";
 
 import {
   DeleteObjectCommand,
+  GetObjectCommand,
   PutObjectCommand,
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
+import { MEDIA_ROUTE_PREFIX } from "@/lib/media/media-route";
 import { logger } from "@/lib/observability/logger";
 import type { ObjectStorageAdapter } from "@/lib/r2/types";
 
@@ -15,7 +17,8 @@ export type R2AdapterConfig = {
   accessKeyId: string;
   secretAccessKey: string;
   bucketName: string;
-  publicBaseUrl: string;
+  /** Public CDN origin (custom domain or `r2.dev`). Empty → served via app route. */
+  publicBaseUrl?: string;
   /** Defaults to `https://{accountId}.r2.cloudflarestorage.com`. */
   endpoint?: string;
 };
@@ -29,7 +32,7 @@ export function createR2ObjectStorageAdapter(
   const endpoint =
     config.endpoint?.replace(/\/$/, "") ??
     `https://${config.accountId}.r2.cloudflarestorage.com`;
-  const publicBaseUrl = config.publicBaseUrl.replace(/\/$/, "");
+  const publicBaseUrl = (config.publicBaseUrl ?? "").replace(/\/$/, "");
 
   const client = new S3Client({
     region: "auto",
@@ -75,8 +78,37 @@ export function createR2ObjectStorageAdapter(
         throw error;
       }
     },
+    async getObject(objectKey) {
+      try {
+        const result = await client.send(
+          new GetObjectCommand({
+            Bucket: config.bucketName,
+            Key: objectKey,
+          }),
+        );
+        if (!result.Body) {
+          return null;
+        }
+        return {
+          body: result.Body.transformToWebStream(),
+          contentType: result.ContentType ?? "application/octet-stream",
+          contentLength: result.ContentLength ?? null,
+          etag: result.ETag ?? null,
+        };
+      } catch (error) {
+        const name = error instanceof Error ? error.name : "unknown";
+        if (name === "NoSuchKey" || name === "NotFound") {
+          return null;
+        }
+        logger.error("r2.get_object_failed", { objectKey, name });
+        throw error;
+      }
+    },
     buildPublicUrl(objectKey) {
       const key = objectKey.replace(/^\//, "");
+      if (!publicBaseUrl) {
+        return `${MEDIA_ROUTE_PREFIX}/${key}`;
+      }
       return `${publicBaseUrl}/${key}`;
     },
     async deleteObject(objectKey) {

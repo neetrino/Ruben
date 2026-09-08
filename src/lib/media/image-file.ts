@@ -14,6 +14,15 @@ export function extensionForImageMime(mimeType: string): string {
   return "jpg";
 }
 
+/** Inverse of {@link extensionForImageMime}, for objects served from storage. */
+export function imageMimeForExtension(extension: string): string {
+  const normalized = extension.toLowerCase().replace(/^\./, "");
+  if (normalized === "png") return "image/png";
+  if (normalized === "webp") return "image/webp";
+  if (normalized === "gif") return "image/gif";
+  return "image/jpeg";
+}
+
 /** Validates MIME and size for admin image uploads. */
 export function validateImageFile(
   file: File,
