@@ -39,8 +39,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // `data-scroll-behavior` keeps router navigation jump-free while in-page
+  // scrolling stays smooth (see `.profile-desktop-page` in globals.css).
   return (
-    <html lang="hy" className="h-full" suppressHydrationWarning>
+    <html
+      lang="hy"
+      className="h-full"
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body
         className={`${geistSans.variable} ${geistMono.variable} flex min-h-dvh flex-col overflow-x-hidden antialiased`}
       >
