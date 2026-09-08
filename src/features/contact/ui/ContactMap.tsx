@@ -16,7 +16,7 @@ type ContactMapProps = {
 const MAP_ROOT_MARGIN = "240px 0px";
 
 const TAB_CLASS =
-  "flex min-h-[3.25rem] items-start gap-2.5 rounded-[15px] border px-4 py-3 text-left text-sm leading-snug font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)]";
+  "flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-[15px] border px-4 py-3 text-center text-sm leading-snug font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)]";
 const TAB_SELECTED_CLASS = "border-brand bg-brand/10 text-gray-900 shadow-sm";
 const TAB_IDLE_CLASS =
   "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50";
@@ -42,7 +42,7 @@ export function ContactMap({ title, tabsTitle, branches }: ContactMapProps) {
       aria-label={title}
     >
       <div className="mx-auto max-w-7xl pt-10 sm:pt-12">
-        <p className="text-[11px] font-bold tracking-[0.08em] text-gray-500 uppercase">
+        <p className="text-center text-[11px] font-bold tracking-[0.08em] text-gray-500 uppercase">
           {tabsTitle}
         </p>
 
@@ -69,12 +69,10 @@ export function ContactMap({ title, tabsTitle, branches }: ContactMapProps) {
                 }}
               >
                 <MapPin
-                  className="mt-0.5 h-4 w-4 shrink-0 text-[var(--brand)]"
+                  className="h-4 w-4 shrink-0 text-[var(--brand)]"
                   aria-hidden
                 />
-                <span className="min-w-0 flex-1">
-                  {formatBranchAddress(branch)}
-                </span>
+                <span className="min-w-0">{formatBranchAddress(branch)}</span>
               </button>
             );
           })}
