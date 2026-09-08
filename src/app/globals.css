@@ -354,8 +354,10 @@ body {
 
 /**
  * Storefront profile desktop (Kamancha): sticky band under the header.
- * Equal top/bottom gaps; content column scrolls internally. When that
- * column reaches its end, page scroll continues so the footer is reachable.
+ * Equal top/bottom gaps; the bands grow with their content and only start
+ * scrolling internally once they reach the viewport cap, so short sections
+ * (addresses, password) let the footer rise over the hero wave instead of
+ * leaving a screen of empty space above it.
  */
 @media (min-width: 1025px) {
   /**
@@ -378,9 +380,6 @@ body {
 
   .profile-desktop-page {
     flex: 1 1 auto;
-    min-height: calc(
-      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
-    );
     align-items: flex-start;
   }
 
@@ -388,9 +387,6 @@ body {
     position: sticky;
     top: calc(var(--storefront-header-offset) + var(--profile-sticky-gap));
     z-index: 10;
-    height: calc(
-      100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
-    );
     max-height: calc(
       100dvh - var(--storefront-header-offset) - (var(--profile-sticky-gap) * 2)
     );
