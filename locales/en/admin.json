@@ -536,12 +536,8 @@
     "detail": {
       "role": "Role",
       "status": "Status",
+      "email": "Email",
       "phone": "Phone",
-      "emailVerified": "Email verified",
-      "no": "No",
-      "never": "Never",
-      "lastLogin": "Last login",
-      "created": "Member since",
       "unknownRole": "Unknown role",
       "unknownStatus": "Unknown status",
       "noOrders": "No orders yet.",

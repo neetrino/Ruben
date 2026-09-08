@@ -225,8 +225,17 @@ export function AdminUsersView({
                     user.status === "ACTIVE" || user.status === "SUSPENDED";
 
                   return (
-                    <tr key={user.id} className={ADMIN_TABLE_ROW}>
-                      <td className={ADMIN_TABLE_TD_CHECK}>
+                    <tr
+                      key={user.id}
+                      className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+                      onClick={() =>
+                        router.push(`/${locale}/admin/users/${user.id}`)
+                      }
+                    >
+                      <td
+                        className={ADMIN_TABLE_TD_CHECK}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <input
                           type="checkbox"
                           className={ADMIN_TABLE_CHECKBOX}
@@ -237,17 +246,9 @@ export function AdminUsersView({
                         />
                       </td>
                       <td className={ADMIN_TABLE_TD}>
-                        <Link
-                          href={`/${locale}/admin/users/${user.id}`}
-                          className="block min-w-[160px]"
-                        >
-                          <p className="font-medium text-gray-900 hover:underline">
-                            {displayName(user)}
-                          </p>
-                          <p className="truncate text-xs text-gray-400">
-                            {user.id}
-                          </p>
-                        </Link>
+                        <p className="min-w-[160px] font-medium text-gray-900">
+                          {displayName(user)}
+                        </p>
                       </td>
                       <td className={ADMIN_TABLE_TD}>
                         <p className="text-sm text-gray-600">{user.email}</p>
@@ -271,7 +272,10 @@ export function AdminUsersView({
                           {user.role.toLowerCase()}
                         </span>
                       </td>
-                      <td className={ADMIN_TABLE_TD_CENTER}>
+                      <td
+                        className={ADMIN_TABLE_TD_CENTER}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <button
                           type="button"
                           role="switch"

@@ -30,7 +30,7 @@ type AdminUserRecentOrdersProps = {
   copy: AdminDictionary;
 };
 
-/** User detail recent orders — 2-up grid; opens the shared admin order sheet. */
+/** User detail recent orders — 3-up grid; opens the shared admin order sheet. */
 export function AdminUserRecentOrders({
   locale,
   orders,
@@ -75,18 +75,24 @@ export function AdminUserRecentOrders({
         {orders.length === 0 ? (
           <p className="text-sm text-gray-600">{copy.users.detail.noOrders}</p>
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             {orders.map((order) => (
               <button
                 key={order.id}
                 type="button"
-                className="rounded-lg border border-gray-200 p-3 text-left transition-colors hover:bg-gray-50"
+                className="flex items-start justify-between gap-3 rounded-lg border border-gray-200 p-3 text-left transition-colors hover:bg-gray-50"
                 onClick={() => openOrder(order.orderNumber)}
               >
-                <div className="flex flex-wrap items-center gap-2">
+                <div className="min-w-0">
                   <strong className="text-sm text-gray-900">
                     {order.orderNumber}
                   </strong>
+                  <p className="mt-1 text-sm text-gray-600">
+                    {order.totalAmount.toLocaleString("en-US")}{" "}
+                    {order.baseCurrency}
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-center gap-1 whitespace-nowrap">
                   <span
                     className={`${ADMIN_BADGE} ${orderStatusBadgeClass(order.status)}`}
                   >
@@ -98,9 +104,6 @@ export function AdminUserRecentOrders({
                     {order.paymentStatus}
                   </span>
                 </div>
-                <p className="mt-1 text-sm text-gray-600">
-                  {order.totalAmount.toLocaleString("en-US")} {order.baseCurrency}
-                </p>
               </button>
             ))}
           </div>

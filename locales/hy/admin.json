@@ -536,12 +536,8 @@
     "detail": {
       "role": "Դեր",
       "status": "Կարգավիճակ",
+      "email": "Էլ. փոստ",
       "phone": "Հեռախոս",
-      "emailVerified": "Էլ. փոստը հաստատված է",
-      "no": "Ոչ",
-      "never": "Երբեք",
-      "lastLogin": "Վերջին մուտք",
-      "created": "Անդամ է-ից",
       "unknownRole": "Անհայտ դեր",
       "unknownStatus": "Անհայտ կարգավիճակ",
       "noOrders": "Պատվերներ դեռ չկան:",

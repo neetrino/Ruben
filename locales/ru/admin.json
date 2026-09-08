@@ -536,12 +536,8 @@
     "detail": {
       "role": "Роль",
       "status": "Статус",
+      "email": "Email",
       "phone": "Телефон",
-      "emailVerified": "Email подтверждён",
-      "no": "Нет",
-      "never": "Никогда",
-      "lastLogin": "Последний вход",
-      "created": "Участник с",
       "unknownRole": "Неизвестная роль",
       "unknownStatus": "Неизвестный статус",
       "noOrders": "Заказов пока нет.",
