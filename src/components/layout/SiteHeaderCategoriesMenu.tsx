@@ -42,6 +42,7 @@ export function SiteHeaderCategoriesMenu({
     <IconDropdown
       label={label}
       menuAlign="left"
+      closeOnScroll
       triggerClassName={TRIGGER_CLASS}
       menuClassName={MENU_CLASS}
       trigger={(open) => (

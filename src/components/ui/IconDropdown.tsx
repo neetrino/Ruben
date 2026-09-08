@@ -19,6 +19,8 @@ type IconDropdownProps = {
   menuAlign?: "left" | "right";
   /** Open on pointer hover (click still toggles; needed for touch). */
   openOnHover?: boolean;
+  /** Close the menu when the page scrolls (menu-internal scrolling is kept). */
+  closeOnScroll?: boolean;
 };
 
 const DEFAULT_TRIGGER_CLASS =
@@ -36,6 +38,7 @@ export function IconDropdown({
   menuPlacement = "bottom",
   menuAlign = "right",
   openOnHover = false,
+  closeOnScroll = false,
 }: IconDropdownProps) {
   const [open, setOpen] = useState(false);
   const [elevated, setElevated] = useState(false);
@@ -100,6 +103,18 @@ export function IconDropdown({
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open || !closeOnScroll) return;
+
+    function handleScroll(): void {
+      clearCloseTimer();
+      setOpen(false);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [open, closeOnScroll]);
 
   const placementOpen =
     menuPlacement === "top"
