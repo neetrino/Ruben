@@ -40,7 +40,7 @@ export function CatalogCategoryChips({
 
   return (
     <div
-      className="flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] sm:px-10 lg:px-12 [&::-webkit-scrollbar]:hidden"
+      className="flex gap-3 overflow-x-auto px-[13px] [scrollbar-width:none] sm:px-10 lg:px-12 [&::-webkit-scrollbar]:hidden"
       role="list"
       aria-label="Categories"
     >
