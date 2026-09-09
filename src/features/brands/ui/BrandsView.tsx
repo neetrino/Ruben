@@ -28,7 +28,7 @@ export function BrandsView({ locale, dictionary }: BrandsViewProps) {
 
         <RevealList
           as="ul"
-          className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-5 lg:grid-cols-4 lg:gap-6"
+          className="grid grid-cols-2 gap-3 sm:gap-5 md:grid-cols-4 lg:gap-6"
         >
           {STOREFRONT_BRANDS.map((brand) => (
             <RevealItem as="li" key={brand.id}>
@@ -36,7 +36,7 @@ export function BrandsView({ locale, dictionary }: BrandsViewProps) {
                 href={productsHref}
                 prefetchPolicy="intent"
                 aria-label={brand.name}
-                className={`flex aspect-[16/9] w-full items-center justify-center rounded-[24px] border border-gray-200/80 bg-[#f7f7f7] px-4 text-center transition-colors hover:border-gray-300 hover:bg-gray-100 ${HOVER_LIFT_CLASS}`}
+                className={`flex aspect-[16/8] w-full items-center justify-center rounded-[24px] border border-gray-200/80 bg-[#f7f7f7] px-4 text-center transition-colors hover:border-gray-300 hover:bg-gray-100 ${HOVER_LIFT_CLASS}`}
               >
                 <span className="text-base leading-none font-bold tracking-tight text-[#111] uppercase sm:text-xl lg:text-2xl">
                   {brand.name}
