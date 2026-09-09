@@ -17,7 +17,7 @@ function chipClass(active: boolean): string {
   return [
     "inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-2 text-sm whitespace-nowrap transition-colors",
     active
-      ? "bg-[#1f1f1f] text-white"
+      ? "bg-[var(--brand)] text-black"
       : "border border-[#1f1f1f] bg-white text-[#1f1f1f] hover:bg-neutral-50",
   ].join(" ");
 }
@@ -56,7 +56,7 @@ export function CatalogCategoryChips({
           alt=""
           width={20}
           height={20}
-          className={`size-5 ${allActive ? "brightness-0 invert" : ""}`}
+          className={`size-5 ${allActive ? "brightness-0" : ""}`}
           aria-hidden
         />
         {allLabel}
@@ -81,7 +81,7 @@ export function CatalogCategoryChips({
               alt=""
               width={20}
               height={20}
-              className={`size-5 ${active ? "brightness-0 invert" : ""}`}
+              className={`size-5 ${active ? "brightness-0" : ""}`}
               aria-hidden
             />
             {category.title}
