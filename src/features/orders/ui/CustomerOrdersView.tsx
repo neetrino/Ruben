@@ -24,6 +24,10 @@ type CustomerOrdersViewProps = {
   emptyLabel: string;
   statusLabels: Dictionary["admin"]["orders"]["status"];
   paymentLabels: Dictionary["admin"]["orders"]["payment"];
+  copy: Pick<
+    Dictionary["profile"],
+    "orderNumber" | "viewDetails" | "placedOn" | "status"
+  >;
 };
 
 export function CustomerOrdersView({
@@ -32,6 +36,7 @@ export function CustomerOrdersView({
   emptyLabel,
   statusLabels,
   paymentLabels,
+  copy,
 }: CustomerOrdersViewProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [detail, setDetail] = useState<AdminOrderDetailView | null>(null);
@@ -63,10 +68,12 @@ export function CustomerOrdersView({
   return (
     <>
       <CustomerOrdersTable
+        locale={locale}
         orders={orders}
         emptyLabel={emptyLabel}
         statusLabels={statusLabels}
         paymentLabels={paymentLabels}
+        copy={copy}
         onOpenOrder={openOrder}
       />
       <OrderDetailsDrawer

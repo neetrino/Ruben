@@ -104,7 +104,7 @@ export function OrderDetailsDrawer({
         ) : null}
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4">
+      <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y [-webkit-overflow-scrolling:touch] px-5 py-4">
         {isLoading ? (
           <div className="space-y-3">
             <div className="h-24 animate-pulse rounded-[20px] bg-gray-100" />
