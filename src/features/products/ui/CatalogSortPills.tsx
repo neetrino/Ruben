@@ -85,7 +85,7 @@ export function CatalogSortPills({
           ariaLabel={copy.sortLabel}
           value={filters.sort}
           options={options}
-          className="w-full [&>button]:h-11 [&>button]:rounded-full [&>button]:border-0 [&>button]:bg-black [&>button]:px-4 [&>button]:text-sm [&>button]:font-semibold [&>button]:text-white [&>button]:shadow-none [&>button]:hover:border-transparent [&>button>svg]:text-white"
+          className="w-full [&>button]:h-10 [&>button]:rounded-full [&>button]:border-0 [&>button]:bg-black [&>button]:px-4 [&>button]:text-sm [&>button]:font-semibold [&>button]:text-white [&>button]:shadow-none [&>button]:hover:border-transparent [&>button>svg]:text-white"
           onValueChange={handleSortChange}
         />
       </div>
