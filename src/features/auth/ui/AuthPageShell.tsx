@@ -60,7 +60,7 @@ export function AuthPageShell({
           width={1370}
           height={1380}
           priority
-          className="absolute top-[-200px] right-[-280px] h-auto w-[1100px] max-w-none select-none lg:right-[-160px] lg:w-[1280px]"
+          className="absolute top-[-200px] right-0 h-auto w-[1100px] max-w-none select-none lg:w-[1280px]"
         />
       </div>
     </div>
