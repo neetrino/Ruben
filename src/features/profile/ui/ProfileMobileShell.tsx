@@ -3,6 +3,7 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
@@ -48,6 +49,7 @@ export function ProfileMobileShell({
   /** Keeps sub-route content mounted while the close keyframe plays. */
   const [closingToHub, setClosingToHub] = useState(false);
   const [isDesktop, setIsDesktop] = useState<boolean | null>(null);
+  const desktopContentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const media = window.matchMedia(PROFILE_DESKTOP_MEDIA_QUERY);
@@ -65,6 +67,12 @@ export function ProfileMobileShell({
       scheduleStateUpdate(setClosingToHub, false);
     }
   }, [isHub, pathname]);
+
+  // The desktop column keeps its own scrollport across route changes, so a new
+  // section would otherwise open at the previous scroll offset.
+  useEffect(() => {
+    desktopContentRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
 
   const sheetOpen = (!isHub || hubSheetOpen) && !closingToHub;
 
@@ -101,7 +109,10 @@ export function ProfileMobileShell({
   );
 
   const desktopColumn = (
-    <div className="profile-desktop-content profile-sticky-band min-w-0 flex-1">
+    <div
+      ref={desktopContentRef}
+      className="profile-desktop-content profile-sticky-band min-w-0 flex-1"
+    >
       {revealed}
     </div>
   );
@@ -113,7 +124,10 @@ export function ProfileMobileShell({
     content = (
       <>
         <div className="profile-mobile-page w-full lg:hidden">{hub}</div>
-        <div className="profile-desktop-content profile-sticky-band hidden min-w-0 flex-1 lg:block">
+        <div
+          ref={desktopContentRef}
+          className="profile-desktop-content profile-sticky-band hidden min-w-0 flex-1 lg:block"
+        >
           {revealed}
         </div>
       </>

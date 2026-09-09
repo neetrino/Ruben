@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 
-import { PageAppear } from "@/components/motion/PageAppear";
+import { StorefrontPageAppear } from "@/components/motion/StorefrontPageAppear";
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
 import { MobileNavAccountAction } from "@/components/layout/MobileNavAccountAction";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
@@ -55,7 +55,7 @@ export default async function StorefrontLayout({
       />
       <main className="storefront-main mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <MaintenanceGate>
-          <PageAppear>{children}</PageAppear>
+          <StorefrontPageAppear>{children}</StorefrontPageAppear>
         </MaintenanceGate>
       </main>
       {/* Footer is desktop-only, so mobile keeps the copyright at the page end. */}

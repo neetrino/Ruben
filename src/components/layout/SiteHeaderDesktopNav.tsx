@@ -1,6 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import { usePathname } from "next/navigation";
 
 import { AppLink } from "@/components/ui/AppLink";
@@ -14,6 +21,11 @@ type NavItem = {
 type SiteHeaderDesktopNavProps = {
   locale: Locale;
   items: readonly NavItem[];
+  /** Dropdown placed inline, right after the nav item with `afterHref`. */
+  inlineMenu?: {
+    afterHref: string;
+    node: React.ReactNode;
+  };
 };
 
 type IndicatorBox = {
@@ -35,6 +47,7 @@ function isActive(pathname: string, href: string, locale: Locale): boolean {
 export function SiteHeaderDesktopNav({
   locale,
   items,
+  inlineMenu,
 }: SiteHeaderDesktopNavProps) {
   const pathname = usePathname() ?? `/${locale}`;
   const navRef = useRef<HTMLElement>(null);
@@ -98,26 +111,29 @@ export function SiteHeaderDesktopNav({
         const active = isActive(pathname, item.href, locale);
         const key = `${item.href}-${item.label}`;
         return (
-          <AppLink
-            key={key}
-            href={item.href}
-            prefetchPolicy="intent"
-            ref={(node) => {
-              if (node) {
-                linkRefs.current.set(item.href, node);
-              } else {
-                linkRefs.current.delete(item.href);
+          <Fragment key={key}>
+            <AppLink
+              href={item.href}
+              prefetchPolicy="intent"
+              ref={(node) => {
+                if (node) {
+                  linkRefs.current.set(item.href, node);
+                } else {
+                  linkRefs.current.delete(item.href);
+                }
+              }}
+              className={
+                active
+                  ? "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-[var(--brand-deep)] uppercase transition-colors duration-300"
+                  : "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-white uppercase transition-colors duration-300 hover:text-[var(--brand-deep)]"
               }
-            }}
-            className={
-              active
-                ? "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-[var(--brand-deep)] uppercase transition-colors duration-300"
-                : "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-white uppercase transition-colors duration-300 hover:text-[var(--brand-deep)]"
-            }
-            aria-current={active ? "page" : undefined}
-          >
-            {item.label}
-          </AppLink>
+              aria-current={active ? "page" : undefined}
+            >
+              {item.label}
+            </AppLink>
+
+            {inlineMenu?.afterHref === item.href ? inlineMenu.node : null}
+          </Fragment>
         );
       })}
 

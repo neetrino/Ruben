@@ -3,9 +3,11 @@ import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
 import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
+import { SiteFooterContact } from "@/components/layout/SiteFooterContact";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
+import type { StoreBranch } from "@/lib/store/branches";
 
 type SiteFooterProps = {
   dictionary: Dictionary;
@@ -21,6 +23,7 @@ const SOCIAL_CLASS =
 export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   const footer = dictionary.footer;
   const contact = dictionary.contact;
+  const branches: readonly StoreBranch[] = contact.branches;
 
   const navLinks = [
     { href: `/${locale}/products`, label: footer.shop },
@@ -83,13 +86,20 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
       <Reveal className="relative z-10 mx-auto max-w-[1440px] px-[5.56%] pt-24 pb-10 sm:pt-28 lg:pt-32">
         <div className="flex flex-col gap-12 border-b border-white/12 pb-16 lg:flex-row lg:items-start lg:justify-between lg:gap-12 xl:gap-16">
           <div className="max-w-[469px] shrink-0">
-            <Image
-              src={FOOTER_ASSETS.logo}
-              alt={dictionary.brand}
-              width={87}
-              height={54}
-              className="h-[54px] w-auto"
-            />
+            <AppLink
+              href={`/${locale}`}
+              prefetchPolicy="intent"
+              className="inline-block outline-none"
+              aria-label={dictionary.brand}
+            >
+              <Image
+                src={FOOTER_ASSETS.logo}
+                alt={dictionary.brand}
+                width={87}
+                height={54}
+                className="h-[54px] w-auto transition-opacity hover:opacity-80"
+              />
+            </AppLink>
             <p className="mt-8 max-w-[320px] text-sm leading-[22.75px] text-white/45">
               {footer.description}
             </p>
@@ -157,32 +167,18 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
               </ul>
             </div>
 
-            <div>
+            <div className="translate-x-6">
               <h3 className={`${HEADING_CLASS} whitespace-nowrap`}>
                 {footer.contactInfo}
               </h3>
-              <ul className="mt-6 space-y-3 text-sm leading-5 text-white/50">
-                <li>{contact.storeAddress}</li>
-                <li>
-                  <a
-                    href={`tel:${contact.storePhone.replace(/\s/g, "")}`}
-                    className="transition-colors hover:text-white"
-                  >
-                    {contact.storePhone}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href={`mailto:${contact.storeEmail}`}
-                    className="transition-colors hover:text-white"
-                  >
-                    {contact.storeEmail}
-                  </a>
-                </li>
-                <li className="border-t border-white/10 pt-4">
-                  {footer.hours}
-                </li>
-              </ul>
+              <SiteFooterContact
+                branches={branches}
+                storeName={dictionary.brand}
+                email={contact.storeEmail}
+                hours={[footer.hours, footer.hoursSunday]}
+                phonesLabel={contact.callTitle}
+                addressesLabel={contact.branchesTitle}
+              />
             </div>
           </div>
         </div>

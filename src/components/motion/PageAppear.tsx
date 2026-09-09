@@ -13,6 +13,8 @@ type PageAppearProps = {
   children: ReactNode;
   className?: string;
   y?: number;
+  /** Replay trigger. Defaults to the pathname — override to skip sub-routes. */
+  transitionKey?: string;
 };
 
 /**
@@ -22,12 +24,13 @@ export function PageAppear({
   children,
   className,
   y = MOTION_Y_PAGE_PX,
+  transitionKey,
 }: PageAppearProps) {
   const pathname = usePathname() ?? "";
 
   return (
     <m.div
-      key={pathname}
+      key={transitionKey ?? pathname}
       className={className}
       initial={{ opacity: 0, y }}
       animate={{ opacity: 1, y: 0 }}

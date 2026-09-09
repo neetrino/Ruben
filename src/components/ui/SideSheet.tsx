@@ -9,6 +9,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { ChevronLeft, ChevronRight, X } from "lucide-react";
+import { BODY_SCROLL_LOCK_ALLOW } from "@/lib/react/use-body-scroll-lock";
 
 /** Must match `.animate-side-sheet-panel-*` duration in globals.css. */
 export const SIDE_SHEET_ANIMATION_MS = 300;
@@ -186,6 +187,7 @@ export function SideSheet({
         )}
         <div
           className={`flex h-full min-h-0 w-full flex-col overflow-hidden bg-white shadow-2xl ${panelRadius}`}
+          {...{ [BODY_SCROLL_LOCK_ALLOW]: "" }}
           onClick={(event) => event.stopPropagation()}
         >
           {displayChildren}

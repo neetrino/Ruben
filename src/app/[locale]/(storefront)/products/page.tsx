@@ -171,7 +171,7 @@ export default async function ProductsPage({
         </span>
       </nav>
 
-      <div className="pb-10 lg:pb-14">
+      <div className="pb-6 lg:pb-14">
         <CatalogCategoryChips
           locale={rawLocale}
           filters={filters}
@@ -195,28 +195,32 @@ export default async function ProductsPage({
             <p className="hidden text-sm leading-none text-[#888] lg:block">
               {showingNodes}
             </p>
-            <div className="flex flex-wrap items-center gap-3 tablet:w-full tablet:flex-row-reverse tablet:justify-between lg:w-auto lg:flex-row lg:justify-start">
-              <CatalogFiltersSheet
-                locale={rawLocale}
-                filters={filters}
-                categories={categories}
-                priceBounds={priceBounds}
-                totalCount={catalog.total}
-                copy={filterCopy}
-                applyLabel={dictionary.catalog.applyFilters}
-                resultsLabel={resultsLabel}
-              />
-              <CatalogSortPills
-                locale={rawLocale}
-                filters={filters}
-                copy={{
-                  sortLabel: dictionary.catalog.sortLabel,
-                  sortNewest: dictionary.catalog.sortNewest,
-                  sortPriceAsc: dictionary.catalog.sortPriceAsc,
-                  sortPriceDesc: dictionary.catalog.sortPriceDesc,
-                  sortPopular: dictionary.catalog.sortPopular,
-                }}
-              />
+            <div className="grid w-full grid-cols-2 gap-2 lg:flex lg:w-auto lg:items-center lg:gap-3">
+              <div className="min-w-0">
+                <CatalogSortPills
+                  locale={rawLocale}
+                  filters={filters}
+                  copy={{
+                    sortLabel: dictionary.catalog.sortLabel,
+                    sortNewest: dictionary.catalog.sortNewest,
+                    sortPriceAsc: dictionary.catalog.sortPriceAsc,
+                    sortPriceDesc: dictionary.catalog.sortPriceDesc,
+                    sortPopular: dictionary.catalog.sortPopular,
+                  }}
+                />
+              </div>
+              <div className="min-w-0">
+                <CatalogFiltersSheet
+                  locale={rawLocale}
+                  filters={filters}
+                  categories={categories}
+                  priceBounds={priceBounds}
+                  totalCount={catalog.total}
+                  copy={filterCopy}
+                  applyLabel={dictionary.catalog.applyFilters}
+                  resultsLabel={resultsLabel}
+                />
+              </div>
             </div>
           </div>
 

@@ -11,22 +11,40 @@ type IconDropdownProps = {
   trigger: React.ReactNode | ((open: boolean) => React.ReactNode);
   children: React.ReactNode;
   triggerClassName?: string;
+  /** Menu surface styling; override for non-default (e.g. dark) surfaces. */
+  menuClassName?: string;
   /** Where the menu opens relative to the trigger. Default: below. */
   menuPlacement?: "bottom" | "top";
+  /** Trigger edge the menu is aligned to, or centered. Default: right. */
+  menuAlign?: "left" | "center" | "right";
   /** Open on pointer hover (click still toggles; needed for touch). */
   openOnHover?: boolean;
+  /** Close the menu when the page scrolls (menu-internal scrolling is kept). */
+  closeOnScroll?: boolean;
 };
 
 const DEFAULT_TRIGGER_CLASS =
   "inline-flex h-11 items-center gap-2 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-gray-800 shadow-sm outline-none transition-colors hover:border-gray-300";
+
+const DEFAULT_MENU_CLASS =
+  "w-full overflow-hidden rounded-2xl border border-gray-100 bg-white";
+
+const ALIGN_CLASS: Record<"left" | "center" | "right", string> = {
+  left: "left-0",
+  center: "left-1/2 -translate-x-1/2",
+  right: "right-0",
+};
 
 export function IconDropdown({
   label,
   trigger,
   children,
   triggerClassName,
+  menuClassName,
   menuPlacement = "bottom",
+  menuAlign = "right",
   openOnHover = false,
+  closeOnScroll = false,
 }: IconDropdownProps) {
   const [open, setOpen] = useState(false);
   const [elevated, setElevated] = useState(false);
@@ -92,6 +110,18 @@ export function IconDropdown({
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open || !closeOnScroll) return;
+
+    function handleScroll(): void {
+      clearCloseTimer();
+      setOpen(false);
+    }
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [open, closeOnScroll]);
+
   const placementOpen =
     menuPlacement === "top"
       ? "bottom-full origin-bottom"
@@ -99,6 +129,7 @@ export function IconDropdown({
   const placementGap = menuPlacement === "top" ? "pb-2" : "pt-2";
   const placementClosedTransform =
     menuPlacement === "top" ? "translate-y-1" : "-translate-y-1";
+  const alignClass = ALIGN_CLASS[menuAlign];
 
   return (
     <div
@@ -120,7 +151,7 @@ export function IconDropdown({
       </button>
 
       <div
-        className={`absolute right-0 z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
+        className={`absolute ${alignClass} z-[220] grid w-max transition-[grid-template-rows,opacity,transform] ease-[cubic-bezier(0.22,1,0.36,1)] ${placementOpen} ${placementGap} ${
           open
             ? "translate-y-0 grid-rows-[1fr] opacity-100"
             : `pointer-events-none grid-rows-[0fr] opacity-0 ${placementClosedTransform}`
@@ -133,7 +164,7 @@ export function IconDropdown({
             id={menuId}
             role="menu"
             aria-label={label}
-            className="w-full overflow-hidden rounded-2xl border border-gray-100 bg-white"
+            className={menuClassName ?? DEFAULT_MENU_CLASS}
           >
             <div
               className="flex w-full flex-col"

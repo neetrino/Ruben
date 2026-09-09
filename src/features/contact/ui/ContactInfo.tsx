@@ -1,67 +1,79 @@
-import type { ReactNode } from "react";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { Clock, Mail, MapPin, Phone } from "lucide-react";
 
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { formatBranchAddress, type StoreBranch } from "@/lib/store/branches";
+import { toTelHref } from "@/lib/store/phone";
 
 type ContactInfoProps = {
   copy: Dictionary["contact"];
 };
 
-function InfoRow({
-  icon,
-  title,
-  children,
-}: {
-  icon: ReactNode;
-  title: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="flex gap-4">
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[var(--brand)] text-black">
-        {icon}
-      </div>
-      <div className="min-w-0 pt-0.5">
-        <h2 className="text-lg font-semibold tracking-tight text-gray-900">
-          {title}
-        </h2>
-        <div className="mt-2 space-y-1.5 text-sm leading-relaxed text-gray-600">
-          {children}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-const linkClassName =
-  "font-semibold text-gray-900 underline-offset-2 transition hover:text-black hover:underline";
+const EYEBROW_CLASS =
+  "text-[11px] font-bold tracking-[0.08em] text-gray-500 uppercase";
+const ROW_CLASS = "flex items-start gap-2.5";
+const ICON_CLASS = "mt-0.5 h-[18px] w-[18px] shrink-0 text-gray-900";
+const VALUE_CLASS =
+  "text-sm leading-snug font-medium text-gray-900 sm:text-base";
+const LINK_CLASS =
+  "text-sm leading-snug font-semibold text-gray-900 transition-colors hover:text-black sm:text-base";
+const INFO_BLOCK_HOVER_CLASS =
+  "w-full max-w-sm rounded-[12px] px-2 py-2 -mx-2 transition-colors hover:bg-[#fec6041a]";
 
 export function ContactInfo({ copy }: ContactInfoProps) {
+  const branches: readonly StoreBranch[] = copy.branches;
+
   return (
-    <div className="flex h-full flex-col space-y-8 rounded-[20px] border border-gray-200/80 bg-white p-6 shadow-[0_18px_50px_-28px_rgba(17,24,39,0.22)] sm:p-8">
-      <InfoRow icon={<Phone className="h-5 w-5" strokeWidth={2.25} />} title={copy.callTitle}>
-        <p>{copy.callDescription}</p>
-        <a href={`tel:${copy.storePhone}`} className={linkClassName}>
-          {copy.storePhone}
-        </a>
-      </InfoRow>
+    <div className="flex w-full flex-col gap-8">
+      <div>
+        <p className={EYEBROW_CLASS}>{copy.branchesTitle}</p>
+        <ul className="mt-4 space-y-4">
+          {branches.map((branch, index) => (
+            <li key={branch.address} className={`${INFO_BLOCK_HOVER_CLASS} space-y-2`}>
+              <div className={ROW_CLASS}>
+                <MapPin className={ICON_CLASS} aria-hidden />
+                <p className={VALUE_CLASS}>{formatBranchAddress(branch)}</p>
+              </div>
 
-      <div className="h-px bg-gray-100" aria-hidden />
+              {branch.phone ? (
+                <div className={ROW_CLASS}>
+                  <Phone className={ICON_CLASS} aria-hidden />
+                  <a href={toTelHref(branch.phone)} className={LINK_CLASS}>
+                    {branch.phone}
+                  </a>
+                </div>
+              ) : null}
 
-      <InfoRow icon={<Mail className="h-5 w-5" strokeWidth={2.25} />} title={copy.writeTitle}>
-        <p>{copy.writeDescription}</p>
-        <a href={`mailto:${copy.storeEmail}`} className={linkClassName}>
-          {copy.emailLabel} {copy.storeEmail}
-        </a>
-      </InfoRow>
+              {index < branches.length - 1 ? (
+                <div
+                  className="h-px w-full max-w-sm bg-gray-200"
+                  aria-hidden
+                />
+              ) : null}
+            </li>
+          ))}
+        </ul>
+      </div>
 
-      <div className="h-px bg-gray-100" aria-hidden />
+      <div>
+        <p className={EYEBROW_CLASS}>{copy.email}</p>
+        <div className={`${ROW_CLASS} ${INFO_BLOCK_HOVER_CLASS} mt-3`}>
+          <Mail className={ICON_CLASS} aria-hidden />
+          <a href={`mailto:${copy.storeEmail}`} className={LINK_CLASS}>
+            {copy.storeEmail}
+          </a>
+        </div>
+      </div>
 
-      <InfoRow icon={<MapPin className="h-5 w-5" strokeWidth={2.25} />} title={copy.hqTitle}>
-        <p>{copy.hoursWeekdays}</p>
-        <p>{copy.hoursSaturday}</p>
-        <p className="pt-1 font-semibold text-gray-900">{copy.storeAddress}</p>
-      </InfoRow>
+      <div className={INFO_BLOCK_HOVER_CLASS}>
+        <p className={EYEBROW_CLASS}>{copy.hoursTitle}</p>
+        <div className={`${ROW_CLASS} mt-3`}>
+          <Clock className={ICON_CLASS} aria-hidden />
+          <div className={VALUE_CLASS}>
+            <p>{copy.hoursWeekdays}</p>
+            <p>{copy.hoursSunday}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

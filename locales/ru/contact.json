@@ -1,6 +1,5 @@
 {
   "title": "Контакты",
-  "subtitle": "Отправьте сообщение — мы ответим вам.",
   "name": "Имя",
   "email": "Email",
   "phone": "Телефон (необязательно)",
@@ -9,22 +8,45 @@
   "submit": "Отправить",
   "success": "Спасибо — сообщение отправлено.",
   "error": "Не удалось отправить сообщение.",
-  "storePhone": "+374 10 123 456",
   "storeEmail": "info@kamancha.am",
-  "storeAddress": "Абовян 23, Ереван, Армения",
   "social": {
-    "instagram": "https://instagram.com",
-    "facebook": "https://facebook.com",
+    "instagram": "https://www.instagram.com/ruben_store_showroom",
+    "facebook": "https://www.facebook.com/share/1ELGKYNoUs/",
     "linkedin": "https://linkedin.com",
-    "whatsapp": "https://wa.me/37410123456"
+    "whatsapp": "https://wa.me/37455102009"
   },
   "callTitle": "Позвоните нам:",
-  "callDescription": "Мы на связи 24/7, 7 дней в неделю.",
-  "writeTitle": "Напишите нам:",
-  "writeDescription": "Заполните форму, и мы свяжемся с вами в течение 24 часов.",
-  "emailLabel": "Email:",
-  "hqTitle": "Главный офис:",
-  "hoursWeekdays": "Понедельник - Пятница: 9:00-20:00",
-  "hoursSaturday": "Суббота: 11:00 - 15:00",
-  "mapTitle": "Расположение магазина"
+  "branchesTitle": "Наши адреса:",
+  "branches": [
+    {
+      "address": "Адонца 19",
+      "district": "Арабкир",
+      "phone": "055 10 20 09"
+    },
+    {
+      "address": "Фучика 27/44",
+      "district": "Аджапняк",
+      "phone": "095 10 20 90"
+    },
+    {
+      "address": "Ростовян 15/9",
+      "district": "Эребуни",
+      "phone": "041 10 20 40"
+    },
+    {
+      "address": "Гусана Шерама 100",
+      "district": "Бангладеш",
+      "phone": "033 10 04 35"
+    },
+    {
+      "address": "Малатия-Себастия 37/6",
+      "district": null,
+      "phone": null
+    }
+  ],
+  "hoursTitle": "Часы работы:",
+  "hoursWeekdays": "Понедельник–суббота: 09:30–19:00",
+  "hoursSunday": "Воскресенье: 10:00–18:00",
+  "mapTitle": "Расположение магазина",
+  "mapTabsTitle": "Наши адреса на карте"
 }

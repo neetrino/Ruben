@@ -17,7 +17,7 @@ function chipClass(active: boolean): string {
   return [
     "inline-flex shrink-0 items-center gap-2 rounded-full px-5 py-2 text-sm whitespace-nowrap transition-colors",
     active
-      ? "bg-[#1f1f1f] text-white"
+      ? "bg-[var(--brand)] text-black"
       : "border border-[#1f1f1f] bg-white text-[#1f1f1f] hover:bg-neutral-50",
   ].join(" ");
 }
@@ -40,7 +40,7 @@ export function CatalogCategoryChips({
 
   return (
     <div
-      className="flex gap-3 overflow-x-auto px-6 [scrollbar-width:none] sm:px-10 lg:px-12 [&::-webkit-scrollbar]:hidden"
+      className="flex gap-3 overflow-x-auto px-[13px] [scrollbar-width:none] sm:px-10 lg:px-12 [&::-webkit-scrollbar]:hidden"
       role="list"
       aria-label="Categories"
     >
@@ -56,7 +56,7 @@ export function CatalogCategoryChips({
           alt=""
           width={20}
           height={20}
-          className={`size-5 ${allActive ? "brightness-0 invert" : ""}`}
+          className={`size-5 ${allActive ? "brightness-0" : ""}`}
           aria-hidden
         />
         {allLabel}
@@ -81,7 +81,7 @@ export function CatalogCategoryChips({
               alt=""
               width={20}
               height={20}
-              className={`size-5 ${active ? "brightness-0 invert" : ""}`}
+              className={`size-5 ${active ? "brightness-0" : ""}`}
               aria-hidden
             />
             {category.title}

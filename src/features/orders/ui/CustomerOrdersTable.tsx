@@ -7,6 +7,7 @@ import {
   orderStatusBadgeClass,
   paymentStatusBadgeClass,
 } from "@/features/admin/ui/status-badge";
+import { ProfileRecentOrderCard } from "@/features/profile/ui/ProfileRecentOrderCard";
 import {
   ADMIN_TABLE,
   ADMIN_TABLE_CARD,
@@ -36,10 +37,15 @@ type CustomerOrderRow = {
 };
 
 type CustomerOrdersTableProps = {
+  locale: string;
   orders: CustomerOrderRow[];
   emptyLabel: string;
   statusLabels: Dictionary["admin"]["orders"]["status"];
   paymentLabels: Dictionary["admin"]["orders"]["payment"];
+  copy: Pick<
+    Dictionary["profile"],
+    "orderNumber" | "viewDetails" | "placedOn" | "status"
+  >;
   onOpenOrder: (orderNumber: string) => void;
 };
 
@@ -83,78 +89,109 @@ function localizePaymentStatus(
 }
 
 export function CustomerOrdersTable({
+  locale,
   orders,
   emptyLabel,
   statusLabels,
   paymentLabels,
+  copy,
   onOpenOrder,
 }: CustomerOrdersTableProps) {
+  const dateLocale =
+    locale === "hy" ? "hy-AM" : locale === "ru" ? "ru-RU" : "en-US";
+
   return (
-    <Card className={ADMIN_TABLE_CARD}>
-      <div className={ADMIN_TABLE_OUTER_SCROLL}>
-        <table className={ADMIN_TABLE}>
-          <thead className={ADMIN_TABLE_THEAD}>
-            <tr>
-              <th className={ADMIN_TABLE_TH}>Order</th>
-              <th className={ADMIN_TABLE_TH_METRIC}>Status</th>
-              <th className={ADMIN_TABLE_TH_METRIC}>Payment</th>
-              <th className={ADMIN_TABLE_TH_METRIC}>Total</th>
-              <th className={ADMIN_TABLE_TH_METRIC}>Placed</th>
-            </tr>
-          </thead>
-          <tbody className={ADMIN_TABLE_TBODY}>
-            {orders.map((order) => (
-              <tr
-                key={order.id}
-                className={`${ADMIN_TABLE_ROW} cursor-pointer`}
-                onClick={() => onOpenOrder(order.orderNumber)}
-              >
-                <td className={ADMIN_TABLE_TD}>
-                  <span className="font-medium text-gray-900">
-                    {order.orderNumber}
-                  </span>
-                </td>
-                <td className={ADMIN_TABLE_TD_METRIC}>
-                  <span
-                    className={`${ADMIN_BADGE} ${orderStatusBadgeClass(order.status)}`}
-                  >
-                    {localizeOrderStatus(order.status, statusLabels)}
-                  </span>
-                </td>
-                <td className={ADMIN_TABLE_TD_METRIC}>
-                  <span
-                    className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(order.paymentStatus)}`}
-                  >
-                    {localizePaymentStatus(order.paymentStatus, paymentLabels)}
-                  </span>
-                </td>
-                <td className={ADMIN_TABLE_TD_METRIC}>
-                  <span className="font-semibold text-gray-900">
-                    {formatOrderDrawerMoney(
-                      order.totalAmount,
-                      order.baseCurrency,
-                    )}
-                  </span>
-                </td>
-                <td className={ADMIN_TABLE_TD_METRIC}>
-                  <AdminPlacedStamp value={order.placedAt} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      <div className="space-y-3 p-3 sm:p-4 lg:hidden">
+        {orders.map((order) => (
+          <ProfileRecentOrderCard
+            key={order.id}
+            orderNumber={order.orderNumber}
+            status={localizeOrderStatus(order.status, statusLabels)}
+            totalLabel={formatOrderDrawerMoney(order.totalAmount, order.baseCurrency)}
+            metaLine={`${copy.status}: ${localizePaymentStatus(order.paymentStatus, paymentLabels)}`}
+            placedOnLine={`${copy.placedOn} ${new Intl.DateTimeFormat(dateLocale, {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+              timeZone: "Asia/Yerevan",
+            }).format(new Date(order.placedAt))}`}
+            orderNumberLabel={copy.orderNumber}
+            viewDetailsLabel={copy.viewDetails}
+            onViewDetails={() => onOpenOrder(order.orderNumber)}
+          />
+        ))}
+        {orders.length === 0 ? (
+          <p className="py-8 text-center text-sm text-gray-600">{emptyLabel}</p>
+        ) : null}
       </div>
-      {orders.length === 0 ? (
-        <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
-          {emptyLabel}
-        </p>
-      ) : (
-        <div className={ADMIN_TABLE_FOOTER_ROUNDED_B}>
-          <p className="text-sm text-gray-600">
-            {orders.length} order{orders.length === 1 ? "" : "s"} on this page
-          </p>
+
+      <Card className={`${ADMIN_TABLE_CARD} hidden lg:block`}>
+        <div className={ADMIN_TABLE_OUTER_SCROLL}>
+          <table className={ADMIN_TABLE}>
+            <thead className={ADMIN_TABLE_THEAD}>
+              <tr>
+                <th className={ADMIN_TABLE_TH}>Order</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>Status</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>Payment</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>Total</th>
+                <th className={ADMIN_TABLE_TH_METRIC}>Placed</th>
+              </tr>
+            </thead>
+            <tbody className={ADMIN_TABLE_TBODY}>
+              {orders.map((order) => (
+                <tr
+                  key={order.id}
+                  className={`${ADMIN_TABLE_ROW} cursor-pointer`}
+                  onClick={() => onOpenOrder(order.orderNumber)}
+                >
+                  <td className={ADMIN_TABLE_TD}>
+                    <span className="font-medium text-gray-900">
+                      {order.orderNumber}
+                    </span>
+                  </td>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <span
+                      className={`${ADMIN_BADGE} ${orderStatusBadgeClass(order.status)}`}
+                    >
+                      {localizeOrderStatus(order.status, statusLabels)}
+                    </span>
+                  </td>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <span
+                      className={`${ADMIN_BADGE} ${paymentStatusBadgeClass(order.paymentStatus)}`}
+                    >
+                      {localizePaymentStatus(order.paymentStatus, paymentLabels)}
+                    </span>
+                  </td>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <span className="font-semibold text-gray-900">
+                      {formatOrderDrawerMoney(
+                        order.totalAmount,
+                        order.baseCurrency,
+                      )}
+                    </span>
+                  </td>
+                  <td className={ADMIN_TABLE_TD_METRIC}>
+                    <AdminPlacedStamp value={order.placedAt} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      )}
-    </Card>
+        {orders.length === 0 ? (
+          <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
+            {emptyLabel}
+          </p>
+        ) : (
+          <div className={ADMIN_TABLE_FOOTER_ROUNDED_B}>
+            <p className="text-sm text-gray-600">
+              {orders.length} order{orders.length === 1 ? "" : "s"} on this page
+            </p>
+          </div>
+        )}
+      </Card>
+    </>
   );
 }

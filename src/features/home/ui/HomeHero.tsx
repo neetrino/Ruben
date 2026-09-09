@@ -65,7 +65,7 @@ export function HomeHero({
         animate="show"
         variants={heroStaggerVariants}
       >
-        <div className="relative z-20 max-w-xl pt-1 lg:pt-3">
+        <div className="relative z-20 max-w-xl translate-x-[22px] translate-y-6 pt-1 lg:pt-3">
           <h1 className="sr-only">{brandName}</h1>
           <m.div variants={heroItemVariants}>
             <Image

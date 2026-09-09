@@ -83,12 +83,14 @@ export default async function OrdersPage({
         {dictionary.profile.orders}
       </h1>
 
-      <CustomerOrdersFilters
-        total={total}
-        status={filters.status}
-        paymentStatus={filters.paymentStatus}
-        q={filters.q}
-      />
+      <div className="hidden lg:block">
+        <CustomerOrdersFilters
+          total={total}
+          status={filters.status}
+          paymentStatus={filters.paymentStatus}
+          q={filters.q}
+        />
+      </div>
 
       <CustomerOrdersView
         locale={locale}
@@ -96,6 +98,12 @@ export default async function OrdersPage({
         emptyLabel={dictionary.profile.noOrders}
         statusLabels={dictionary.admin.orders.status}
         paymentLabels={dictionary.admin.orders.payment}
+        copy={{
+          orderNumber: dictionary.profile.orderNumber,
+          viewDetails: dictionary.profile.viewDetails,
+          placedOn: dictionary.profile.placedOn,
+          status: dictionary.profile.status,
+        }}
       />
 
       {totalPages > 1 ? (

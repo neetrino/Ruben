@@ -1,6 +1,5 @@
 {
   "title": "Կապ",
-  "subtitle": "Ուղարկեք հաղորդագրություն, և մենք կպատասխանենք։",
   "name": "Անուն",
   "email": "Էլ. փոստ",
   "phone": "Հեռախոս (ըստ ցանկության)",
@@ -9,22 +8,45 @@
   "submit": "Ուղարկել",
   "success": "Շնորհակալություն — հաղորդագրությունն ուղարկված է։",
   "error": "Չհաջողվեց ուղարկել հաղորդագրությունը։",
-  "storePhone": "+374 10 123 456",
   "storeEmail": "info@kamancha.am",
-  "storeAddress": "Աբովյան 23, Երևան, Հայաստան",
   "social": {
-    "instagram": "https://instagram.com",
-    "facebook": "https://facebook.com",
+    "instagram": "https://www.instagram.com/ruben_store_showroom",
+    "facebook": "https://www.facebook.com/share/1ELGKYNoUs/",
     "linkedin": "https://linkedin.com",
-    "whatsapp": "https://wa.me/37410123456"
+    "whatsapp": "https://wa.me/37455102009"
   },
   "callTitle": "Զանգահարեք մեզ՝",
-  "callDescription": "Մենք հասանելի ենք 24/7, շաբաթը 7 օր։",
-  "writeTitle": "Գրեք մեզ՝",
-  "writeDescription": "Լրացրեք ձևը, և մենք կկապվենք ձեզ հետ 24 ժամվա ընթացքում։",
-  "emailLabel": "Էլ. փոստ՝",
-  "hqTitle": "Գլխամաս՝",
-  "hoursWeekdays": "Երկուշաբթի - Ուրբաթ՝ 9:00-20:00",
-  "hoursSaturday": "Շաբաթ՝ 11:00 - 15:00",
-  "mapTitle": "Խանութի գտնվելու վայրը"
+  "branchesTitle": "Մեր հասցեները՝",
+  "branches": [
+    {
+      "address": "Ադոնց 19",
+      "district": "Արաբկիր",
+      "phone": "055 10 20 09"
+    },
+    {
+      "address": "Ֆուչիկի 27/44",
+      "district": "Աջափնյակ",
+      "phone": "095 10 20 90"
+    },
+    {
+      "address": "Ռոստովյան 15/9",
+      "district": "Էրեբունի",
+      "phone": "041 10 20 40"
+    },
+    {
+      "address": "Գուսան Շերամի 100",
+      "district": "Բանգլադեշ",
+      "phone": "033 10 04 35"
+    },
+    {
+      "address": "Մալաթիա Սեբաստիա 37/6",
+      "district": null,
+      "phone": null
+    }
+  ],
+  "hoursTitle": "Աշխատանքային ժամեր՝",
+  "hoursWeekdays": "Երկուշաբթի–շաբաթ՝ 09:30–19:00",
+  "hoursSunday": "Կիրակի՝ 10:00–18:00",
+  "mapTitle": "Խանութի գտնվելու վայրը",
+  "mapTabsTitle": "Մեր հասցեները քարտեզում"
 }

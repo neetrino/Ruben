@@ -6,6 +6,7 @@ import { Check, Copy, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { CopyTextButton } from "@/components/ui/CopyTextButton";
 import {
   ConfirmDialog,
   deleteConfirmDescription,
@@ -162,9 +163,16 @@ export function AdminCouponsView({ locale, coupons }: AdminCouponsViewProps) {
                 {coupons.map((promo) => (
                   <tr key={promo.id} className={ADMIN_TABLE_ROW}>
                     <td className={ADMIN_TABLE_TD}>
-                      <span className="font-medium text-gray-900">
-                        {promo.code}
-                      </span>
+                      {promo.code ? (
+                        <CopyTextButton
+                          value={promo.code}
+                          copyLabel={t.common.copy}
+                          copiedLabel={t.common.copied}
+                          className="font-medium text-gray-900 hover:text-gray-700"
+                        />
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
                     </td>
                     <td className={ADMIN_TABLE_TD_CENTER}>
                       {typeLabel(promo.discountType, t.coupons.type.percent, t.coupons.type.fixed)}

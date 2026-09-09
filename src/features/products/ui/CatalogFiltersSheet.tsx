@@ -135,7 +135,7 @@ export function CatalogFiltersSheet({
       <button
         type="button"
         onClick={openSheet}
-        className="inline-flex h-11 items-center gap-2 rounded-full bg-black px-4 text-sm font-semibold text-white lg:hidden"
+        className="flex h-10 w-full items-center justify-center gap-2 rounded-full bg-black px-4 text-sm font-semibold text-white lg:hidden lg:w-auto"
         aria-haspopup="dialog"
         aria-expanded={open}
       >
