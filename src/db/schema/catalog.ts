@@ -140,12 +140,15 @@ export const brands = pgTable(
     translations: jsonb("translations").$type<TranslationsJson>().notNull(),
     sortOrder: integer("sort_order").notNull().default(0),
     status: categoryStatusEnum("status").notNull().default("ACTIVE"),
+    /** When true, brand can appear in the home partners strip (max 5). */
+    isFeatured: boolean("is_featured").notNull().default(false),
     createdAt: createdAtColumn(),
     updatedAt: updatedAtColumn(),
     deletedAt: deletedAtColumn(),
   },
   (table) => [
     index("brands_status_sort_idx").on(table.status, table.sortOrder),
+    index("brands_featured_sort_idx").on(table.isFeatured, table.sortOrder),
     uniqueIndex("brands_slug_hy_uidx")
       .on(sql`(${table.translations}->'hy'->>'slug')`)
       .where(sql`${table.translations}->'hy'->>'slug' IS NOT NULL`),

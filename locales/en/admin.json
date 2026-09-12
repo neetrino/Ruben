@@ -377,18 +377,22 @@
     "searchPlaceholder": "Search brands…",
     "searchAria": "Search brands",
     "clearToReorder": "Clear search to reorder brands.",
+    "homeHint": "Star brands to show on the home page ({count}/{limit}).",
     "empty": "No brands yet.",
     "emptySearch": "No brands match your search.",
     "columns": {
       "image": "Logo",
       "title": "Name",
       "slug": "Slug",
+      "home": "Home",
       "actions": "Actions"
     },
     "aria": {
       "edit": "Edit brand",
       "delete": "Delete brand",
-      "reorder": "Drag to reorder"
+      "reorder": "Drag to reorder",
+      "feature": "Show brand on home page",
+      "unfeature": "Hide brand from home page"
     },
     "drawer": {
       "editTitle": "Edit brand",

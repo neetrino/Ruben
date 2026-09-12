@@ -13,6 +13,7 @@ export type AdminBrandListItem = {
   slug: string;
   status: string;
   sortOrder: number;
+  isFeatured: boolean;
   imageUrl: string | null;
 };
 
@@ -70,6 +71,7 @@ export async function listAdminBrands(
       slug: translation?.slug ?? "",
       status: row.status,
       sortOrder: row.sortOrder,
+      isFeatured: row.isFeatured,
       imageUrl: images.get(row.id) ?? null,
     };
   });

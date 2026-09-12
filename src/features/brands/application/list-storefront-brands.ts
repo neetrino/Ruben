@@ -5,6 +5,7 @@ import { unstable_cache } from "next/cache";
 
 import { getDb } from "@/db/client";
 import { brands, mediaAssets, type LocaleTranslation } from "@/db/schema";
+import { HOME_PARTNER_BRANDS_LIMIT } from "@/features/brands/domain/home-partners";
 import {
   CACHE_TAGS,
   PUBLIC_CACHE_REVALIDATE_SECONDS,
@@ -27,47 +28,50 @@ function translationFor(
   return translations[locale] ?? translations.hy ?? translations.en ?? null;
 }
 
-async function loadStorefrontBrands(
-  locale: Locale,
-): Promise<StorefrontBrandItem[]> {
-  const rows = await getDb()
-    .select({
-      id: brands.id,
-      translations: brands.translations,
-      sortOrder: brands.sortOrder,
-    })
-    .from(brands)
-    .where(
-      and(eq(brands.status, "ACTIVE"), isNull(brands.deletedAt)),
-    )
-    .orderBy(asc(brands.sortOrder), asc(brands.createdAt));
-
+async function loadBrandImages(
+  brandIds: readonly string[],
+): Promise<Map<string, string>> {
   const images = new Map<string, string>();
-  if (rows.length > 0) {
-    const mediaRows = await getDb()
-      .select({
-        brandId: mediaAssets.brandId,
-        objectKey: mediaAssets.objectKey,
-      })
-      .from(mediaAssets)
-      .where(
-        and(
-          isNotNull(mediaAssets.brandId),
-          eq(mediaAssets.uploadStatus, "READY"),
-          or(
-            eq(mediaAssets.isPrimary, true),
-            eq(mediaAssets.role, "PRIMARY"),
-            eq(mediaAssets.role, "COVER"),
-          ),
-        ),
-      );
+  if (brandIds.length === 0) return images;
 
-    for (const media of mediaRows) {
-      if (!media.brandId || images.has(media.brandId)) continue;
-      images.set(media.brandId, mediaPublicUrl(media.objectKey));
+  const mediaRows = await getDb()
+    .select({
+      brandId: mediaAssets.brandId,
+      objectKey: mediaAssets.objectKey,
+    })
+    .from(mediaAssets)
+    .where(
+      and(
+        isNotNull(mediaAssets.brandId),
+        eq(mediaAssets.uploadStatus, "READY"),
+        or(
+          eq(mediaAssets.isPrimary, true),
+          eq(mediaAssets.role, "PRIMARY"),
+          eq(mediaAssets.role, "COVER"),
+        ),
+      ),
+    );
+
+  const idSet = new Set(brandIds);
+  for (const media of mediaRows) {
+    if (!media.brandId || !idSet.has(media.brandId) || images.has(media.brandId)) {
+      continue;
     }
+    images.set(media.brandId, mediaPublicUrl(media.objectKey));
   }
 
+  return images;
+}
+
+function mapBrandRows(
+  rows: Array<{
+    id: string;
+    translations: (typeof brands.$inferSelect)["translations"];
+    sortOrder: number;
+  }>,
+  locale: Locale,
+  images: Map<string, string>,
+): StorefrontBrandItem[] {
   return rows
     .map((row) => {
       const translation = translationFor(row.translations, locale);
@@ -83,13 +87,68 @@ async function loadStorefrontBrands(
     .filter((row): row is StorefrontBrandItem => row !== null);
 }
 
-/** Cached active brands for storefront surfaces. */
+async function loadStorefrontBrands(
+  locale: Locale,
+): Promise<StorefrontBrandItem[]> {
+  const rows = await getDb()
+    .select({
+      id: brands.id,
+      translations: brands.translations,
+      sortOrder: brands.sortOrder,
+    })
+    .from(brands)
+    .where(and(eq(brands.status, "ACTIVE"), isNull(brands.deletedAt)))
+    .orderBy(asc(brands.sortOrder), asc(brands.createdAt));
+
+  const images = await loadBrandImages(rows.map((row) => row.id));
+  return mapBrandRows(rows, locale, images);
+}
+
+async function loadHomePartnerBrands(
+  locale: Locale,
+): Promise<StorefrontBrandItem[]> {
+  const rows = await getDb()
+    .select({
+      id: brands.id,
+      translations: brands.translations,
+      sortOrder: brands.sortOrder,
+    })
+    .from(brands)
+    .where(
+      and(
+        eq(brands.status, "ACTIVE"),
+        eq(brands.isFeatured, true),
+        isNull(brands.deletedAt),
+      ),
+    )
+    .orderBy(asc(brands.sortOrder), asc(brands.createdAt))
+    .limit(HOME_PARTNER_BRANDS_LIMIT);
+
+  const images = await loadBrandImages(rows.map((row) => row.id));
+  return mapBrandRows(rows, locale, images);
+}
+
+/** Cached active brands for the storefront brands page / filters. */
 export async function listStorefrontBrands(
   locale: Locale,
 ): Promise<StorefrontBrandItem[]> {
   return unstable_cache(
     () => loadStorefrontBrands(locale),
     [`storefront-brands-${locale}`],
+    {
+      revalidate: PUBLIC_CACHE_REVALIDATE_SECONDS,
+      tags: [CACHE_TAGS.brands],
+    },
+  )();
+}
+
+/** Cached starred brands for the home partners strip (max 5). */
+export async function listHomePartnerBrands(
+  locale: Locale,
+): Promise<StorefrontBrandItem[]> {
+  return unstable_cache(
+    () => loadHomePartnerBrands(locale),
+    [`storefront-home-brands-${locale}`],
     {
       revalidate: PUBLIC_CACHE_REVALIDATE_SECONDS,
       tags: [CACHE_TAGS.brands],

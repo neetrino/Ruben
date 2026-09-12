@@ -9,12 +9,11 @@ type HomePartnersProps = {
 };
 
 /**
- * White partners strip — brand logos/names from admin CMS.
- * Renders nothing when there are no published brands.
+ * White partners strip — starred brand logos from admin CMS (max 5).
+ * Renders nothing when none are starred for home.
  */
 export function HomePartners({ brands, title }: HomePartnersProps) {
-  const marks = brands.slice(0, 4);
-  if (marks.length === 0) {
+  if (brands.length === 0) {
     return null;
   }
 
@@ -29,7 +28,7 @@ export function HomePartners({ brands, title }: HomePartnersProps) {
           as="ul"
           className="flex w-full flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24 lg:justify-evenly lg:gap-x-0"
         >
-          {marks.map((brand) => (
+          {brands.map((brand) => (
             <RevealItem
               as="li"
               key={brand.id}

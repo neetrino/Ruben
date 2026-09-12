@@ -2,7 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { GripVertical, ImageIcon, Pencil, Plus, Trash2 } from "lucide-react";
+import {
+  GripVertical,
+  ImageIcon,
+  Pencil,
+  Plus,
+  Star,
+  Trash2,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -31,8 +38,10 @@ import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import {
   deleteBrandAction,
   reorderBrandsAction,
+  toggleBrandFeaturedAction,
 } from "@/features/brands/actions";
 import type { AdminBrandListItem } from "@/features/brands/application/list-admin-brands";
+import { HOME_PARTNER_BRANDS_LIMIT } from "@/features/brands/domain/home-partners";
 import { AddBrandDrawer } from "@/features/brands/ui/AddBrandDrawer";
 
 type AdminBrandsViewProps = {
@@ -99,6 +108,7 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
   }, [brands]);
 
   const isFiltering = query.trim().length > 0;
+  const featuredCount = brands.filter((brand) => brand.isFeatured).length;
 
   const visibleRows = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -152,10 +162,29 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
     });
   }
 
+  function toggleFeatured(brand: AdminBrandListItem): void {
+    startTransition(async () => {
+      setError(null);
+      const result = await toggleBrandFeaturedAction(locale, brand.id);
+      if (!result.ok) {
+        setError(result.error.message);
+        return;
+      }
+      router.refresh();
+    });
+  }
+
   return (
     <section>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className={ADMIN_PAGE_TITLE}>{t.brands.title}</h1>
+        <div>
+          <h1 className={ADMIN_PAGE_TITLE}>{t.brands.title}</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            {t.brands.homeHint
+              .replace("{count}", String(featuredCount))
+              .replace("{limit}", String(HOME_PARTNER_BRANDS_LIMIT))}
+          </p>
+        </div>
         <Button
           type="button"
           size="sm"
@@ -202,6 +231,9 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
                   <th className={ADMIN_TABLE_TH}>{t.brands.columns.title}</th>
                   <th className={ADMIN_TABLE_TH}>{t.brands.columns.slug}</th>
                   <th className={ADMIN_TABLE_TH_CENTER}>
+                    {t.brands.columns.home}
+                  </th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>
                     {t.brands.columns.actions}
                   </th>
                 </tr>
@@ -213,9 +245,13 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
                   return (
                     <tr
                       key={brand.id}
-                      className={`${ADMIN_TABLE_ROW} ${
+                      className={`${ADMIN_TABLE_ROW} cursor-pointer ${
                         isDragging ? "bg-gray-50 opacity-50 shadow-sm" : ""
                       }`}
+                      onClick={() => {
+                        setEditingBrand(brand);
+                        setDrawerOpen(true);
+                      }}
                       onDragOver={(event) => {
                         if (isFiltering || !draggingId) return;
                         event.preventDefault();
@@ -228,7 +264,10 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
                         setDraggingId(null);
                       }}
                     >
-                      <td className={ADMIN_TABLE_TD}>
+                      <td
+                        className={ADMIN_TABLE_TD}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <button
                           type="button"
                           draggable={!isFiltering && !isPending}
@@ -281,7 +320,34 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
                           {brand.slug || t.common.na}
                         </span>
                       </td>
-                      <td className={ADMIN_TABLE_TD_CENTER}>
+                      <td
+                        className={ADMIN_TABLE_TD_CENTER}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <button
+                          type="button"
+                          disabled={isPending}
+                          onClick={() => toggleFeatured(brand)}
+                          className="rounded p-1 text-gray-400 hover:bg-gray-100 hover:text-amber-500 disabled:opacity-40"
+                          aria-label={
+                            brand.isFeatured
+                              ? t.brands.aria.unfeature
+                              : t.brands.aria.feature
+                          }
+                        >
+                          <Star
+                            className={`h-4 w-4 ${
+                              brand.isFeatured
+                                ? "fill-amber-400 text-amber-400"
+                                : ""
+                            }`}
+                          />
+                        </button>
+                      </td>
+                      <td
+                        className={ADMIN_TABLE_TD_CENTER}
+                        onClick={(event) => event.stopPropagation()}
+                      >
                         <div className="inline-flex items-center gap-1">
                           <button
                             type="button"

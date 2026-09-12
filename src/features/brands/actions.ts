@@ -1,11 +1,12 @@
 "use server";
 
-import { and, eq, inArray, isNull, max } from "drizzle-orm";
+import { and, count, eq, inArray, isNull, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getDb } from "@/db/client";
 import { brands, type TranslationsJson } from "@/db/schema";
+import { HOME_PARTNER_BRANDS_LIMIT } from "@/features/brands/domain/home-partners";
 import {
   persistBrandImage,
   removeBrandImage,
@@ -32,6 +33,7 @@ function buildTranslations(title: string, slug: string): TranslationsJson {
 function revalidateBrands(locale: string): void {
   revalidatePath(`/${locale}/admin/brands`);
   revalidatePath(`/${locale}/brands`);
+  revalidatePath(`/${locale}`);
   invalidateBrandsCache();
 }
 
@@ -238,4 +240,50 @@ export async function reorderBrandsAction(
 
   revalidateBrands(locale);
   return ok({ updated: uniqueIds.length });
+}
+
+/** Toggles whether a brand appears on the home page (star). Caps at 5. */
+export async function toggleBrandFeaturedAction(
+  locale: string,
+  brandId: string,
+): Promise<Result<{ isFeatured: boolean }>> {
+  if (!isLocale(locale)) {
+    return err("INVALID_LOCALE", "Invalid locale.");
+  }
+
+  await requireAdmin(locale as Locale);
+
+  const [existing] = await getDb()
+    .select({ id: brands.id, isFeatured: brands.isFeatured })
+    .from(brands)
+    .where(and(eq(brands.id, brandId), isNull(brands.deletedAt)))
+    .limit(1);
+
+  if (!existing) {
+    return err("NOT_FOUND", "Brand not found.");
+  }
+
+  const next = !existing.isFeatured;
+
+  if (next) {
+    const [featured] = await getDb()
+      .select({ value: count() })
+      .from(brands)
+      .where(and(eq(brands.isFeatured, true), isNull(brands.deletedAt)));
+
+    if ((featured?.value ?? 0) >= HOME_PARTNER_BRANDS_LIMIT) {
+      return err(
+        "VALIDATION_ERROR",
+        `Home page can show at most ${HOME_PARTNER_BRANDS_LIMIT} brands.`,
+      );
+    }
+  }
+
+  await getDb()
+    .update(brands)
+    .set({ isFeatured: next, updatedAt: new Date() })
+    .where(eq(brands.id, existing.id));
+
+  revalidateBrands(locale);
+  return ok({ isFeatured: next });
 }

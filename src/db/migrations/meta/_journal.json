@@ -43,6 +43,13 @@
       "when": 1789245319337,
       "tag": "0005_high_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789248292150,
+      "tag": "0006_melted_tattoo",
+      "breakpoints": true
     }
   ]
 }
