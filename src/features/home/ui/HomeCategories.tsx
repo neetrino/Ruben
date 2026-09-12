@@ -21,10 +21,6 @@ type HomeCategoriesProps = {
   nextLabel: string;
 };
 
-function isWideCard(index: number): boolean {
-  return index % 2 === 0;
-}
-
 export function HomeCategories({
   categories,
   emptyLabel,
@@ -119,9 +115,7 @@ export function HomeCategories({
         ref={scrollerRef}
         className="flex snap-x snap-mandatory items-end gap-8 overflow-x-auto px-6 pb-8 sm:gap-11 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {categories.map((category, index) => {
-          const wide = isWideCard(index);
-
+        {categories.map((category) => {
           return (
             <div
               key={category.id}
@@ -132,9 +126,7 @@ export function HomeCategories({
                   cardRefs.current.delete(category.id);
                 }
               }}
-              className={`shrink-0 snap-center ${
-                wide ? "w-[min(78vw,345px)]" : "w-[min(40vw,137px)]"
-              }`}
+              className="w-[min(70vw,260px)] shrink-0 snap-center"
             >
               <AppLink
                 href={category.href}
@@ -142,32 +134,16 @@ export function HomeCategories({
                 className="group relative flex flex-col items-center"
                 onFocus={() => setActiveId(category.id)}
               >
-                <div
-                  className={`relative w-full overflow-hidden ${
-                    wide
-                      ? "h-[200px] sm:h-[229px]"
-                      : "mt-[18px] h-[180px] sm:h-[206px]"
-                  }`}
-                >
-                  {category.imageUrl ? (
-                    <Image
-                      src={category.imageUrl}
-                      alt={category.title}
-                      fill
-                      sizes={
-                        wide
-                          ? "(max-width: 640px) 78vw, 345px"
-                          : "(max-width: 640px) 40vw, 137px"
-                      }
-                      className={
-                        wide
-                          ? "object-contain object-bottom transition duration-300 group-hover:scale-105"
-                          : "object-cover object-center transition duration-300 group-hover:scale-105"
-                      }
-                    />
-                  ) : null}
+                <div className="relative h-[200px] w-full overflow-hidden sm:h-[229px]">
+                  <Image
+                    src={category.imageUrl ?? HOME_ASSETS.heroProduct}
+                    alt={category.title}
+                    fill
+                    sizes="(max-width: 640px) 70vw, 260px"
+                    className="object-contain object-bottom transition duration-300 group-hover:scale-105"
+                  />
                 </div>
-                <p className="mt-4 text-center text-base font-bold leading-4 tracking-wide text-white uppercase">
+                <p className="mt-7 line-clamp-2 min-h-[2.5rem] w-full self-stretch text-center text-sm leading-5 font-bold tracking-wide text-white uppercase sm:mt-8 sm:min-h-[3rem] sm:text-base sm:leading-6">
                   {category.title}
                 </p>
               </AppLink>
