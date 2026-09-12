@@ -29,7 +29,7 @@
 - Financial, stock և audit records-ը hard delete չեն ընդունում։
 - Flexible JSONB-ը միշտ Zod schema/version ունի և business-critical relational կապերը չի փոխարինում։
 
-## 3. Canonical 25-table inventory
+## 3. Canonical 26-table inventory
 
 | # | Table | Domain | Նշանակություն |
 |---:|---|---|---|
@@ -41,23 +41,24 @@
 | 6 | `products` | Catalog | Product, translations, price, current stock |
 | 7 | `categories` | Catalog | Hierarchy և translations |
 | 8 | `product_categories` | Catalog | Product/category many-to-many կապ |
-| 9 | `stock_movements` | Inventory | Immutable stock ledger |
-| 10 | `hero_slides` | Content | Hero configuration և translations |
-| 11 | `blog_posts` | Content | Blog content, translations և tags |
-| 12 | `carts` | Commerce | Guest/customer cart identity/lifecycle |
-| 13 | `cart_items` | Commerce | Cart product quantities |
-| 14 | `wishlist_items` | Commerce | Customer wishlist entries |
-| 15 | `compare_items` | Commerce | Customer product comparison entries |
-| 16 | `promotions` | Pricing | Coupons և automatic discounts մեկ rule model-ում |
-| 17 | `promotion_users` | Pricing | User-restricted promotion allowlist |
-| 18 | `delivery_rules` | Fulfillment | Location-based delivery pricing |
-| 19 | `orders` | Orders | Order, address/money/promotion snapshots, idempotency |
-| 20 | `order_items` | Orders | Immutable purchased-item snapshots |
-| 21 | `order_events` | Orders | Status, notes և payment provider events |
-| 22 | `payments` | Payments | Payment attempts/current provider state |
-| 23 | `contact_messages` | Support | Contact inbox |
-| 24 | `audit_logs` | Security | Immutable admin/security audit |
-| 25 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
+| 9 | `brands` | Catalog | Partner brands, translations, logos via media |
+| 10 | `stock_movements` | Inventory | Immutable stock ledger |
+| 11 | `hero_slides` | Content | Hero configuration և translations |
+| 12 | `blog_posts` | Content | Blog content, translations և tags |
+| 13 | `carts` | Commerce | Guest/customer cart identity/lifecycle |
+| 14 | `cart_items` | Commerce | Cart product quantities |
+| 15 | `wishlist_items` | Commerce | Customer wishlist entries |
+| 16 | `compare_items` | Commerce | Customer product comparison entries |
+| 17 | `promotions` | Pricing | Coupons և automatic discounts մեկ rule model-ում |
+| 18 | `promotion_users` | Pricing | User-restricted promotion allowlist |
+| 19 | `delivery_rules` | Fulfillment | Location-based delivery pricing |
+| 20 | `orders` | Orders | Order, address/money/promotion snapshots, idempotency |
+| 21 | `order_items` | Orders | Immutable purchased-item snapshots |
+| 22 | `order_events` | Orders | Status, notes և payment provider events |
+| 23 | `payments` | Payments | Payment attempts/current provider state |
+| 24 | `contact_messages` | Support | Contact inbox |
+| 25 | `audit_logs` | Security | Immutable admin/security audit |
+| 26 | `outbox_events` | Reliability | Reliable post-commit email/provider/cache work |
 
 ### Count assumptions
 
@@ -161,6 +162,10 @@ Self-referencing `parent_id`, `translations JSONB`, sort order, active/archive s
 ### 6.3 `product_categories`
 
 Composite unique `(product_id, category_id)`, optional `is_primary`, sort metadata և reverse lookup indexes։ Պահվում է, որովհետև product-ը կարող է ունենալ մի քանի category։
+
+### 6.3a `brands`
+
+Partner / manufacturer brands՝ `translations JSONB` (title/slug), sort order, active/archive state և timestamps։ Logo-ն resolve է լինում `media_assets.brand_id`-ով։ Product↔brand FK դեռ չկա։
 
 ### 6.4 `stock_movements`
 

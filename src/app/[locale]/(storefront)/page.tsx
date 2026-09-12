@@ -13,10 +13,11 @@ import { HomeFeaturedSection } from "@/features/home/ui/HomeFeaturedSection";
 import { HomeFeatures } from "@/features/home/ui/HomeFeatures";
 import { HomeHero } from "@/features/home/ui/HomeHero";
 import { HomeMobileHeroSection } from "@/features/home/ui/HomeMobileHeroSection";
-import { HomePartners } from "@/features/home/ui/HomePartners";
+import { HomePartnersSection } from "@/features/home/ui/HomePartnersSection";
 import { HomePromotionsSection } from "@/features/home/ui/HomePromotionsSection";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { resolveExistingPublicMediaUrl } from "@/lib/media/resolve-public-media-url";
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
@@ -34,7 +35,11 @@ export default async function HomePage({ params }: HomePageProps) {
   const productsHref = `/${locale}/products`;
 
   // Critical path only — below-fold rails stream via Suspense.
-  const heroSlides = await listActiveHeroSlides(locale);
+  const heroSlides = (await listActiveHeroSlides(locale)).map((slide) => ({
+    ...slide,
+    mobileImageUrl: resolveExistingPublicMediaUrl(slide.mobileImageUrl),
+    desktopImageUrl: resolveExistingPublicMediaUrl(slide.desktopImageUrl),
+  }));
 
   return (
     <div className="home-page-root relative bg-white">
@@ -47,11 +52,10 @@ export default async function HomePage({ params }: HomePageProps) {
       </Suspense>
 
       <HomeHero
-        slides={heroSlides}
         brandName={dictionary.home.title}
-        fallbackSubtitle={dictionary.home.subtitle}
-        fallbackCtaLabel={dictionary.home.cta}
-        fallbackCtaHref={productsHref}
+        subtitle={dictionary.home.subtitle}
+        ctaLabel={dictionary.home.cta}
+        ctaHref={productsHref}
       />
 
       <div className="hidden lg:block">
@@ -96,7 +100,12 @@ export default async function HomePage({ params }: HomePageProps) {
           />
         </LazyWhenVisible>
 
-        <HomePartners title={dictionary.home.partnersTitle} />
+        <Suspense fallback={null}>
+          <HomePartnersSection
+            locale={locale}
+            title={dictionary.home.partnersTitle}
+          />
+        </Suspense>
       </div>
     </div>
   );

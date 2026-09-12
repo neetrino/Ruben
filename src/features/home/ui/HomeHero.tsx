@@ -10,32 +10,27 @@ import {
 } from "@/components/motion/motion-config";
 import { HomeArrowCta, HomeArrowCtaIcon } from "@/features/home/ui/HomeArrowCta";
 import { HOME_ASSETS } from "@/features/home/config/assets";
-import type { StorefrontHeroSlide } from "@/features/hero/application/queries";
 
 type HomeHeroProps = {
-  slides: StorefrontHeroSlide[];
   brandName: string;
-  fallbackSubtitle: string;
-  fallbackCtaLabel: string;
-  fallbackCtaHref: string;
+  subtitle: string;
+  ctaLabel: string;
+  ctaHref: string;
 };
 
 function isInternalHref(href: string): boolean {
   return href.startsWith("/");
 }
 
+/**
+ * Desktop home hero — static brand artwork (admin Mobile Banner is mobile-only).
+ */
 export function HomeHero({
-  slides,
   brandName,
-  fallbackSubtitle,
-  fallbackCtaLabel,
-  fallbackCtaHref,
+  subtitle,
+  ctaLabel,
+  ctaHref,
 }: HomeHeroProps) {
-  const active = slides[0] ?? null;
-  const subtitle = active?.copy.subtitle ?? fallbackSubtitle;
-  const ctaLabel = active?.copy.buttonLabel ?? fallbackCtaLabel;
-  const ctaHref = active?.copy.buttonUrl ?? fallbackCtaHref;
-
   return (
     <section className="relative z-0 hidden bg-white pt-0 pb-12 sm:pb-20 lg:block lg:min-h-[820px] lg:pb-8">
       {/*
@@ -102,7 +97,7 @@ export function HomeHero({
           </m.div>
         </div>
 
-        {/* Mobile / tablet — product in flow */}
+        {/* Mobile / tablet — product in flow (inside desktop section breakpoint helpers) */}
         <div className="relative z-20 mx-auto aspect-square w-full max-w-[560px] sm:max-w-[640px] lg:hidden">
           <Image
             src={HOME_ASSETS.heroProduct}

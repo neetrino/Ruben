@@ -10,6 +10,8 @@ type SiteCopyrightProps = {
   linkClassName?: string;
   /** Puts the "Created by …" credit on its own line (narrow viewports). */
   createdByOnNewLine?: boolean;
+  /** Compact mobile line: `© {year} | Created by Neetrino`. */
+  compact?: boolean;
 };
 
 /**
@@ -21,17 +23,22 @@ export function SiteCopyright({
   className = "",
   linkClassName = "",
   createdByOnNewLine = false,
+  compact = false,
 }: SiteCopyrightProps) {
   const footer = dictionary.footer;
-  const prefix = footer.copyrightPrefix.replace(
+  const year = String(new Date().getFullYear());
+  const prefix = (compact ? footer.copyrightMobilePrefix : footer.copyrightPrefix).replace(
     "{year}",
-    String(new Date().getFullYear()),
+    year,
   );
+  const company = compact
+    ? footer.copyrightMobileCompany
+    : footer.copyrightCompany;
 
   return (
     <p className={className}>
       <span>{prefix} </span>
-      <span className={createdByOnNewLine ? "block" : undefined}>
+      <span className={!compact && createdByOnNewLine ? "block" : undefined}>
         <span>{footer.copyrightCreatedBy} </span>
         <a
           href={COPYRIGHT_COMPANY_URL}
@@ -39,9 +46,9 @@ export function SiteCopyright({
           rel="noopener noreferrer"
           className={`font-bold ${linkClassName}`}
         >
-          {footer.copyrightCompany}
+          {company}
         </a>
-        {footer.copyrightSuffix ? (
+        {!compact && footer.copyrightSuffix ? (
           <span> {footer.copyrightSuffix}</span>
         ) : null}
       </span>

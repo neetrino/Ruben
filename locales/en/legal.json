@@ -4,152 +4,341 @@
   "privacy": {
     "title": "Privacy Policy",
     "lastUpdatedLabel": "Last updated",
-    "lastUpdated": "11 August 2026",
-    "intro": "This Privacy Policy explains how White-Shop collects, uses, stores, and protects personal data when you visit our storefront, create an account, place an order, or contact us.",
+    "lastUpdated": "12 September 2026",
+    "intro": [
+      "By visiting the website rubengroup.am (hereinafter referred to as the “Website”) and making purchases, you automatically consent to the collection, processing, and use of your personal data.",
+      "By \"Personal Data,\" we mean any information that allows or may allow us to directly or indirectly identify your identity, such as your name, surname, address, email, phone number, and other data (hereinafter referred to as \"Data\").",
+      "In this Privacy Policy, \"we,\" \"us,\" and \"our\" refer to Website (for more information, please visit the \"About Us\" section), while \"you,\" \"your,\" and \"yours\" refer to any individual who visits the Website or uses our services."
+    ],
     "sections": [
       {
-        "heading": "1. Data we collect",
+        "heading": "1. Collected Data",
         "paragraphs": [
-          "Account and contact details such as name, email address, phone number, and delivery address.",
-          "Order and payment-related information needed to process purchases, including order history and delivery preferences. Card details are processed by our payment providers and are not stored on our servers.",
-          "Technical and usage data such as browser type, device information, and basic analytics needed to operate and improve the storefront."
+          "We may collect the following types of information:"
+        ],
+        "bullets": [
+          "Contact information – name, surname, address, phone number, email address",
+          "Purchase information – products purchased, payment methods",
+          "Technical information – device type, browser, operating system",
+          "Cookies and tracking technologies – for website usage analysis"
         ]
       },
       {
-        "heading": "2. How we use your data",
+        "heading": "2. Use of Data",
         "paragraphs": [
-          "To process orders, arrange delivery or store pickup, and provide customer support.",
-          "To create and manage your account, send order updates, and respond to messages you send us.",
-          "To improve website performance, prevent fraud, and meet legal, accounting, and security obligations."
+          "Collected data is never sold or provided to third parties for marketing purposes. It is used only for the following purposes:"
+        ],
+        "bullets": [
+          "Processing and shipping orders",
+          "Providing user support",
+          "Improving website functionality",
+          "Complying with legal requirements"
         ]
       },
       {
-        "heading": "3. Sharing and retention",
+        "heading": "3. Data Retention Periods",
         "paragraphs": [
-          "We share personal data only with trusted service providers required to operate the store, such as payment processors, delivery partners, and hosting providers, and only to the extent needed for their services.",
-          "We retain personal data for as long as needed to fulfill orders, provide support, and comply with legal and accounting requirements. When account deletion is requested, personal contact details are anonymized where possible while order records needed for legal purposes may be retained."
+          "Your personal data is stored as follows:"
+        ],
+        "bullets": [
+          "User account data – as long as the account is active",
+          "Purchase history – 5 years (to comply with tax and accounting regulations)",
+          "Marketing data – 2 years or until the user opts out"
         ]
       },
       {
-        "heading": "4. Your rights and contact",
+        "heading": "4. Data Security",
         "paragraphs": [
-          "Depending on applicable law, you may request access to, correction of, or deletion of your personal data, and you may update account details from your profile.",
-          "For privacy questions or requests, contact us using the details on our Contact page."
+          "We implement appropriate technical and organizational measures to ensure the protection of your data, including:"
+        ],
+        "bullets": [
+          "SSL encryption – to secure payment and personal data transmission",
+          "Access control – limited access to personal data",
+          "Regular audits – to detect potential security vulnerabilities"
+        ]
+      },
+      {
+        "heading": "5. Sharing Data with Third Parties",
+        "paragraphs": [
+          "We do not sell or provide your data to third parties, except for:"
+        ],
+        "bullets": [
+          "Shipping services – to ensure order delivery",
+          "Payment systems – for secure payment processing",
+          "Law enforcement authorities – in cases required by law"
+        ]
+      },
+      {
+        "heading": "",
+        "paragraphs": [
+          "All third parties are obligated to protect your data and cannot use it for other purposes."
+        ]
+      },
+      {
+        "heading": "6. User Rights",
+        "paragraphs": [
+          "You have the right to:"
+        ],
+        "bullets": [
+          "Receive a copy of your personal data",
+          "Edit or delete your data (through our website settings or customer support)",
+          "Opt-out of marketing emails (via the \"unsubscribe\" link in each email)",
+          "Request that your data is not processed for specific purposes, except in cases required by law"
+        ]
+      },
+      {
+        "heading": "7. Cookies Usage",
+        "paragraphs": [
+          "Our website uses cookies to optimize user experience. We use:"
+        ],
+        "bullets": [
+          "Functional cookies – to ensure proper website operation",
+          "Analytical cookies – to understand user behavior and improve the website",
+          "Marketing cookies (only with your consent) – to provide more relevant advertisements"
+        ]
+      },
+      {
+        "heading": "8. Policy Changes",
+        "paragraphs": [
+          "We reserve the right to make legally permitted changes to this page and the above sections. Updates will be posted on the Website."
         ]
       }
     ]
   },
   "terms": {
-    "title": "Terms & Conditions",
+    "title": "Terms and Conditions",
     "lastUpdatedLabel": "Last updated",
-    "lastUpdated": "11 August 2026",
-    "intro": "These Terms & Conditions govern your use of the White-Shop website and the purchase of products through our online store. By placing an order or creating an account, you agree to these terms.",
+    "lastUpdated": "12 September 2026",
+    "intro": [],
     "sections": [
       {
-        "heading": "1. Eligibility and accounts",
+        "heading": "1. General Provisions",
         "paragraphs": [
-          "You must provide accurate and complete information when registering or checking out as a guest.",
-          "You are responsible for keeping your account credentials confidential and for activity that occurs under your account."
+          "1.1. These Terms and Conditions govern the use of rubengroup.am website (hereinafter referred to as the \"Website\").",
+          "1.2. By accessing or using the Website, you agree to these Terms.",
+          "1.3. If you do not agree to any part of these Terms, please do not use the Website.",
+          "1.4. The Website reserves the right to modify these Terms without prior notice. Changes become effective upon their publication on the Website.",
+          "1.5. Continued use of the Website implies acceptance of the updated Terms."
         ]
       },
       {
-        "heading": "2. Orders and pricing",
+        "heading": "2. Key Definitions",
         "paragraphs": [
-          "Product availability, prices, discounts, taxes, and delivery fees are confirmed at checkout before you place an order.",
-          "We may refuse or cancel an order in cases such as pricing errors, stock unavailability, suspected fraud, or payment failure. If payment has already been captured for a cancelled order, we will arrange a refund according to our Refund Policy."
+          "The following definitions apply in these Terms:"
+        ],
+        "bullets": [
+          "Website – The online platform rubengroup.am offering services, content, and various functionalities.",
+          "User – Any individual or legal entity accessing or using the Website.",
+          "Services – All products, services, content, and tools available via the Website.",
+          "Content – Any text, images, videos, audio, or other materials available on the Website.",
+          "Intellectual Property – Website name, logo, texts, software, and other elements protected by copyright or trademark law.",
+          "Transaction – Any purchase, service registration, or other contractual agreement on the Website."
         ]
       },
       {
-        "heading": "3. Payment and delivery",
+        "heading": "3. User Obligations",
         "paragraphs": [
-          "Accepted payment methods are shown at checkout and may include cash on delivery and supported online payment options.",
-          "Delivery timelines and fees depend on the selected shipping method and location. Store pickup is available where offered."
+          "3.1. The User agrees to:"
+        ],
+        "bullets": [
+          "Use the Website only for lawful purposes.",
+          "Not interfere with the Website’s technical operation.",
+          "Not distribute viruses, malware, or any harmful code.",
+          "Not attempt to illegally access Website servers or data.",
+          "Not publish or distribute illegal, offensive, defamatory, or hate-inducing content."
         ]
       },
       {
-        "heading": "4. Acceptable use",
+        "heading": "",
         "paragraphs": [
-          "You agree not to misuse the website, attempt unauthorized access, interfere with store operations, or use the service for unlawful purposes.",
-          "Product descriptions and images are provided for informational purposes. We aim for accuracy but minor differences may occur."
+          "3.2. The Website reserves the right to block any User who violates these Terms."
         ]
       },
       {
-        "heading": "5. Changes and contact",
+        "heading": "4. Limitation of Liability",
         "paragraphs": [
-          "We may update these Terms & Conditions from time to time. The latest version will be published on this page with an updated date.",
-          "If you have questions about these terms, contact us through the Contact page."
+          "4.1. The Website is provided \"as is\" without any warranties."
+        ]
+      },
+      {
+        "heading": "",
+        "paragraphs": [
+          "4.2. The Website is not responsible for:"
+        ],
+        "bullets": [
+          "Any errors or technical malfunctions.",
+          "Incorrect or false information entered by Users.",
+          "Damages resulting from third-party interactions with the Website.",
+          "The accuracy, reliability, or timeliness of the content provided."
+        ]
+      },
+      {
+        "heading": "",
+        "paragraphs": [
+          "4.3. The Website is not liable for indirect damages, including lost revenue or data loss."
+        ]
+      },
+      {
+        "heading": "5. Intellectual Property",
+        "paragraphs": [
+          "5.1. All materials on the Website, including texts, images, logos, and software, belong to the Website or its rightful owners.",
+          "5.2. Copying, distributing, selling, or using any content without prior written permission is strictly prohibited.",
+          "5.3. The User has no right to use the Website’s trademark or domain name without written permission."
+        ]
+      },
+      {
+        "heading": "6. Payments and Refunds",
+        "paragraphs": [
+          "6.1. If the Website offers paid services, payments must be made under the specified conditions.",
+          "6.2. The Website may change prices or payment terms without prior notice.",
+          "6.3. If applicable, refund policies will be outlined separately on the Website."
+        ]
+      },
+      {
+        "heading": "7. Dispute Resolution",
+        "paragraphs": [
+          "7.1. These Terms are governed by the laws of the Republic of Armenia.",
+          "7.2. All disputes should first be resolved through negotiations.",
+          "7.3. If negotiations fail, disputes will be handled in the competent courts of Armenia."
+        ]
+      },
+      {
+        "heading": "8. Force Majeure",
+        "paragraphs": [
+          "8.1. The Website is not responsible for failure or delay in fulfilling obligations due to force majeure circumstances, including:"
+        ],
+        "bullets": [
+          "Natural disasters (earthquakes, floods, fires, etc.).",
+          "Governmental restrictions or prohibitions.",
+          "Military conflicts, terrorism, or civil unrest.",
+          "Technical failures beyond the Website’s control."
+        ]
+      },
+      {
+        "heading": "9. Privacy and Data Protection",
+        "paragraphs": [
+          "9.1. The Website commits to protecting user data in accordance with the Privacy Policy.",
+          "9.2. The Website may collect and process user data for legal purposes.",
+          "9.3. The Website reserves the right to disclose user data to authorities as required by law."
         ]
       }
     ]
   },
   "refund": {
-    "title": "Refund Policy",
+    "title": "Return and Exchange Policy",
     "lastUpdatedLabel": "Last updated",
-    "lastUpdated": "11 August 2026",
-    "intro": "This Refund Policy describes when refunds and returns are available for orders placed on White-Shop.",
+    "lastUpdated": "12 September 2026",
+    "intro": "At RUBEN GROUP, we want your purchase from rubengroup.am to fully meet your expectations. If you need to return or exchange a product, the main conditions are outlined below.",
     "sections": [
       {
-        "heading": "1. Eligibility",
-        "paragraphs": [
-          "You may request a return or refund if an item arrives damaged, defective, incorrect, or significantly different from the product description.",
-          "Requests should be submitted as soon as possible after delivery, and no later than 14 days from the delivery date, unless a longer period is required by applicable law."
+        "heading": "1. Exchange",
+        "paragraphs": [],
+        "bullets": [
+          "Purchased items, except for special-order, custom-sized, or customer-modified products, are eligible for exchange within 14 days.",
+          "An exchange is possible only if the product has not been used, installed, or assembled and retains its resalable condition, complete set, and original factory packaging.",
+          "An official receipt or electronic proof of purchase is required for exchanges."
         ]
       },
       {
-        "heading": "2. Non-returnable items",
-        "paragraphs": [
-          "Certain products may be non-returnable for hygiene, safety, or personalization reasons. Any such exceptions will be indicated on the product page where possible.",
-          "Items that have been used beyond reasonable inspection, damaged by the customer, or returned without original packaging or proof of purchase may be declined."
+        "heading": "2. Returns",
+        "paragraphs": [],
+        "bullets": [
+          "Purchased items, except for special-order, custom-sized, or customer-modified products, can be returned within 14 days.",
+          "The product must be unused, uninstalled, unassembled, undamaged, complete, and in its original factory packaging.",
+          "An official receipt or electronic proof of purchase is required for returns.",
+          "If we mistakenly deliver the wrong product, the customer may return it or exchange it for the correct product at no additional charge.",
+          "A product submitted for return or exchange must not show signs of use, installation, assembly, cutting, drilling, or any other modification."
         ]
       },
       {
-        "heading": "3. Refund process",
-        "paragraphs": [
-          "Approved refunds are processed to the original payment method where possible. Cash-on-delivery refunds may be arranged by bank transfer or another agreed method.",
-          "Refund timing depends on the payment provider and bank processing times. We will confirm once the refund has been initiated."
+        "heading": "3. Refunds",
+        "paragraphs": [],
+        "bullets": [
+          "If the returned product meets the conditions above, the refund will be issued using the same payment method used for the original purchase.",
+          "Refunds for card payments will be processed within up to 7 business days, depending on the bank’s processing procedures.",
+          "Delivery fees are non-refundable, except where an incorrect or damaged product was delivered."
         ]
       },
       {
-        "heading": "4. How to request a refund",
+        "heading": "4. Order Cancellation",
+        "paragraphs": [],
+        "bullets": [
+          "An order may be canceled before the delivery process begins.",
+          "If the order has already been handed over for delivery, it cannot be canceled; where applicable, the return conditions will apply."
+        ]
+      },
+      {
+        "heading": "5. Special and Custom Orders",
         "paragraphs": [
-          "Contact us with your order number, a short description of the issue, and photos if the item is damaged or incorrect.",
-          "Our support team will review the request and provide return or resolution instructions."
+          "Special-order products, items made in custom sizes, colors, or configurations, as well as products cut or otherwise modified at the customer’s request, cannot be returned or exchanged, except in cases of a manufacturing defect or incorrect delivery."
+        ]
+      },
+      {
+        "heading": "6. Non-Returnable Items",
+        "paragraphs": [],
+        "bullets": [
+          "Used, installed, or assembled products",
+          "Products cut, modified, or made to custom dimensions at the customer’s request",
+          "Special-order products or items manufactured in a custom configuration",
+          "Products damaged by the customer or returned with incomplete components or packaging"
+        ]
+      },
+      {
+        "heading": "",
+        "paragraphs": [
+          "Special Note: If a product is damaged, visibly defective, or does not match the order, please contact us before installation or assembly."
         ]
       }
     ]
   },
   "delivery": {
-    "title": "Delivery Policy",
+    "title": "Delivery and Shipping Terms",
     "lastUpdatedLabel": "Last updated",
-    "lastUpdated": "11 August 2026",
-    "intro": "This Delivery Policy explains how White-Shop ships orders, which options are available, and what to expect after checkout.",
+    "lastUpdated": "12 September 2026",
+    "intro": "At RUBEN GROUP, we aim to deliver renovation products—including tiles, sanitary ware, bathroom and bedroom furniture, and other goods—quickly, safely, and conveniently. Below are the main delivery terms for orders placed through rubengroup.am.",
     "sections": [
       {
-        "heading": "1. Delivery options",
-        "paragraphs": [
-          "At checkout you can choose store pickup or delivery to an address, depending on availability for your location.",
-          "Delivery fees and estimated timing are calculated from our delivery rules and are shown before you place the order."
+        "heading": "1. Delivery Timeframes",
+        "paragraphs": [],
+        "bullets": [
+          "Delivery time depends on the product type, availability, order volume, delivery address, as well as the product dimensions and weight.",
+          "The estimated delivery timeframe is agreed and confirmed during order processing.",
+          "If there are any changes or potential delays, our team will contact you in advance."
         ]
       },
       {
-        "heading": "2. Coverage and timing",
+        "heading": "2. Delivery Options",
         "paragraphs": [
-          "We currently prioritize delivery within Armenia. Available cities and locations are listed at checkout.",
-          "Orders are prepared after payment confirmation or successful order placement. Delivery times may vary by location, order volume, and courier schedules."
+          "We offer the following delivery options:"
+        ],
+        "bullets": [
+          "Standard delivery – carried out to the address and within the timeframe agreed in advance.",
+          "Delivery terms for bulky or heavy products are agreed separately, taking the product dimensions and weight into account."
         ]
       },
       {
-        "heading": "3. Receiving your order",
-        "paragraphs": [
-          "Please ensure your contact phone number and address details are accurate so the courier or store team can reach you.",
-          "If you are unavailable at the delivery attempt, the courier or our support team may contact you to arrange another attempt or store pickup where applicable."
+        "heading": "3. Delivery Fees",
+        "paragraphs": [],
+        "bullets": [
+          "Delivery fees are calculated based on the delivery address, order volume, product dimensions, and weight.",
+          "The final delivery fee is communicated and agreed before the order is confirmed."
         ]
       },
       {
-        "heading": "4. Delays and issues",
+        "heading": "4. Possible Delays",
         "paragraphs": [
-          "If your order is delayed or arrives incomplete or damaged, contact us promptly with your order number so we can investigate and help resolve the issue.",
-          "Force majeure events, courier disruptions, or incorrect address details may affect delivery timing. We will work with you to find a practical resolution."
+          "Despite our efforts, in some cases delivery may be delayed due to:"
+        ],
+        "bullets": [
+          "Adverse weather conditions",
+          "Transportation or logistics issues",
+          "Product availability, order preparation, or peak workload"
+        ]
+      },
+      {
+        "heading": "",
+        "paragraphs": [
+          "If a delay occurs, we will notify you in advance and provide an updated delivery timeframe."
         ]
       }
     ]

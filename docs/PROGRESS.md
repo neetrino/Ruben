@@ -12,7 +12,7 @@
 | 2 | Database foundation | Done | 25 tables + seed |
 | 3 | Identity and authorization | Done | DB sessions, login/register/logout |
 | 4 | Catalog admin and media | Done (minimal) | Admin products/categories; R2 adapter when credentials set |
-| 5 | Storefront catalog | Done | URL filter/sort/page + card fields (CAT-001–010; brand/attributes deferred — no schema) |
+| 5 | Storefront catalog | Done | URL filter/sort/page + card fields (CAT-001–010); brands admin CMS added (`brands` table); product↔brand link still deferred |
 | 6 | Cart and checkout | Done | Durable cart + COD/card/FastShift + coupon apply |
 | 7 | Customer self-service | Done (minimal) | Profile, orders, personal info |
 | 8 | Admin commerce operations | Done | Dashboard, orders ops, users, promotions |

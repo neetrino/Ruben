@@ -2,8 +2,19 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import {
+  useMemo,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
+import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
+import {
+  ALL_CATEGORIES_ICON,
+  CategoryIcon,
+} from "@/features/categories/ui/category-icons";
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
 import type { CatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import { catalogHref } from "@/features/products/domain/catalog-url";
@@ -14,7 +25,6 @@ import {
   CatalogFilterMoreToggle,
 } from "@/features/products/ui/CatalogFilterExpand";
 import {
-  CATALOG_BRAND_OPTIONS,
   CATALOG_BRAND_PREVIEW,
   CATALOG_CATEGORY_PREVIEW,
   CATALOG_FEATURE_OPTIONS,
@@ -39,6 +49,7 @@ type CatalogFiltersProps = {
   locale: string;
   filters: CatalogListFilter;
   categories: CatalogCategoryOption[];
+  brands: readonly StorefrontBrandItem[];
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
@@ -51,11 +62,48 @@ const HEADING =
 
 function categoryOptionClass(active: boolean): string {
   return [
-    "flex w-full items-center justify-between rounded-[12px] px-4 py-2 text-left text-[13px] leading-[19.5px] transition-colors",
+    "flex w-full items-center gap-2 rounded-[12px] px-4 py-2 text-left text-[13px] leading-[19.5px] transition-colors",
     active
       ? "bg-black font-bold text-white"
       : "font-normal text-black hover:bg-black/5",
   ].join(" ");
+}
+
+function sortCategories(
+  items: CatalogCategoryOption[],
+): CatalogCategoryOption[] {
+  return [...items].sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    return a.title.localeCompare(b.title);
+  });
+}
+
+type CategoryTreeNode = {
+  category: CatalogCategoryOption;
+  children: CatalogCategoryOption[];
+  totalCount: number;
+};
+
+function buildCategoryTree(
+  categories: CatalogCategoryOption[],
+): CategoryTreeNode[] {
+  const roots = sortCategories(categories.filter((item) => !item.parentId));
+  const childrenByParent = new Map<string, CatalogCategoryOption[]>();
+
+  for (const item of categories) {
+    if (!item.parentId) continue;
+    const bucket = childrenByParent.get(item.parentId) ?? [];
+    bucket.push(item);
+    childrenByParent.set(item.parentId, bucket);
+  }
+
+  return roots.map((root) => {
+    const children = sortCategories(childrenByParent.get(root.id) ?? []);
+    const totalCount =
+      root.productCount +
+      children.reduce((sum, child) => sum + child.productCount, 0);
+    return { category: root, children, totalCount };
+  });
 }
 
 function toggleLocal(list: string[], id: string): string[] {
@@ -67,7 +115,6 @@ function toggleLocal(list: string[], id: string): string[] {
 type BrandRowProps = {
   id: string;
   label: string;
-  count: number;
   checked: boolean;
   tabIndex?: number;
   onToggle: () => void;
@@ -76,7 +123,6 @@ type BrandRowProps = {
 function BrandRow({
   id,
   label,
-  count,
   checked,
   tabIndex,
   onToggle,
@@ -93,23 +139,21 @@ function BrandRow({
         tabIndex={tabIndex}
         onChange={onToggle}
       />
-      <span className="text-[13px] leading-[19.5px] tracking-[0.5px] text-black">
+      <span className="min-w-0 truncate text-[13px] leading-[19.5px] tracking-[0.5px] text-black">
         {label}
-      </span>
-      <span className="ml-auto text-[11px] leading-[16.5px] text-[#999]">
-        {count}
       </span>
     </label>
   );
 }
 
 /**
- * Shop sidebar filters (Figma 119:1472): Brand, Price, Category, Features.
+ * Shop sidebar filters: Brand (admin CMS), Price, Category, Features.
  */
 export function CatalogFilters({
   locale,
   filters,
   categories,
+  brands,
   priceBounds,
   totalCount,
   copy,
@@ -119,6 +163,9 @@ export function CatalogFilters({
   const [isPending, startTransition] = useTransition();
   const [brandExpanded, setBrandExpanded] = useState(false);
   const [categoryExpanded, setCategoryExpanded] = useState(false);
+  const [expandedCategoryIds, setExpandedCategoryIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [featureExpanded, setFeatureExpanded] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
@@ -130,83 +177,183 @@ export function CatalogFilters({
     });
   }
 
-  const previewBrands = CATALOG_BRAND_OPTIONS.slice(0, CATALOG_BRAND_PREVIEW);
-  const extraBrands = CATALOG_BRAND_OPTIONS.slice(CATALOG_BRAND_PREVIEW);
-  const previewCategories = categories.slice(0, CATALOG_CATEGORY_PREVIEW);
-  const extraCategories = categories.slice(CATALOG_CATEGORY_PREVIEW);
+  const categoryTree = useMemo(
+    () => buildCategoryTree(categories),
+    [categories],
+  );
+  const previewCategoryNodes = categoryTree.slice(0, CATALOG_CATEGORY_PREVIEW);
+  const extraCategoryNodes = categoryTree.slice(CATALOG_CATEGORY_PREVIEW);
+
+  const previewBrands = brands.slice(0, CATALOG_BRAND_PREVIEW);
+  const extraBrands = brands.slice(CATALOG_BRAND_PREVIEW);
   const previewFeatures = CATALOG_FEATURE_OPTIONS.slice(
     0,
     CATALOG_FEATURE_PREVIEW,
   );
   const extraFeatures = CATALOG_FEATURE_OPTIONS.slice(CATALOG_FEATURE_PREVIEW);
 
+  function toggleCategoryNode(categoryId: string): void {
+    setExpandedCategoryIds((current) => {
+      const next = new Set(current);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
+
+  function renderCategoryNode(node: CategoryTreeNode): ReactNode {
+    const { category, children, totalCount } = node;
+    const active = filters.category === category.slug;
+    const childActive = children.some(
+      (child) => child.slug === filters.category,
+    );
+    const isOpen = expandedCategoryIds.has(category.id) || childActive;
+    const hasChildren = children.length > 0;
+
+    return (
+      <div key={category.id} className="flex flex-col gap-1">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            className={`${categoryOptionClass(active)} min-w-0 flex-1`}
+            aria-pressed={active}
+            onClick={() => navigate({ category: category.slug })}
+          >
+            <CategoryIcon
+              slug={category.slug}
+              title={category.title}
+              className="size-4 shrink-0"
+            />
+            <span className="min-w-0 flex-1 truncate">{category.title}</span>
+            <span
+              className={
+                active
+                  ? "text-[11px] text-white/60"
+                  : "text-[11px] text-[#999]"
+              }
+            >
+              {totalCount}
+            </span>
+          </button>
+          {hasChildren ? (
+            <button
+              type="button"
+              onClick={() => toggleCategoryNode(category.id)}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-[10px] text-black/50 transition-colors hover:bg-black/5 hover:text-black"
+              aria-expanded={isOpen}
+              aria-label={category.title}
+            >
+              {isOpen ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </button>
+          ) : null}
+        </div>
+        {hasChildren && isOpen ? (
+          <div className="ml-3 flex flex-col gap-1 border-l border-black/10 pl-2">
+            {children.map((child) => {
+              const childIsActive = filters.category === child.slug;
+              return (
+                <button
+                  key={child.id}
+                  type="button"
+                  className={categoryOptionClass(childIsActive)}
+                  aria-pressed={childIsActive}
+                  onClick={() => navigate({ category: child.slug })}
+                >
+                  <CategoryIcon
+                    slug={child.slug}
+                    title={child.title}
+                    className="size-4 shrink-0"
+                  />
+                  <span className="min-w-0 flex-1 truncate">{child.title}</span>
+                  <span
+                    className={
+                      childIsActive
+                        ? "text-[11px] text-white/60"
+                        : "text-[11px] text-[#999]"
+                    }
+                  >
+                    {child.productCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <aside
       className={[
         "flex w-full flex-col gap-6",
-        className ?? "max-w-[280px]",
+        className ?? "max-w-[320px]",
         isPending ? "opacity-70" : "",
       ]
         .filter(Boolean)
         .join(" ")}
       aria-label={copy.filtersTitle}
     >
-      <section className={`${PANEL} pt-[19px] pb-6`}>
-        <h2 className={`${HEADING} px-0`}>
-          <span className="relative inline-flex size-[22px] shrink-0 overflow-hidden">
-            <Image
-              src={CATALOG_ASSETS.filterBrand}
-              alt=""
-              width={22}
-              height={22}
-              className="size-[22px]"
-              aria-hidden
-            />
-          </span>
-          {copy.brandLabel}
-        </h2>
-        <div className="mt-1 flex flex-col gap-[3px]">
-          {previewBrands.map((brand) => (
-            <BrandRow
-              key={brand.id}
-              id={brand.id}
-              label={brand.label}
-              count={brand.count}
-              checked={selectedBrands.includes(brand.id)}
-              onToggle={() =>
-                setSelectedBrands((prev) => toggleLocal(prev, brand.id))
-              }
-            />
-          ))}
+      {brands.length > 0 ? (
+        <section className={`${PANEL} pt-[19px] pb-6`}>
+          <h2 className={`${HEADING} px-0`}>
+            <span className="relative inline-flex size-[22px] shrink-0 overflow-hidden">
+              <Image
+                src={CATALOG_ASSETS.filterBrand}
+                alt=""
+                width={22}
+                height={22}
+                className="size-[22px]"
+                aria-hidden
+              />
+            </span>
+            {copy.brandLabel}
+          </h2>
+          <div className="mt-1 flex flex-col gap-[3px]">
+            {previewBrands.map((brand) => (
+              <BrandRow
+                key={brand.id}
+                id={brand.id}
+                label={brand.title}
+                checked={selectedBrands.includes(brand.id)}
+                onToggle={() =>
+                  setSelectedBrands((prev) => toggleLocal(prev, brand.id))
+                }
+              />
+            ))}
+            {extraBrands.length > 0 ? (
+              <CatalogFilterExpandable expanded={brandExpanded}>
+                <div className="flex flex-col gap-[3px]">
+                  {extraBrands.map((brand) => (
+                    <BrandRow
+                      key={brand.id}
+                      id={brand.id}
+                      label={brand.title}
+                      checked={selectedBrands.includes(brand.id)}
+                      tabIndex={brandExpanded ? 0 : -1}
+                      onToggle={() =>
+                        setSelectedBrands((prev) => toggleLocal(prev, brand.id))
+                      }
+                    />
+                  ))}
+                </div>
+              </CatalogFilterExpandable>
+            ) : null}
+          </div>
           {extraBrands.length > 0 ? (
-            <CatalogFilterExpandable expanded={brandExpanded}>
-              <div className="flex flex-col gap-[3px]">
-                {extraBrands.map((brand) => (
-                  <BrandRow
-                    key={brand.id}
-                    id={brand.id}
-                    label={brand.label}
-                    count={brand.count}
-                    checked={selectedBrands.includes(brand.id)}
-                    tabIndex={brandExpanded ? 0 : -1}
-                    onToggle={() =>
-                      setSelectedBrands((prev) => toggleLocal(prev, brand.id))
-                    }
-                  />
-                ))}
-              </div>
-            </CatalogFilterExpandable>
+            <CatalogFilterMoreToggle
+              expanded={brandExpanded}
+              moreLabel={copy.moreLabel}
+              lessLabel={copy.lessLabel}
+              onToggle={() => setBrandExpanded((value) => !value)}
+            />
           ) : null}
-        </div>
-        {extraBrands.length > 0 ? (
-          <CatalogFilterMoreToggle
-            expanded={brandExpanded}
-            moreLabel={copy.moreLabel}
-            lessLabel={copy.lessLabel}
-            onToggle={() => setBrandExpanded((value) => !value)}
-          />
-        ) : null}
-      </section>
+        </section>
+      ) : null}
 
       <section className={PANEL}>
         <h2 className={HEADING}>
@@ -265,7 +412,8 @@ export function CatalogFilters({
             aria-pressed={!filters.category}
             onClick={() => navigate({ category: undefined })}
           >
-            <span>{copy.allCategories}</span>
+            <ALL_CATEGORIES_ICON className="size-4 shrink-0" aria-hidden />
+            <span className="min-w-0 flex-1 truncate">{copy.allCategories}</span>
             <span
               className={
                 !filters.category
@@ -276,61 +424,16 @@ export function CatalogFilters({
               {totalCount}
             </span>
           </button>
-          {previewCategories.map((category) => {
-            const active = filters.category === category.slug;
-            return (
-              <button
-                key={category.slug}
-                type="button"
-                className={categoryOptionClass(active)}
-                aria-pressed={active}
-                onClick={() => navigate({ category: category.slug })}
-              >
-                <span>{category.title}</span>
-                <span
-                  className={
-                    active
-                      ? "text-[11px] text-white/60"
-                      : "text-[11px] text-[#999]"
-                  }
-                >
-                  {category.productCount}
-                </span>
-              </button>
-            );
-          })}
-          {extraCategories.length > 0 ? (
+          {previewCategoryNodes.map((node) => renderCategoryNode(node))}
+          {extraCategoryNodes.length > 0 ? (
             <CatalogFilterExpandable expanded={categoryExpanded}>
               <div className="flex flex-col gap-2">
-                {extraCategories.map((category) => {
-                  const active = filters.category === category.slug;
-                  return (
-                    <button
-                      key={category.slug}
-                      type="button"
-                      className={categoryOptionClass(active)}
-                      aria-pressed={active}
-                      tabIndex={categoryExpanded ? 0 : -1}
-                      onClick={() => navigate({ category: category.slug })}
-                    >
-                      <span>{category.title}</span>
-                      <span
-                        className={
-                          active
-                            ? "text-[11px] text-white/60"
-                            : "text-[11px] text-[#999]"
-                        }
-                      >
-                        {category.productCount}
-                      </span>
-                    </button>
-                  );
-                })}
+                {extraCategoryNodes.map((node) => renderCategoryNode(node))}
               </div>
             </CatalogFilterExpandable>
           ) : null}
         </div>
-        {extraCategories.length > 0 ? (
+        {extraCategoryNodes.length > 0 ? (
           <CatalogFilterMoreToggle
             expanded={categoryExpanded}
             moreLabel={copy.moreLabel}

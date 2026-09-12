@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 
+import { listStorefrontBrands } from "@/features/brands/application/list-storefront-brands";
 import { BrandsView } from "@/features/brands/ui/BrandsView";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -15,7 +16,12 @@ export default async function BrandsPage({ params }: BrandsPageProps) {
     notFound();
   }
 
-  const dictionary = getDictionary(rawLocale);
+  const [dictionary, brands] = await Promise.all([
+    Promise.resolve(getDictionary(rawLocale)),
+    listStorefrontBrands(rawLocale),
+  ]);
 
-  return <BrandsView locale={rawLocale} dictionary={dictionary} />;
+  return (
+    <BrandsView locale={rawLocale} dictionary={dictionary} brands={brands} />
+  );
 }

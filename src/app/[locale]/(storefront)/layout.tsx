@@ -61,9 +61,9 @@ export default async function StorefrontLayout({
       {/* Footer is desktop-only, so mobile keeps the copyright at the page end. */}
       <SiteCopyright
         dictionary={dictionary}
-        className="storefront-mobile-copyright px-4 pt-8 text-center text-xs leading-5 text-neutral-500 sm:px-6 lg:hidden"
+        className="storefront-mobile-copyright px-4 pt-8 text-center text-sm leading-5 text-neutral-500 sm:px-6 lg:hidden"
         linkClassName="text-neutral-700 underline-offset-2 hover:underline"
-        createdByOnNewLine
+        compact
       />
       <SiteFooter dictionary={dictionary} locale={locale} />
       <MobileBottomNavIsland

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
-import { AppLink } from "@/components/ui/AppLink";
+import { listStorefrontBrands } from "@/features/brands/application/list-storefront-brands";
 import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import {
@@ -72,9 +72,10 @@ export default async function ProductsPage({
 
   let filters = parseCatalogFilters(raw);
   const dictionary = getDictionary(rawLocale);
-  const [currency, user] = await Promise.all([
+  const [currency, user, brands] = await Promise.all([
     getSelectedCurrency(),
     getCurrentUser(),
+    listStorefrontBrands(rawLocale),
   ]);
   const rateQuote = await getCheckoutRateSnapshot(currency);
 
@@ -152,26 +153,7 @@ export default async function ProductsPage({
 
   return (
     <div className="shop-page-root">
-      <nav
-        aria-label="Breadcrumb"
-        className="hidden items-center gap-2 px-6 pt-4 pb-6 text-sm sm:px-10 lg:flex lg:px-12 lg:pb-8"
-      >
-        <AppLink
-          href={`/${rawLocale}`}
-          prefetchPolicy="intent"
-          className="text-[#888] hover:text-black"
-        >
-          {dictionary.catalog.breadcrumbHome}
-        </AppLink>
-        <span className="text-[#bbb]" aria-hidden>
-          /
-        </span>
-        <span className="font-semibold text-black">
-          {dictionary.catalog.breadcrumbShop}
-        </span>
-      </nav>
-
-      <div className="pb-6 lg:pb-14">
+      <div className="pt-4 pb-6 lg:pt-8 lg:pb-14">
         <CatalogCategoryChips
           locale={rawLocale}
           filters={filters}
@@ -181,7 +163,7 @@ export default async function ProductsPage({
       </div>
 
       <div className="px-[13px] sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
+        <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start">
           <div className="hidden lg:block">
             <Reveal>
             <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
@@ -214,6 +196,7 @@ export default async function ProductsPage({
                   locale={rawLocale}
                   filters={filters}
                   categories={categories}
+                  brands={brands}
                   priceBounds={priceBounds}
                   totalCount={catalog.total}
                   copy={filterCopy}
@@ -229,6 +212,7 @@ export default async function ProductsPage({
               locale={rawLocale}
               filters={filters}
               categories={categories}
+              brands={brands}
               priceBounds={priceBounds}
               totalCount={catalog.total}
               copy={filterCopy}

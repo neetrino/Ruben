@@ -1,23 +1,21 @@
+import Image from "next/image";
+
 import { RevealItem, RevealList } from "@/components/motion/RevealList";
-import {
-  STOREFRONT_BRANDS,
-  type StorefrontBrand,
-} from "@/features/brands/config/brands";
+import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 
 type HomePartnersProps = {
-  brands?: readonly StorefrontBrand[];
+  brands: readonly StorefrontBrandItem[];
   title?: string;
 };
 
 /**
- * Figma 118:1233 — white partners strip with rounded top over the yellow block.
- * Four bold brand wordmarks centered in a wide row.
+ * White partners strip — starred brand logos from admin CMS (max 5).
+ * Renders nothing when none are starred for home.
  */
-export function HomePartners({
-  brands = STOREFRONT_BRANDS,
-  title,
-}: HomePartnersProps) {
-  const marks = brands.slice(0, 4);
+export function HomePartners({ brands, title }: HomePartnersProps) {
+  if (brands.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -30,15 +28,25 @@ export function HomePartners({
           as="ul"
           className="flex w-full flex-wrap items-center justify-center gap-x-16 gap-y-8 sm:gap-x-24 lg:justify-evenly lg:gap-x-0"
         >
-          {marks.map((brand) => (
+          {brands.map((brand) => (
             <RevealItem
               as="li"
               key={brand.id}
               className="flex shrink-0 items-center"
             >
-              <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
-                {brand.name}
-              </span>
+              {brand.imageUrl ? (
+                <Image
+                  src={brand.imageUrl}
+                  alt={brand.title}
+                  width={280}
+                  height={96}
+                  className="h-14 w-auto max-w-[200px] object-contain sm:h-20 sm:max-w-[260px] lg:h-24 lg:max-w-[320px]"
+                />
+              ) : (
+                <span className="text-center text-[28px] leading-tight font-bold text-[#111] uppercase sm:text-[40px] lg:text-[52px]">
+                  {brand.title}
+                </span>
+              )}
             </RevealItem>
           ))}
         </RevealList>

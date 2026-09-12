@@ -1,5 +1,6 @@
 export { appMeta } from "@/db/schema/app-meta";
 export {
+  brands,
   categories,
   productCategories,
   products,

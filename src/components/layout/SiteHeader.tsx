@@ -56,8 +56,11 @@ async function SiteHeaderMainNavAsync({
   const categoryNavItems = categories.map((category) => ({
     id: category.id,
     label: category.title,
+    slug: category.slug,
     href: `/${locale}/products?category=${encodeURIComponent(category.slug)}`,
     imageUrl: category.imageUrl,
+    parentId: category.parentId,
+    sortOrder: category.sortOrder,
   }));
 
   return (

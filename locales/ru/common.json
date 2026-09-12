@@ -41,8 +41,8 @@
     "legal": "Правовая информация",
     "privacyPolicy": "Политика конфиденциальности",
     "terms": "Условия использования",
-    "refundPolicy": "Политика возврата",
-    "deliveryPolicy": "Политика доставки",
+    "refundPolicy": "Политика возврата и обмена",
+    "deliveryPolicy": "Условия доставки и поставки",
     "deliveryReturns": "Доставка и возврат",
     "faq": "Частые вопросы",
     "specialOffers": "Специальные предложения",
@@ -55,6 +55,8 @@
     "copyrightPrefix": "Copyright © {year} | All rights reserved |",
     "copyrightCreatedBy": "Created by",
     "copyrightCompany": "Neetrino IT Company",
-    "copyrightSuffix": ""
+    "copyrightSuffix": "",
+    "copyrightMobilePrefix": "© {year} |",
+    "copyrightMobileCompany": "Neetrino"
   }
 }

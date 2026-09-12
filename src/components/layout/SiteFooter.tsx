@@ -34,10 +34,10 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
   ] as const;
 
   const supportLinks = [
-    { href: `/${locale}/legal/delivery`, label: footer.deliveryReturns },
+    { href: `/${locale}/legal/delivery`, label: footer.deliveryPolicy },
+    { href: `/${locale}/legal/refund`, label: footer.refundPolicy },
     { href: `/${locale}/legal/terms`, label: footer.terms },
     { href: `/${locale}/legal/privacy`, label: footer.privacyPolicy },
-    { href: `/${locale}/contact`, label: footer.faq },
   ] as const;
 
   const socials = [

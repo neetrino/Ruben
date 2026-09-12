@@ -26,12 +26,14 @@ export async function HomeCategoriesSection({
   const categories = await listStorefrontCategories(locale);
   const productsHref = `/${locale}/products`;
 
-  const categoryCards = categories.map((category) => ({
-    id: category.id,
-    title: category.title,
-    href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
-    imageUrl: category.imageUrl,
-  }));
+  const categoryCards = categories
+    .filter((category) => category.parentId === null)
+    .map((category) => ({
+      id: category.id,
+      title: category.title,
+      href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
+      imageUrl: category.imageUrl,
+    }));
 
   return (
     <HomeCategories

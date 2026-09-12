@@ -63,3 +63,8 @@ export function invalidateBlogCache(input?: {
     }
   }
 }
+
+/** Invalidates storefront brand list caches. */
+export function invalidateBrandsCache(): void {
+  updateTag(CACHE_TAGS.brands);
+}

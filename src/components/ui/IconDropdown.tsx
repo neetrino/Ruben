@@ -171,10 +171,13 @@ export function IconDropdown({
               onClick={(event) => {
                 // Closing unmounts interactive children. Form submits (e.g. logout)
                 // must finish first; the following redirect navigates away.
+                // Expand/collapse controls keep the menu open.
                 const target = event.target;
                 if (
                   target instanceof Element &&
-                  target.closest("form, button[type='submit']")
+                  target.closest(
+                    "form, button[type='submit'], [data-keep-menu-open]",
+                  )
                 ) {
                   return;
                 }
@@ -187,7 +190,9 @@ export function IconDropdown({
                 const target = event.target;
                 if (
                   target instanceof Element &&
-                  target.closest("form, button[type='submit']")
+                  target.closest(
+                    "form, button[type='submit'], [data-keep-menu-open]",
+                  )
                 ) {
                   return;
                 }

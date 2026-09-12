@@ -28,21 +28,22 @@ describe("getDictionary", () => {
     expect(dictionary.admin.nav.dashboard).toBe("Dashboard");
     expect(dictionary.admin.common.save).toBe("Save");
     expect(dictionary.legal.privacy.title).toBe("Privacy Policy");
-    expect(dictionary.legal.terms.title).toBe("Terms & Conditions");
-    expect(dictionary.legal.refund.title).toBe("Refund Policy");
-    expect(dictionary.legal.delivery.title).toBe("Delivery Policy");
-    expect(dictionary.footer.refundPolicy).toBe("Refund Policy");
-    expect(dictionary.footer.deliveryPolicy).toBe("Delivery Policy");
+    expect(dictionary.legal.terms.title).toBe("Terms and Conditions");
+    expect(dictionary.legal.refund.title).toBe("Return and Exchange Policy");
+    expect(dictionary.legal.delivery.title).toBe("Delivery and Shipping Terms");
+    expect(dictionary.footer.refundPolicy).toBe("Return and Exchange Policy");
+    expect(dictionary.footer.deliveryPolicy).toBe("Delivery and Shipping Terms");
   });
 
   it("loads Armenian and Russian namespaces", () => {
     expect(getDictionary("hy").nav.home).toBe("ԳԼԽԱՎՈՐ");
     expect(getDictionary("hy").admin.nav.dashboard).toBe("Վահանակ");
     expect(getDictionary("hy").legal.privacy.title).toBe(
-      "Գաղտնիության քաղաքականություն",
+      "Գաղտնիության Քաղաքականություն",
     );
     expect(getDictionary("ru").nav.home).toBe("ГЛАВНАЯ");
     expect(getDictionary("ru").admin.nav.dashboard).toBe("Дашборд");
-    expect(getDictionary("ru").legal.refund.title).toBe("Политика возврата");
-  });
+    expect(getDictionary("ru").legal.refund.title).toBe(
+      "Политика возврата и обмена",
+    );  });
 });

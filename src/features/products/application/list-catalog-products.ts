@@ -50,9 +50,12 @@ export type CatalogListItem = CatalogProduct & {
 };
 
 export type CatalogCategoryOption = {
+  id: string;
   slug: string;
   title: string;
   productCount: number;
+  parentId: string | null;
+  sortOrder: number;
 };
 
 export type CatalogListResult = {
@@ -121,10 +124,10 @@ async function resolvePriceBoundsAmd(
   };
 }
 
-async function resolveCategoryId(
+async function resolveCategoryIds(
   locale: Locale,
   slug: string | undefined,
-): Promise<string | undefined> {
+): Promise<string[] | undefined> {
   if (!slug) return undefined;
 
   const [row] = await getDb()
@@ -139,7 +142,20 @@ async function resolveCategoryId(
     )
     .limit(1);
 
-  return row?.id;
+  if (!row) return undefined;
+
+  const children = await getDb()
+    .select({ id: categories.id })
+    .from(categories)
+    .where(
+      and(
+        eq(categories.status, "ACTIVE"),
+        isNull(categories.deletedAt),
+        eq(categories.parentId, row.id),
+      ),
+    );
+
+  return [row.id, ...children.map((child) => child.id)];
 }
 
 async function loadCatalogCategoryOptions(
@@ -148,6 +164,7 @@ async function loadCatalogCategoryOptions(
   const rows = await getDb()
     .select({
       id: categories.id,
+      parentId: categories.parentId,
       translations: categories.translations,
       sortOrder: categories.sortOrder,
       productCount: sql<number>`coalesce(count(${productCategories.productId}) filter (
@@ -169,9 +186,12 @@ async function loadCatalogCategoryOptions(
       const translation = row.translations[locale] ?? row.translations.hy;
       if (!translation) return null;
       return {
+        id: row.id,
         slug: translation.slug,
         title: translation.title,
         productCount: row.productCount,
+        parentId: row.parentId,
+        sortOrder: row.sortOrder,
       } satisfies CatalogCategoryOption;
     })
     .filter((row): row is CatalogCategoryOption => row !== null);
@@ -212,7 +232,7 @@ async function loadPrimaryImages(
 function buildWhere(
   locale: Locale,
   filters: CatalogListFilter,
-  categoryId: string | undefined,
+  categoryIds: string[] | undefined,
   minAmd: number | undefined,
   maxAmd: number | undefined,
 ): SQL | undefined {
@@ -246,12 +266,15 @@ function buildWhere(
     conditions.push(lte(products.priceAmount, maxAmd));
   }
 
-  if (categoryId) {
+  if (categoryIds && categoryIds.length > 0) {
     conditions.push(
       sql`exists (
         select 1 from ${productCategories}
         where ${productCategories.productId} = ${products.id}
-          and ${productCategories.categoryId} = ${categoryId}
+          and ${productCategories.categoryId} in (${sql.join(
+            categoryIds.map((id) => sql`${id}::uuid`),
+            sql`, `,
+          )})
       )`,
     );
   }
@@ -288,14 +311,14 @@ async function loadCatalogProductsPage(
   filters: CatalogListFilter,
   displayCurrency: Currency,
 ): Promise<CatalogListResult> {
-  const [{ minAmd, maxAmd }, categoryId, categoryOptions] = await Promise.all([
+  const [{ minAmd, maxAmd }, categoryIds, categoryOptions] = await Promise.all([
     resolvePriceBoundsAmd(filters, displayCurrency),
-    resolveCategoryId(locale, filters.category),
+    resolveCategoryIds(locale, filters.category),
     loadCatalogCategoryOptions(locale),
   ]);
 
   // Invalid category slug → empty result set (safe normalize).
-  if (filters.category && !categoryId) {
+  if (filters.category && !categoryIds) {
     return {
       products: [],
       total: 0,
@@ -305,7 +328,7 @@ async function loadCatalogProductsPage(
     };
   }
 
-  const where = buildWhere(locale, filters, categoryId, minAmd, maxAmd);
+  const where = buildWhere(locale, filters, categoryIds, minAmd, maxAmd);
   const offset = (filters.page - 1) * filters.pageSize;
 
   const [[countRow], rows] = await Promise.all([
