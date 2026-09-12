@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 
 import { SideSheet } from "@/components/ui/SideSheet";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
+import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
 import type { CatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
@@ -51,6 +52,7 @@ type CatalogFiltersSheetProps = {
   locale: string;
   filters: CatalogListFilter;
   categories: CatalogCategoryOption[];
+  brands: readonly StorefrontBrandItem[];
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
@@ -66,6 +68,7 @@ export function CatalogFiltersSheet({
   locale,
   filters,
   categories,
+  brands,
   priceBounds,
   totalCount,
   copy,
@@ -172,6 +175,7 @@ export function CatalogFiltersSheet({
             locale={locale}
             filters={filters}
             categories={categories}
+            brands={brands}
             priceBounds={priceBounds}
             totalCount={totalCount}
             copy={copy}

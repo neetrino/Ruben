@@ -5,17 +5,20 @@ import { useCallback, useState } from "react";
 function isProductsTreePath(pathname: string, locale: string): boolean {
   const productsPath = `/${locale}/admin/products`;
   const categoriesPath = `/${locale}/admin/categories`;
+  const brandsPath = `/${locale}/admin/brands`;
   return (
     pathname === productsPath ||
     pathname.startsWith(`${productsPath}/`) ||
     pathname === categoriesPath ||
-    pathname.startsWith(`${categoriesPath}/`)
+    pathname.startsWith(`${categoriesPath}/`) ||
+    pathname === brandsPath ||
+    pathname.startsWith(`${brandsPath}/`)
   );
 }
 
 /**
  * Products nested nav visibility.
- * Auto-opens when entering products/categories routes; user can still toggle.
+ * Auto-opens when entering products/categories/brands routes; user can still toggle.
  */
 export function useAdminProductsSubnavExpanded(
   pathname: string,

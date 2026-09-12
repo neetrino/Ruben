@@ -1,23 +1,22 @@
+import Image from "next/image";
+
 import { RevealItem, RevealList } from "@/components/motion/RevealList";
-import {
-  STOREFRONT_BRANDS,
-  type StorefrontBrand,
-} from "@/features/brands/config/brands";
+import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 
 type HomePartnersProps = {
-  brands?: readonly StorefrontBrand[];
+  brands: readonly StorefrontBrandItem[];
   title?: string;
 };
 
 /**
- * Figma 118:1233 — white partners strip with rounded top over the yellow block.
- * Four bold brand wordmarks centered in a wide row.
+ * White partners strip — brand logos/names from admin CMS.
+ * Renders nothing when there are no published brands.
  */
-export function HomePartners({
-  brands = STOREFRONT_BRANDS,
-  title,
-}: HomePartnersProps) {
+export function HomePartners({ brands, title }: HomePartnersProps) {
   const marks = brands.slice(0, 4);
+  if (marks.length === 0) {
+    return null;
+  }
 
   return (
     <section
@@ -36,9 +35,19 @@ export function HomePartners({
               key={brand.id}
               className="flex shrink-0 items-center"
             >
-              <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
-                {brand.name}
-              </span>
+              {brand.imageUrl ? (
+                <Image
+                  src={brand.imageUrl}
+                  alt={brand.title}
+                  width={200}
+                  height={64}
+                  className="h-10 w-auto max-w-[160px] object-contain sm:h-12 lg:h-14"
+                />
+              ) : (
+                <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
+                  {brand.title}
+                </span>
+              )}
             </RevealItem>
           ))}
         </RevealList>

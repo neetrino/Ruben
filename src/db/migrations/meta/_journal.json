@@ -36,6 +36,13 @@
       "when": 1786458513805,
       "tag": "0004_numerous_sway",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1789245319337,
+      "tag": "0005_high_shocker",
+      "breakpoints": true
     }
   ]
 }

@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
+import { listStorefrontBrands } from "@/features/brands/application/list-storefront-brands";
 import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import {
@@ -71,9 +72,10 @@ export default async function ProductsPage({
 
   let filters = parseCatalogFilters(raw);
   const dictionary = getDictionary(rawLocale);
-  const [currency, user] = await Promise.all([
+  const [currency, user, brands] = await Promise.all([
     getSelectedCurrency(),
     getCurrentUser(),
+    listStorefrontBrands(rawLocale),
   ]);
   const rateQuote = await getCheckoutRateSnapshot(currency);
 
@@ -194,6 +196,7 @@ export default async function ProductsPage({
                   locale={rawLocale}
                   filters={filters}
                   categories={categories}
+                  brands={brands}
                   priceBounds={priceBounds}
                   totalCount={catalog.total}
                   copy={filterCopy}
@@ -209,6 +212,7 @@ export default async function ProductsPage({
               locale={rawLocale}
               filters={filters}
               categories={categories}
+              brands={brands}
               priceBounds={priceBounds}
               totalCount={catalog.total}
               copy={filterCopy}

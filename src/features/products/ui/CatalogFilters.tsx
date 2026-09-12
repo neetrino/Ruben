@@ -10,11 +10,12 @@ import {
 } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
-import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
+import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 import {
   ALL_CATEGORIES_ICON,
   CategoryIcon,
 } from "@/features/categories/ui/category-icons";
+import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
 import type { CatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
@@ -24,7 +25,6 @@ import {
   CatalogFilterMoreToggle,
 } from "@/features/products/ui/CatalogFilterExpand";
 import {
-  CATALOG_BRAND_OPTIONS,
   CATALOG_BRAND_PREVIEW,
   CATALOG_CATEGORY_PREVIEW,
   CATALOG_FEATURE_OPTIONS,
@@ -49,6 +49,7 @@ type CatalogFiltersProps = {
   locale: string;
   filters: CatalogListFilter;
   categories: CatalogCategoryOption[];
+  brands: readonly StorefrontBrandItem[];
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
@@ -114,7 +115,6 @@ function toggleLocal(list: string[], id: string): string[] {
 type BrandRowProps = {
   id: string;
   label: string;
-  count: number;
   checked: boolean;
   tabIndex?: number;
   onToggle: () => void;
@@ -123,7 +123,6 @@ type BrandRowProps = {
 function BrandRow({
   id,
   label,
-  count,
   checked,
   tabIndex,
   onToggle,
@@ -140,23 +139,21 @@ function BrandRow({
         tabIndex={tabIndex}
         onChange={onToggle}
       />
-      <span className="text-[13px] leading-[19.5px] tracking-[0.5px] text-black">
+      <span className="min-w-0 truncate text-[13px] leading-[19.5px] tracking-[0.5px] text-black">
         {label}
-      </span>
-      <span className="ml-auto text-[11px] leading-[16.5px] text-[#999]">
-        {count}
       </span>
     </label>
   );
 }
 
 /**
- * Shop sidebar filters (Figma 119:1472): Brand, Price, Category, Features.
+ * Shop sidebar filters: Brand (admin CMS), Price, Category, Features.
  */
 export function CatalogFilters({
   locale,
   filters,
   categories,
+  brands,
   priceBounds,
   totalCount,
   copy,
@@ -187,8 +184,8 @@ export function CatalogFilters({
   const previewCategoryNodes = categoryTree.slice(0, CATALOG_CATEGORY_PREVIEW);
   const extraCategoryNodes = categoryTree.slice(CATALOG_CATEGORY_PREVIEW);
 
-  const previewBrands = CATALOG_BRAND_OPTIONS.slice(0, CATALOG_BRAND_PREVIEW);
-  const extraBrands = CATALOG_BRAND_OPTIONS.slice(CATALOG_BRAND_PREVIEW);
+  const previewBrands = brands.slice(0, CATALOG_BRAND_PREVIEW);
+  const extraBrands = brands.slice(CATALOG_BRAND_PREVIEW);
   const previewFeatures = CATALOG_FEATURE_OPTIONS.slice(
     0,
     CATALOG_FEATURE_PREVIEW,
@@ -301,62 +298,62 @@ export function CatalogFilters({
         .join(" ")}
       aria-label={copy.filtersTitle}
     >
-      <section className={`${PANEL} pt-[19px] pb-6`}>
-        <h2 className={`${HEADING} px-0`}>
-          <span className="relative inline-flex size-[22px] shrink-0 overflow-hidden">
-            <Image
-              src={CATALOG_ASSETS.filterBrand}
-              alt=""
-              width={22}
-              height={22}
-              className="size-[22px]"
-              aria-hidden
-            />
-          </span>
-          {copy.brandLabel}
-        </h2>
-        <div className="mt-1 flex flex-col gap-[3px]">
-          {previewBrands.map((brand) => (
-            <BrandRow
-              key={brand.id}
-              id={brand.id}
-              label={brand.label}
-              count={brand.count}
-              checked={selectedBrands.includes(brand.id)}
-              onToggle={() =>
-                setSelectedBrands((prev) => toggleLocal(prev, brand.id))
-              }
-            />
-          ))}
+      {brands.length > 0 ? (
+        <section className={`${PANEL} pt-[19px] pb-6`}>
+          <h2 className={`${HEADING} px-0`}>
+            <span className="relative inline-flex size-[22px] shrink-0 overflow-hidden">
+              <Image
+                src={CATALOG_ASSETS.filterBrand}
+                alt=""
+                width={22}
+                height={22}
+                className="size-[22px]"
+                aria-hidden
+              />
+            </span>
+            {copy.brandLabel}
+          </h2>
+          <div className="mt-1 flex flex-col gap-[3px]">
+            {previewBrands.map((brand) => (
+              <BrandRow
+                key={brand.id}
+                id={brand.id}
+                label={brand.title}
+                checked={selectedBrands.includes(brand.id)}
+                onToggle={() =>
+                  setSelectedBrands((prev) => toggleLocal(prev, brand.id))
+                }
+              />
+            ))}
+            {extraBrands.length > 0 ? (
+              <CatalogFilterExpandable expanded={brandExpanded}>
+                <div className="flex flex-col gap-[3px]">
+                  {extraBrands.map((brand) => (
+                    <BrandRow
+                      key={brand.id}
+                      id={brand.id}
+                      label={brand.title}
+                      checked={selectedBrands.includes(brand.id)}
+                      tabIndex={brandExpanded ? 0 : -1}
+                      onToggle={() =>
+                        setSelectedBrands((prev) => toggleLocal(prev, brand.id))
+                      }
+                    />
+                  ))}
+                </div>
+              </CatalogFilterExpandable>
+            ) : null}
+          </div>
           {extraBrands.length > 0 ? (
-            <CatalogFilterExpandable expanded={brandExpanded}>
-              <div className="flex flex-col gap-[3px]">
-                {extraBrands.map((brand) => (
-                  <BrandRow
-                    key={brand.id}
-                    id={brand.id}
-                    label={brand.label}
-                    count={brand.count}
-                    checked={selectedBrands.includes(brand.id)}
-                    tabIndex={brandExpanded ? 0 : -1}
-                    onToggle={() =>
-                      setSelectedBrands((prev) => toggleLocal(prev, brand.id))
-                    }
-                  />
-                ))}
-              </div>
-            </CatalogFilterExpandable>
+            <CatalogFilterMoreToggle
+              expanded={brandExpanded}
+              moreLabel={copy.moreLabel}
+              lessLabel={copy.lessLabel}
+              onToggle={() => setBrandExpanded((value) => !value)}
+            />
           ) : null}
-        </div>
-        {extraBrands.length > 0 ? (
-          <CatalogFilterMoreToggle
-            expanded={brandExpanded}
-            moreLabel={copy.moreLabel}
-            lessLabel={copy.lessLabel}
-            onToggle={() => setBrandExpanded((value) => !value)}
-          />
-        ) : null}
-      </section>
+        </section>
+      ) : null}
 
       <section className={PANEL}>
         <h2 className={HEADING}>

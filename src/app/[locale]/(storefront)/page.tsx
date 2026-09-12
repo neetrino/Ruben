@@ -13,7 +13,7 @@ import { HomeFeaturedSection } from "@/features/home/ui/HomeFeaturedSection";
 import { HomeFeatures } from "@/features/home/ui/HomeFeatures";
 import { HomeHero } from "@/features/home/ui/HomeHero";
 import { HomeMobileHeroSection } from "@/features/home/ui/HomeMobileHeroSection";
-import { HomePartners } from "@/features/home/ui/HomePartners";
+import { HomePartnersSection } from "@/features/home/ui/HomePartnersSection";
 import { HomePromotionsSection } from "@/features/home/ui/HomePromotionsSection";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -96,7 +96,12 @@ export default async function HomePage({ params }: HomePageProps) {
           />
         </LazyWhenVisible>
 
-        <HomePartners title={dictionary.home.partnersTitle} />
+        <Suspense fallback={null}>
+          <HomePartnersSection
+            locale={locale}
+            title={dictionary.home.partnersTitle}
+          />
+        </Suspense>
       </div>
     </div>
   );

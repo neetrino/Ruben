@@ -11,6 +11,7 @@
     "orders": "Orders",
     "products": "Products",
     "categories": "Categories",
+    "brands": "Brands",
     "delivery": "Delivery",
     "discounts": "Discounts",
     "coupons": "Coupons",
@@ -69,6 +70,7 @@
     "entity": {
       "product": "product",
       "category": "category",
+      "brand": "brand",
       "deliveryLocation": "delivery location",
       "promoCode": "promo code",
       "post": "post",
@@ -363,6 +365,44 @@
       "uploadImage": "Upload image",
       "remove": "Remove image",
       "create": "Create category"
+    },
+    "status": {
+      "published": "Published",
+      "archived": "Archived"
+    }
+  },
+  "brands": {
+    "title": "Brands",
+    "add": "Add brand",
+    "searchPlaceholder": "Search brands…",
+    "searchAria": "Search brands",
+    "clearToReorder": "Clear search to reorder brands.",
+    "empty": "No brands yet.",
+    "emptySearch": "No brands match your search.",
+    "columns": {
+      "image": "Logo",
+      "title": "Name",
+      "slug": "Slug",
+      "actions": "Actions"
+    },
+    "aria": {
+      "edit": "Edit brand",
+      "delete": "Delete brand",
+      "reorder": "Drag to reorder"
+    },
+    "drawer": {
+      "editTitle": "Edit brand",
+      "createTitle": "Create brand",
+      "titleLabel": "Name",
+      "titlePlaceholder": "Enter brand name",
+      "slug": "Slug",
+      "status": "Status",
+      "image": "Logo",
+      "slugHint": "Used in the URL. Auto-generated from name.",
+      "changeImage": "Change logo",
+      "uploadImage": "Upload logo",
+      "remove": "Remove logo",
+      "create": "Create brand"
     },
     "status": {
       "published": "Published",

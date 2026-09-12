@@ -131,3 +131,29 @@ export const productCategories = pgTable(
       .where(sql`${table.isPrimary} = true`),
   ],
 );
+
+/** Partner / manufacturer brands (admin CMS + storefront brands page). */
+export const brands = pgTable(
+  "brands",
+  {
+    id: idColumn(),
+    translations: jsonb("translations").$type<TranslationsJson>().notNull(),
+    sortOrder: integer("sort_order").notNull().default(0),
+    status: categoryStatusEnum("status").notNull().default("ACTIVE"),
+    createdAt: createdAtColumn(),
+    updatedAt: updatedAtColumn(),
+    deletedAt: deletedAtColumn(),
+  },
+  (table) => [
+    index("brands_status_sort_idx").on(table.status, table.sortOrder),
+    uniqueIndex("brands_slug_hy_uidx")
+      .on(sql`(${table.translations}->'hy'->>'slug')`)
+      .where(sql`${table.translations}->'hy'->>'slug' IS NOT NULL`),
+    uniqueIndex("brands_slug_en_uidx")
+      .on(sql`(${table.translations}->'en'->>'slug')`)
+      .where(sql`${table.translations}->'en'->>'slug' IS NOT NULL`),
+    uniqueIndex("brands_slug_ru_uidx")
+      .on(sql`(${table.translations}->'ru'->>'slug')`)
+      .where(sql`${table.translations}->'ru'->>'slug' IS NOT NULL`),
+  ],
+);
