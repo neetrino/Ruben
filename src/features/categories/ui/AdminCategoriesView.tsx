@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronRight, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, GripVertical, ImageIcon, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -395,7 +395,7 @@ export function AdminCategoriesView({
                         </button>
                       </td>
                       <td className={ADMIN_TABLE_TD}>
-                        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded border border-dashed border-gray-300 bg-gray-50">
+                        <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
                           {category.imageUrl ? (
                             // Category image hosts vary; native img avoids next/image allowlists.
                             // eslint-disable-next-line @next/next/no-img-element
@@ -405,7 +405,10 @@ export function AdminCategoriesView({
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <span className="text-gray-400">—</span>
+                            <ImageIcon
+                              className="h-5 w-5 text-gray-400"
+                              aria-hidden
+                            />
                           )}
                         </div>
                       </td>

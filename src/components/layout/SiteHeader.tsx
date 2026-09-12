@@ -58,6 +58,8 @@ async function SiteHeaderMainNavAsync({
     label: category.title,
     href: `/${locale}/products?category=${encodeURIComponent(category.slug)}`,
     imageUrl: category.imageUrl,
+    parentId: category.parentId,
+    sortOrder: category.sortOrder,
   }));
 
   return (

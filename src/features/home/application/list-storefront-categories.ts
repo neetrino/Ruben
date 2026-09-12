@@ -17,6 +17,8 @@ export type StorefrontCategory = {
   title: string;
   slug: string;
   imageUrl: string | null;
+  parentId: string | null;
+  sortOrder: number;
 };
 
 async function loadStorefrontCategories(
@@ -25,6 +27,7 @@ async function loadStorefrontCategories(
   const rows = await getDb()
     .select({
       id: categories.id,
+      parentId: categories.parentId,
       translations: categories.translations,
       sortOrder: categories.sortOrder,
     })
@@ -67,6 +70,8 @@ async function loadStorefrontCategories(
         title: translation.title,
         slug: translation.slug,
         imageUrl: images.get(row.id) ?? null,
+        parentId: row.parentId,
+        sortOrder: row.sortOrder,
       } satisfies StorefrontCategory;
     })
     .filter((row): row is StorefrontCategory => row !== null);

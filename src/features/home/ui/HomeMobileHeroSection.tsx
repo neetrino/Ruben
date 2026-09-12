@@ -33,11 +33,13 @@ export async function HomeMobileHeroSection({
       locale={locale}
       brandName={dictionary.brand}
       slides={slidesWithExistingMedia}
-      categories={categories.map((category) => ({
-        id: category.id,
-        title: category.title,
-        href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
-      }))}
+      categories={categories
+        .filter((category) => category.parentId === null)
+        .map((category) => ({
+          id: category.id,
+          title: category.title,
+          href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
+        }))}
       allCategoriesLabel={dictionary.catalog.allChip}
       prevSlideLabel={dictionary.home.categoriesPrev}
       nextSlideLabel={dictionary.home.categoriesNext}
