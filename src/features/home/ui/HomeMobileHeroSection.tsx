@@ -4,7 +4,6 @@ import { HomeMobileHero } from "@/features/home/ui/HomeMobileHero";
 import type { StorefrontHeroSlide } from "@/features/hero/application/queries";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
-import { resolveExistingPublicMediaUrl } from "@/lib/media/resolve-public-media-url";
 
 type HomeMobileHeroSectionProps = {
   locale: Locale;
@@ -21,18 +20,11 @@ export async function HomeMobileHeroSection({
   const categories = await listStorefrontCategories(locale);
   const productsHref = `/${locale}/products`;
 
-  // Drop missing local `/uploads/...` files so Next/Image does not 404.
-  const slidesWithExistingMedia = slides.map((slide) => ({
-    ...slide,
-    mobileImageUrl: resolveExistingPublicMediaUrl(slide.mobileImageUrl),
-    desktopImageUrl: resolveExistingPublicMediaUrl(slide.desktopImageUrl),
-  }));
-
   return (
     <HomeMobileHero
       locale={locale}
       brandName={dictionary.brand}
-      slides={slidesWithExistingMedia}
+      slides={slides}
       categories={categories
         .filter((category) => category.parentId === null)
         .map((category) => ({
@@ -42,8 +34,6 @@ export async function HomeMobileHeroSection({
           href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
         }))}
       allCategoriesLabel={dictionary.catalog.allChip}
-      prevSlideLabel={dictionary.home.categoriesPrev}
-      nextSlideLabel={dictionary.home.categoriesNext}
       fallbackImageSrc={HOME_ASSETS.heroProduct}
     />
   );

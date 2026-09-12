@@ -24,8 +24,6 @@ type HomeMobileHeroProps = {
   slides: StorefrontHeroSlide[];
   categories: readonly HomeMobileCategoryChip[];
   allCategoriesLabel: string;
-  prevSlideLabel: string;
-  nextSlideLabel: string;
   fallbackImageSrc: string;
 };
 
@@ -40,8 +38,6 @@ export function HomeMobileHero({
   slides,
   categories,
   allCategoriesLabel,
-  prevSlideLabel,
-  nextSlideLabel,
   fallbackImageSrc,
 }: HomeMobileHeroProps) {
   const allHref = catalogHref(locale, DEFAULT_CATALOG_FILTERS, {
@@ -92,8 +88,6 @@ export function HomeMobileHero({
         <HomeMobileHeroCarousel
           brandName={brandName}
           slides={slides}
-          prevSlideLabel={prevSlideLabel}
-          nextSlideLabel={nextSlideLabel}
           fallbackImageSrc={fallbackImageSrc}
         />
       </Reveal>

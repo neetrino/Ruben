@@ -35,6 +35,10 @@ export function HomeHero({
   const subtitle = active?.copy.subtitle ?? fallbackSubtitle;
   const ctaLabel = active?.copy.buttonLabel ?? fallbackCtaLabel;
   const ctaHref = active?.copy.buttonUrl ?? fallbackCtaHref;
+  const productImageSrc =
+    active?.desktopImageUrl ??
+    active?.mobileImageUrl ??
+    HOME_ASSETS.heroProduct;
 
   return (
     <section className="relative z-0 hidden bg-white pt-0 pb-12 sm:pb-20 lg:block lg:min-h-[820px] lg:pb-8">
@@ -102,10 +106,10 @@ export function HomeHero({
           </m.div>
         </div>
 
-        {/* Mobile / tablet — product in flow */}
+        {/* Mobile / tablet — product in flow (inside desktop section breakpoint helpers) */}
         <div className="relative z-20 mx-auto aspect-square w-full max-w-[560px] sm:max-w-[640px] lg:hidden">
           <Image
-            src={HOME_ASSETS.heroProduct}
+            src={productImageSrc}
             alt=""
             fill
             priority
@@ -131,7 +135,7 @@ export function HomeHero({
         transition={{ duration: 0.45, ease: MOTION_EASE, delay: 0.12 }}
       >
         <Image
-          src={HOME_ASSETS.heroProduct}
+          src={productImageSrc}
           alt=""
           fill
           priority

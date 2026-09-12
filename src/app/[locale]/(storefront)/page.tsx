@@ -17,6 +17,7 @@ import { HomePartnersSection } from "@/features/home/ui/HomePartnersSection";
 import { HomePromotionsSection } from "@/features/home/ui/HomePromotionsSection";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { resolveExistingPublicMediaUrl } from "@/lib/media/resolve-public-media-url";
 
 type HomePageProps = {
   params: Promise<{ locale: string }>;
@@ -34,7 +35,11 @@ export default async function HomePage({ params }: HomePageProps) {
   const productsHref = `/${locale}/products`;
 
   // Critical path only — below-fold rails stream via Suspense.
-  const heroSlides = await listActiveHeroSlides(locale);
+  const heroSlides = (await listActiveHeroSlides(locale)).map((slide) => ({
+    ...slide,
+    mobileImageUrl: resolveExistingPublicMediaUrl(slide.mobileImageUrl),
+    desktopImageUrl: resolveExistingPublicMediaUrl(slide.desktopImageUrl),
+  }));
 
   return (
     <div className="home-page-root relative bg-white">

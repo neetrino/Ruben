@@ -1,123 +1,163 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { HOME_ASSETS } from "@/features/home/config/assets";
-import { HomeMobileChevronButton } from "@/features/home/ui/HomeMobileChevronButton";
 import type { StorefrontHeroSlide } from "@/features/hero/application/queries";
+import { useSnapCarousel } from "@/features/products/ui/use-snap-carousel";
 
 type HomeMobileHeroCarouselProps = {
   brandName: string;
   slides: StorefrontHeroSlide[];
-  prevSlideLabel: string;
-  nextSlideLabel: string;
   fallbackImageSrc?: string;
 };
+
+const SLIDE_AUTO_MS = 6000;
+const AUTOPLAY_RESUME_MS = 4000;
 
 function slideImageCandidate(slide: StorefrontHeroSlide | null): string | null {
   return slide?.mobileImageUrl ?? slide?.desktopImageUrl ?? null;
 }
 
 /**
- * Mobile home hero image carousel with side arrows and dots (Figma 171:533).
+ * Mobile home hero image carousel — native snap swipe + dots (same as PDP gallery).
  */
 export function HomeMobileHeroCarousel({
   brandName,
   slides,
-  prevSlideLabel,
-  nextSlideLabel,
   fallbackImageSrc = HOME_ASSETS.heroProduct,
 }: HomeMobileHeroCarouselProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
   const [failedUrls, setFailedUrls] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
-  const slideCount = Math.max(slides.length, 1);
-  const activeSlide = slides[activeIndex] ?? null;
-  const candidate = slideImageCandidate(activeSlide);
-  const imageSrc =
-    candidate && !failedUrls.has(candidate) ? candidate : fallbackImageSrc;
+  const [autoplayPaused, setAutoplayPaused] = useState(false);
+  const resumeTimerRef = useRef<number | null>(null);
+
+  const displaySlides =
+    slides.length > 0
+      ? slides
+      : [
+          {
+            id: "fallback",
+            sortOrder: 0,
+            copy: { title: brandName },
+            desktopImageUrl: null,
+            mobileImageUrl: null,
+          } satisfies StorefrontHeroSlide,
+        ];
+
+  const slideCount = displaySlides.length;
+  const canSwipe = slideCount > 1;
+  const { trackRef, activeIndex, handleScroll, scrollToIndex } =
+    useSnapCarousel(slideCount);
+
+  const clearResumeTimer = useCallback(() => {
+    if (resumeTimerRef.current != null) {
+      window.clearTimeout(resumeTimerRef.current);
+      resumeTimerRef.current = null;
+    }
+  }, []);
+
+  const pauseAutoplay = useCallback(() => {
+    clearResumeTimer();
+    setAutoplayPaused(true);
+  }, [clearResumeTimer]);
+
+  const scheduleAutoplayResume = useCallback(() => {
+    clearResumeTimer();
+    resumeTimerRef.current = window.setTimeout(() => {
+      setAutoplayPaused(false);
+      resumeTimerRef.current = null;
+    }, AUTOPLAY_RESUME_MS);
+  }, [clearResumeTimer]);
+
+  useEffect(() => () => clearResumeTimer(), [clearResumeTimer]);
 
   useEffect(() => {
-    if (slides.length <= 1) {
-      return;
-    }
+    if (!canSwipe || autoplayPaused) return;
+
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % slides.length);
-    }, 6000);
+      const next = (activeIndex + 1) % slideCount;
+      scrollToIndex(next);
+    }, SLIDE_AUTO_MS);
+
     return () => window.clearInterval(timer);
-  }, [slides.length]);
+  }, [activeIndex, autoplayPaused, canSwipe, scrollToIndex, slideCount]);
 
-  const goPrev = useCallback(() => {
-    setActiveIndex((current) => (current - 1 + slideCount) % slideCount);
-  }, [slideCount]);
-
-  const goNext = useCallback(() => {
-    setActiveIndex((current) => (current + 1) % slideCount);
-  }, [slideCount]);
-
-  const handleImageError = useCallback(() => {
-    if (!candidate || candidate === fallbackImageSrc) {
-      return;
-    }
-    setFailedUrls((current) => {
-      if (current.has(candidate)) {
-        return current;
-      }
-      const next = new Set(current);
-      next.add(candidate);
-      return next;
-    });
-  }, [candidate, fallbackImageSrc]);
+  const markFailed = useCallback(
+    (url: string) => {
+      if (url === fallbackImageSrc) return;
+      setFailedUrls((current) => {
+        if (current.has(url)) return current;
+        const next = new Set(current);
+        next.add(url);
+        return next;
+      });
+    },
+    [fallbackImageSrc],
+  );
 
   return (
     <>
       <div className="relative mt-6 tablet:mt-12">
-        <div className="relative mx-auto aspect-[344/198] w-full max-w-[344px] overflow-hidden rounded-[10px] bg-neutral-100 tablet:max-w-[720px]">
-          <Image
-            key={imageSrc}
-            src={imageSrc}
-            alt={activeSlide?.copy.title ?? brandName}
-            fill
-            priority
-            sizes="(max-width: 743px) 344px, 720px"
-            className="object-cover"
-            onError={handleImageError}
-          />
-        </div>
+        <div className="relative aspect-[344/198] w-full overflow-hidden rounded-[20px] bg-neutral-100">
+          <div
+            ref={trackRef}
+            onScroll={handleScroll}
+            onPointerDown={canSwipe ? pauseAutoplay : undefined}
+            onPointerUp={canSwipe ? scheduleAutoplayResume : undefined}
+            onPointerCancel={canSwipe ? scheduleAutoplayResume : undefined}
+            className="absolute inset-0 flex snap-x snap-mandatory overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {displaySlides.map((slide, index) => {
+              const candidate = slideImageCandidate(slide);
+              const src =
+                candidate && !failedUrls.has(candidate)
+                  ? candidate
+                  : fallbackImageSrc;
 
-        {slides.length > 1 ? (
-          <div className="pointer-events-none absolute inset-y-0 left-1/2 flex w-[min(100%,367px)] -translate-x-1/2 items-center justify-between px-0 tablet:w-[min(100%,760px)]">
-            <HomeMobileChevronButton
-              label={prevSlideLabel}
-              direction="left"
-              onClick={goPrev}
-              className="pointer-events-auto"
-            />
-            <HomeMobileChevronButton
-              label={nextSlideLabel}
-              direction="right"
-              onClick={goNext}
-              className="pointer-events-auto"
-            />
+              return (
+                <div
+                  key={slide.id}
+                  className="relative h-full w-full shrink-0 snap-center"
+                >
+                  <Image
+                    src={src}
+                    alt={slide.copy.title || brandName}
+                    fill
+                    priority={index === 0}
+                    sizes="(max-width: 1023px) calc(100vw - 28px), 720px"
+                    className="pointer-events-none select-none object-cover"
+                    draggable={false}
+                    onError={() => {
+                      if (candidate) markFailed(candidate);
+                    }}
+                  />
+                </div>
+              );
+            })}
           </div>
-        ) : null}
+        </div>
       </div>
 
       <div
         className="mt-4 flex items-center justify-center gap-1"
-        aria-hidden={slides.length <= 1}
+        aria-hidden={!canSwipe}
       >
-        {(slides.length > 1 ? slides : [null, null, null]).map((slide, index) => {
-          const isActive = slides.length > 1 ? index === activeIndex : index === 0;
-          if (slides.length > 1 && slide) {
+        {(canSwipe ? displaySlides : [null, null, null]).map((slide, index) => {
+          const isActive = canSwipe ? index === activeIndex : index === 0;
+          if (canSwipe && slide) {
             return (
               <button
                 key={slide.id}
                 type="button"
                 aria-label={`${index + 1}`}
-                onClick={() => setActiveIndex(index)}
+                onClick={() => {
+                  pauseAutoplay();
+                  scrollToIndex(index);
+                  scheduleAutoplayResume();
+                }}
                 className={`size-3 rounded-full transition-colors ${
                   isActive ? "bg-[var(--brand)]" : "bg-[#d9d9d9]"
                 }`}
