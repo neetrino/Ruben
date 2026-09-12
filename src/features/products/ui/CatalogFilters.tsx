@@ -294,7 +294,7 @@ export function CatalogFilters({
     <aside
       className={[
         "flex w-full flex-col gap-6",
-        className ?? "max-w-[280px]",
+        className ?? "max-w-[320px]",
         isPending ? "opacity-70" : "",
       ]
         .filter(Boolean)

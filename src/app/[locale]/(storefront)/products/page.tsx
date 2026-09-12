@@ -161,7 +161,7 @@ export default async function ProductsPage({
       </div>
 
       <div className="px-[13px] sm:px-10 lg:px-12">
-        <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[280px_minmax(0,1fr)] lg:items-start">
+        <div className="grid grid-cols-1 gap-x-10 gap-y-6 lg:grid-cols-[320px_minmax(0,1fr)] lg:items-start">
           <div className="hidden lg:block">
             <Reveal>
             <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
