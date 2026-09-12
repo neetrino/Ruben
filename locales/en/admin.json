@@ -17,7 +17,7 @@
     "coupons": "Coupons",
     "users": "Users",
     "analytics": "Analytics",
-    "hero": "Hero Slides",
+    "hero": "Mobile Banner",
     "blog": "Blog",
     "messages": "Messages",
     "settings": "Settings"
@@ -645,18 +645,18 @@
     }
   },
   "hero": {
-    "title": "Hero Slides",
-    "count": "{count} slide(s)",
-    "create": "Add slide",
-    "slidesHeading": "Slides ({count})",
+    "title": "Mobile Banner",
+    "count": "{count} banner(s)",
+    "create": "Add banner",
+    "slidesHeading": "Banners ({count})",
     "noImage": "No image",
     "sort": "sort {n}",
     "published": "Published",
     "draft": "Draft",
-    "empty": "No slides yet. Add your first hero slide.",
+    "empty": "No banners yet. Add your first mobile banner.",
     "drawer": {
-      "editTitle": "Edit slide",
-      "createTitle": "Create slide"
+      "editTitle": "Edit banner",
+      "createTitle": "Create banner"
     },
     "form": {
       "title": "Title",

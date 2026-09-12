@@ -12,7 +12,6 @@ import {
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { ADMIN_BADGE } from "@/features/admin/ui/status-badge";
 import type { AdminHeroSlideListItem } from "@/features/hero/application/queries";
-import { HeroSlideControls } from "@/features/hero/ui/HeroSlideControls";
 import { HeroSlideModal } from "@/features/hero/ui/HeroSlideModal";
 
 type AdminHeroViewProps = {
@@ -75,10 +74,32 @@ export function AdminHeroView({
           <p className="text-center text-sm text-gray-600">{t.hero.empty}</p>
         </Card>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3 2xl:grid-cols-4">
           {slides.map((slide) => (
-            <Card key={slide.id} className="flex h-full flex-col p-4">
-              <div className="flex min-w-0 flex-1 gap-3">
+            <Card
+              key={slide.id}
+              role="button"
+              tabIndex={0}
+              onClick={() => openEdit(slide)}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  openEdit(slide);
+                }
+              }}
+              className="relative flex h-full cursor-pointer flex-col p-4 transition-shadow hover:shadow-md"
+            >
+              <span
+                className={`absolute top-3 right-3 z-10 ${ADMIN_BADGE} ${
+                  slide.isActive
+                    ? "bg-green-100 text-green-800"
+                    : "bg-gray-100 text-gray-800"
+                }`}
+              >
+                {slide.isActive ? t.hero.published : t.hero.draft}
+              </span>
+
+              <div className="flex min-w-0 flex-1 gap-3 pr-24">
                 {slide.imageUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element -- admin thumbnail
                   <img
@@ -92,44 +113,16 @@ export function AdminHeroView({
                   </div>
                 )}
                 <div className="min-w-0 flex-1">
-                  <p>
-                    <button
-                      type="button"
-                      onClick={() => openEdit(slide)}
-                      className="text-left font-medium text-gray-900 hover:underline"
-                    >
-                      {slide.title}
-                    </button>
+                  <p className="font-medium text-gray-900">{slide.title}</p>
+                  <p className="mt-2 text-xs text-gray-500">
+                    {t.hero.sort.replace("{n}", String(slide.sortOrder))}
                   </p>
-                  <div className="mt-2 flex flex-wrap items-center gap-2">
-                    <span className="text-xs text-gray-500">
-                      {t.hero.sort.replace("{n}", String(slide.sortOrder))}
-                    </span>
-                    <span
-                      className={`${ADMIN_BADGE} ${
-                        slide.isActive
-                          ? "bg-green-100 text-green-800"
-                          : "bg-gray-100 text-gray-800"
-                      }`}
-                    >
-                      {slide.isActive ? t.hero.published : t.hero.draft}
-                    </span>
-                  </div>
                   {slide.subtitle ? (
                     <p className="mt-1 line-clamp-2 text-sm text-gray-600">
                       {slide.subtitle}
                     </p>
                   ) : null}
                 </div>
-              </div>
-              <div className="mt-3 flex justify-end">
-                <HeroSlideControls
-                  locale={locale}
-                  slideId={slide.id}
-                  slideTitle={slide.title}
-                  isActive={slide.isActive}
-                  onEdit={() => openEdit(slide)}
-                />
               </div>
             </Card>
           ))}
@@ -145,4 +138,3 @@ export function AdminHeroView({
     </section>
   );
 }
-

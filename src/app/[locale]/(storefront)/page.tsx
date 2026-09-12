@@ -52,11 +52,10 @@ export default async function HomePage({ params }: HomePageProps) {
       </Suspense>
 
       <HomeHero
-        slides={heroSlides}
         brandName={dictionary.home.title}
-        fallbackSubtitle={dictionary.home.subtitle}
-        fallbackCtaLabel={dictionary.home.cta}
-        fallbackCtaHref={productsHref}
+        subtitle={dictionary.home.subtitle}
+        ctaLabel={dictionary.home.cta}
+        ctaHref={productsHref}
       />
 
       <div className="hidden lg:block">
