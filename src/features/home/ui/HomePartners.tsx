@@ -39,12 +39,12 @@ export function HomePartners({ brands, title }: HomePartnersProps) {
                 <Image
                   src={brand.imageUrl}
                   alt={brand.title}
-                  width={200}
-                  height={64}
-                  className="h-10 w-auto max-w-[160px] object-contain sm:h-12 lg:h-14"
+                  width={280}
+                  height={96}
+                  className="h-14 w-auto max-w-[200px] object-contain sm:h-20 sm:max-w-[260px] lg:h-24 lg:max-w-[320px]"
                 />
               ) : (
-                <span className="text-center text-[22px] leading-tight font-bold text-[#111] uppercase sm:text-[32px] lg:text-[44px]">
+                <span className="text-center text-[28px] leading-tight font-bold text-[#111] uppercase sm:text-[40px] lg:text-[52px]">
                   {brand.title}
                 </span>
               )}
