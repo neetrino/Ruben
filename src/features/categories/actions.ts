@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, isNull, max } from "drizzle-orm";
+import { and, eq, inArray, isNull, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -246,7 +246,10 @@ const reorderCategoriesSchema = z.object({
   orderedIds: z.array(z.string().uuid()).min(1),
 });
 
-/** Persists admin category table order via sortOrder (1-based). */
+/**
+ * Persists sibling order via sortOrder (1-based).
+ * `orderedIds` must be a complete sibling group (all roots, or all children of one parent).
+ */
 export async function reorderCategoriesAction(
   locale: string,
   raw: z.infer<typeof reorderCategoriesSchema>,
@@ -267,23 +270,43 @@ export async function reorderCategoriesAction(
     return err("VALIDATION_ERROR", "Duplicate category ids in order.");
   }
 
-  const existing = await getDb()
+  const rows = await getDb()
+    .select({ id: categories.id, parentId: categories.parentId })
+    .from(categories)
+    .where(and(isNull(categories.deletedAt), inArray(categories.id, uniqueIds)));
+
+  if (rows.length !== uniqueIds.length) {
+    return err("NOT_FOUND", "Category not found.");
+  }
+
+  const byId = new Map(rows.map((row) => [row.id, row]));
+  const firstParentId = byId.get(uniqueIds[0]!)?.parentId ?? null;
+  for (const id of uniqueIds) {
+    if ((byId.get(id)?.parentId ?? null) !== firstParentId) {
+      return err(
+        "VALIDATION_ERROR",
+        "Can only reorder categories that share the same parent.",
+      );
+    }
+  }
+
+  const siblings = await getDb()
     .select({ id: categories.id })
     .from(categories)
-    .where(and(isNull(categories.deletedAt)));
+    .where(
+      and(
+        isNull(categories.deletedAt),
+        firstParentId === null
+          ? isNull(categories.parentId)
+          : eq(categories.parentId, firstParentId),
+      ),
+    );
 
-  if (existing.length !== uniqueIds.length) {
+  if (siblings.length !== uniqueIds.length) {
     return err(
       "VALIDATION_ERROR",
       "Category list is out of date. Refresh and try again.",
     );
-  }
-
-  const existingSet = new Set(existing.map((row) => row.id));
-  for (const id of uniqueIds) {
-    if (!existingSet.has(id)) {
-      return err("NOT_FOUND", "Category not found.");
-    }
   }
 
   const now = new Date();

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -40,6 +40,17 @@ type AdminCategoriesViewProps = {
   categories: AdminCategoryListItem[];
 };
 
+type CategoryTreeNode = {
+  category: AdminCategoryListItem;
+  children: AdminCategoryListItem[];
+};
+
+type FlatRow = {
+  category: AdminCategoryListItem;
+  depth: 0 | 1;
+  childCount: number;
+};
+
 function moveItem<T>(list: T[], fromIndex: number, toIndex: number): T[] {
   if (
     fromIndex === toIndex ||
@@ -65,6 +76,30 @@ function sameOrder(
   return left.every((item, index) => item.id === right[index]?.id);
 }
 
+function sortByOrder(list: AdminCategoryListItem[]): AdminCategoryListItem[] {
+  return [...list].sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    return a.title.localeCompare(b.title);
+  });
+}
+
+function buildTree(categories: AdminCategoryListItem[]): CategoryTreeNode[] {
+  const roots = sortByOrder(categories.filter((item) => !item.parentId));
+  const childrenByParent = new Map<string, AdminCategoryListItem[]>();
+
+  for (const item of categories) {
+    if (!item.parentId) continue;
+    const bucket = childrenByParent.get(item.parentId) ?? [];
+    bucket.push(item);
+    childrenByParent.set(item.parentId, bucket);
+  }
+
+  return roots.map((root) => ({
+    category: root,
+    children: sortByOrder(childrenByParent.get(root.id) ?? []),
+  }));
+}
+
 export function AdminCategoriesView({
   locale,
   categories,
@@ -82,6 +117,7 @@ export function AdminCategoriesView({
     title: string;
   } | null>(null);
   const [ordered, setOrdered] = useState(categories);
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(() => new Set());
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const orderedRef = useRef(ordered);
   const dragOriginRef = useRef<AdminCategoryListItem[] | null>(null);
@@ -98,13 +134,61 @@ export function AdminCategoriesView({
 
   const needle = query.trim().toLowerCase();
   const isFiltering = needle.length > 0;
+  const tree = useMemo(() => buildTree(ordered), [ordered]);
 
-  const visible = useMemo(() => {
-    if (!isFiltering) return ordered;
-    return ordered.filter((category) =>
-      category.title.toLowerCase().includes(needle),
-    );
-  }, [ordered, isFiltering, needle]);
+  const visibleRows = useMemo((): FlatRow[] => {
+    const rows: FlatRow[] = [];
+
+    for (const node of tree) {
+      const rootMatches = node.category.title.toLowerCase().includes(needle);
+      const matchingChildren = isFiltering
+        ? node.children.filter((child) =>
+            child.title.toLowerCase().includes(needle),
+          )
+        : node.children;
+
+      if (isFiltering && !rootMatches && matchingChildren.length === 0) {
+        continue;
+      }
+
+      rows.push({
+        category: node.category,
+        depth: 0,
+        childCount: node.children.length,
+      });
+
+      const shouldExpand =
+        expandedIds.has(node.category.id) ||
+        (isFiltering && (rootMatches || matchingChildren.length > 0));
+
+      if (!shouldExpand) continue;
+
+      const childrenToShow = isFiltering
+        ? rootMatches
+          ? node.children
+          : matchingChildren
+        : node.children;
+
+      for (const child of childrenToShow) {
+        rows.push({
+          category: child,
+          depth: 1,
+          childCount: 0,
+        });
+      }
+    }
+
+    return rows;
+  }, [tree, expandedIds, isFiltering, needle]);
+
+  function toggleExpanded(categoryId: string): void {
+    setExpandedIds((current) => {
+      const next = new Set(current);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
 
   function requestDelete(categoryId: string, categoryTitle: string): void {
     setPendingDelete({ id: categoryId, title: categoryTitle });
@@ -126,18 +210,43 @@ export function AdminCategoriesView({
     });
   }
 
-  function persistCurrentOrder(): void {
+  function siblingIds(parentId: string | null): string[] {
+    return orderedRef.current
+      .filter((item) => (item.parentId ?? null) === parentId)
+      .sort((a, b) => {
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return a.title.localeCompare(b.title);
+      })
+      .map((item) => item.id);
+  }
+
+  function persistCurrentOrder(parentId: string | null): void {
     if (persistedRef.current) return;
     const next = orderedRef.current;
     const previous = dragOriginRef.current;
     dragOriginRef.current = null;
-    if (!previous || sameOrder(previous, next)) return;
+    if (!previous) return;
+
+    const nextSiblingOrder = next
+      .filter((item) => (item.parentId ?? null) === parentId)
+      .sort((a, b) => {
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return a.title.localeCompare(b.title);
+      });
+    const previousSiblingOrder = previous
+      .filter((item) => (item.parentId ?? null) === parentId)
+      .sort((a, b) => {
+        if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+        return a.title.localeCompare(b.title);
+      });
+
+    if (sameOrder(previousSiblingOrder, nextSiblingOrder)) return;
 
     persistedRef.current = true;
     startTransition(async () => {
       setError(null);
       const result = await reorderCategoriesAction(locale, {
-        orderedIds: next.map((category) => category.id),
+        orderedIds: nextSiblingOrder.map((category) => category.id),
       });
       if (!result.ok) {
         setOrdered(previous);
@@ -149,15 +258,26 @@ export function AdminCategoriesView({
     });
   }
 
-  function reorderToward(targetId: string): void {
-    if (!draggingId || isFiltering || draggingId === targetId) return;
+  function reorderToward(target: AdminCategoryListItem): void {
+    if (!draggingId || isFiltering || draggingId === target.id) return;
+
+    const dragging = orderedRef.current.find((item) => item.id === draggingId);
+    if (!dragging) return;
+    if ((dragging.parentId ?? null) !== (target.parentId ?? null)) return;
+
+    const parentId = dragging.parentId ?? null;
+    const siblingOrder = siblingIds(parentId);
+    const fromIndex = siblingOrder.indexOf(draggingId);
+    const toIndex = siblingOrder.indexOf(target.id);
+    if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return;
+
+    const nextSiblingOrder = moveItem(siblingOrder, fromIndex, toIndex);
     setOrdered((current) => {
-      const fromIndex = current.findIndex(
-        (category) => category.id === draggingId,
-      );
-      const toIndex = current.findIndex((category) => category.id === targetId);
-      if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return current;
-      const next = moveItem(current, fromIndex, toIndex);
+      const next = current.map((item) => {
+        if ((item.parentId ?? null) !== parentId) return item;
+        const sortOrder = nextSiblingOrder.indexOf(item.id) + 1;
+        return sortOrder > 0 ? { ...item, sortOrder } : item;
+      });
       orderedRef.current = next;
       return next;
     });
@@ -198,7 +318,7 @@ export function AdminCategoriesView({
       {error ? <p className="mb-3 text-sm text-red-700">{error}</p> : null}
 
       <Card className={ADMIN_TABLE_CARD}>
-        {visible.length === 0 ? (
+        {visibleRows.length === 0 ? (
           <p className={`${ADMIN_TABLE_STATE_INSET} text-sm text-gray-600`}>
             {categories.length === 0
               ? t.categories.empty
@@ -209,32 +329,39 @@ export function AdminCategoriesView({
             <table className={ADMIN_TABLE}>
               <thead className={ADMIN_TABLE_THEAD}>
                 <tr>
-                  <th className={`${ADMIN_TABLE_TH} w-8`} aria-label={t.categories.aria.reorder} />
+                  <th
+                    className={`${ADMIN_TABLE_TH} w-8`}
+                    aria-label={t.categories.aria.reorder}
+                  />
                   <th className={ADMIN_TABLE_TH}>{t.categories.columns.image}</th>
                   <th className={ADMIN_TABLE_TH}>{t.categories.columns.title}</th>
                   <th className={ADMIN_TABLE_TH}>{t.categories.columns.category}</th>
-                  <th className={ADMIN_TABLE_TH_CENTER}>{t.categories.columns.actions}</th>
+                  <th className={ADMIN_TABLE_TH_CENTER}>
+                    {t.categories.columns.actions}
+                  </th>
                 </tr>
               </thead>
               <tbody className={ADMIN_TABLE_TBODY}>
-                {visible.map((category) => {
+                {visibleRows.map(({ category, depth, childCount }) => {
                   const isDragging = draggingId === category.id;
+                  const isExpanded = expandedIds.has(category.id);
+                  const isRoot = depth === 0;
 
                   return (
                     <tr
                       key={category.id}
                       className={`${ADMIN_TABLE_ROW} ${
                         isDragging ? "bg-gray-50 opacity-50 shadow-sm" : ""
-                      }`}
+                      } ${!isRoot ? "bg-gray-50/60" : ""}`}
                       onDragOver={(event) => {
                         if (isFiltering || !draggingId) return;
                         event.preventDefault();
                         event.dataTransfer.dropEffect = "move";
-                        reorderToward(category.id);
+                        reorderToward(category);
                       }}
                       onDrop={(event) => {
                         event.preventDefault();
-                        persistCurrentOrder();
+                        persistCurrentOrder(category.parentId ?? null);
                         setDraggingId(null);
                       }}
                     >
@@ -258,7 +385,7 @@ export function AdminCategoriesView({
                             setDraggingId(category.id);
                           }}
                           onDragEnd={() => {
-                            persistCurrentOrder();
+                            persistCurrentOrder(category.parentId ?? null);
                             setDraggingId(null);
                           }}
                           className="inline-flex cursor-grab touch-none text-gray-400 active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
@@ -270,6 +397,8 @@ export function AdminCategoriesView({
                       <td className={ADMIN_TABLE_TD}>
                         <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded border border-dashed border-gray-300 bg-gray-50">
                           {category.imageUrl ? (
+                            // Category image hosts vary; native img avoids next/image allowlists.
+                            // eslint-disable-next-line @next/next/no-img-element
                             <img
                               src={category.imageUrl}
                               alt=""
@@ -281,9 +410,45 @@ export function AdminCategoriesView({
                         </div>
                       </td>
                       <td className={ADMIN_TABLE_TD}>
-                        <p className="font-medium text-gray-900">
-                          {category.title}
-                        </p>
+                        <div
+                          className={`flex min-w-0 items-center gap-2 ${
+                            !isRoot ? "pl-6" : ""
+                          }`}
+                        >
+                          {isRoot && childCount > 0 ? (
+                            <button
+                              type="button"
+                              onClick={() => toggleExpanded(category.id)}
+                              className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-gray-500 hover:bg-gray-100 hover:text-gray-900"
+                              aria-expanded={isExpanded || isFiltering}
+                              aria-label={t.categories.aria.subcategories.replace(
+                                "{count}",
+                                String(childCount),
+                              )}
+                            >
+                              {isExpanded || isFiltering ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                            </button>
+                          ) : (
+                            <span className="inline-block w-7 shrink-0" aria-hidden />
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-medium text-gray-900">
+                              {category.title}
+                            </p>
+                            {isRoot && childCount > 0 ? (
+                              <p className="text-xs text-gray-500">
+                                {t.categories.aria.subcategories.replace(
+                                  "{count}",
+                                  String(childCount),
+                                )}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
                       </td>
                       <td className={ADMIN_TABLE_TD}>
                         <span className="text-sm text-gray-500">
@@ -314,14 +479,6 @@ export function AdminCategoriesView({
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
-                          {category.childCount > 0 ? (
-                            <span
-                              className="ml-1 text-gray-400"
-                              aria-label={t.categories.aria.subcategories.replace("{count}", String(category.childCount))}
-                            >
-                              <ChevronRight className="h-4 w-4" />
-                            </span>
-                          ) : null}
                         </div>
                       </td>
                     </tr>
@@ -349,7 +506,11 @@ export function AdminCategoriesView({
         title={t.common.delete}
         description={
           pendingDelete
-            ? deleteConfirmDescription(t.common.entity.category, pendingDelete.title, t.common.confirmDelete)
+            ? deleteConfirmDescription(
+                t.common.entity.category,
+                pendingDelete.title,
+                t.common.confirmDelete,
+              )
             : ""
         }
         confirmLabel={t.common.delete}
