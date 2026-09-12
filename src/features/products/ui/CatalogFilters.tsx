@@ -2,7 +2,13 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
+import {
+  useMemo,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
 import type { CatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
@@ -56,6 +62,43 @@ function categoryOptionClass(active: boolean): string {
       ? "bg-black font-bold text-white"
       : "font-normal text-black hover:bg-black/5",
   ].join(" ");
+}
+
+function sortCategories(
+  items: CatalogCategoryOption[],
+): CatalogCategoryOption[] {
+  return [...items].sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    return a.title.localeCompare(b.title);
+  });
+}
+
+type CategoryTreeNode = {
+  category: CatalogCategoryOption;
+  children: CatalogCategoryOption[];
+  totalCount: number;
+};
+
+function buildCategoryTree(
+  categories: CatalogCategoryOption[],
+): CategoryTreeNode[] {
+  const roots = sortCategories(categories.filter((item) => !item.parentId));
+  const childrenByParent = new Map<string, CatalogCategoryOption[]>();
+
+  for (const item of categories) {
+    if (!item.parentId) continue;
+    const bucket = childrenByParent.get(item.parentId) ?? [];
+    bucket.push(item);
+    childrenByParent.set(item.parentId, bucket);
+  }
+
+  return roots.map((root) => {
+    const children = sortCategories(childrenByParent.get(root.id) ?? []);
+    const totalCount =
+      root.productCount +
+      children.reduce((sum, child) => sum + child.productCount, 0);
+    return { category: root, children, totalCount };
+  });
 }
 
 function toggleLocal(list: string[], id: string): string[] {
@@ -119,6 +162,9 @@ export function CatalogFilters({
   const [isPending, startTransition] = useTransition();
   const [brandExpanded, setBrandExpanded] = useState(false);
   const [categoryExpanded, setCategoryExpanded] = useState(false);
+  const [expandedCategoryIds, setExpandedCategoryIds] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [featureExpanded, setFeatureExpanded] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
@@ -130,15 +176,105 @@ export function CatalogFilters({
     });
   }
 
+  const categoryTree = useMemo(
+    () => buildCategoryTree(categories),
+    [categories],
+  );
+  const previewCategoryNodes = categoryTree.slice(0, CATALOG_CATEGORY_PREVIEW);
+  const extraCategoryNodes = categoryTree.slice(CATALOG_CATEGORY_PREVIEW);
+
   const previewBrands = CATALOG_BRAND_OPTIONS.slice(0, CATALOG_BRAND_PREVIEW);
   const extraBrands = CATALOG_BRAND_OPTIONS.slice(CATALOG_BRAND_PREVIEW);
-  const previewCategories = categories.slice(0, CATALOG_CATEGORY_PREVIEW);
-  const extraCategories = categories.slice(CATALOG_CATEGORY_PREVIEW);
   const previewFeatures = CATALOG_FEATURE_OPTIONS.slice(
     0,
     CATALOG_FEATURE_PREVIEW,
   );
   const extraFeatures = CATALOG_FEATURE_OPTIONS.slice(CATALOG_FEATURE_PREVIEW);
+
+  function toggleCategoryNode(categoryId: string): void {
+    setExpandedCategoryIds((current) => {
+      const next = new Set(current);
+      if (next.has(categoryId)) next.delete(categoryId);
+      else next.add(categoryId);
+      return next;
+    });
+  }
+
+  function renderCategoryNode(node: CategoryTreeNode): ReactNode {
+    const { category, children, totalCount } = node;
+    const active = filters.category === category.slug;
+    const childActive = children.some(
+      (child) => child.slug === filters.category,
+    );
+    const isOpen = expandedCategoryIds.has(category.id) || childActive;
+    const hasChildren = children.length > 0;
+
+    return (
+      <div key={category.id} className="flex flex-col gap-1">
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            className={`${categoryOptionClass(active)} min-w-0 flex-1`}
+            aria-pressed={active}
+            onClick={() => navigate({ category: category.slug })}
+          >
+            <span className="min-w-0 truncate">{category.title}</span>
+            <span
+              className={
+                active
+                  ? "text-[11px] text-white/60"
+                  : "text-[11px] text-[#999]"
+              }
+            >
+              {totalCount}
+            </span>
+          </button>
+          {hasChildren ? (
+            <button
+              type="button"
+              onClick={() => toggleCategoryNode(category.id)}
+              className="inline-flex size-8 shrink-0 items-center justify-center rounded-[10px] text-black/50 transition-colors hover:bg-black/5 hover:text-black"
+              aria-expanded={isOpen}
+              aria-label={category.title}
+            >
+              {isOpen ? (
+                <ChevronDown className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </button>
+          ) : null}
+        </div>
+        {hasChildren && isOpen ? (
+          <div className="ml-3 flex flex-col gap-1 border-l border-black/10 pl-2">
+            {children.map((child) => {
+              const childIsActive = filters.category === child.slug;
+              return (
+                <button
+                  key={child.id}
+                  type="button"
+                  className={categoryOptionClass(childIsActive)}
+                  aria-pressed={childIsActive}
+                  onClick={() => navigate({ category: child.slug })}
+                >
+                  <span className="min-w-0 truncate">{child.title}</span>
+                  <span
+                    className={
+                      childIsActive
+                        ? "text-[11px] text-white/60"
+                        : "text-[11px] text-[#999]"
+                    }
+                  >
+                    {child.productCount}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        ) : null}
+      </div>
+    );
+  }
 
   return (
     <aside
@@ -276,61 +412,16 @@ export function CatalogFilters({
               {totalCount}
             </span>
           </button>
-          {previewCategories.map((category) => {
-            const active = filters.category === category.slug;
-            return (
-              <button
-                key={category.slug}
-                type="button"
-                className={categoryOptionClass(active)}
-                aria-pressed={active}
-                onClick={() => navigate({ category: category.slug })}
-              >
-                <span>{category.title}</span>
-                <span
-                  className={
-                    active
-                      ? "text-[11px] text-white/60"
-                      : "text-[11px] text-[#999]"
-                  }
-                >
-                  {category.productCount}
-                </span>
-              </button>
-            );
-          })}
-          {extraCategories.length > 0 ? (
+          {previewCategoryNodes.map((node) => renderCategoryNode(node))}
+          {extraCategoryNodes.length > 0 ? (
             <CatalogFilterExpandable expanded={categoryExpanded}>
               <div className="flex flex-col gap-2">
-                {extraCategories.map((category) => {
-                  const active = filters.category === category.slug;
-                  return (
-                    <button
-                      key={category.slug}
-                      type="button"
-                      className={categoryOptionClass(active)}
-                      aria-pressed={active}
-                      tabIndex={categoryExpanded ? 0 : -1}
-                      onClick={() => navigate({ category: category.slug })}
-                    >
-                      <span>{category.title}</span>
-                      <span
-                        className={
-                          active
-                            ? "text-[11px] text-white/60"
-                            : "text-[11px] text-[#999]"
-                        }
-                      >
-                        {category.productCount}
-                      </span>
-                    </button>
-                  );
-                })}
+                {extraCategoryNodes.map((node) => renderCategoryNode(node))}
               </div>
             </CatalogFilterExpandable>
           ) : null}
         </div>
-        {extraCategories.length > 0 ? (
+        {extraCategoryNodes.length > 0 ? (
           <CatalogFilterMoreToggle
             expanded={categoryExpanded}
             moreLabel={copy.moreLabel}

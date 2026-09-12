@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
-import { AppLink } from "@/components/ui/AppLink";
 import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import {
@@ -152,26 +151,7 @@ export default async function ProductsPage({
 
   return (
     <div className="shop-page-root">
-      <nav
-        aria-label="Breadcrumb"
-        className="hidden items-center gap-2 px-6 pt-4 pb-6 text-sm sm:px-10 lg:flex lg:px-12 lg:pb-8"
-      >
-        <AppLink
-          href={`/${rawLocale}`}
-          prefetchPolicy="intent"
-          className="text-[#888] hover:text-black"
-        >
-          {dictionary.catalog.breadcrumbHome}
-        </AppLink>
-        <span className="text-[#bbb]" aria-hidden>
-          /
-        </span>
-        <span className="font-semibold text-black">
-          {dictionary.catalog.breadcrumbShop}
-        </span>
-      </nav>
-
-      <div className="pb-6 lg:pb-14">
+      <div className="pt-4 pb-6 lg:pt-8 lg:pb-14">
         <CatalogCategoryChips
           locale={rawLocale}
           filters={filters}

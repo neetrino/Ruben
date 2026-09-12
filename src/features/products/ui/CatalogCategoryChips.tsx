@@ -27,8 +27,18 @@ function chipIconSrc(index: number): string {
   return icons[index % icons.length] ?? CATALOG_ASSETS.chipAll;
 }
 
+function sortCategories(
+  items: CatalogCategoryOption[],
+): CatalogCategoryOption[] {
+  return [...items].sort((a, b) => {
+    if (a.sortOrder !== b.sortOrder) return a.sortOrder - b.sortOrder;
+    return a.title.localeCompare(b.title);
+  });
+}
+
 /**
  * Horizontal category quick filters matching Figma Shop page chips.
+ * Shows root categories only; a root stays active when one of its children is selected.
  */
 export function CatalogCategoryChips({
   locale,
@@ -36,6 +46,19 @@ export function CatalogCategoryChips({
   categories,
   allLabel,
 }: CatalogCategoryChipsProps) {
+  const roots = sortCategories(
+    categories.filter((category) => !category.parentId),
+  );
+
+  const selected = filters.category
+    ? categories.find((category) => category.slug === filters.category)
+    : undefined;
+  const selectedRootSlug = selected
+    ? selected.parentId
+      ? categories.find((category) => category.id === selected.parentId)?.slug
+      : selected.slug
+    : null;
+
   const allActive = !filters.category;
 
   return (
@@ -62,11 +85,11 @@ export function CatalogCategoryChips({
         {allLabel}
       </AppLink>
 
-      {categories.map((category, index) => {
-        const active = filters.category === category.slug;
+      {roots.map((category, index) => {
+        const active = selectedRootSlug === category.slug;
         return (
           <AppLink
-            key={category.slug}
+            key={category.id}
             href={catalogHref(locale, filters, {
               category: category.slug,
               page: 1,
