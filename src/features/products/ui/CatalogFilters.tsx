@@ -11,6 +11,10 @@ import {
 import { ChevronDown, ChevronRight } from "lucide-react";
 
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
+import {
+  ALL_CATEGORIES_ICON,
+  CategoryIcon,
+} from "@/features/categories/ui/category-icons";
 import type { CatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
@@ -57,7 +61,7 @@ const HEADING =
 
 function categoryOptionClass(active: boolean): string {
   return [
-    "flex w-full items-center justify-between rounded-[12px] px-4 py-2 text-left text-[13px] leading-[19.5px] transition-colors",
+    "flex w-full items-center gap-2 rounded-[12px] px-4 py-2 text-left text-[13px] leading-[19.5px] transition-colors",
     active
       ? "bg-black font-bold text-white"
       : "font-normal text-black hover:bg-black/5",
@@ -218,7 +222,12 @@ export function CatalogFilters({
             aria-pressed={active}
             onClick={() => navigate({ category: category.slug })}
           >
-            <span className="min-w-0 truncate">{category.title}</span>
+            <CategoryIcon
+              slug={category.slug}
+              title={category.title}
+              className="size-4 shrink-0"
+            />
+            <span className="min-w-0 flex-1 truncate">{category.title}</span>
             <span
               className={
                 active
@@ -257,7 +266,12 @@ export function CatalogFilters({
                   aria-pressed={childIsActive}
                   onClick={() => navigate({ category: child.slug })}
                 >
-                  <span className="min-w-0 truncate">{child.title}</span>
+                  <CategoryIcon
+                    slug={child.slug}
+                    title={child.title}
+                    className="size-4 shrink-0"
+                  />
+                  <span className="min-w-0 flex-1 truncate">{child.title}</span>
                   <span
                     className={
                       childIsActive
@@ -401,7 +415,8 @@ export function CatalogFilters({
             aria-pressed={!filters.category}
             onClick={() => navigate({ category: undefined })}
           >
-            <span>{copy.allCategories}</span>
+            <ALL_CATEGORIES_ICON className="size-4 shrink-0" aria-hidden />
+            <span className="min-w-0 flex-1 truncate">{copy.allCategories}</span>
             <span
               className={
                 !filters.category

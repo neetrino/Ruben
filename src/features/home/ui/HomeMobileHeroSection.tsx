@@ -38,6 +38,7 @@ export async function HomeMobileHeroSection({
         .map((category) => ({
           id: category.id,
           title: category.title,
+          slug: category.slug,
           href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
         }))}
       allCategoriesLabel={dictionary.catalog.allChip}

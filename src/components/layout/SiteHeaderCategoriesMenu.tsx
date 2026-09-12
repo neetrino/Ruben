@@ -1,15 +1,17 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, ChevronRight, ImageIcon } from "lucide-react";
+import { ChevronDown, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { IconDropdown } from "@/components/ui/IconDropdown";
+import { getCategoryIcon } from "@/features/categories/ui/category-icons";
 
 export type CategoryNavItem = {
   id: string;
   label: string;
+  slug: string;
   href: string;
   imageUrl: string | null;
   parentId: string | null;
@@ -63,7 +65,17 @@ function buildCategoryTree(
   }));
 }
 
-function CategoryThumb({ imageUrl }: { imageUrl: string | null }) {
+function CategoryThumb({
+  imageUrl,
+  slug,
+  label,
+}: {
+  imageUrl: string | null;
+  slug: string;
+  label: string;
+}) {
+  const FallbackIcon = getCategoryIcon(slug, label);
+
   return (
     <span className={THUMBNAIL_CLASS}>
       {imageUrl ? (
@@ -76,7 +88,7 @@ function CategoryThumb({ imageUrl }: { imageUrl: string | null }) {
           className="size-full object-contain"
         />
       ) : (
-        <ImageIcon className="size-4 text-white/35" aria-hidden />
+        <FallbackIcon className="size-4 text-white/55" aria-hidden />
       )}
     </span>
   );
@@ -136,7 +148,11 @@ export function SiteHeaderCategoriesMenu({
                   prefetchPolicy="intent"
                   className={ITEM_CLASS}
                 >
-                  <CategoryThumb imageUrl={category.imageUrl} />
+                  <CategoryThumb
+                    imageUrl={category.imageUrl}
+                    slug={category.slug}
+                    label={category.label}
+                  />
                   <span className="min-w-0 flex-1 truncate">{category.label}</span>
                 </AppLink>
                 {hasChildren ? (
@@ -176,7 +192,11 @@ export function SiteHeaderCategoriesMenu({
                         prefetchPolicy="intent"
                         className={ITEM_CLASS}
                       >
-                        <CategoryThumb imageUrl={child.imageUrl} />
+                        <CategoryThumb
+                          imageUrl={child.imageUrl}
+                          slug={child.slug}
+                          label={child.label}
+                        />
                         <span className="min-w-0 flex-1 truncate">
                           {child.label}
                         </span>

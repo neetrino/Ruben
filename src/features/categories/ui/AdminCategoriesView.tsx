@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, ChevronRight, GripVertical, ImageIcon, Pencil, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronRight, GripVertical, Pencil, Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -14,6 +14,7 @@ import {
   ADMIN_INPUT,
   ADMIN_PAGE_TITLE,
 } from "@/features/admin/ui/admin-form-classes";
+import { getCategoryIcon } from "@/features/categories/ui/category-icons";
 import {
   ADMIN_TABLE,
   ADMIN_TABLE_CARD,
@@ -346,6 +347,10 @@ export function AdminCategoriesView({
                   const isDragging = draggingId === category.id;
                   const isExpanded = expandedIds.has(category.id);
                   const isRoot = depth === 0;
+                  const FallbackIcon = getCategoryIcon(
+                    category.slug,
+                    category.title,
+                  );
 
                   return (
                     <tr
@@ -405,7 +410,7 @@ export function AdminCategoriesView({
                               className="h-full w-full object-cover"
                             />
                           ) : (
-                            <ImageIcon
+                            <FallbackIcon
                               className="h-5 w-5 text-gray-400"
                               aria-hidden
                             />

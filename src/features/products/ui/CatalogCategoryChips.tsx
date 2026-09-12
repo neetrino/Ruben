@@ -1,10 +1,13 @@
-import Image from "next/image";
+"use client";
 
 import { AppLink } from "@/components/ui/AppLink";
+import {
+  ALL_CATEGORIES_ICON,
+  CategoryIcon,
+} from "@/features/categories/ui/category-icons";
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
-import { CATALOG_ASSETS } from "@/features/products/ui/catalog-assets";
 
 type CatalogCategoryChipsProps = {
   locale: string;
@@ -20,11 +23,6 @@ function chipClass(active: boolean): string {
       ? "bg-[var(--brand)] text-black"
       : "border border-[#1f1f1f] bg-white text-[#1f1f1f] hover:bg-neutral-50",
   ].join(" ");
-}
-
-function chipIconSrc(index: number): string {
-  const icons = CATALOG_ASSETS.chipIcons;
-  return icons[index % icons.length] ?? CATALOG_ASSETS.chipAll;
 }
 
 function sortCategories(
@@ -60,6 +58,7 @@ export function CatalogCategoryChips({
     : null;
 
   const allActive = !filters.category;
+  const AllIcon = ALL_CATEGORIES_ICON;
 
   return (
     <div
@@ -74,18 +73,11 @@ export function CatalogCategoryChips({
         aria-current={allActive ? "page" : undefined}
         role="listitem"
       >
-        <Image
-          src={CATALOG_ASSETS.chipAll}
-          alt=""
-          width={20}
-          height={20}
-          className={`size-5 ${allActive ? "brightness-0" : ""}`}
-          aria-hidden
-        />
+        <AllIcon className="size-5 shrink-0" aria-hidden />
         {allLabel}
       </AppLink>
 
-      {roots.map((category, index) => {
+      {roots.map((category) => {
         const active = selectedRootSlug === category.slug;
         return (
           <AppLink
@@ -99,13 +91,10 @@ export function CatalogCategoryChips({
             aria-current={active ? "page" : undefined}
             role="listitem"
           >
-            <Image
-              src={chipIconSrc(index)}
-              alt=""
-              width={20}
-              height={20}
-              className={`size-5 ${active ? "brightness-0" : ""}`}
-              aria-hidden
+            <CategoryIcon
+              slug={category.slug}
+              title={category.title}
+              className="size-5 shrink-0"
             />
             {category.title}
           </AppLink>
