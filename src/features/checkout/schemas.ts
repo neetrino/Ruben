@@ -37,6 +37,14 @@ export const checkoutSchema = z
         });
       }
     }
+
+    if (value.shippingMethod === "pickup" && !value.line1?.trim()) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["line1"],
+        message: "Pickup store is required.",
+      });
+    }
   });
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;

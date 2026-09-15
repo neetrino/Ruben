@@ -17,8 +17,11 @@
     "address": "Address",
     "city": "City",
     "deliveryLocation": "Delivery location",
-    "selectLocation": "Select location"
+    "selectLocation": "Select location",
+    "pickupLocation": "Branch",
+    "selectPickupLocation": "Select a store"
   },
+  "pickupStoreTitle": "Pickup store",
   "placeholders": {
     "phone": "+374XXXXXXXX",
     "address": "Street, apartment, office, etc.",
@@ -26,7 +29,7 @@
   },
   "shipping": {
     "storePickup": "Store Pickup",
-    "storePickupDescription": "Pick up your order from our store (Free)",
+    "storePickupDescription": "Pick up your order from a branch (Free)",
     "delivery": "Delivery",
     "deliveryDescription": "We will deliver your order to your address",
     "deliveryUnavailable": "Delivery is unavailable — no locations configured",
@@ -37,7 +40,7 @@
   "payment": {
     "cashOnDelivery": "Cash payment",
     "cashOnDeliveryDescription": "Pay cash when you receive your order",
-    "cashPickup": "Cash payment",
+    "cashPickup": "Cash payment on site",
     "card": "Card payment",
     "cardShort": "Card",
     "cardDescription": "Pay securely with your bank card (ArCa, Visa, Mastercard)",

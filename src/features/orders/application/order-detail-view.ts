@@ -77,8 +77,13 @@ export function toAdminOrderDetailView(
   storeName: string,
 ): AdminOrderDetailView {
   const { order, items, payments } = detail;
-  const isPickup = order.deliveryLabelSnapshot === "Store pickup";
+  const isPickup =
+    order.deliveryLabelSnapshot?.startsWith("Store pickup") ?? false;
   const latestPayment = payments[0] ?? null;
+  const pickupBranch =
+    isPickup && order.shippingAddress.line1.trim()
+      ? order.shippingAddress.line1.trim()
+      : storeName;
 
   return {
     orderNumber: order.orderNumber,
@@ -95,7 +100,7 @@ export function toAdminOrderDetailView(
     deliveryLabel: order.deliveryLabelSnapshot,
     couponCode: order.promotionCodeSnapshot,
     isPickup,
-    storeName,
+    storeName: pickupBranch,
     shippingMethod: isPickup
       ? "pickup"
       : (order.deliveryLabelSnapshot ?? "delivery"),

@@ -11,6 +11,7 @@ import { resolveProductPrices } from "@/features/promotions/application/resolve-
 import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { pickupBranchOptions } from "@/lib/store/branches";
 
 const CheckoutForm = dynamic(
   () =>
@@ -80,6 +81,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         contactInformation: copy.contactInformation,
         shippingMethod: copy.shippingMethod,
         shippingAddress: copy.shippingAddress,
+        pickupStoreTitle: copy.pickupStoreTitle,
         paymentMethod: copy.paymentMethod,
         orderSummary: copy.orderSummary,
         firstName: copy.form.firstName,
@@ -90,6 +92,8 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         address: copy.form.address,
         deliveryLocation: copy.form.deliveryLocation,
         selectLocation: copy.form.selectLocation,
+        pickupLocation: copy.form.pickupLocation,
+        selectPickupLocation: copy.form.selectPickupLocation,
         phonePlaceholder: copy.placeholders.phone,
         cityPlaceholder: copy.placeholders.city,
         addressPlaceholder: copy.placeholders.address,
@@ -121,6 +125,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         continueShopping: copy.buttons.continueShopping,
         cartEmpty: copy.errors.cartEmpty,
       }}
+      pickupBranches={pickupBranchOptions(dictionary.contact.branches)}
     />
     </Reveal>
   );

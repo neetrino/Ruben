@@ -30,6 +30,7 @@ type CheckoutLabels = {
   contactInformation: string;
   shippingMethod: string;
   shippingAddress: string;
+  pickupStoreTitle: string;
   paymentMethod: string;
   orderSummary: string;
   firstName: string;
@@ -40,6 +41,8 @@ type CheckoutLabels = {
   address: string;
   deliveryLocation: string;
   selectLocation: string;
+  pickupLocation: string;
+  selectPickupLocation: string;
   phonePlaceholder: string;
   cityPlaceholder: string;
   addressPlaceholder: string;
@@ -84,6 +87,7 @@ type CheckoutFormProps = {
   defaultLine1: string;
   subtotalAmount: number;
   deliveryOptions: CheckoutDeliveryOption[];
+  pickupBranches: Array<{ label: string; value: string }>;
   hasItems: boolean;
 };
 
@@ -113,6 +117,7 @@ export function CheckoutForm({
   defaultLine1,
   subtotalAmount,
   deliveryOptions,
+  pickupBranches,
   hasItems,
 }: CheckoutFormProps) {
   const router = useRouter();
@@ -122,6 +127,7 @@ export function CheckoutForm({
     deliveryOptions.length > 0 ? "delivery" : "pickup",
   );
   const [deliveryRuleId, setDeliveryRuleId] = useState(defaultRuleId);
+  const [pickupBranchId, setPickupBranchId] = useState("");
   const [paymentMethod, setPaymentMethod] =
     useState<CheckoutPaymentMethod>("cash_on_delivery");
   const [error, setError] = useState<string | null>(null);
@@ -192,7 +198,9 @@ export function CheckoutForm({
 
   const shippingFormatted =
     shippingMethod === "pickup"
-      ? labels.freePickup
+      ? pickupBranchId
+        ? `${labels.freePickup} · ${pickupBranchId}`
+        : labels.freePickup
       : selectedDelivery
         ? `${formatMoney(shippingAmount)} (${selectedDelivery.label})`
         : labels.selectDeliveryLocation;
@@ -272,7 +280,7 @@ export function CheckoutForm({
         line1:
           shippingMethod === "delivery"
             ? String(data.get("line1") ?? "")
-            : undefined,
+            : pickupBranchId || undefined,
         couponCode: appliedCouponCode ?? undefined,
       });
 
@@ -315,6 +323,9 @@ export function CheckoutForm({
             deliveryOptions={deliveryOptions}
             deliveryRuleId={deliveryRuleId}
             onDeliveryRuleChange={setDeliveryRuleId}
+            pickupBranches={pickupBranches}
+            pickupBranchId={pickupBranchId}
+            onPickupBranchChange={setPickupBranchId}
             paymentMethod={paymentMethod}
             onPaymentMethodChange={setPaymentMethod}
             paymentOptions={paymentOptions}

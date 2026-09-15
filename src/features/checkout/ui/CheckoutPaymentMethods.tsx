@@ -45,6 +45,7 @@ export function CheckoutPaymentMethods({
         {options.map((option) => {
           const selected = value === option.id;
           const isCard = option.iconKind === "card-badges";
+          const isWallet = option.iconKind === "wallet";
           const logoError = logoErrors[option.id] ?? false;
 
           const icons = (
@@ -62,7 +63,7 @@ export function CheckoutPaymentMethods({
             />
           );
 
-          if (isCard) {
+          if (isCard || isWallet) {
             return (
               <label key={option.id} className={checkoutOptionClass(selected)}>
                 <CheckoutRadio
@@ -71,26 +72,13 @@ export function CheckoutPaymentMethods({
                   checked={selected}
                   onChange={() => onChange(option.id)}
                   disabled={disabled}
-                  className="self-center"
+                  className="self-start"
                 />
-
-                <div className="flex w-full min-w-0 flex-1 flex-col items-start gap-1.5 lg:hidden">
+                <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
                   <span className="font-medium text-gray-900">
-                    {option.shortName}
+                    {isCard ? option.name : option.shortName}
                   </span>
                   {icons}
-                </div>
-
-                <div className="hidden min-w-0 flex-1 items-center gap-3 lg:flex lg:gap-4">
-                  <div className="flex shrink-0 items-center">{icons}</div>
-                  <div className="min-w-0">
-                    <div className="font-medium text-gray-900">
-                      {option.name}
-                    </div>
-                    <div className="text-sm text-gray-600">
-                      {option.description}
-                    </div>
-                  </div>
                 </div>
               </label>
             );
@@ -109,32 +97,12 @@ export function CheckoutPaymentMethods({
               <div className="flex min-w-0 flex-1 items-center gap-3 lg:gap-4">
                 <div className="flex shrink-0 items-center">{icons}</div>
                 <div className="min-w-0">
-                  {option.iconKind === "cash" ? (
-                    <>
-                      <div className="font-medium text-gray-900">
-                        {option.name}
-                      </div>
-                      {option.description ? (
-                        <div className="hidden text-sm text-gray-600 lg:block">
-                          {option.description}
-                        </div>
-                      ) : null}
-                    </>
-                  ) : (
-                    <>
-                      <span className="font-medium text-gray-900 lg:hidden">
-                        {option.shortName}
-                      </span>
-                      <div className="hidden lg:block">
-                        <div className="font-medium text-gray-900">
-                          {option.name}
-                        </div>
-                        <div className="text-sm text-gray-600">
-                          {option.description}
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  <div className="font-medium text-gray-900">{option.name}</div>
+                  {option.description ? (
+                    <div className="hidden text-sm text-gray-600 lg:block">
+                      {option.description}
+                    </div>
+                  ) : null}
                 </div>
               </div>
             </label>

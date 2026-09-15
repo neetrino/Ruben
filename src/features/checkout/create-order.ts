@@ -46,6 +46,7 @@ import { normalizePromotionCode } from "@/features/promotions/domain/promotion-r
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getCheckoutRateSnapshot } from "@/lib/fx/service";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
 import { createId } from "@/lib/id";
 import { convertAmount } from "@/lib/money/convert";
 import { defaultCurrency } from "@/lib/money/currency";
@@ -53,6 +54,7 @@ import {
   CURRENCY_COOKIE_NAME,
   parseCurrencyCookie,
 } from "@/lib/money/currency-cookie";
+import { isPickupBranchAddress } from "@/lib/store/branches";
 
 function hashValue(value: string): string {
   return createHash("sha256").update(value).digest("hex");
@@ -155,6 +157,8 @@ export async function createOrderAction(
       }
 
       let delivery: typeof deliveryRules.$inferSelect | null = null;
+      let pickupBranchAddress: string | null = null;
+
       if (input.shippingMethod === "delivery") {
         if (!input.deliveryRuleId) {
           throw new Error("Delivery location is required.");
@@ -176,6 +180,13 @@ export async function createOrderAction(
         }
 
         delivery = matched;
+      } else {
+        const pickupBranches = getDictionary(input.locale).contact.branches;
+        const selected = input.line1?.trim() ?? "";
+        if (!isPickupBranchAddress(pickupBranches, selected)) {
+          throw new Error("Pickup store is required.");
+        }
+        pickupBranchAddress = selected;
       }
 
       const address = {
@@ -190,7 +201,7 @@ export async function createOrderAction(
             : (delivery?.city?.trim() || input.city?.trim() || ""),
         line1:
           input.shippingMethod === "pickup"
-            ? (input.line1?.trim() || "Store pickup")
+            ? (pickupBranchAddress ?? "")
             : (input.line1 ?? ""),
         line2: input.line2,
         postalCode: input.postalCode,
@@ -365,7 +376,7 @@ export async function createOrderAction(
           input.shippingMethod === "delivery" ? (delivery?.id ?? null) : null,
         deliveryLabelSnapshot:
           input.shippingMethod === "pickup"
-            ? "Store pickup"
+            ? `Store pickup · ${pickupBranchAddress}`
             : delivery
               ? deliveryLabel(delivery.countryCode, delivery.city)
               : "Delivery",

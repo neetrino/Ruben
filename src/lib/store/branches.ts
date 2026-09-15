@@ -13,3 +13,25 @@ export function formatBranchAddress(branch: StoreBranch): string {
     ? `${branch.address} (${branch.district})`
     : branch.address;
 }
+
+/** Select options for checkout store pickup (label and value are the formatted address). */
+export function pickupBranchOptions(
+  branches: readonly StoreBranch[],
+): Array<{ label: string; value: string }> {
+  return branches.map((branch) => {
+    const label = formatBranchAddress(branch);
+    return { label, value: label };
+  });
+}
+
+/** Whether `line1` matches a known pickup branch for the given locale list. */
+export function isPickupBranchAddress(
+  branches: readonly StoreBranch[],
+  line1: string,
+): boolean {
+  const normalized = line1.trim();
+  if (!normalized) {
+    return false;
+  }
+  return branches.some((branch) => formatBranchAddress(branch) === normalized);
+}
