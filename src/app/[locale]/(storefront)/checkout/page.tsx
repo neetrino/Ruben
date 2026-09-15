@@ -56,7 +56,8 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
 
   return (
     <Reveal>
-    <CheckoutForm
+      <div className="px-2 sm:px-4 lg:px-6 xl:px-10">
+        <CheckoutForm
       locale={rawLocale}
       productsHref={`/${rawLocale}/products`}
       hasItems={items.length > 0}
@@ -127,6 +128,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
       }}
       pickupBranches={pickupBranchOptions(dictionary.contact.branches)}
     />
+      </div>
     </Reveal>
   );
 }

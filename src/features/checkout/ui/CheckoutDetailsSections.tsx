@@ -18,12 +18,6 @@ const FIELD_CLASS =
 
 const SHIPPING_ICON_CLASS = "mt-0.5 h-6 w-6 shrink-0 text-gray-700";
 
-const BRANCH_LIST_CLASS =
-  "max-h-[13.5rem] divide-y divide-gray-100 overflow-y-auto overscroll-contain rounded-[15px] border border-gray-200 [scrollbar-width:thin] [scrollbar-color:#C4C4C4_transparent] [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#C4C4C4]";
-
-const BRANCH_ROW_CLASS =
-  "flex cursor-pointer items-center px-3 py-2 outline-none transition-colors [-webkit-tap-highlight-color:transparent] hover:bg-gray-50 focus-within:bg-gray-50";
-
 type CheckoutDetailsLabels = {
   contactInformation: string;
   shippingMethod: string;
@@ -200,30 +194,16 @@ export function CheckoutDetailsSections({
         </div>
 
         {shippingMethod === "pickup" ? (
-          <div className="mt-4">
-            <p className="sr-only">{labels.pickupLocation}</p>
-            <div
-              role="radiogroup"
-              aria-label={labels.pickupLocation}
-              className={BRANCH_LIST_CLASS}
-            >
-              {pickupBranches.map((branch) => (
-                <label key={branch.value} className={BRANCH_ROW_CLASS}>
-                  <CheckoutRadio
-                    name="pickupBranchId"
-                    value={branch.value}
-                    checked={pickupBranchId === branch.value}
-                    onChange={() => onPickupBranchChange(branch.value)}
-                    disabled={pending}
-                    className="!mr-2.5"
-                    required
-                  />
-                  <span className="min-w-0 flex-1 truncate text-sm text-gray-900">
-                    {branch.label}
-                  </span>
-                </label>
-              ))}
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <SelectDropdown
+              name="pickupBranchId"
+              ariaLabel={labels.selectPickupLocation}
+              value={pickupBranchId}
+              allLabel={labels.selectPickupLocation}
+              options={pickupBranches}
+              disabled={pending || pickupBranches.length === 0}
+              onValueChange={onPickupBranchChange}
+            />
           </div>
         ) : null}
 

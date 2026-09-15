@@ -98,7 +98,7 @@ export function CheckoutPaymentMethods({
         })}
 
         {onlineOptions.length > 0 ? (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3">
             {onlineOptions.map((option) => {
               const selected = value === option.id;
               const isCard = option.iconKind === "card-badges";

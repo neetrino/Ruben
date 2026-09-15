@@ -111,16 +111,10 @@ export function CheckoutPaymentMethodIcons({
     return (
       <>
         <div className="flex shrink-0 items-center justify-center lg:hidden">
-          <CheckoutCashIcon
-            sizePx={CASH_ICON_SIZE_MOBILE_PX}
-            className="text-black"
-          />
+          <CheckoutCashIcon sizePx={CASH_ICON_SIZE_MOBILE_PX} />
         </div>
         <div className="hidden shrink-0 items-center justify-center lg:flex">
-          <CheckoutCashIcon
-            sizePx={CASH_ICON_SIZE_DESKTOP_PX}
-            className="text-black"
-          />
+          <CheckoutCashIcon sizePx={CASH_ICON_SIZE_DESKTOP_PX} />
         </div>
       </>
     );

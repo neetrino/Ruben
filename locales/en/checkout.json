@@ -19,7 +19,7 @@
     "deliveryLocation": "Delivery location",
     "selectLocation": "Select location",
     "pickupLocation": "Branch",
-    "selectPickupLocation": "Select a store"
+    "selectPickupLocation": "Select a branch"
   },
   "pickupStoreTitle": "Pickup store",
   "placeholders": {

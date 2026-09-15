@@ -19,7 +19,7 @@
     "deliveryLocation": "Место доставки",
     "selectLocation": "Выберите место",
     "pickupLocation": "Филиал",
-    "selectPickupLocation": "Выберите магазин"
+    "selectPickupLocation": "Выберите филиал"
   },
   "pickupStoreTitle": "Магазин самовывоза",
   "placeholders": {
