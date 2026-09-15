@@ -11,9 +11,6 @@ export async function toggleCompareAction(
     return ok(result);
   } catch (error) {
     const code = error instanceof Error ? error.message : "UNKNOWN";
-    if (code === "UNAUTHENTICATED") {
-      return err("UNAUTHENTICATED", "Sign in to compare products.");
-    }
     if (code === "PRODUCT_UNAVAILABLE") {
       return err("PRODUCT_UNAVAILABLE", "Product unavailable.");
     }
@@ -31,11 +28,7 @@ export async function clearCompareAction(): Promise<Result<null>> {
   try {
     await clearCompare();
     return ok(null);
-  } catch (error) {
-    const code = error instanceof Error ? error.message : "UNKNOWN";
-    if (code === "UNAUTHENTICATED") {
-      return err("UNAUTHENTICATED", "Sign in to compare products.");
-    }
+  } catch {
     return err("COMPARE_FAILED", "Unable to clear compare list.");
   }
 }

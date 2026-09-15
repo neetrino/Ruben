@@ -1,5 +1,7 @@
 "use client";
 
+import { Truck, User } from "lucide-react";
+
 import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
@@ -14,10 +16,13 @@ import type { CheckoutDeliveryOption } from "@/features/delivery/application/que
 const FIELD_CLASS =
   "h-11 w-full rounded-[15px] border border-gray-200 px-4 text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 focus:border-gray-300 disabled:bg-gray-50";
 
+const SHIPPING_ICON_CLASS = "mt-0.5 h-6 w-6 shrink-0 text-gray-700";
+
 type CheckoutDetailsLabels = {
   contactInformation: string;
   shippingMethod: string;
   shippingAddress: string;
+  pickupStoreTitle: string;
   paymentMethod: string;
   firstName: string;
   lastName: string;
@@ -27,6 +32,8 @@ type CheckoutDetailsLabels = {
   address: string;
   deliveryLocation: string;
   selectLocation: string;
+  pickupLocation: string;
+  selectPickupLocation: string;
   phonePlaceholder: string;
   cityPlaceholder: string;
   addressPlaceholder: string;
@@ -45,6 +52,9 @@ type CheckoutDetailsSectionsProps = {
   deliveryOptions: CheckoutDeliveryOption[];
   deliveryRuleId: string;
   onDeliveryRuleChange: (ruleId: string) => void;
+  pickupBranches: Array<{ label: string; value: string }>;
+  pickupBranchId: string;
+  onPickupBranchChange: (branchId: string) => void;
   paymentMethod: CheckoutPaymentMethod;
   onPaymentMethodChange: (method: CheckoutPaymentMethod) => void;
   paymentOptions: CheckoutPaymentOption[];
@@ -63,6 +73,9 @@ export function CheckoutDetailsSections({
   deliveryOptions,
   deliveryRuleId,
   onDeliveryRuleChange,
+  pickupBranches,
+  pickupBranchId,
+  onPickupBranchChange,
   paymentMethod,
   onPaymentMethodChange,
   paymentOptions,
@@ -137,7 +150,7 @@ export function CheckoutDetailsSections({
         <h2 className="mb-6 text-xl font-semibold text-gray-900">
           {labels.shippingMethod}
         </h2>
-        <div className="space-y-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <label className={checkoutOptionClass(shippingMethod === "pickup")}>
             <CheckoutRadio
               name="shippingMethod"
@@ -146,10 +159,15 @@ export function CheckoutDetailsSections({
               onChange={() => onShippingMethodChange("pickup")}
               disabled={pending}
             />
-            <div className="flex-1">
-              <div className="font-medium text-gray-900">{labels.storePickup}</div>
-              <div className="text-sm text-gray-600">
-                {labels.storePickupDescription}
+            <div className="flex min-w-0 flex-1 items-start gap-3">
+              <User className={SHIPPING_ICON_CLASS} aria-hidden />
+              <div className="min-w-0">
+                <div className="font-medium text-gray-900">
+                  {labels.storePickup}
+                </div>
+                <div className="text-sm text-gray-600">
+                  {labels.storePickupDescription}
+                </div>
               </div>
             </div>
           </label>
@@ -161,24 +179,36 @@ export function CheckoutDetailsSections({
               onChange={() => onShippingMethodChange("delivery")}
               disabled={pending}
             />
-            <div className="flex-1">
-              <div className="font-medium text-gray-900">{labels.delivery}</div>
-              <div className="text-sm text-gray-600">
-                {deliveryOptions.length === 0
-                  ? labels.deliveryUnavailable
-                  : labels.deliveryDescription}
+            <div className="flex min-w-0 flex-1 items-start gap-3">
+              <Truck className={SHIPPING_ICON_CLASS} aria-hidden />
+              <div className="min-w-0">
+                <div className="font-medium text-gray-900">{labels.delivery}</div>
+                <div className="text-sm text-gray-600">
+                  {deliveryOptions.length === 0
+                    ? labels.deliveryUnavailable
+                    : labels.deliveryDescription}
+                </div>
               </div>
             </div>
           </label>
         </div>
-      </Card>
 
-      {shippingMethod === "delivery" ? (
-        <Card className="rounded-[15px] border-gray-200 p-6 shadow-sm">
-          <h2 className="mb-6 text-xl font-semibold text-gray-900">
-            {labels.shippingAddress}
-          </h2>
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+        {shippingMethod === "pickup" ? (
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <SelectDropdown
+              name="pickupBranchId"
+              ariaLabel={labels.selectPickupLocation}
+              value={pickupBranchId}
+              allLabel={labels.selectPickupLocation}
+              options={pickupBranches}
+              disabled={pending || pickupBranches.length === 0}
+              onValueChange={onPickupBranchChange}
+            />
+          </div>
+        ) : null}
+
+        {shippingMethod === "delivery" ? (
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
             <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
               {labels.deliveryLocation}
               <SelectDropdown
@@ -207,8 +237,8 @@ export function CheckoutDetailsSections({
               />
             </label>
           </div>
-        </Card>
-      ) : null}
+        ) : null}
+      </Card>
 
       <CheckoutPaymentMethods
         title={labels.paymentMethod}

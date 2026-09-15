@@ -49,6 +49,9 @@ export const CHECKOUT_PAYMENT_WALLET_LOGO_SRC =
 export const CHECKOUT_PAYMENT_WALLET_LOGO_SOURCE_WIDTH_PX = 1024;
 export const CHECKOUT_PAYMENT_WALLET_LOGO_SOURCE_HEIGHT_PX = 270;
 
+export const CHECKOUT_PAYMENT_CASH_ICON_SRC =
+  "/assets/payments/checkout/cash.png";
+
 export const CHECKOUT_CARD_PAYMENT_BADGES: CheckoutCardPaymentBadge[] = [
   {
     alt: "Visa",

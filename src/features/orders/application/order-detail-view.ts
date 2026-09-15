@@ -1,11 +1,12 @@
 import "server-only";
 
-import { mediaPublicUrl } from "@/lib/media/public-url";
 import { getStoreIdentity } from "@/features/settings/application/queries";
 import {
   getAdminOrderByNumber,
   type AdminOrderDetail,
 } from "@/features/orders/application/queries";
+import { getPrimaryProductImageUrls } from "@/features/products/application/primary-product-images";
+import { mediaPublicUrl } from "@/lib/media/public-url";
 
 export type AdminOrderDetailItemView = {
   id: string;
@@ -75,10 +76,16 @@ function paymentMethodLabel(method: string): string {
 export function toAdminOrderDetailView(
   detail: AdminOrderDetail,
   storeName: string,
+  fallbackImageUrls: ReadonlyMap<string, string> = new Map(),
 ): AdminOrderDetailView {
   const { order, items, payments } = detail;
-  const isPickup = order.deliveryLabelSnapshot === "Store pickup";
+  const isPickup =
+    order.deliveryLabelSnapshot?.startsWith("Store pickup") ?? false;
   const latestPayment = payments[0] ?? null;
+  const pickupBranch =
+    isPickup && order.shippingAddress.line1.trim()
+      ? order.shippingAddress.line1.trim()
+      : storeName;
 
   return {
     orderNumber: order.orderNumber,
@@ -95,7 +102,7 @@ export function toAdminOrderDetailView(
     deliveryLabel: order.deliveryLabelSnapshot,
     couponCode: order.promotionCodeSnapshot,
     isPickup,
-    storeName,
+    storeName: pickupBranch,
     shippingMethod: isPickup
       ? "pickup"
       : (order.deliveryLabelSnapshot ?? "delivery"),
@@ -107,19 +114,37 @@ export function toAdminOrderDetailView(
       ? paymentMethodLabel(latestPayment.method)
       : "—",
     paymentAmount: latestPayment?.amount ?? order.totalAmount,
-    items: items.map((item) => ({
-      id: item.id,
-      title: item.productTitleSnapshot,
-      sku: item.productSkuSnapshot,
-      imageUrl: item.productImageKeySnapshot
+    items: items.map((item) => {
+      const snapshotUrl = item.productImageKeySnapshot
         ? mediaPublicUrl(item.productImageKeySnapshot)
-        : null,
-      quantity: item.quantity,
-      unitPriceAmount: item.unitBaseAmount,
-      lineTotalAmount: item.lineTotalAmount,
-      currency: item.currency,
-    })),
+        : null;
+      const fallbackUrl = item.productId
+        ? (fallbackImageUrls.get(item.productId) ?? null)
+        : null;
+
+      return {
+        id: item.id,
+        title: item.productTitleSnapshot,
+        sku: item.productSkuSnapshot,
+        imageUrl: snapshotUrl ?? fallbackUrl,
+        quantity: item.quantity,
+        unitPriceAmount: item.unitBaseAmount,
+        lineTotalAmount: item.lineTotalAmount,
+        currency: item.currency,
+      };
+    }),
   };
+}
+
+/** Primary image URLs for line items that have no stored snapshot. */
+export async function getOrderItemFallbackImageUrls(
+  detail: AdminOrderDetail,
+): Promise<Map<string, string>> {
+  const missingImageProductIds = detail.items
+    .filter((item) => !item.productImageKeySnapshot && item.productId)
+    .map((item) => item.productId as string);
+
+  return getPrimaryProductImageUrls(missingImageProductIds);
 }
 
 /** Loads order detail shaped for the admin drawer. */
@@ -131,6 +156,10 @@ export async function getAdminOrderDetailView(
     return null;
   }
 
-  const identity = await getStoreIdentity();
-  return toAdminOrderDetailView(detail, identity.name);
+  const [identity, fallbackImageUrls] = await Promise.all([
+    getStoreIdentity(),
+    getOrderItemFallbackImageUrls(detail),
+  ]);
+
+  return toAdminOrderDetailView(detail, identity.name, fallbackImageUrls);
 }

@@ -18,6 +18,8 @@ type SelectDropdownProps = {
   allLabel?: string;
   options: ReadonlyArray<SelectDropdownOption>;
   className?: string;
+  /** Extra classes for the trigger button. */
+  triggerClassName?: string;
   disabled?: boolean;
   onValueChange: (value: string) => void;
   /** Wait for close animation before calling onValueChange. Default true. */
@@ -31,6 +33,7 @@ export function SelectDropdown({
   allLabel,
   options,
   className = "",
+  triggerClassName = "",
   disabled = false,
   onValueChange,
   deferChange = true,
@@ -112,7 +115,7 @@ export function SelectDropdown({
       <button
         type="button"
         disabled={disabled}
-        className="flex h-11 w-full items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-left text-sm text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50"
+        className={`flex h-11 w-full items-center justify-between gap-3 rounded-2xl border border-gray-200 bg-white px-4 pr-3 text-left text-sm text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 disabled:cursor-not-allowed disabled:opacity-50 ${triggerClassName}`.trim()}
         aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}

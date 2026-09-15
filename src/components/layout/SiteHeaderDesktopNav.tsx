@@ -124,8 +124,8 @@ export function SiteHeaderDesktopNav({
               }}
               className={
                 active
-                  ? "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-[var(--brand-deep)] uppercase transition-colors duration-300"
-                  : "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-white uppercase transition-colors duration-300 hover:text-[var(--brand-deep)]"
+                  ? "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-[var(--brand-deep)] transition-colors duration-300"
+                  : "relative z-10 pb-1.5 text-xs leading-4 tracking-[1.8px] text-white transition-colors duration-300 hover:text-[var(--brand-deep)]"
               }
               aria-current={active ? "page" : undefined}
             >

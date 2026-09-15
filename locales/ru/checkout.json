@@ -17,8 +17,11 @@
     "address": "Адрес",
     "city": "Город",
     "deliveryLocation": "Место доставки",
-    "selectLocation": "Выберите место"
+    "selectLocation": "Выберите место",
+    "pickupLocation": "Филиал",
+    "selectPickupLocation": "Выберите филиал"
   },
+  "pickupStoreTitle": "Магазин самовывоза",
   "placeholders": {
     "phone": "+374XXXXXXXX",
     "address": "Улица, квартира, офис и т.д.",
@@ -26,7 +29,7 @@
   },
   "shipping": {
     "storePickup": "Самовывоз",
-    "storePickupDescription": "Заберите заказ в магазине (Бесплатно)",
+    "storePickupDescription": "Заберите заказ в филиале (Бесплатно)",
     "delivery": "Доставка",
     "deliveryDescription": "Доставим заказ по вашему адресу",
     "deliveryUnavailable": "Доставка недоступна — локации не настроены",
@@ -37,7 +40,7 @@
   "payment": {
     "cashOnDelivery": "Наличными",
     "cashOnDeliveryDescription": "Оплатите наличными при получении заказа",
-    "cashPickup": "Наличная оплата",
+    "cashPickup": "Наличная оплата на месте",
     "card": "Оплата картой",
     "cardShort": "Картой",
     "cardDescription": "Безопасная оплата банковской картой (ArCa, Visa, Mastercard)",

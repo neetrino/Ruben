@@ -1,6 +1,7 @@
 "use server";
 
 import {
+  getOrderItemFallbackImageUrls,
   toAdminOrderDetailView,
   type AdminOrderDetailView,
 } from "@/features/orders/application/order-detail-view";
@@ -34,6 +35,10 @@ export async function getCustomerOrderDetailAction(
     return err("NOT_FOUND", "Order not found.");
   }
 
-  const identity = await getStoreIdentity();
-  return ok(toAdminOrderDetailView(loaded, identity.name));
+  const [identity, fallbackImageUrls] = await Promise.all([
+    getStoreIdentity(),
+    getOrderItemFallbackImageUrls(loaded),
+  ]);
+
+  return ok(toAdminOrderDetailView(loaded, identity.name, fallbackImageUrls));
 }

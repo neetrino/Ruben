@@ -37,10 +37,10 @@ type NavTab = {
   badge?: number;
 };
 
-/** Matches `pl-5` + `size-[52px]` + `gap-3` on the rail. */
+/** Matches horizontal rail padding + `size-[52px]` + `gap-3`. */
 const TAB_PX = 52;
 const GAP_PX = 12;
-const PAD_LEFT_PX = 20;
+const PAD_X_PX = 10;
 
 const ICON_HOME: NavIconSize = { width: 26, height: 26, className: "size-[26px]" };
 const ICON_SHOP: NavIconSize = { width: 24, height: 24, className: "h-5 w-6" };
@@ -57,7 +57,7 @@ function startsWithPath(pathname: string, base: string): boolean {
 }
 
 function yellowOffsetX(activeIndex: number): number {
-  return PAD_LEFT_PX + activeIndex * (TAB_PX + GAP_PX);
+  return PAD_X_PX + activeIndex * (TAB_PX + GAP_PX);
 }
 
 /**
@@ -244,7 +244,7 @@ export function MobileBottomNav({
       aria-label={dictionary.nav.navigation}
       className="mobile-bottom-nav pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center px-[22px] pb-[max(16px,env(safe-area-inset-bottom))] lg:hidden"
     >
-      <div className="pointer-events-auto relative flex max-w-[338px] items-center gap-3 rounded-[60px] bg-[rgba(33,33,33,0.71)] py-2.5 pr-2.5 pl-5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-[10px]">
+      <div className="pointer-events-auto relative flex max-w-[338px] items-center gap-3 rounded-[60px] bg-[rgba(33,33,33,0.71)] px-2.5 py-2.5 shadow-[0_8px_24px_rgba(0,0,0,0.18)] backdrop-blur-[10px]">
         <span
           aria-hidden
           className="pointer-events-none absolute top-2.5 left-0 z-10 size-[52px] rounded-full bg-[var(--brand)] transition-transform duration-500 ease-[cubic-bezier(0.33,1,0.32,1)] motion-reduce:transition-none"
