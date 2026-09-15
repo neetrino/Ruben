@@ -11,6 +11,10 @@ import {
   products,
 } from "@/db/schema";
 import { COMPARE_MAX_PRODUCTS } from "@/features/compare/constants";
+import {
+  peekGuestCompareIds,
+  setGuestCompareIds,
+} from "@/features/compare/guest-compare";
 import type { CompareProduct } from "@/features/compare/types";
 import {
   getActiveProductsByIds,
@@ -20,11 +24,11 @@ import { getCurrentUser } from "@/lib/auth/session";
 import { createId } from "@/lib/id";
 import type { Locale } from "@/lib/i18n/config";
 
-/** Returns compare list item count for the signed-in user (0 for guests). */
+/** Returns compare list item count for the viewer (signed-in or guest). */
 export async function getCompareCount(): Promise<number> {
   const user = await getCurrentUser();
   if (!user) {
-    return 0;
+    return (await peekGuestCompareIds()).length;
   }
 
   const [row] = await getDb()
@@ -43,7 +47,12 @@ export async function getCompareProductIds(
 ): Promise<Set<string>> {
   const user = await getCurrentUser();
   if (!user) {
-    return new Set();
+    const guestIds = await peekGuestCompareIds();
+    if (!productIds || productIds.length === 0) {
+      return new Set(guestIds);
+    }
+    const wanted = new Set(productIds);
+    return new Set(guestIds.filter((id) => wanted.has(id)));
   }
 
   const conditions = [eq(compareItems.userId, user.id)];
@@ -109,29 +118,14 @@ async function loadCategoriesByProductIds(
   return map;
 }
 
-/**
- * Active catalog products on the viewer's compare list
- * (ordered by compare add time, newest first).
- */
-export async function listCompareProducts(
+async function loadCompareProductsByOrderedIds(
   locale: Locale,
+  comparedIds: string[],
 ): Promise<CompareProduct[]> {
-  const user = await getCurrentUser();
-  if (!user) {
+  if (comparedIds.length === 0) {
     return [];
   }
 
-  const links = await getDb()
-    .select({ productId: compareItems.productId })
-    .from(compareItems)
-    .where(eq(compareItems.userId, user.id))
-    .orderBy(desc(compareItems.createdAt));
-
-  if (links.length === 0) {
-    return [];
-  }
-
-  const comparedIds = links.map((row) => row.productId);
   const [active, categoriesByProduct] = await Promise.all([
     getActiveProductsByIds(locale, comparedIds),
     loadCategoriesByProductIds(comparedIds, locale),
@@ -153,17 +147,30 @@ export async function listCompareProducts(
 }
 
 /**
- * Adds or removes a product from the signed-in user's compare list.
- * Guests must sign in first (caller redirects).
+ * Active catalog products on the viewer's compare list
+ * (ordered by compare add time, newest first).
  */
-export async function toggleCompare(productId: string): Promise<{
-  inCompare: boolean;
-}> {
+export async function listCompareProducts(
+  locale: Locale,
+): Promise<CompareProduct[]> {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("UNAUTHENTICATED");
+    return loadCompareProductsByOrderedIds(locale, await peekGuestCompareIds());
   }
 
+  const links = await getDb()
+    .select({ productId: compareItems.productId })
+    .from(compareItems)
+    .where(eq(compareItems.userId, user.id))
+    .orderBy(desc(compareItems.createdAt));
+
+  return loadCompareProductsByOrderedIds(
+    locale,
+    links.map((row) => row.productId),
+  );
+}
+
+async function assertActiveProduct(productId: string): Promise<void> {
   const [product] = await getDb()
     .select({
       id: products.id,
@@ -177,6 +184,42 @@ export async function toggleCompare(productId: string): Promise<{
   if (!product || product.status !== "ACTIVE") {
     throw new Error("PRODUCT_UNAVAILABLE");
   }
+}
+
+async function toggleGuestCompare(productId: string): Promise<{
+  inCompare: boolean;
+}> {
+  await assertActiveProduct(productId);
+
+  const current = await peekGuestCompareIds();
+  if (current.includes(productId)) {
+    await setGuestCompareIds(current.filter((id) => id !== productId));
+    revalidateComparePaths();
+    return { inCompare: false };
+  }
+
+  if (current.length >= COMPARE_MAX_PRODUCTS) {
+    throw new Error("COMPARE_LIMIT");
+  }
+
+  await setGuestCompareIds([productId, ...current]);
+  revalidateComparePaths();
+  return { inCompare: true };
+}
+
+/**
+ * Adds or removes a product from the viewer's compare list
+ * (DB for signed-in users, cookie for guests).
+ */
+export async function toggleCompare(productId: string): Promise<{
+  inCompare: boolean;
+}> {
+  const user = await getCurrentUser();
+  if (!user) {
+    return toggleGuestCompare(productId);
+  }
+
+  await assertActiveProduct(productId);
 
   const [existing] = await getDb()
     .select({ id: compareItems.id })
@@ -215,11 +258,13 @@ export async function toggleCompare(productId: string): Promise<{
   return { inCompare: true };
 }
 
-/** Removes every product from the signed-in user's compare list. */
+/** Removes every product from the viewer's compare list. */
 export async function clearCompare(): Promise<void> {
   const user = await getCurrentUser();
   if (!user) {
-    throw new Error("UNAUTHENTICATED");
+    await setGuestCompareIds([]);
+    revalidateComparePaths();
+    return;
   }
 
   await getDb().delete(compareItems).where(eq(compareItems.userId, user.id));

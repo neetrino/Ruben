@@ -17,7 +17,8 @@ type CompareButtonProps = {
   locale: Locale;
   productId: string;
   initialInCompare: boolean;
-  isSignedIn: boolean;
+  /** @deprecated Compare works for guests; kept for call-site compatibility. */
+  isSignedIn?: boolean;
   label: string;
   limitReachedLabel?: string;
   className?: string;
@@ -27,10 +28,8 @@ type CompareButtonProps = {
 };
 
 export function CompareButton({
-  locale,
   productId,
   initialInCompare,
-  isSignedIn,
   label,
   limitReachedLabel,
   className = "",
@@ -48,10 +47,6 @@ export function CompareButton({
     if (!result.ok) {
       setCompareOverride(productId, !next);
       adjustCompareCountDelta(next ? -1 : 1);
-      if (result.error.code === "UNAUTHENTICATED") {
-        router.push(`/${locale}/login`);
-        return;
-      }
       if (result.error.code === "COMPARE_LIMIT" && limitReachedLabel) {
         window.alert(limitReachedLabel);
       }
@@ -68,14 +63,6 @@ export function CompareButton({
   function handleClick(event: MouseEvent<HTMLButtonElement>): void {
     event.preventDefault();
     event.stopPropagation();
-
-    if (!isSignedIn) {
-      const next = encodeURIComponent(
-        typeof window !== "undefined" ? window.location.pathname : `/${locale}`,
-      );
-      router.push(`/${locale}/login?next=${next}`);
-      return;
-    }
 
     const next = !inCompare;
     setCompareOverride(productId, next);

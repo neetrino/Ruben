@@ -7,7 +7,6 @@ import { COMPARE_MAX_PRODUCTS } from "@/features/compare/constants";
 import { listCompareProducts } from "@/features/compare/queries";
 import { ClearCompareButton } from "@/features/compare/ui/ClearCompareButton";
 import { CompareTable } from "@/features/compare/ui/CompareTable";
-import { getCurrentUser } from "@/lib/auth/session";
 import { isLocale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
 import {
@@ -27,30 +26,10 @@ export default async function ComparePage({ params }: ComparePageProps) {
   }
 
   const dictionary = getDictionary(rawLocale);
-  const [user, currency, products] = await Promise.all([
-    getCurrentUser(),
+  const [currency, products] = await Promise.all([
     getSelectedCurrency(),
     listCompareProducts(rawLocale),
   ]);
-
-  if (!user) {
-    return (
-      <section className="flex flex-col gap-4 pt-6 sm:pt-8 lg:pt-10">
-        <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
-          {dictionary.nav.compare}
-        </h1>
-        <p className="text-[#888]">
-          <Link
-            href={`/${rawLocale}/login?next=${encodeURIComponent(`/${rawLocale}/compare`)}`}
-            className="font-medium text-gray-900 underline underline-offset-2"
-          >
-            {dictionary.header.login}
-          </Link>{" "}
-          — {dictionary.compare.signInPrompt}
-        </p>
-      </section>
-    );
-  }
 
   const formatPrice = await createDisplayPriceFormatter(rawLocale, currency);
   const priced = products.map((product) => {
@@ -101,24 +80,24 @@ export default async function ComparePage({ params }: ComparePageProps) {
         </p>
       ) : (
         <Reveal>
-        <CompareTable
-          locale={rawLocale}
-          items={priced}
-          labels={{
-            product: dictionary.compare.rows.product,
-            price: dictionary.compare.rows.price,
-            compareAt: dictionary.compare.rows.compareAt,
-            discount: dictionary.compare.rows.discount,
-            availability: dictionary.compare.rows.availability,
-            categories: dictionary.compare.rows.categories,
-            description: dictionary.compare.rows.description,
-            inStock: dictionary.product.inStock,
-            outOfStock: dictionary.product.outOfStock,
-            remove: dictionary.compare.remove,
-            addToCart: dictionary.product.addToCart,
-            emptyValue: dictionary.compare.emptyValue,
-          }}
-        />
+          <CompareTable
+            locale={rawLocale}
+            items={priced}
+            labels={{
+              product: dictionary.compare.rows.product,
+              price: dictionary.compare.rows.price,
+              compareAt: dictionary.compare.rows.compareAt,
+              discount: dictionary.compare.rows.discount,
+              availability: dictionary.compare.rows.availability,
+              categories: dictionary.compare.rows.categories,
+              description: dictionary.compare.rows.description,
+              inStock: dictionary.product.inStock,
+              outOfStock: dictionary.product.outOfStock,
+              remove: dictionary.compare.remove,
+              addToCart: dictionary.product.addToCart,
+              emptyValue: dictionary.compare.emptyValue,
+            }}
+          />
         </Reveal>
       )}
     </section>
