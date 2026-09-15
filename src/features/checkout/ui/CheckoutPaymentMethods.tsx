@@ -117,11 +117,11 @@ export function CheckoutPaymentMethods({
                     disabled={disabled}
                     className="self-center"
                   />
-                  <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                    <span className="font-medium text-gray-900">
+                  <div className="flex min-w-0 flex-1 items-center gap-3 lg:gap-4">
+                    <div className="flex shrink-0 items-center">{icons}</div>
+                    <span className="min-w-0 truncate font-medium text-gray-900">
                       {isCard ? option.name : option.shortName}
                     </span>
-                    {icons}
                   </div>
                 </label>
               );
