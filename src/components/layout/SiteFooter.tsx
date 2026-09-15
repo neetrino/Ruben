@@ -186,7 +186,7 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
         <div className="flex w-full items-center justify-center pt-8">
           <SiteCopyright
             dictionary={dictionary}
-            className="max-w-full text-center text-sm leading-5 text-white/40"
+            className="max-w-full text-center text-base leading-6 text-white/40"
             linkClassName="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
           />
         </div>
