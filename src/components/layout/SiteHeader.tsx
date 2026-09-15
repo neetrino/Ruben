@@ -41,6 +41,7 @@ async function SiteHeaderMainNavAsync({
     { href: `/${locale}`, label: dictionary.nav.home },
     { href: `/${locale}/products`, label: dictionary.nav.products },
     { href: `/${locale}/brands`, label: dictionary.nav.brands },
+    { href: `/${locale}/about`, label: dictionary.nav.about },
     { href: `/${locale}/contact`, label: dictionary.nav.contact },
   ] as const;
 
