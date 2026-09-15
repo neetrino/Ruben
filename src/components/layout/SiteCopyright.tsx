@@ -36,7 +36,7 @@ export function SiteCopyright({
     : footer.copyrightCompany;
 
   return (
-    <p className={`uppercase ${className}`.trim()}>
+    <p className={`${compact ? "uppercase" : ""} ${className}`.trim()}>
       <span>{prefix} </span>
       <span className={!compact && createdByOnNewLine ? "block" : undefined}>
         <span>{footer.copyrightCreatedBy} </span>
