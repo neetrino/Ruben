@@ -202,7 +202,7 @@ export function CartDrawer({
                             alt={item.title}
                             fill
                             sizes="96px"
-                            className="object-contain p-0.5"
+                            className="object-cover"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
@@ -221,7 +221,7 @@ export function CartDrawer({
                             alt={item.title}
                             fill
                             sizes="96px"
-                            className="object-contain p-0.5"
+                            className="object-cover"
                           />
                         ) : (
                           <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">

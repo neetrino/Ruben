@@ -44,6 +44,7 @@ import {
 } from "@/features/promotions/domain/evaluate-coupon";
 import { normalizePromotionCode } from "@/features/promotions/domain/promotion-rules";
 import { resolveProductPrices } from "@/features/promotions/application/resolve-product-prices";
+import { getPrimaryProductImageKeys } from "@/features/products/application/primary-product-images";
 import { getCurrentUser } from "@/lib/auth/session";
 import { getCheckoutRateSnapshot } from "@/lib/fx/service";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
@@ -212,6 +213,7 @@ export async function createOrderAction(
         productId: string;
         title: string;
         sku: string;
+        imageKey: string | null;
         quantity: number;
         unitAmount: number;
         unitDisplayAmount: number;
@@ -253,6 +255,10 @@ export async function createOrderAction(
         })),
       );
 
+      const primaryImageKeys = await getPrimaryProductImageKeys(
+        lockedProducts.map(({ product }) => product.id),
+      );
+
       for (const { product: locked, quantity } of lockedProducts) {
         const resolved = pricedUnits.get(locked.id);
         const unitAmount = resolved?.unitAmount ?? locked.priceAmount;
@@ -278,6 +284,7 @@ export async function createOrderAction(
             locked.translations.hy?.title ??
             locked.sku,
           sku: locked.sku,
+          imageKey: primaryImageKeys.get(locked.id) ?? null,
           quantity,
           unitAmount,
           unitDisplayAmount,
@@ -400,6 +407,7 @@ export async function createOrderAction(
           productId: line.productId,
           productTitleSnapshot: line.title,
           productSkuSnapshot: line.sku,
+          productImageKeySnapshot: line.imageKey,
           quantity: line.quantity,
           unitBaseAmount: line.unitAmount,
           unitDisplayAmount: line.unitDisplayAmount,
