@@ -102,6 +102,7 @@ export function CheckoutPaymentMethods({
             {onlineOptions.map((option) => {
               const selected = value === option.id;
               const isCard = option.iconKind === "card-badges";
+              const label = isCard ? option.name : option.shortName;
               const icons = renderIcons(option);
 
               return (
@@ -117,11 +118,13 @@ export function CheckoutPaymentMethods({
                     disabled={disabled}
                     className="self-center"
                   />
-                  <div className="flex min-w-0 flex-1 items-center gap-3 lg:gap-4">
-                    <div className="flex shrink-0 items-center">{icons}</div>
-                    <span className="min-w-0 truncate font-medium text-gray-900">
-                      {isCard ? option.name : option.shortName}
+                  <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5 lg:flex-row lg:items-center lg:gap-4">
+                    <span className="font-medium text-gray-900 lg:order-2 lg:min-w-0 lg:truncate">
+                      {label}
                     </span>
+                    <div className="flex shrink-0 items-center lg:order-1">
+                      {icons}
+                    </div>
                   </div>
                 </label>
               );

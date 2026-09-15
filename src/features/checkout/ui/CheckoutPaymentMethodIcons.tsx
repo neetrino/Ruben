@@ -159,7 +159,7 @@ export function CheckoutPaymentMethodIcons({
   return (
     <>
       <div
-        className="flex max-w-full flex-wrap items-center justify-start self-start lg:hidden"
+        className="flex max-w-full flex-nowrap items-center justify-start lg:hidden"
         style={{ gap: CHECKOUT_PAYMENT_CARD_BADGES_GAP_MOBILE_PX }}
       >
         {getCheckoutCardBadges().map((badge) => (
