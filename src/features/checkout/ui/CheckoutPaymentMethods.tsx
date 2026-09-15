@@ -38,51 +38,39 @@ export function CheckoutPaymentMethods({
 }: CheckoutPaymentMethodsProps) {
   const [logoErrors, setLogoErrors] = useState<Record<string, boolean>>({});
 
+  const cashOptions = options.filter((option) => option.iconKind === "cash");
+  const onlineOptions = options.filter(
+    (option) =>
+      option.iconKind === "card-badges" || option.iconKind === "wallet",
+  );
+
+  function renderIcons(option: CheckoutPaymentOption) {
+    const isCard = option.iconKind === "card-badges";
+    const logoError = logoErrors[option.id] ?? false;
+
+    return (
+      <CheckoutPaymentMethodIcons
+        kind={option.iconKind}
+        walletLogoSrc={
+          option.walletLogoSrc ?? CHECKOUT_PAYMENT_WALLET_LOGO_SRC
+        }
+        walletAlt={option.walletAlt ?? option.shortName}
+        walletLogoError={logoError}
+        onWalletLogoError={() =>
+          setLogoErrors((prev) => ({ ...prev, [option.id]: true }))
+        }
+        mobileCardFramed={isCard}
+      />
+    );
+  }
+
   return (
     <section className="rounded-[15px] border border-gray-200 bg-white p-6 shadow-sm">
       <h2 className="mb-6 text-xl font-semibold text-gray-900">{title}</h2>
       <div className="space-y-3">
-        {options.map((option) => {
+        {cashOptions.map((option) => {
           const selected = value === option.id;
-          const isCard = option.iconKind === "card-badges";
-          const isWallet = option.iconKind === "wallet";
-          const logoError = logoErrors[option.id] ?? false;
-
-          const icons = (
-            <CheckoutPaymentMethodIcons
-              kind={option.iconKind}
-              walletLogoSrc={
-                option.walletLogoSrc ?? CHECKOUT_PAYMENT_WALLET_LOGO_SRC
-              }
-              walletAlt={option.walletAlt ?? option.shortName}
-              walletLogoError={logoError}
-              onWalletLogoError={() =>
-                setLogoErrors((prev) => ({ ...prev, [option.id]: true }))
-              }
-              mobileCardFramed={isCard}
-            />
-          );
-
-          if (isCard || isWallet) {
-            return (
-              <label key={option.id} className={checkoutOptionClass(selected)}>
-                <CheckoutRadio
-                  name="paymentMethod"
-                  value={option.id}
-                  checked={selected}
-                  onChange={() => onChange(option.id)}
-                  disabled={disabled}
-                  className="self-start"
-                />
-                <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
-                  <span className="font-medium text-gray-900">
-                    {isCard ? option.name : option.shortName}
-                  </span>
-                  {icons}
-                </div>
-              </label>
-            );
-          }
+          const icons = renderIcons(option);
 
           return (
             <label key={option.id} className={checkoutOptionClass(selected)}>
@@ -108,6 +96,38 @@ export function CheckoutPaymentMethods({
             </label>
           );
         })}
+
+        {onlineOptions.length > 0 ? (
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {onlineOptions.map((option) => {
+              const selected = value === option.id;
+              const isCard = option.iconKind === "card-badges";
+              const icons = renderIcons(option);
+
+              return (
+                <label
+                  key={option.id}
+                  className={checkoutOptionClass(selected)}
+                >
+                  <CheckoutRadio
+                    name="paymentMethod"
+                    value={option.id}
+                    checked={selected}
+                    onChange={() => onChange(option.id)}
+                    disabled={disabled}
+                    className="self-center"
+                  />
+                  <div className="flex min-w-0 flex-1 flex-col items-start gap-1.5">
+                    <span className="font-medium text-gray-900">
+                      {isCard ? option.name : option.shortName}
+                    </span>
+                    {icons}
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+        ) : null}
       </div>
     </section>
   );
