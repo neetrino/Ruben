@@ -31,7 +31,7 @@ type SiteHeaderCategoriesMenuProps = {
 };
 
 const TRIGGER_CLASS =
-  "relative z-10 inline-flex items-center gap-1.5 pb-1.5 text-xs leading-4 tracking-[1.8px] whitespace-nowrap text-white transition-colors duration-300 hover:text-[var(--brand-deep)]";
+  "relative z-10 inline-flex items-center gap-1.5 pb-1.5 text-xs leading-4 tracking-[1.8px] whitespace-nowrap text-white uppercase transition-colors duration-300 hover:text-[var(--brand-deep)]";
 const MENU_CLASS =
   "max-h-[min(70vh,420px)] w-max max-w-[320px] min-w-[240px] overflow-y-auto rounded-2xl border border-white/10 bg-[#212121] p-2 shadow-[0_18px_40px_rgba(0,0,0,0.45)]";
 const ITEM_CLASS =

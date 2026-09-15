@@ -16,7 +16,7 @@ import type { CheckoutDeliveryOption } from "@/features/delivery/application/que
 const FIELD_CLASS =
   "h-11 w-full rounded-[15px] border border-gray-200 px-4 text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 focus:border-gray-300 disabled:bg-gray-50";
 
-const SHIPPING_ICON_CLASS = "mt-0.5 h-6 w-6 shrink-0 text-gray-700";
+const SHIPPING_ICON_CLASS = "h-6 w-6 shrink-0 self-center text-gray-700";
 
 type CheckoutDetailsLabels = {
   contactInformation: string;
@@ -159,7 +159,7 @@ export function CheckoutDetailsSections({
               onChange={() => onShippingMethodChange("pickup")}
               disabled={pending}
             />
-            <div className="flex min-w-0 flex-1 items-start gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <User className={SHIPPING_ICON_CLASS} aria-hidden />
               <div className="min-w-0">
                 <div className="font-medium text-gray-900">
@@ -179,7 +179,7 @@ export function CheckoutDetailsSections({
               onChange={() => onShippingMethodChange("delivery")}
               disabled={pending}
             />
-            <div className="flex min-w-0 flex-1 items-start gap-3">
+            <div className="flex min-w-0 flex-1 items-center gap-3">
               <Truck className={SHIPPING_ICON_CLASS} aria-hidden />
               <div className="min-w-0">
                 <div className="font-medium text-gray-900">{labels.delivery}</div>
