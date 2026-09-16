@@ -119,7 +119,6 @@ export function SiteHeaderCategoriesMenu({
     <IconDropdown
       label={label}
       menuAlign="center"
-      openOnHover
       closeOnScroll
       triggerClassName={TRIGGER_CLASS}
       menuClassName={MENU_CLASS}
