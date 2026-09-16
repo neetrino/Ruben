@@ -1,6 +1,7 @@
 import Image from "next/image";
 
 import { ABOUT_ASSETS } from "@/features/about/content/about-assets";
+import { AboutHeroWave } from "@/features/about/ui/AboutHeroWave";
 
 type AboutHeroPhotoProps = {
   alt: string;
@@ -24,31 +25,7 @@ export function AboutHeroPhoto({ alt }: AboutHeroPhotoProps) {
         />
       </div>
 
-      <div
-        className="pointer-events-none absolute z-[1] flex items-center justify-center"
-        style={{
-          top: "-41.97%",
-          right: "-0.86%",
-          bottom: "-22.17%",
-          left: "3.96%",
-        }}
-        aria-hidden
-      >
-        {/* Figma 249:629 — 1339×505 path rotated −45.38° into the vector box. */}
-        <img
-          src={ABOUT_ASSETS.heroWave}
-          alt=""
-          width={1339}
-          height={505}
-          className="max-w-none origin-center select-none"
-          style={{
-            width: "min(1288px, 105%)",
-            height: "auto",
-            aspectRatio: "1339 / 505",
-            transform: "rotate(-45.38deg)",
-          }}
-        />
-      </div>
+      <AboutHeroWave />
 
       <div
         className="absolute z-[2] overflow-hidden rounded-[56px]"
