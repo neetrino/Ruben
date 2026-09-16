@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { MotionProvider } from "@/components/motion/MotionProvider";
-import { SHARE_IMAGE } from "@/lib/seo/share-image";
-import hyCommon from "@/locales/hy/common.json";
+import {
+  createRootMetadata,
+  resolvePublicAppUrl,
+} from "@/lib/seo/site-metadata";
 
 import "./globals.css";
-
-const defaultDescription = hyCommon.seo.description;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,28 +19,9 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const appUrl =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
-
-export const metadata: Metadata = {
-  metadataBase: new URL(appUrl),
-  title: {
-    default: "Ruben",
-    template: "%s · Ruben",
-  },
-  description: defaultDescription,
-  openGraph: {
-    type: "website",
-    siteName: "Ruben",
-    description: defaultDescription,
-    images: [SHARE_IMAGE],
-  },
-  twitter: {
-    card: "summary_large_image",
-    description: defaultDescription,
-    images: [SHARE_IMAGE.url],
-  },
-};
+export function generateMetadata(): Metadata {
+  return createRootMetadata(resolvePublicAppUrl());
+}
 
 export default function RootLayout({
   children,

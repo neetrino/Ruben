@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
-import { SHARE_IMAGE } from "@/lib/seo/share-image";
+import {
+  createLocaleMetadata,
+  resolvePublicAppUrl,
+} from "@/lib/seo/site-metadata";
 
 type LocaleLayoutProps = {
   children: React.ReactNode;
@@ -25,18 +28,7 @@ export async function generateMetadata({
 
   const description = getDictionary(rawLocale).seo.description;
 
-  return {
-    description,
-    openGraph: {
-      description,
-      images: [SHARE_IMAGE],
-    },
-    twitter: {
-      card: "summary_large_image",
-      description,
-      images: [SHARE_IMAGE.url],
-    },
-  };
+  return createLocaleMetadata(rawLocale, description, resolvePublicAppUrl());
 }
 
 export default async function LocaleLayout({
