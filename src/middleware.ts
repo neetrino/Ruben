@@ -17,8 +17,7 @@ export function middleware(request: NextRequest): NextResponse {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/api") ||
-    pathname.startsWith("/opengraph-image") ||
-    pathname.startsWith("/twitter-image") ||
+    pathname === "/og-image.png" ||
     pathname.startsWith("/icon") ||
     pathname.startsWith("/apple-icon") ||
     pathname.includes(".")
@@ -41,5 +40,7 @@ export function middleware(request: NextRequest): NextResponse {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|og-image.png|assets/).*)",
+  ],
 };
