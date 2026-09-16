@@ -20,8 +20,6 @@ export const ABOUT_H2_LIGHT_CLASS =
 export const ABOUT_BODY_CLASS =
   "text-sm leading-relaxed text-black/75 sm:text-[15px] sm:leading-7";
 
-export const ABOUT_PRIMARY_CTA_CLASS =
-  "inline-flex h-12 min-w-[160px] items-center justify-center rounded-full bg-brand px-7 text-sm font-semibold text-black transition hover:brightness-95";
-
-export const ABOUT_GHOST_CTA_CLASS =
-  "inline-flex h-12 min-w-[160px] items-center justify-center rounded-full border border-white/35 bg-white/5 px-7 text-sm font-semibold text-white backdrop-blur-sm transition hover:border-white/60 hover:bg-white/10";
+/** Compact primary pill for mobile CTA row. */
+export const ABOUT_MOBILE_PRIMARY_CTA_CLASS =
+  "inline-flex h-12 min-w-0 flex-[1.35] basis-0 items-center justify-center whitespace-nowrap rounded-full bg-brand px-3 text-[13px] font-bold text-black uppercase transition hover:brightness-95 sm:px-5 sm:text-sm";

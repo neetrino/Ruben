@@ -4,11 +4,19 @@ const HOME_ARROW_CTA_PATH =
 const HOME_ARROW_CTA_MOTION_CLASS =
   "transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[3px] group-hover:-translate-y-[3px] group-focus-visible:translate-x-[3px] group-focus-visible:-translate-y-[3px] motion-reduce:transition-none motion-reduce:group-hover:translate-x-0 motion-reduce:group-hover:translate-y-0 motion-reduce:group-focus-visible:translate-x-0 motion-reduce:group-focus-visible:translate-y-0";
 
-/** Yellow disc + diagonal arrow for home pill CTAs. Arrow shifts up-right on hover. */
-export function HomeArrowCtaIcon() {
+type HomeArrowCtaIconProps = {
+  /** Yellow disc (default) or black disc for yellow pills. */
+  tone?: "brand" | "dark";
+};
+
+/** Disc + diagonal arrow for home pill CTAs. Arrow shifts up-right on hover. */
+export function HomeArrowCtaIcon({ tone = "brand" }: HomeArrowCtaIconProps) {
+  const discClass = tone === "dark" ? "bg-black" : "bg-[var(--brand)]";
+  const arrowFill = tone === "dark" ? "var(--brand)" : "black";
+
   return (
     <span
-      className="flex size-[41px] shrink-0 items-center justify-center rounded-full bg-[var(--brand)]"
+      className={`flex size-[41px] shrink-0 items-center justify-center rounded-full ${discClass}`}
       aria-hidden
     >
       <svg
@@ -19,7 +27,7 @@ export function HomeArrowCtaIcon() {
       >
         <path
           d={HOME_ARROW_CTA_PATH}
-          fill="black"
+          fill={arrowFill}
           className={HOME_ARROW_CTA_MOTION_CLASS}
         />
       </svg>
