@@ -1,13 +1,92 @@
 {
-  "eyebrow": "Elegant design",
-  "title": "About our online store",
-  "paragraphs": [
-    "We are delighted to welcome you to our online store. Our company strives to provide you with the best shopping experience with a wide range of quality products and excellent service.",
-    "Our mission is to make online shopping simple, convenient and enjoyable. We carefully select each product to ensure high quality and customer satisfaction.",
-    "We are proud to offer not only excellent products but also excellent customer service. Our team is always ready to help you find exactly what you are looking for."
+  "title": "About us",
+  "seoDescription": "Ruben Brothers is a construction and finishing materials company with more than 28 years of a culture of quality and trust.",
+  "heroTitle": "More than 28 years of a culture of quality and trust",
+  "heroLead": "28+ years of experience. International quality.",
+  "storyEyebrow": "Our story",
+  "pathTitle": "Our path",
+  "statValue": "28+",
+  "statLabel": "years of experience",
+  "heroImageAlt": "Ruben Brothers showroom",
+  "intro": [
+    "Ruben Brothers is a company in construction and finishing materials whose history began more than 28 years ago.",
+    "Over the years we have shaped a culture of work in which every choice is based on quality, reliability, and long-term value.",
+    "Today Ruben Brothers presents a wide range of finishing and renovation materials, combining the experience of international manufacturers, contemporary design, and the needs of the Armenian market."
   ],
-  "teamEyebrow": "About us",
-  "teamTitle": "Our team",
-  "teamDescription": "Our team consists of experienced professionals who are dedicated to their work and strive to provide the best service for our customers.",
-  "heroImageAlt": "Our team working together"
+  "assortmentTitle": "A choice that begins with quality",
+  "assortmentIntro": "Our assortment is the result of careful selection. We work with recognized manufacturers on the international market and strive to offer our customers products that meet high standards of quality and contemporary design.",
+  "assortmentLead": "Our range includes:",
+  "assortmentItems": [
+    "wallpapers",
+    "ceramic tiles and porcelain stoneware",
+    "laminate",
+    "sanitary ware",
+    "bathroom furniture",
+    "paints and decorative coatings",
+    "radiators",
+    "gas boilers",
+    "other renovation and finishing solutions"
+  ],
+  "assortmentClosing": "For us, a product is not just a material. It is part of a future interior, and choosing it should be thoughtful and reliable.",
+  "internationalTitle": "International experience in one place",
+  "international": [
+    "For more than two decades we have been working with the international market, importing products from different countries and presenting them to consumers in Armenia.",
+    "Thanks to our partner network and the experience accumulated over the years, we bring together the best solutions from different markets — from European design to modern technologies and practical solutions."
+  ],
+  "showroomsTitle": "A new culture of showrooms",
+  "showrooms": [
+    "Ruben Brothers showrooms are created not only for shopping, but also to fully imagine the choice.",
+    "We strive to create an environment where the customer can see, compare, and choose the right solutions for their space — in one place.",
+    "For us it is important that every visit is simple, comfortable, and professional."
+  ],
+  "valuesTitle": "Our values",
+  "values": [
+    {
+      "id": "quality",
+      "title": "Quality",
+      "description": "We select products based on their quality, the manufacturer's reputation, and long-term value."
+    },
+    {
+      "id": "trust",
+      "title": "Trust",
+      "description": "28 years of history is, first of all, a responsibility to our customers and partners."
+    },
+    {
+      "id": "choice",
+      "title": "Choice",
+      "description": "We build a diverse assortment so that the right solution can be found for different styles, projects, and needs."
+    },
+    {
+      "id": "professional",
+      "title": "Professional approach",
+      "description": "We value not only the sale, but also supporting the customer in making the right choice."
+    },
+    {
+      "id": "growth",
+      "title": "Development",
+      "description": "We continuously follow international market news, design trends, and technological developments to evolve our assortment accordingly."
+    }
+  ],
+  "visionTitle": "Our vision",
+  "vision": [
+    "Our goal is to continue developing Ruben Brothers as a trusted and recognized name in quality finishing and renovation solutions in Armenia.",
+    "We believe that a high-quality space begins with the right materials.",
+    "And our work is to make that choice more quality, reliable, and complete."
+  ],
+  "brandName": "Ruben Brothers",
+  "taglines": [
+    "A choice made for long-term value."
+  ],
+  "catalogCta": "View the catalog",
+  "contactCta": "Contact",
+  "path": [
+    {
+      "label": "International",
+      "text": "Thanks to our partner network and the experience accumulated over the years, we bring together the best solutions from different markets — from European design to modern technologies and practical solutions."
+    },
+    {
+      "label": "Showrooms",
+      "text": "We strive to create an environment where the customer can see, compare, and choose the right solutions for their space — in one place."
+    }
+  ]
 }
