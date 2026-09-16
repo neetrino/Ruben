@@ -1,6 +1,9 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
+import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
 
 type LocaleLayoutProps = {
   children: React.ReactNode;
@@ -9,6 +12,31 @@ type LocaleLayoutProps = {
 
 export function generateStaticParams(): Array<{ locale: Locale }> {
   return locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({
+  params,
+}: LocaleLayoutProps): Promise<Metadata> {
+  const { locale: rawLocale } = await params;
+
+  if (!isLocale(rawLocale)) {
+    return {};
+  }
+
+  const description = getDictionary(rawLocale).seo.description;
+
+  return {
+    description,
+    openGraph: {
+      description,
+      images: [SHARE_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      description,
+      images: [SHARE_IMAGE.url],
+    },
+  };
 }
 
 export default async function LocaleLayout({

@@ -2,8 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
+import hyCommon from "@/locales/hy/common.json";
 
 import "./globals.css";
+
+const defaultDescription = hyCommon.seo.description;
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +28,17 @@ export const metadata: Metadata = {
     default: "Ruben",
     template: "%s · Ruben",
   },
-  description: "Multilingual e-commerce storefront",
+  description: defaultDescription,
   openGraph: {
     type: "website",
     siteName: "Ruben",
+    description: defaultDescription,
+    images: [SHARE_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
+    description: defaultDescription,
+    images: [SHARE_IMAGE.url],
   },
 };
 
