@@ -3,7 +3,6 @@ import {
   ABOUT_BODY_CLASS,
   ABOUT_CARD_CLASS,
   ABOUT_CONTAINER_CLASS,
-  ABOUT_EYEBROW_CLASS,
   ABOUT_H2_CLASS,
 } from "@/features/about/ui/about-styles";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
@@ -30,19 +29,25 @@ export function AboutAssortment({ copy }: AboutAssortmentProps) {
           </Reveal>
 
           <Reveal delay={0.08}>
-            <p className={`${ABOUT_EYEBROW_CLASS} mb-5`}>
-              {copy.assortmentLead}
-            </p>
-            <ul className="flex flex-wrap gap-2.5">
-              {copy.assortmentItems.map((item) => (
-                <li
-                  key={item}
-                  className="rounded-full border border-black/10 bg-[#f7f7f7] px-4 py-2.5 text-sm font-medium text-black"
-                >
-                  {item}
-                </li>
-              ))}
-            </ul>
+            <div className="rounded-[24px] bg-[#1a1a1a] px-5 py-5 sm:rounded-[28px] sm:px-6 sm:py-6">
+              <p className="text-xs font-bold tracking-[0.08em] text-brand uppercase sm:text-sm">
+                {copy.assortmentLead}
+              </p>
+              <ul className="mt-3.5 space-y-2 sm:mt-4 sm:space-y-2.5">
+                {copy.assortmentItems.map((item) => (
+                  <li
+                    key={item}
+                    className="flex items-start gap-2.5 text-sm leading-relaxed text-white/90 sm:leading-6"
+                  >
+                    <span
+                      className="mt-1.5 size-1.5 shrink-0 rounded-full bg-brand"
+                      aria-hidden
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </Reveal>
         </div>
       </div>

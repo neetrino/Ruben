@@ -1,12 +1,11 @@
 import { Reveal } from "@/components/motion/Reveal";
-import { AppLink } from "@/components/ui/AppLink";
 import { AboutParagraphs } from "@/features/about/ui/AboutParagraphs";
 import {
   ABOUT_CARD_CLASS,
   ABOUT_CONTAINER_CLASS,
   ABOUT_H2_LIGHT_CLASS,
-  ABOUT_PRIMARY_CTA_CLASS,
 } from "@/features/about/ui/about-styles";
+import { HomeArrowCta } from "@/features/home/ui/HomeArrowCta";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 
 type AboutVisionProps = {
@@ -43,13 +42,12 @@ export function AboutVision({ copy, catalogHref }: AboutVisionProps) {
               ))}
             </ul>
           </div>
-          <AppLink
+          <HomeArrowCta
             href={catalogHref}
-            prefetchPolicy="intent"
-            className={`${ABOUT_PRIMARY_CTA_CLASS} self-end shrink-0`}
-          >
-            {copy.catalogCta}
-          </AppLink>
+            label={copy.catalogCta}
+            tone="brand"
+            className="self-end shrink-0"
+          />
         </Reveal>
       </div>
     </section>

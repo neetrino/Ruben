@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
-import Image from "next/image";
 
 import { Reveal } from "@/components/motion/Reveal";
-import { HOME_ASSETS } from "@/features/home/config/assets";
+import { HomeHeroWave } from "@/features/home/ui/HomeHeroWave";
 
 type AuthPageShellProps = {
   brandLabel: string;
@@ -54,14 +53,7 @@ export function AuthPageShell({
         className="pointer-events-none absolute inset-0 z-0 hidden overflow-x-clip md:block"
         aria-hidden
       >
-        <Image
-          src={HOME_ASSETS.heroWave}
-          alt=""
-          width={1370}
-          height={1380}
-          priority
-          className="absolute top-[-200px] right-0 h-auto w-[1100px] max-w-none select-none lg:w-[1280px]"
-        />
+        <HomeHeroWave className="absolute top-[-200px] right-0 h-auto w-[1100px] max-w-none select-none lg:w-[1280px]" />
       </div>
     </div>
   );

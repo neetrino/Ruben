@@ -9,6 +9,7 @@ import {
   heroStaggerVariants,
 } from "@/components/motion/motion-config";
 import { HomeArrowCta, HomeArrowCtaIcon } from "@/features/home/ui/HomeArrowCta";
+import { HomeHeroWave } from "@/features/home/ui/HomeHeroWave";
 import { HOME_ASSETS } from "@/features/home/config/assets";
 
 type HomeHeroProps = {
@@ -44,14 +45,7 @@ export function HomeHero({
         className="pointer-events-none absolute inset-x-0 top-0 z-0 mx-auto hidden max-w-[1440px] overflow-x-clip md:block"
         aria-hidden
       >
-        <Image
-          src={HOME_ASSETS.heroWave}
-          alt=""
-          width={1370}
-          height={1380}
-          priority
-          className="absolute top-[-120px] left-[157px] h-auto w-[1369px] max-w-none select-none"
-        />
+        <HomeHeroWave className="absolute top-[-120px] left-[157px] h-auto w-[1369px] max-w-none select-none" />
       </div>
 
       <m.div

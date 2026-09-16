@@ -1,7 +1,8 @@
-import { Award, Handshake, LayoutGrid, ShieldCheck, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 import { Reveal } from "@/components/motion/Reveal";
 import { RevealItem, RevealList } from "@/components/motion/RevealList";
+import { ABOUT_ASSETS } from "@/features/about/content/about-assets";
 import {
   ABOUT_CARD_CLASS,
   ABOUT_CONTAINER_CLASS,
@@ -15,44 +16,35 @@ type AboutValuesProps = {
 
 type AboutValue = Dictionary["about"]["values"][number];
 
-const VALUE_ICON_CLASS = "h-5 w-5 text-brand";
+const VALUE_ICON_SRC = ABOUT_ASSETS.values;
 
-function ValueIcon({ id }: { id: string }) {
-  switch (id) {
-    case "quality":
-      return <Award className={VALUE_ICON_CLASS} aria-hidden />;
-    case "trust":
-      return <ShieldCheck className={VALUE_ICON_CLASS} aria-hidden />;
-    case "choice":
-      return <LayoutGrid className={VALUE_ICON_CLASS} aria-hidden />;
-    case "professional":
-      return <Handshake className={VALUE_ICON_CLASS} aria-hidden />;
-    case "growth":
-      return <Sparkles className={VALUE_ICON_CLASS} aria-hidden />;
-    default:
-      return null;
+function valueIconSrc(id: string): string | null {
+  if (id in VALUE_ICON_SRC) {
+    return VALUE_ICON_SRC[id as keyof typeof VALUE_ICON_SRC];
   }
+  return null;
 }
 
-function AboutValueCard({
-  value,
-  index,
-}: {
-  value: AboutValue;
-  index: number;
-}) {
+function AboutValueCard({ value }: { value: AboutValue }) {
+  const iconSrc = valueIconSrc(value.id);
+
   return (
-    <article className="h-full rounded-[24px] border border-black/[0.06] bg-[#f7f7f7] p-7 sm:rounded-[28px]">
-      <div className="flex items-center justify-between">
-        <span className="flex size-10 items-center justify-center rounded-full bg-brand text-xs font-bold text-black">
-          {String(index + 1).padStart(2, "0")}
-        </span>
-        <ValueIcon id={value.id} />
+    <article className="flex h-full w-full flex-col rounded-[24px] bg-black p-7 sm:rounded-[28px] sm:p-8">
+      <div className="flex items-center justify-between gap-4">
+        <h3 className="min-w-0 text-lg font-bold uppercase text-brand sm:text-xl">
+          {value.title}
+        </h3>
+        {iconSrc ? (
+          <Image
+            src={iconSrc}
+            alt=""
+            width={88}
+            height={88}
+            className="h-[72px] w-[72px] shrink-0 object-contain sm:h-[88px] sm:w-[88px]"
+          />
+        ) : null}
       </div>
-      <h3 className="mt-6 text-lg font-bold text-black sm:text-xl">
-        {value.title}
-      </h3>
-      <p className="mt-3 text-sm leading-relaxed text-black/70 sm:text-[15px] sm:leading-7">
+      <p className="mt-3 text-sm leading-relaxed text-white/85 sm:text-[15px] sm:leading-7">
         {value.description}
       </p>
     </article>
@@ -68,16 +60,22 @@ export function AboutValues({ copy }: AboutValuesProps) {
           <div className="mt-5 h-1 w-14 rounded-full bg-brand" aria-hidden />
         </Reveal>
 
-        <RevealList
-          as="ul"
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-        >
-          {copy.values.map((value, index) => (
-            <RevealItem as="li" key={value.id}>
-              <AboutValueCard value={value} index={index} />
-            </RevealItem>
-          ))}
-        </RevealList>
+        <div className="flex flex-col gap-4">
+          <RevealList className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+            {copy.values.slice(0, 3).map((value) => (
+              <RevealItem key={value.id} className="min-w-0">
+                <AboutValueCard value={value} />
+              </RevealItem>
+            ))}
+          </RevealList>
+          <RevealList className="mx-auto grid w-full grid-cols-1 gap-4 lg:w-2/3 lg:grid-cols-2">
+            {copy.values.slice(3).map((value) => (
+              <RevealItem key={value.id} className="min-w-0">
+                <AboutValueCard value={value} />
+              </RevealItem>
+            ))}
+          </RevealList>
+        </div>
       </div>
     </section>
   );

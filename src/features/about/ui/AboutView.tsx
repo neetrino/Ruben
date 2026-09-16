@@ -21,7 +21,7 @@ export function AboutView({ locale, copy }: AboutViewProps) {
   const contactHref = `/${locale}/contact`;
 
   return (
-    <div className="about-page-root relative z-0 -mx-4 -mt-2 min-h-full bg-white px-2 pt-6 pb-3 sm:-mx-6 sm:px-3 sm:pt-8 sm:pb-4 lg:-mx-8 lg:-mb-10 lg:px-4 lg:pt-10 lg:pb-5">
+    <div className="about-page-root relative z-0 -mx-4 -mt-2 min-h-full bg-white px-4 pt-1 pb-3 sm:-mx-6 sm:px-5 sm:pt-2 sm:pb-4 lg:-mx-8 lg:-mb-10 lg:px-4 lg:pt-2 lg:pb-5">
       <div className="flex flex-col gap-3 sm:gap-4 lg:gap-5">
         <AboutHero
           copy={copy}
