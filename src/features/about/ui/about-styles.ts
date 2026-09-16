@@ -1,16 +1,15 @@
 export const ABOUT_CARD_CLASS =
   "overflow-hidden rounded-[28px] shadow-[0_8px_30px_rgba(17,24,39,0.06),0_2px_8px_rgba(17,24,39,0.04)] ring-1 ring-black/[0.03] sm:rounded-[36px] lg:rounded-[44px]";
 
-export const ABOUT_HERO_MIN_HEIGHT_CLASS = "min-h-[min(80vh,720px)]";
+/** About hero photo frame — between Figma 1267×753 and the shorter crop. */
+export const ABOUT_HERO_FRAME_CLASS =
+  "relative aspect-[1267/680] overflow-hidden rounded-[40px]";
 
 export const ABOUT_CONTAINER_CLASS =
   "mx-auto w-full max-w-7xl px-6 sm:px-10 lg:px-14";
 
 export const ABOUT_EYEBROW_CLASS =
   "text-xs font-bold tracking-[0.28em] text-brand uppercase";
-
-export const ABOUT_H1_CLASS =
-  "text-[clamp(1.5rem,3.5vw,2.35rem)] font-black leading-tight tracking-tight text-white uppercase";
 
 export const ABOUT_H2_CLASS =
   "text-[clamp(1.65rem,3.4vw,2.4rem)] font-black leading-[1.08] tracking-tight text-black uppercase";
