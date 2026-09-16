@@ -8,6 +8,7 @@ import { getEnv } from "@/config/env";
 import { getPublishedBlogPostBySlug } from "@/features/blog/application/queries";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/get-dictionary";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
 import { sanitizeBlogHtml } from "@/lib/sanitize/html";
 
 type BlogPostPageProps = {
@@ -72,6 +73,7 @@ export async function generateMetadata({
       description,
       type: "article",
       url: canonicalPath,
+      images: [SHARE_IMAGE],
     },
   };
 }

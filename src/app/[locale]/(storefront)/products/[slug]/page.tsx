@@ -15,6 +15,7 @@ import {
   createDisplayPriceFormatter,
   getSelectedCurrency,
 } from "@/lib/money/display-price";
+import { SHARE_IMAGE } from "@/lib/seo/share-image";
 
 type ProductPageProps = {
   params: Promise<{ locale: string; slug: string }>;
@@ -89,7 +90,9 @@ export async function generateMetadata({
       description,
       type: "website",
       url: canonicalPath,
-      ...(product.imageUrl ? { images: [{ url: product.imageUrl }] } : {}),
+      images: product.imageUrl
+        ? [{ url: product.imageUrl }]
+        : [SHARE_IMAGE],
     },
   };
 }

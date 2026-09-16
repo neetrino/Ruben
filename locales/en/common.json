@@ -1,5 +1,8 @@
 {
   "brand": "RUBEN",
+  "seo": {
+    "description": "International quality — for your interior."
+  },
   "nav": {
     "home": "Home",
     "products": "Products",

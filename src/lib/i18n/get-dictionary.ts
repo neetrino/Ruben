@@ -73,6 +73,7 @@ type LocaleNamespaces = {
 function buildDictionary(namespaces: LocaleNamespaces) {
   return {
     brand: namespaces.common.brand,
+    seo: namespaces.common.seo,
     nav: namespaces.common.nav,
     header: namespaces.common.header,
     footer: namespaces.common.footer,
