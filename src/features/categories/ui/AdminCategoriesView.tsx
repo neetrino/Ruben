@@ -52,6 +52,8 @@ type FlatRow = {
   childCount: number;
 };
 
+const NESTED_CATEGORY_SHIFT = "translate-x-6";
+
 function moveItem<T>(list: T[], fromIndex: number, toIndex: number): T[] {
   if (
     fromIndex === toIndex ||
@@ -399,7 +401,11 @@ export function AdminCategoriesView({
                           <GripVertical className="h-4 w-4" />
                         </button>
                       </td>
-                      <td className={ADMIN_TABLE_TD}>
+                      <td
+                        className={`${ADMIN_TABLE_TD} ${
+                          !isRoot ? NESTED_CATEGORY_SHIFT : ""
+                        }`}
+                      >
                         <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-gray-100">
                           {category.imageUrl ? (
                             // Category image hosts vary; native img avoids next/image allowlists.
@@ -417,12 +423,12 @@ export function AdminCategoriesView({
                           )}
                         </div>
                       </td>
-                      <td className={ADMIN_TABLE_TD}>
-                        <div
-                          className={`flex min-w-0 items-center gap-2 ${
-                            !isRoot ? "pl-6" : ""
-                          }`}
-                        >
+                      <td
+                        className={`${ADMIN_TABLE_TD} ${
+                          !isRoot ? NESTED_CATEGORY_SHIFT : ""
+                        }`}
+                      >
+                        <div className="flex min-w-0 items-center gap-2">
                           {isRoot && childCount > 0 ? (
                             <button
                               type="button"
@@ -440,9 +446,9 @@ export function AdminCategoriesView({
                                 <ChevronRight className="h-4 w-4" />
                               )}
                             </button>
-                          ) : (
+                          ) : isRoot ? (
                             <span className="inline-block w-7 shrink-0" aria-hidden />
-                          )}
+                          ) : null}
                           <div className="min-w-0">
                             <p className="font-medium text-gray-900">
                               {category.title}
