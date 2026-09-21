@@ -12,7 +12,7 @@ import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
-import { storeMapsSearchHref } from "@/lib/store/maps";
+import { storeMapsFirmHref } from "@/lib/store/maps";
 import { toTelHref } from "@/lib/store/phone";
 
 type StorefrontMobileTopBarProps = {
@@ -44,9 +44,9 @@ export function StorefrontMobileTopBar({
   const phoneHref = primaryBranch?.phone
     ? toTelHref(primaryBranch.phone)
     : null;
-  const mapsHref = primaryBranch
-    ? storeMapsSearchHref(dictionary.brand, primaryBranch.address)
-    : null;
+  // Opens the Ruben firm network on Yandex (all contact branches), not a street.
+  const mapsHref =
+    dictionary.contact.branches.length > 0 ? storeMapsFirmHref() : null;
 
   const navItems = [
     { href: `/${locale}`, label: dictionary.nav.home },
@@ -112,6 +112,8 @@ export function StorefrontMobileTopBar({
                 {mapsHref ? (
                   <a
                     href={mapsHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={dictionary.contact.mapTitle}
                     className="inline-flex size-12 items-center justify-center rounded-full bg-[var(--brand)]"
                   >

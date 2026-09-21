@@ -1,24 +1,39 @@
 const MAP_ZOOM_LEVEL = 17;
-const MAP_CITY = "Yerevan, Armenia";
+const MAP_CITY = "Yerevan";
 
-function mapQuery(address: string): string {
-  return encodeURIComponent(`${address}, ${MAP_CITY}`);
+/**
+ * Firm search label on Yandex Maps. "RUBEN" alone matches улица Рубена;
+ * this query resolves the store network (see contact branches).
+ */
+const STORE_FIRM_MAP_QUERY = "Ruben строительный гипермаркет";
+
+function encodeMapsText(text: string): string {
+  return encodeURIComponent(text);
 }
 
 /** Keyless Google Maps embed for a store address (contact page map). */
 export function storeMapEmbedSrc(address: string): string {
-  return `https://www.google.com/maps?q=${mapQuery(address)}&z=${MAP_ZOOM_LEVEL}&hl=en&output=embed`;
+  return `https://www.google.com/maps?q=${encodeMapsText(
+    `${address}, ${MAP_CITY}`,
+  )}&z=${MAP_ZOOM_LEVEL}&hl=en&output=embed`;
+}
+
+/** All Ruben firm locations on Yandex Maps (mobile header location icon). */
+export function storeMapsFirmHref(): string {
+  return `https://yandex.com/maps/?text=${encodeMapsText(
+    `${STORE_FIRM_MAP_QUERY} ${MAP_CITY}`,
+  )}`;
 }
 
 /**
- * Google Maps search link for a branch (footer, mobile chrome). The store name
- * is part of the query so Maps resolves the business, not just the street.
+ * Yandex Maps link for one Ruben branch (footer). Address comes first so Maps
+ * opens the firm pin, not a street named Ruben.
  */
 export function storeMapsSearchHref(
-  storeName: string,
+  _storeName: string,
   address: string,
 ): string {
-  return `https://www.google.com/maps/search/?api=1&query=${mapQuery(
-    `${storeName} ${address}`,
-  )}`;
+  return `https://yandex.com/maps/?text=${encodeMapsText(
+    `${address}, ${MAP_CITY}, ${STORE_FIRM_MAP_QUERY}`,
+  )}&z=${MAP_ZOOM_LEVEL}`;
 }
