@@ -16,7 +16,7 @@ type ContactMapProps = {
 const MAP_ROOT_MARGIN = "240px 0px";
 
 const TAB_CLASS =
-  "flex min-h-[3.25rem] items-center justify-center gap-2.5 rounded-[15px] border px-4 py-3 text-center text-sm leading-snug font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)]";
+  "flex min-h-[3.25rem] w-full items-center justify-center gap-2.5 rounded-[15px] border px-4 py-3 text-center text-sm leading-snug font-medium transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--brand)] sm:w-[calc(50%-0.375rem)] md:w-[calc((100%-1.5rem)/3)]";
 const TAB_SELECTED_CLASS = "border-brand bg-brand/10 text-gray-900 shadow-sm";
 const TAB_IDLE_CLASS =
   "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:bg-gray-50";
@@ -47,7 +47,7 @@ export function ContactMap({ title, tabsTitle, branches }: ContactMapProps) {
         </p>
 
         <div
-          className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3"
+          className="mt-3 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center"
           role="tablist"
           aria-label={tabsTitle}
         >
