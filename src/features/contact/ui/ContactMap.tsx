@@ -38,7 +38,7 @@ export function ContactMap({ title, tabsTitle, branches }: ContactMapProps) {
 
   return (
     <section
-      className="relative z-10 mt-4 border-t border-gray-100 bg-white px-4 pb-12 [content-visibility:auto] [contain-intrinsic-size:auto_640px] sm:px-6 sm:pb-16 lg:px-8 lg:pb-20"
+      className="relative z-10 mt-4 border-t border-gray-100 bg-white px-6 pb-12 [content-visibility:auto] [contain-intrinsic-size:auto_640px] sm:pb-16 lg:px-8 lg:pb-20"
       aria-label={title}
     >
       <div className="mx-auto max-w-7xl pt-10 sm:pt-12">
