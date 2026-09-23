@@ -48,13 +48,17 @@ export function HomeMobileHero({
 
   return (
     <section className="relative bg-white px-[14px] pt-5 pb-6 tablet:pb-2 lg:hidden">
-      <div className="-mx-[14px] overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {/*
+        Same horizontal inset as the banner (`px-[14px]` on the section) on
+        both sides — no extra end spacer, or the last pill sits inset further
+        than the banner.
+      */}
+      <div className="overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <MotionChipRow
           className="flex w-max gap-3"
           role="list"
           aria-label={allCategoriesLabel}
         >
-          <span className="w-[14px] shrink-0" aria-hidden />
           <MotionChip>
             <AppLink
               href={allHref}
@@ -84,7 +88,6 @@ export function HomeMobileHero({
               </AppLink>
             </MotionChip>
           ))}
-          <span className="w-[14px] shrink-0" aria-hidden />
         </MotionChipRow>
       </div>
 

@@ -13,7 +13,6 @@ import type { Dictionary } from "@/lib/i18n/get-dictionary";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
 import { storeMapsFirmHref } from "@/lib/store/maps";
-import { toTelHref } from "@/lib/store/phone";
 
 type StorefrontMobileTopBarProps = {
   locale: Locale;
@@ -36,14 +35,9 @@ export function StorefrontMobileTopBar({
 }: StorefrontMobileTopBarProps) {
   const pathname = usePathname();
   const homeHref = `/${locale}`;
+  const contactHref = `/${locale}/contact`;
   const isHomePage = pathname === homeHref || pathname === `${homeHref}/`;
 
-  // Same source as the footer and the contact page: the first branch is the
-  // primary one, so the header never drifts from the published store data.
-  const [primaryBranch] = dictionary.contact.branches;
-  const phoneHref = primaryBranch?.phone
-    ? toTelHref(primaryBranch.phone)
-    : null;
   // Opens the Ruben firm network on Yandex (all contact branches), not a street.
   const mapsHref =
     dictionary.contact.branches.length > 0 ? storeMapsFirmHref() : null;
@@ -127,22 +121,21 @@ export function StorefrontMobileTopBar({
                     />
                   </a>
                 ) : null}
-                {phoneHref ? (
-                  <a
-                    href={phoneHref}
-                    aria-label={dictionary.contact.callTitle}
-                    className="block size-12"
-                  >
-                    <Image
-                      src={HOME_MOBILE_ASSETS.phone}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className="size-12"
-                      aria-hidden
-                    />
-                  </a>
-                ) : null}
+                <AppLink
+                  href={contactHref}
+                  prefetchPolicy="intent"
+                  aria-label={dictionary.nav.contact}
+                  className="block size-12"
+                >
+                  <Image
+                    src={HOME_MOBILE_ASSETS.phone}
+                    alt=""
+                    width={48}
+                    height={48}
+                    className="size-12"
+                    aria-hidden
+                  />
+                </AppLink>
                 <MobileNavDrawer
                   locale={locale}
                   currency={currency}
