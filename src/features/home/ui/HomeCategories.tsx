@@ -28,7 +28,9 @@ export function HomeCategories({
   nextLabel,
 }: HomeCategoriesProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const chipScrollerRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<Map<string, HTMLElement>>(new Map());
+  const chipRefs = useRef<Map<string, HTMLElement>>(new Map());
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const [activeArrow, setActiveArrow] = useState<-1 | 1>(1);
   const resolvedActiveId = categories.some((category) => category.id === activeId)
@@ -39,19 +41,42 @@ export function HomeCategories({
     setActiveId(id);
     const scroller = scrollerRef.current;
     const card = cardRefs.current.get(id);
-    if (!scroller || !card) return;
+    if (scroller && card) {
+      const scrollerRect = scroller.getBoundingClientRect();
+      const cardRect = card.getBoundingClientRect();
+      const nextLeft =
+        scroller.scrollLeft +
+        (cardRect.left - scrollerRect.left) -
+        (scrollerRect.width - cardRect.width) / 2;
+      const maxLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
+      scroller.scrollTo({
+        left: Math.min(maxLeft, Math.max(0, nextLeft)),
+        behavior: "smooth",
+      });
+    }
 
-    const scrollerRect = scroller.getBoundingClientRect();
-    const cardRect = card.getBoundingClientRect();
-    const nextLeft =
-      scroller.scrollLeft +
-      (cardRect.left - scrollerRect.left) -
-      (scrollerRect.width - cardRect.width) / 2;
-    const maxLeft = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-    scroller.scrollTo({
-      left: Math.min(maxLeft, Math.max(0, nextLeft)),
-      behavior: "smooth",
-    });
+    // Keep the active top pill fully in view (especially the last one).
+    const chipScroller = chipScrollerRef.current;
+    const chip = chipRefs.current.get(id);
+    if (chipScroller && chip) {
+      const scrollerRect = chipScroller.getBoundingClientRect();
+      const chipRect = chip.getBoundingClientRect();
+      const pad = 24;
+      let nextLeft = chipScroller.scrollLeft;
+      if (chipRect.right > scrollerRect.right - pad) {
+        nextLeft += chipRect.right - scrollerRect.right + pad;
+      } else if (chipRect.left < scrollerRect.left + pad) {
+        nextLeft -= scrollerRect.left + pad - chipRect.left;
+      }
+      const maxLeft = Math.max(
+        0,
+        chipScroller.scrollWidth - chipScroller.clientWidth,
+      );
+      chipScroller.scrollTo({
+        left: Math.min(maxLeft, Math.max(0, nextLeft)),
+        behavior: "smooth",
+      });
+    }
   }, []);
 
   const scrollCarouselBy = useCallback(
@@ -87,29 +112,54 @@ export function HomeCategories({
       id="categories"
       className="relative z-10 scroll-mt-28 overflow-hidden rounded-t-[40px] bg-[#111] pt-12 pb-14 text-white"
     >
-      <MotionChipRow
-        aria-label="Categories"
-        className="mb-12 flex gap-2 overflow-x-auto px-6 py-1 sm:px-10 lg:px-[51px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      {/*
+        Top category pills. End inset must be a flex child inside `w-max` —
+        `padding-right` on the overflow scroller is ignored, so the last pill
+        stays clipped.
+      */}
+      <div
+        ref={chipScrollerRef}
+        className="mb-12 overflow-x-auto py-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {categories.map((category) => {
-          const isActive = category.id === resolvedActiveId;
-          return (
-            <MotionChip key={category.id}>
-              <AppLink
-                href={category.href}
-                prefetchPolicy="intent"
-                className={
-                  isActive
-                    ? "inline-block rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
-                    : "inline-block rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
-                }
-              >
-                {category.title}
-              </AppLink>
-            </MotionChip>
-          );
-        })}
-      </MotionChipRow>
+        <MotionChipRow
+          aria-label="Categories"
+          className="flex w-max gap-2"
+        >
+          <span
+            className="w-6 shrink-0 sm:w-10 lg:w-[51px]"
+            aria-hidden
+          />
+          {categories.map((category) => {
+            const isActive = category.id === resolvedActiveId;
+            return (
+              <MotionChip key={category.id}>
+                <AppLink
+                  ref={(node) => {
+                    if (node) {
+                      chipRefs.current.set(category.id, node);
+                    } else {
+                      chipRefs.current.delete(category.id);
+                    }
+                  }}
+                  href={category.href}
+                  prefetchPolicy="intent"
+                  className={
+                    isActive
+                      ? "inline-block rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
+                      : "inline-block rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
+                  }
+                >
+                  {category.title}
+                </AppLink>
+              </MotionChip>
+            );
+          })}
+          <span
+            className="w-6 shrink-0 sm:w-10 lg:w-[51px]"
+            aria-hidden
+          />
+        </MotionChipRow>
+      </div>
 
       <div
         ref={scrollerRef}

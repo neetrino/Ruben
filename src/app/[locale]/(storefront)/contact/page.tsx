@@ -41,7 +41,7 @@ export default async function ContactPage({ params }: ContactPageProps) {
 
   return (
     <div className="contact-page-root relative z-0 -mx-4 -mt-10 bg-white sm:-mx-6 lg:-mx-8 lg:-mb-10">
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-12 sm:py-16 lg:px-8">
         <Reveal as="header" className="mb-6 max-w-2xl sm:mb-8">
           <h1 className={STOREFRONT_PAGE_TITLE_CLASS}>{copy.title}</h1>
         </Reveal>

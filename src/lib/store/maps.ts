@@ -11,11 +11,15 @@ function encodeMapsText(text: string): string {
   return encodeURIComponent(text);
 }
 
-/** Keyless Google Maps embed for a store address (contact page map). */
+function storeBranchMapQuery(address: string): string {
+  return `${address}, ${MAP_CITY}, ${STORE_FIRM_MAP_QUERY}`;
+}
+
+/** Yandex Maps embed for a store branch (contact page map). */
 export function storeMapEmbedSrc(address: string): string {
-  return `https://www.google.com/maps?q=${encodeMapsText(
-    `${address}, ${MAP_CITY}`,
-  )}&z=${MAP_ZOOM_LEVEL}&hl=en&output=embed`;
+  return `https://yandex.com/map-widget/v1/?text=${encodeMapsText(
+    storeBranchMapQuery(address),
+  )}&z=${MAP_ZOOM_LEVEL}`;
 }
 
 /** All Ruben firm locations on Yandex Maps (mobile header location icon). */
@@ -34,6 +38,6 @@ export function storeMapsSearchHref(
   address: string,
 ): string {
   return `https://yandex.com/maps/?text=${encodeMapsText(
-    `${address}, ${MAP_CITY}, ${STORE_FIRM_MAP_QUERY}`,
+    storeBranchMapQuery(address),
   )}&z=${MAP_ZOOM_LEVEL}`;
 }
