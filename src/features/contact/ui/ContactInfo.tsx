@@ -10,12 +10,15 @@ type ContactInfoProps = {
 
 const EYEBROW_CLASS =
   "text-[11px] font-bold tracking-[0.08em] text-gray-500 uppercase";
-const ROW_CLASS = "flex items-start gap-2.5";
-const ICON_CLASS = "mt-0.5 h-[18px] w-[18px] shrink-0 text-gray-900";
-const VALUE_CLASS =
-  "text-sm leading-snug font-medium text-gray-900 sm:text-base";
-const LINK_CLASS =
-  "text-sm leading-snug font-semibold text-gray-900 transition-colors hover:text-black sm:text-base";
+const ROW_CLASS = "flex items-center gap-2.5";
+const ICON_CLASS = "h-5 w-5 shrink-0 text-gray-900";
+const ROW_MULTILINE_CLASS = "flex items-start gap-2.5";
+const ICON_MULTILINE_CLASS = "mt-0.5 h-5 w-5 shrink-0 text-gray-900";
+const BRANCH_ADDRESS_CLASS =
+  "text-base leading-snug font-medium text-gray-900";
+const CONTACT_LINK_CLASS =
+  "text-base leading-snug font-semibold text-gray-900 transition-colors hover:text-black";
+const HOURS_VALUE_CLASS = "text-base leading-snug font-medium text-gray-900";
 const INFO_BLOCK_HOVER_CLASS =
   "w-full max-w-sm rounded-[12px] px-2 py-2 -mx-2 transition-colors hover:bg-[#fec6041a]";
 
@@ -29,15 +32,20 @@ export function ContactInfo({ copy }: ContactInfoProps) {
         <ul className="mt-4 space-y-4">
           {branches.map((branch, index) => (
             <li key={branch.address} className={`${INFO_BLOCK_HOVER_CLASS} space-y-2`}>
-              <div className={ROW_CLASS}>
-                <MapPin className={ICON_CLASS} aria-hidden />
-                <p className={VALUE_CLASS}>{formatBranchAddress(branch)}</p>
+              <div className={ROW_MULTILINE_CLASS}>
+                <MapPin className={ICON_MULTILINE_CLASS} aria-hidden />
+                <p className={BRANCH_ADDRESS_CLASS}>
+                  {formatBranchAddress(branch)}
+                </p>
               </div>
 
               {branch.phone ? (
                 <div className={ROW_CLASS}>
                   <Phone className={ICON_CLASS} aria-hidden />
-                  <a href={toTelHref(branch.phone)} className={LINK_CLASS}>
+                  <a
+                    href={toTelHref(branch.phone)}
+                    className={CONTACT_LINK_CLASS}
+                  >
                     {branch.phone}
                   </a>
                 </div>
@@ -58,7 +66,7 @@ export function ContactInfo({ copy }: ContactInfoProps) {
         <p className={EYEBROW_CLASS}>{copy.email}</p>
         <div className={`${ROW_CLASS} ${INFO_BLOCK_HOVER_CLASS} mt-3`}>
           <Mail className={ICON_CLASS} aria-hidden />
-          <a href={`mailto:${copy.storeEmail}`} className={LINK_CLASS}>
+          <a href={`mailto:${copy.storeEmail}`} className={CONTACT_LINK_CLASS}>
             {copy.storeEmail}
           </a>
         </div>
@@ -66,9 +74,9 @@ export function ContactInfo({ copy }: ContactInfoProps) {
 
       <div className={INFO_BLOCK_HOVER_CLASS}>
         <p className={EYEBROW_CLASS}>{copy.hoursTitle}</p>
-        <div className={`${ROW_CLASS} mt-3`}>
-          <Clock className={ICON_CLASS} aria-hidden />
-          <div className={VALUE_CLASS}>
+        <div className={`${ROW_MULTILINE_CLASS} mt-3`}>
+          <Clock className={ICON_MULTILINE_CLASS} aria-hidden />
+          <div className={HOURS_VALUE_CLASS}>
             <p>{copy.hoursWeekdays}</p>
             <p>{copy.hoursSunday}</p>
           </div>
