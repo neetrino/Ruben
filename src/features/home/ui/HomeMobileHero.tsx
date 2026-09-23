@@ -48,41 +48,45 @@ export function HomeMobileHero({
 
   return (
     <section className="relative bg-white px-[14px] pt-5 pb-6 tablet:pb-2 lg:hidden">
-      <MotionChipRow
-        className="flex gap-3 overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        role="list"
-        aria-label={allCategoriesLabel}
-      >
-        <MotionChip>
-          <AppLink
-            href={allHref}
-            prefetchPolicy="intent"
-            role="listitem"
-            className="inline-flex h-[41px] items-center gap-2 rounded-full bg-[var(--brand)] px-5 text-sm font-semibold text-[#1f1f1f]"
-          >
-            <AllIcon className="size-5 shrink-0" aria-hidden />
-            {allCategoriesLabel}
-          </AppLink>
-        </MotionChip>
-
-        {categories.map((category) => (
-          <MotionChip key={category.id}>
+      <div className="-mx-[14px] overflow-x-auto py-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <MotionChipRow
+          className="flex w-max gap-3"
+          role="list"
+          aria-label={allCategoriesLabel}
+        >
+          <span className="w-[14px] shrink-0" aria-hidden />
+          <MotionChip>
             <AppLink
-              href={category.href}
+              href={allHref}
               prefetchPolicy="intent"
               role="listitem"
-              className="inline-flex h-[41px] items-center gap-2 rounded-full border border-[rgba(31,31,31,0.26)] bg-white px-5 text-sm text-[#1f1f1f]"
+              className="inline-flex h-[41px] items-center gap-2 rounded-full bg-[var(--brand)] px-5 text-sm font-semibold text-[#1f1f1f]"
             >
-              <CategoryIcon
-                slug={category.slug}
-                title={category.title}
-                className="size-5 shrink-0"
-              />
-              {category.title}
+              <AllIcon className="size-5 shrink-0" aria-hidden />
+              {allCategoriesLabel}
             </AppLink>
           </MotionChip>
-        ))}
-      </MotionChipRow>
+
+          {categories.map((category) => (
+            <MotionChip key={category.id}>
+              <AppLink
+                href={category.href}
+                prefetchPolicy="intent"
+                role="listitem"
+                className="inline-flex h-[41px] items-center gap-2 rounded-full border border-[rgba(31,31,31,0.26)] bg-white px-5 text-sm text-[#1f1f1f]"
+              >
+                <CategoryIcon
+                  slug={category.slug}
+                  title={category.title}
+                  className="size-5 shrink-0"
+                />
+                {category.title}
+              </AppLink>
+            </MotionChip>
+          ))}
+          <span className="w-[14px] shrink-0" aria-hidden />
+        </MotionChipRow>
+      </div>
 
       <Reveal>
         <HomeMobileHeroCarousel
