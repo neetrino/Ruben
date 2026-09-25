@@ -1,7 +1,10 @@
 import Image from "next/image";
 
 import { Reveal } from "@/components/motion/Reveal";
-import { FOOTER_ASSETS } from "@/components/layout/footer-assets";
+import {
+  FOOTER_ASSETS,
+  FOOTER_PAYMENT_METHODS,
+} from "@/components/layout/footer-assets";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { SiteFooterContact } from "@/components/layout/SiteFooterContact";
 import { AppLink } from "@/components/ui/AppLink";
@@ -183,12 +186,36 @@ export function SiteFooter({ dictionary, locale }: SiteFooterProps) {
           </div>
         </div>
 
-        <div className="flex w-full items-center justify-center pt-8">
+        <div className="flex w-full flex-col items-center justify-center pt-8 lg:flex-row lg:justify-between lg:pt-[18px] lg:pb-[18px]">
           <SiteCopyright
             dictionary={dictionary}
-            className="max-w-full text-center text-base leading-6 text-white/40"
+            className="max-w-full text-center text-base leading-6 text-white/40 lg:text-left"
             linkClassName="text-white underline-offset-2 transition-opacity hover:underline hover:opacity-90"
           />
+          <ul
+            className="mt-4 flex shrink-0 items-center gap-6 lg:mt-0"
+            aria-label="Payment methods"
+          >
+            {FOOTER_PAYMENT_METHODS.map((method) => (
+              <li
+                key={method.id}
+                className="flex h-10 items-center justify-center rounded-[15px] bg-white px-4"
+              >
+                {/* Native img — same markup as Kamancha; next/image aspect box
+                    was shrinking logos inside the white pills. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={method.src}
+                  alt={method.label}
+                  width={method.width}
+                  height={method.height}
+                  loading="lazy"
+                  decoding="async"
+                  style={{ width: "auto", height: method.height }}
+                />
+              </li>
+            ))}
+          </ul>
         </div>
       </Reveal>
     </footer>
