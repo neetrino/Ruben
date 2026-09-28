@@ -31,4 +31,6 @@ export const HOME_MOBILE_ASSETS = {
   navBag: "/assets/home/mobile/nav-bag.svg",
   navHeart: "/assets/home/mobile/nav-heart.svg",
   navUser: "/assets/home/mobile/nav-user.svg",
+  /** Figma 269:473 — yellow RUBEN kiosk for the “All” category card. */
+  categoriesAllKiosk: "/assets/home/mobile/categories/all-kiosk.png",
 } as const;

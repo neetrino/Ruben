@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 import { MotionChip, MotionChipRow } from "@/components/motion/MotionChipRow";
 import { Reveal } from "@/components/motion/Reveal";
 import { AppLink } from "@/components/ui/AppLink";
@@ -5,6 +9,7 @@ import {
   ALL_CATEGORIES_ICON,
   CategoryIcon,
 } from "@/features/categories/ui/category-icons";
+import { HomeCategoriesSheet } from "@/features/home/ui/HomeCategoriesSheet";
 import { HomeMobileHeroCarousel } from "@/features/home/ui/HomeMobileHeroCarousel";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import { DEFAULT_CATALOG_FILTERS } from "@/features/products/schemas/catalog-list";
@@ -16,6 +21,7 @@ export type HomeMobileCategoryChip = {
   title: string;
   slug: string;
   href: string;
+  imageUrl: string | null;
 };
 
 type HomeMobileHeroProps = {
@@ -24,6 +30,7 @@ type HomeMobileHeroProps = {
   slides: StorefrontHeroSlide[];
   categories: readonly HomeMobileCategoryChip[];
   allCategoriesLabel: string;
+  closeLabel: string;
   fallbackImageSrc: string;
 };
 
@@ -31,6 +38,7 @@ type HomeMobileHeroProps = {
  * Mobile home hero: category chips + carousel (Figma 171:562).
  * Logo / search chrome lives in {@link StorefrontMobileTopBar}.
  * Shown below `lg`; desktop keeps {@link HomeHero}.
+ * “All” opens the categories bottom sheet (Kamancha panel + Figma 269:473 cards).
  */
 export function HomeMobileHero({
   locale,
@@ -38,8 +46,10 @@ export function HomeMobileHero({
   slides,
   categories,
   allCategoriesLabel,
+  closeLabel,
   fallbackImageSrc,
 }: HomeMobileHeroProps) {
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const allHref = catalogHref(locale, DEFAULT_CATALOG_FILTERS, {
     category: undefined,
     page: 1,
@@ -60,15 +70,17 @@ export function HomeMobileHero({
           aria-label={allCategoriesLabel}
         >
           <MotionChip>
-            <AppLink
-              href={allHref}
-              prefetchPolicy="intent"
-              role="listitem"
+            <button
+              type="button"
+              aria-haspopup="dialog"
+              aria-expanded={categoriesOpen}
+              aria-controls="home-categories-sheet"
+              onClick={() => setCategoriesOpen(true)}
               className="inline-flex h-[41px] items-center gap-2 rounded-full bg-[var(--brand)] px-5 text-sm font-semibold text-[#1f1f1f]"
             >
               <AllIcon className="size-5 shrink-0" aria-hidden />
               {allCategoriesLabel}
-            </AppLink>
+            </button>
           </MotionChip>
 
           {categories.map((category) => (
@@ -98,6 +110,16 @@ export function HomeMobileHero({
           fallbackImageSrc={fallbackImageSrc}
         />
       </Reveal>
+
+      <HomeCategoriesSheet
+        open={categoriesOpen}
+        onClose={() => setCategoriesOpen(false)}
+        categories={categories}
+        allCategoriesLabel={allCategoriesLabel}
+        allHref={allHref}
+        ariaLabel={allCategoriesLabel}
+        closeLabel={closeLabel}
+      />
     </section>
   );
 }
