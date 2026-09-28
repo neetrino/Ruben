@@ -32,8 +32,10 @@ export async function HomeMobileHeroSection({
           title: category.title,
           slug: category.slug,
           href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
+          imageUrl: category.imageUrl,
         }))}
       allCategoriesLabel={dictionary.catalog.allChip}
+      closeLabel={dictionary.header.searchClose}
       fallbackImageSrc={HOME_ASSETS.heroProduct}
     />
   );

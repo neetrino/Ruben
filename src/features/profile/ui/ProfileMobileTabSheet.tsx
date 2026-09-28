@@ -11,6 +11,7 @@ import {
   type TransitionEvent,
 } from "react";
 import { createPortal } from "react-dom";
+import { X } from "lucide-react";
 
 import { useProfileMobileSheetDrag } from "@/features/profile/ui/use-profile-mobile-sheet-drag";
 import { scheduleStateUpdate } from "@/lib/react/schedule-after-paint";
@@ -34,6 +35,12 @@ type ProfileMobileTabSheetProps = {
   onExited?: () => void;
   ariaLabel: string;
   children: ReactNode;
+  /** Yellow close control, half above the panel’s top edge. */
+  closeLabel?: string;
+  /** Gray drag pill. Off for sheets whose content should scroll to the top edge. */
+  showHandle?: boolean;
+  /** Top corner radius. Defaults to `--radius`. */
+  topRadiusPx?: number;
 };
 
 /**
@@ -46,6 +53,9 @@ export function ProfileMobileTabSheet({
   onExited,
   ariaLabel,
   children,
+  closeLabel,
+  showHandle = true,
+  topRadiusPx,
 }: ProfileMobileTabSheetProps) {
   const mounted = useIsClient();
   const [rendered, setRendered] = useState(false);
@@ -275,40 +285,64 @@ export function ProfileMobileTabSheet({
       />
       <div
         ref={panelRef}
-        className={`relative z-[1] flex w-full flex-col overflow-hidden bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.18)] ${panelClass}`}
+        className={`relative z-[1] w-full ${panelClass}`}
         style={{
           height: `${SHEET_HEIGHT_VH}dvh`,
           maxHeight: "100%",
-          borderTopLeftRadius: "var(--radius)",
-          borderTopRightRadius: "var(--radius)",
         }}
-        {...{ [BODY_SCROLL_LOCK_ALLOW]: "" }}
         onClick={(event) => event.stopPropagation()}
         onAnimationEnd={handlePanelAnimationEnd}
         onTransitionEnd={handlePanelTransitionEnd}
         {...panelPointerHandlers}
       >
+        {closeLabel ? (
+          <button
+            type="button"
+            aria-label={closeLabel}
+            onClick={() => onCloseRef.current()}
+            className="absolute top-0 right-3 z-20 flex size-10 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--brand)] text-[#1f1f1f] shadow-[0_4px_16px_rgba(0,0,0,0.18)]"
+          >
+            <X className="size-4" strokeWidth={2.25} aria-hidden />
+          </button>
+        ) : null}
         <div
-          className="relative z-[2] flex h-12 shrink-0 cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing"
-          {...headerPointerHandlers}
+          className="relative z-[1] flex h-full w-full flex-col overflow-hidden bg-white shadow-[0_-12px_40px_rgba(0,0,0,0.18)]"
+          style={{
+            borderTopLeftRadius: topRadiusPx
+              ? `${topRadiusPx}px`
+              : "var(--radius)",
+            borderTopRightRadius: topRadiusPx
+              ? `${topRadiusPx}px`
+              : "var(--radius)",
+          }}
+          {...{ [BODY_SCROLL_LOCK_ALLOW]: "" }}
         >
+          {showHandle ? (
+            <div
+              className="relative z-[2] flex h-12 shrink-0 cursor-grab touch-none select-none items-center justify-center active:cursor-grabbing"
+              {...headerPointerHandlers}
+            >
+              <div
+                className="rounded-full bg-gray-300"
+                style={{ height: 6, width: 56 }}
+                aria-hidden
+              />
+            </div>
+          ) : null}
           <div
-            className="rounded-full bg-gray-300"
-            style={{ height: 6, width: 56 }}
-            aria-hidden
-          />
-        </div>
-        <div
-          ref={scrollAreaRef}
-          className={`profile-mobile-tab-sheet-scroll relative z-[2] min-h-0 flex-1 overscroll-contain px-3 pt-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
-            isDragging || phase === "exit-drag"
-              ? "touch-none overflow-hidden"
-              : "overflow-y-auto"
-          }`}
-          {...scrollAreaPointerHandlers}
-        >
-          <div className="pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
-            {displayChildren}
+            ref={scrollAreaRef}
+            className={`profile-mobile-tab-sheet-scroll relative z-[2] min-h-0 flex-1 overscroll-contain px-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${
+              showHandle ? "pt-1" : "pt-0"
+            } ${
+              isDragging || phase === "exit-drag"
+                ? "touch-none overflow-hidden"
+                : "overflow-y-auto"
+            }`}
+            {...scrollAreaPointerHandlers}
+          >
+            <div className="pb-[calc(2.5rem+env(safe-area-inset-bottom,0px))]">
+              {displayChildren}
+            </div>
           </div>
         </div>
       </div>
