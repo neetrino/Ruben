@@ -36,7 +36,7 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
   const [user, { items }, deliveryOptions] = await Promise.all([
     getCurrentUser(),
     getCartWithItems(),
-    getCheckoutDeliveryOptions(),
+    getCheckoutDeliveryOptions(rawLocale),
   ]);
   const prices = await resolveProductPrices(
     items.map(({ product }) => ({

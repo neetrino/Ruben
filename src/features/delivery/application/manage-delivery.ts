@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 
 import { getDb } from "@/db/client";
 import { deliveryRules } from "@/db/schema";
+import { buildLocaleLabels } from "@/features/delivery/domain/country-translations";
 import {
   deliveryLocationSchema,
   type DeliveryLocationInput,
@@ -20,12 +21,38 @@ function revalidateDelivery(locale: string): void {
   revalidatePath(`/${locale}/cart`);
 }
 
-function normalizeCountry(country: string): string {
-  const trimmed = country.trim();
+/**
+ * Keeps a compact country code for address snapshots: 2-letter ISO when
+ * provided, otherwise uses the English display name.
+ */
+function resolveCountryCode(countryEn: string): string {
+  const trimmed = countryEn.trim();
   if (/^[a-z]{2}$/i.test(trimmed)) {
     return trimmed.toUpperCase();
   }
   return trimmed;
+}
+
+function toLocationValues(data: DeliveryLocationInput) {
+  const countryTranslations = buildLocaleLabels({
+    hy: data.countryHy,
+    en: data.countryEn,
+    ru: data.countryRu,
+  });
+  const cityTranslations = buildLocaleLabels({
+    hy: data.cityHy,
+    en: data.cityEn,
+    ru: data.cityRu,
+  });
+
+  return {
+    countryCode: resolveCountryCode(data.countryEn),
+    countryTranslations,
+    city: data.cityEn.trim(),
+    cityTranslations,
+    priceAmount: data.priceAmount,
+    freeThresholdAmount: data.freeThresholdAmount,
+  };
 }
 
 /** Creates a delivery location for checkout pricing. */
@@ -44,7 +71,7 @@ export async function createDeliveryLocationAction(
     return err("VALIDATION", "Invalid delivery location.");
   }
 
-  const data = parsed.data;
+  const values = toLocationValues(parsed.data);
   const [maxPriority] = await getDb()
     .select({ value: max(deliveryRules.priority) })
     .from(deliveryRules);
@@ -52,10 +79,7 @@ export async function createDeliveryLocationAction(
   const id = createId();
   await getDb().insert(deliveryRules).values({
     id,
-    countryCode: normalizeCountry(data.country),
-    city: data.city.trim(),
-    priceAmount: data.priceAmount,
-    freeThresholdAmount: data.freeThresholdAmount,
+    ...values,
     isActive: true,
     priority: (maxPriority?.value ?? 0) + 1,
   });
@@ -81,7 +105,6 @@ export async function updateDeliveryLocationAction(
     return err("VALIDATION", "Invalid delivery location.");
   }
 
-  const data = parsed.data;
   const [existing] = await getDb()
     .select({ id: deliveryRules.id })
     .from(deliveryRules)
@@ -95,10 +118,7 @@ export async function updateDeliveryLocationAction(
   await getDb()
     .update(deliveryRules)
     .set({
-      countryCode: normalizeCountry(data.country),
-      city: data.city.trim(),
-      priceAmount: data.priceAmount,
-      freeThresholdAmount: data.freeThresholdAmount,
+      ...toLocationValues(parsed.data),
       updatedAt: new Date(),
     })
     .where(eq(deliveryRules.id, id));

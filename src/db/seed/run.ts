@@ -385,7 +385,17 @@ async function seed(): Promise<void> {
     .values({
       id: seedIds.deliveryArmenia,
       countryCode: "AM",
+      countryTranslations: {
+        hy: "Հայաստան",
+        en: "Armenia",
+        ru: "Армения",
+      },
       city: "Yerevan",
+      cityTranslations: {
+        hy: "Երևան",
+        en: "Yerevan",
+        ru: "Ереван",
+      },
       priceAmount: 1500,
       freeThresholdAmount: 50000,
       estimatedDaysMin: 1,
@@ -398,7 +408,17 @@ async function seed(): Promise<void> {
       set: {
         isActive: true,
         countryCode: "AM",
+        countryTranslations: {
+          hy: "Հայաստան",
+          en: "Armenia",
+          ru: "Армения",
+        },
         city: "Yerevan",
+        cityTranslations: {
+          hy: "Երևան",
+          en: "Yerevan",
+          ru: "Ереван",
+        },
         priceAmount: 1500,
         freeThresholdAmount: 50000,
         updatedAt: now,

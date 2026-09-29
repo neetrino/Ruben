@@ -16,7 +16,7 @@ export default async function AdminDeliveryPage({
     notFound();
   }
 
-  const locations = await listAdminDeliveryLocations();
+  const locations = await listAdminDeliveryLocations(locale);
 
   return <AdminDeliveryView locale={locale} locations={locations} />;
 }

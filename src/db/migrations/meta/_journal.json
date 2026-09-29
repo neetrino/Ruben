@@ -50,6 +50,20 @@
       "when": 1789248292150,
       "tag": "0006_melted_tattoo",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1790705573293,
+      "tag": "0007_violet_doctor_octopus",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1790705867899,
+      "tag": "0008_past_mac_gargan",
+      "breakpoints": true
     }
   ]
 }

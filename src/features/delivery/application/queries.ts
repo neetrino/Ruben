@@ -3,14 +3,21 @@ import "server-only";
 import { asc, desc, eq } from "drizzle-orm";
 
 import { getDb } from "@/db/client";
-import { deliveryRules } from "@/db/schema";
+import {
+  deliveryRules,
+  type DeliveryLocaleLabelsJson,
+} from "@/db/schema";
+import { resolveDeliveryLocaleLabel } from "@/features/delivery/domain/country-translations";
 import { createId } from "@/lib/id";
+import { defaultLocale, type Locale } from "@/lib/i18n/config";
 import { logger } from "@/lib/observability/logger";
 
 export type AdminDeliveryLocation = {
   id: string;
   country: string;
+  countryTranslations: DeliveryLocaleLabelsJson;
   city: string;
+  cityTranslations: DeliveryLocaleLabelsJson;
   priceAmount: number;
   freeThresholdAmount: number | null;
   priority: number;
@@ -27,6 +34,16 @@ export type CheckoutDeliveryOption = {
 
 const DEFAULT_DELIVERY_CITY = "Yerevan";
 const DEFAULT_DELIVERY_COUNTRY = "AM";
+const DEFAULT_DELIVERY_COUNTRY_TRANSLATIONS: DeliveryLocaleLabelsJson = {
+  hy: "Հայաստան",
+  en: "Armenia",
+  ru: "Армения",
+};
+const DEFAULT_DELIVERY_CITY_TRANSLATIONS: DeliveryLocaleLabelsJson = {
+  hy: "Երևան",
+  en: "Yerevan",
+  ru: "Ереван",
+};
 const DEFAULT_DELIVERY_PRICE = 1500;
 const DEFAULT_FREE_THRESHOLD = 50000;
 
@@ -38,33 +55,49 @@ function locationLabel(country: string, city: string | null): string {
   return country;
 }
 
-function toCheckoutOption(row: {
-  id: string;
-  country: string;
-  city: string | null;
-  priceAmount: number;
-  freeThresholdAmount: number | null;
-}): CheckoutDeliveryOption {
-  const city = row.city?.trim() || "";
+function toCheckoutOption(
+  row: {
+    id: string;
+    countryCode: string;
+    countryTranslations: DeliveryLocaleLabelsJson;
+    city: string | null;
+    cityTranslations: DeliveryLocaleLabelsJson;
+    priceAmount: number;
+    freeThresholdAmount: number | null;
+  },
+  locale: Locale,
+): CheckoutDeliveryOption {
+  const city = resolveDeliveryLocaleLabel(
+    row.cityTranslations,
+    locale,
+    row.city ?? "",
+  );
+  const country = resolveDeliveryLocaleLabel(
+    row.countryTranslations,
+    locale,
+    row.countryCode,
+  );
   return {
     id: row.id,
-    country: row.country,
+    country,
     city,
     priceAmount: row.priceAmount,
     freeThresholdAmount: row.freeThresholdAmount,
-    label: locationLabel(row.country, city || null),
+    label: locationLabel(country, city || null),
   };
 }
 
 /** Lists all delivery locations for the admin table. */
-export async function listAdminDeliveryLocations(): Promise<
-  AdminDeliveryLocation[]
-> {
+export async function listAdminDeliveryLocations(
+  locale: Locale = defaultLocale,
+): Promise<AdminDeliveryLocation[]> {
   const rows = await getDb()
     .select({
       id: deliveryRules.id,
-      country: deliveryRules.countryCode,
+      countryCode: deliveryRules.countryCode,
+      countryTranslations: deliveryRules.countryTranslations,
       city: deliveryRules.city,
+      cityTranslations: deliveryRules.cityTranslations,
       priceAmount: deliveryRules.priceAmount,
       freeThresholdAmount: deliveryRules.freeThresholdAmount,
       priority: deliveryRules.priority,
@@ -75,8 +108,18 @@ export async function listAdminDeliveryLocations(): Promise<
 
   return rows.map((row) => ({
     id: row.id,
-    country: row.country,
-    city: row.city?.trim() || "",
+    country: resolveDeliveryLocaleLabel(
+      row.countryTranslations,
+      locale,
+      row.countryCode,
+    ),
+    countryTranslations: row.countryTranslations ?? {},
+    city: resolveDeliveryLocaleLabel(
+      row.cityTranslations,
+      locale,
+      row.city ?? "",
+    ),
+    cityTranslations: row.cityTranslations ?? {},
     priceAmount: row.priceAmount,
     freeThresholdAmount: row.freeThresholdAmount,
     priority: row.priority,
@@ -102,7 +145,9 @@ async function ensureDefaultDeliveryLocation(): Promise<void> {
   await db.insert(deliveryRules).values({
     id: createId(),
     countryCode: DEFAULT_DELIVERY_COUNTRY,
+    countryTranslations: DEFAULT_DELIVERY_COUNTRY_TRANSLATIONS,
     city: DEFAULT_DELIVERY_CITY,
+    cityTranslations: DEFAULT_DELIVERY_CITY_TRANSLATIONS,
     priceAmount: DEFAULT_DELIVERY_PRICE,
     freeThresholdAmount: DEFAULT_FREE_THRESHOLD,
     estimatedDaysMin: 1,
@@ -117,16 +162,18 @@ async function ensureDefaultDeliveryLocation(): Promise<void> {
 }
 
 /** Active delivery locations shown in the checkout location dropdown. */
-export async function listCheckoutDeliveryOptions(): Promise<
-  CheckoutDeliveryOption[]
-> {
+export async function listCheckoutDeliveryOptions(
+  locale: Locale,
+): Promise<CheckoutDeliveryOption[]> {
   await ensureDefaultDeliveryLocation();
 
   const rows = await getDb()
     .select({
       id: deliveryRules.id,
-      country: deliveryRules.countryCode,
+      countryCode: deliveryRules.countryCode,
+      countryTranslations: deliveryRules.countryTranslations,
       city: deliveryRules.city,
+      cityTranslations: deliveryRules.cityTranslations,
       priceAmount: deliveryRules.priceAmount,
       freeThresholdAmount: deliveryRules.freeThresholdAmount,
     })
@@ -134,5 +181,5 @@ export async function listCheckoutDeliveryOptions(): Promise<
     .where(eq(deliveryRules.isActive, true))
     .orderBy(desc(deliveryRules.priority), asc(deliveryRules.city));
 
-  return rows.map((row) => toCheckoutOption(row));
+  return rows.map((row) => toCheckoutOption(row, locale));
 }
