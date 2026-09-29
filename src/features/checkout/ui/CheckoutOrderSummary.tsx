@@ -15,6 +15,8 @@ type CheckoutOrderSummaryProps = {
   totalLabel: string;
   subtotalFormatted: string;
   shippingFormatted: string;
+  /** Optional second line under shipping (e.g. selected pickup branch). */
+  shippingDetail?: string | null;
   totalFormatted: string;
   couponDraft: string;
   onCouponDraftChange: (value: string) => void;
@@ -38,6 +40,7 @@ export function CheckoutOrderSummary({
   totalLabel,
   subtotalFormatted,
   shippingFormatted,
+  shippingDetail = null,
   totalFormatted,
   couponDraft,
   onCouponDraftChange,
@@ -100,9 +103,14 @@ export function CheckoutOrderSummary({
             <span>{subtotalLabel}</span>
             <span>{subtotalFormatted}</span>
           </div>
-          <div className="flex justify-between text-gray-600">
-            <span>{shippingLabel}</span>
-            <span className="text-right">{shippingFormatted}</span>
+          <div className="space-y-1">
+            <div className="flex justify-between text-gray-600">
+              <span>{shippingLabel}</span>
+              <span className="text-right">{shippingFormatted}</span>
+            </div>
+            {shippingDetail ? (
+              <p className="text-sm text-gray-500">{shippingDetail}</p>
+            ) : null}
           </div>
           <div className="border-t border-gray-200 pt-4">
             <div className="flex justify-between text-lg font-bold text-gray-900">

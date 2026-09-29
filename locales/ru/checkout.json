@@ -34,6 +34,7 @@
     "deliveryDescription": "Доставим заказ по вашему адресу",
     "deliveryUnavailable": "Доставка недоступна — локации не настроены",
     "freePickup": "Бесплатно (Самовывоз)",
+    "free": "Бесплатно",
     "enterCity": "Укажите город",
     "selectDeliveryLocation": "Выберите место доставки"
   },

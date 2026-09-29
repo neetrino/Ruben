@@ -52,6 +52,7 @@ type CheckoutLabels = {
   deliveryDescription: string;
   deliveryUnavailable: string;
   freePickup: string;
+  free: string;
   enterCity: string;
   selectDeliveryLocation: string;
   cashOnDelivery: string;
@@ -198,12 +199,18 @@ export function CheckoutForm({
 
   const shippingFormatted =
     shippingMethod === "pickup"
-      ? pickupBranchId
-        ? `${labels.freePickup} · ${pickupBranchId}`
-        : labels.freePickup
+      ? labels.free
       : selectedDelivery
         ? `${formatMoney(shippingAmount)} (${selectedDelivery.label})`
         : labels.selectDeliveryLocation;
+
+  const shippingRowLabel =
+    shippingMethod === "pickup" ? labels.storePickup : labels.shipping;
+
+  const shippingDetail =
+    shippingMethod === "pickup" && pickupBranchId.trim()
+      ? pickupBranchId.trim()
+      : null;
 
   function clearAppliedCoupon(): void {
     setAppliedCouponCode(null);
@@ -343,10 +350,11 @@ export function CheckoutForm({
             couponApplyLabel={labels.couponApply}
             couponApplyingLabel={labels.couponApplying}
             subtotalLabel={labels.subtotal}
-            shippingLabel={labels.shipping}
+            shippingLabel={shippingRowLabel}
             totalLabel={labels.total}
             subtotalFormatted={formatMoney(subtotalAmount)}
             shippingFormatted={shippingFormatted}
+            shippingDetail={shippingDetail}
             totalFormatted={formatMoney(totalAmount)}
             couponDraft={couponDraft}
             onCouponDraftChange={onCouponDraftChange}
