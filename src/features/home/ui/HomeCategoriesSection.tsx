@@ -31,6 +31,7 @@ export async function HomeCategoriesSection({
     .map((category) => ({
       id: category.id,
       title: category.title,
+      slug: category.slug,
       href: `${productsHref}?category=${encodeURIComponent(category.slug)}`,
       imageUrl: category.imageUrl,
     }));

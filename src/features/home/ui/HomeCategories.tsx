@@ -5,11 +5,13 @@ import { useCallback, useRef, useState } from "react";
 
 import { MotionChip, MotionChipRow } from "@/components/motion/MotionChipRow";
 import { AppLink } from "@/components/ui/AppLink";
+import { CategoryIcon } from "@/features/categories/ui/category-icons";
 import { HOME_ASSETS } from "@/features/home/config/assets";
 
 export type HomeCategoryItem = {
   id: string;
   title: string;
+  slug: string;
   href: string;
   imageUrl: string | null;
 };
@@ -145,10 +147,15 @@ export function HomeCategories({
                   prefetchPolicy="intent"
                   className={
                     isActive
-                      ? "inline-block rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
-                      : "inline-block rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
+                      ? "inline-flex items-center gap-2 rounded-full bg-white px-6 py-[9px] text-sm leading-[21px] text-black"
+                      : "inline-flex items-center gap-2 rounded-full border border-white px-6 py-[9px] text-sm leading-[21px] text-white transition hover:bg-white/10"
                   }
                 >
+                  <CategoryIcon
+                    slug={category.slug}
+                    title={category.title}
+                    className="size-5 shrink-0"
+                  />
                   {category.title}
                 </AppLink>
               </MotionChip>
