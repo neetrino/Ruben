@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
 import { listStorefrontBrands } from "@/features/brands/application/list-storefront-brands";
-import { listCatalogProducts } from "@/features/products/application/list-catalog-products";
+import { listCatalogProducts, getCatalogMaxListPriceAmd } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
 import {
   catalogListFilterSchema,
@@ -72,10 +72,11 @@ export default async function ProductsPage({
 
   let filters = parseCatalogFilters(raw);
   const dictionary = getDictionary(rawLocale);
-  const [currency, user, brands] = await Promise.all([
+  const [currency, user, brands, maxListPriceAmd] = await Promise.all([
     getSelectedCurrency(),
     getCurrentUser(),
     listStorefrontBrands(rawLocale),
+    getCatalogMaxListPriceAmd(),
   ]);
   const rateQuote = await getCheckoutRateSnapshot(currency);
 
@@ -115,6 +116,7 @@ export default async function ProductsPage({
     currency,
     rate: rateQuote.rate,
     locale: rawLocale,
+    maxAmd: maxListPriceAmd,
   });
 
   const resultsLabel = dictionary.catalog.resultsCount.replace(
@@ -159,6 +161,7 @@ export default async function ProductsPage({
           filters={filters}
           categories={categories}
           allLabel={dictionary.catalog.allChip}
+          closeLabel={dictionary.header.searchClose}
         />
       </div>
 

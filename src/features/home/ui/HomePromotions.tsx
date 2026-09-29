@@ -25,7 +25,6 @@ type HomePromotionsProps = {
   title: string;
   viewAllLabel: string;
   viewAllHref: string;
-  emptyLabel: string;
   globalDiscountLabel: string | null;
   wishlistLabel: string;
   compareLabel: string;
@@ -40,7 +39,6 @@ export function HomePromotions({
   title,
   viewAllLabel,
   viewAllHref,
-  emptyLabel,
   globalDiscountLabel,
   wishlistLabel,
   compareLabel,
@@ -49,6 +47,10 @@ export function HomePromotions({
   isSignedIn,
   products,
 }: HomePromotionsProps) {
+  if (products.length === 0) {
+    return null;
+  }
+
   return (
     <section
       id="promotions"
@@ -69,39 +71,35 @@ export function HomePromotions({
           </p>
         ) : null}
 
-        {products.length > 0 ? (
-          <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 sm:gap-y-10 tablet:grid-cols-3 tablet-lg:grid-cols-4 xl:gap-x-8">
-            {products.map((product, index) => (
-              <div key={product.id} className={homeGridItemClass(index, 2)}>
-                <HomeProductCard
-                  href={product.href}
-                  title={product.title}
-                  brandLabel={product.brandLabel}
-                  categoryLabel={product.categoryLabel}
-                  priceFormatted={product.priceFormatted}
-                  compareAtFormatted={product.compareAtFormatted}
-                  discountPercent={product.discountPercent}
-                  badgeLabel={product.badgeLabel}
-                  imageUrl={product.imageUrl}
-                  inStock={product.inStock}
-                  appearIndex={index}
-                  priority={index < 4}
-                  locale={locale}
-                  productId={product.id}
-                  inWishlist={product.inWishlist ?? false}
-                  inCompare={product.inCompare ?? false}
-                  isSignedIn={isSignedIn}
-                  wishlistLabel={wishlistLabel}
-                  compareLabel={compareLabel}
-                  compareLimitLabel={compareLimitLabel}
-                  addToCartLabel={addToCartLabel}
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <p className="text-neutral-600">{emptyLabel}</p>
-        )}
+        <div className="grid grid-cols-2 gap-x-2 gap-y-6 sm:gap-x-6 sm:gap-y-10 tablet:grid-cols-3 tablet-lg:grid-cols-4 xl:gap-x-8">
+          {products.map((product, index) => (
+            <div key={product.id} className={homeGridItemClass(index, 2)}>
+              <HomeProductCard
+                href={product.href}
+                title={product.title}
+                brandLabel={product.brandLabel}
+                categoryLabel={product.categoryLabel}
+                priceFormatted={product.priceFormatted}
+                compareAtFormatted={product.compareAtFormatted}
+                discountPercent={product.discountPercent}
+                badgeLabel={product.badgeLabel}
+                imageUrl={product.imageUrl}
+                inStock={product.inStock}
+                appearIndex={index}
+                priority={index < 4}
+                locale={locale}
+                productId={product.id}
+                inWishlist={product.inWishlist ?? false}
+                inCompare={product.inCompare ?? false}
+                isSignedIn={isSignedIn}
+                wishlistLabel={wishlistLabel}
+                compareLabel={compareLabel}
+                compareLimitLabel={compareLimitLabel}
+                addToCartLabel={addToCartLabel}
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

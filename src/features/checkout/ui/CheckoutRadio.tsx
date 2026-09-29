@@ -17,11 +17,11 @@ export function CheckoutRadio({
       <input type="radio" disabled={disabled} className="peer sr-only" {...props} />
       <span
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-full border-2 border-gray-300 bg-white transition-colors peer-checked:border-[var(--brand)] peer-disabled:opacity-50"
+        className="pointer-events-none absolute inset-0 rounded-full border-2 border-gray-300 bg-white transition-[border-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] peer-checked:border-[var(--brand)] peer-disabled:opacity-50"
       />
       <span
         aria-hidden
-        className="pointer-events-none h-2.5 w-2.5 scale-0 rounded-full bg-[var(--brand)] transition-transform peer-checked:scale-100 peer-disabled:opacity-50"
+        className="pointer-events-none h-2.5 w-2.5 scale-0 rounded-full bg-[var(--brand)] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] peer-checked:scale-100 peer-disabled:opacity-50"
       />
     </span>
   );

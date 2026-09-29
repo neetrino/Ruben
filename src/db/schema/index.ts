@@ -50,6 +50,8 @@ export {
   deliveryRules,
   promotionUsers,
   promotions,
+  type DeliveryCountryTranslationsJson,
+  type DeliveryLocaleLabelsJson,
 } from "@/db/schema/pricing";
 export {
   auditLogs,

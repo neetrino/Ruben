@@ -430,14 +430,27 @@
       "createTitle": "Add delivery location"
     },
     "fields": {
+      "translations": "Translations",
       "country": "Country",
       "city": "City",
       "price": "Shipping price",
       "freeFrom": "Free shipping from"
     },
+    "errors": {
+      "countryRequired": "Enter the country name in all languages.",
+      "translationsRequired": "Enter country and city in all languages."
+    },
     "placeholders": {
-      "country": "e.g. Armenia",
-      "city": "e.g. Yerevan",
+      "country": {
+        "hy": "e.g. Հայաստան",
+        "en": "e.g. Armenia",
+        "ru": "e.g. Армения"
+      },
+      "city": {
+        "hy": "e.g. Երևան",
+        "en": "e.g. Yerevan",
+        "ru": "e.g. Ереван"
+      },
       "price": "0.00",
       "freeFrom": "0.00 (leave blank to disable)"
     }

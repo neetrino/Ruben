@@ -18,6 +18,8 @@ import {
   promotions,
   stockMovements,
 } from "@/db/schema";
+import { resolveDeliveryLocaleLabel } from "@/features/delivery/domain/country-translations";
+import { isLocale } from "@/lib/i18n/config";
 import { withTransaction } from "@/db/transaction";
 import {
   getCartWithItems,
@@ -61,12 +63,12 @@ function hashValue(value: string): string {
   return createHash("sha256").update(value).digest("hex");
 }
 
-function deliveryLabel(countryCode: string, city: string | null): string {
+function deliveryLabel(country: string, city: string | null): string {
   const cityPart = city?.trim();
   if (cityPart) {
-    return `${cityPart}, ${countryCode}`;
+    return `${cityPart}, ${country}`;
   }
-  return countryCode;
+  return country;
 }
 
 export type CreateOrderResult =
@@ -385,7 +387,18 @@ export async function createOrderAction(
           input.shippingMethod === "pickup"
             ? `Store pickup · ${pickupBranchAddress}`
             : delivery
-              ? deliveryLabel(delivery.countryCode, delivery.city)
+              ? deliveryLabel(
+                  resolveDeliveryLocaleLabel(
+                    delivery.countryTranslations,
+                    isLocale(input.locale) ? input.locale : "hy",
+                    delivery.countryCode,
+                  ),
+                  resolveDeliveryLocaleLabel(
+                    delivery.cityTranslations,
+                    isLocale(input.locale) ? input.locale : "hy",
+                    delivery.city ?? "",
+                  ),
+                )
               : "Delivery",
         deliveryEstimateSnapshot:
           input.shippingMethod === "pickup"

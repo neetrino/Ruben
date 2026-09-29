@@ -34,6 +34,7 @@
     "deliveryDescription": "We will deliver your order to your address",
     "deliveryUnavailable": "Delivery is unavailable — no locations configured",
     "freePickup": "Free (Store Pickup)",
+    "free": "Free",
     "enterCity": "Enter City",
     "selectDeliveryLocation": "Select delivery location"
   },

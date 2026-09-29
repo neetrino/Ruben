@@ -25,9 +25,20 @@ const createBrandSchema = z.object({
 
 export type CreateBrandInput = z.infer<typeof createBrandSchema>;
 
-function buildTranslations(title: string, slug: string): TranslationsJson {
-  const translation = { title, slug };
-  return { hy: translation, en: translation, ru: translation };
+function mergeLocaleTranslation(
+  existing: TranslationsJson | null | undefined,
+  locale: Locale,
+  title: string,
+  slug: string,
+): TranslationsJson {
+  return {
+    ...(existing ?? {}),
+    [locale]: {
+      ...(existing?.[locale] ?? {}),
+      title,
+      slug,
+    },
+  };
 }
 
 function revalidateBrands(locale: string): void {
@@ -49,7 +60,7 @@ async function insertBrand(
   const id = createId();
   await getDb().insert(brands).values({
     id,
-    translations: buildTranslations(data.title, data.slug),
+    translations: mergeLocaleTranslation(null, locale, data.title, data.slug),
     sortOrder: (maxSort?.value ?? 0) + 1,
     status: data.status,
   });
@@ -119,7 +130,7 @@ export async function updateBrandFromDrawerAction(
   await requireAdmin(locale as Locale);
 
   const [existing] = await getDb()
-    .select({ id: brands.id })
+    .select({ id: brands.id, translations: brands.translations })
     .from(brands)
     .where(and(eq(brands.id, brandId), isNull(brands.deletedAt)))
     .limit(1);
@@ -131,7 +142,12 @@ export async function updateBrandFromDrawerAction(
   await getDb()
     .update(brands)
     .set({
-      translations: buildTranslations(parsed.data.title, parsed.data.slug),
+      translations: mergeLocaleTranslation(
+        existing.translations,
+        locale as Locale,
+        parsed.data.title,
+        parsed.data.slug,
+      ),
       status: parsed.data.status,
       updatedAt: new Date(),
     })

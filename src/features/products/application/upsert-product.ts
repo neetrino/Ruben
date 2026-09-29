@@ -36,13 +36,20 @@ const productUpsertSchema = z.object({
 
 export type ProductUpsertInput = z.infer<typeof productUpsertSchema>;
 
-function buildTranslations(data: ProductUpsertInput): TranslationsJson {
-  const entry = {
-    title: data.title,
-    slug: data.slug,
-    description: data.description || undefined,
+function mergeLocaleTranslation(
+  existing: TranslationsJson | null | undefined,
+  locale: Locale,
+  data: ProductUpsertInput,
+): TranslationsJson {
+  return {
+    ...(existing ?? {}),
+    [locale]: {
+      ...(existing?.[locale] ?? {}),
+      title: data.title,
+      slug: data.slug,
+      description: data.description || undefined,
+    },
   };
-  return { hy: entry, en: entry, ru: entry };
 }
 
 function revalidateProducts(
@@ -153,7 +160,7 @@ export async function createProductFromDrawerAction(
     compareAtAmount: data.compareAtAmount,
     stockOnHand: data.stockOnHand,
     status: data.status,
-    translations: buildTranslations(data),
+    translations: mergeLocaleTranslation(null, locale as Locale, data),
   });
 
   const categoryError = await syncProductCategories(id, data.categoryIds);
@@ -238,7 +245,11 @@ export async function updateProductFromDrawerAction(
       compareAtAmount: data.compareAtAmount,
       stockOnHand: data.stockOnHand,
       status: data.status || existing.status,
-      translations: buildTranslations(data),
+      translations: mergeLocaleTranslation(
+        existing.translations,
+        locale as Locale,
+        data,
+      ),
       updatedAt: new Date(),
     })
     .where(eq(products.id, existing.id));

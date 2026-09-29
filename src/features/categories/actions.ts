@@ -22,9 +22,20 @@ const createCategorySchema = z.object({
 
 export type CreateCategoryInput = z.infer<typeof createCategorySchema>;
 
-function buildTranslations(title: string, slug: string): TranslationsJson {
-  const translation = { title, slug };
-  return { hy: translation, en: translation, ru: translation };
+function mergeLocaleTranslation(
+  existing: TranslationsJson | null | undefined,
+  locale: Locale,
+  title: string,
+  slug: string,
+): TranslationsJson {
+  return {
+    ...(existing ?? {}),
+    [locale]: {
+      ...(existing?.[locale] ?? {}),
+      title,
+      slug,
+    },
+  };
 }
 
 function revalidateCategories(locale: string): void {
@@ -63,7 +74,7 @@ async function insertCategory(
   await getDb().insert(categories).values({
     id,
     parentId: data.parentId,
-    translations: buildTranslations(data.title, data.slug),
+    translations: mergeLocaleTranslation(null, locale, data.title, data.slug),
     sortOrder: (maxSort?.value ?? 0) + 1,
     status: data.status,
   });
@@ -162,7 +173,7 @@ export async function updateCategoryFromDrawerAction(
   await requireAdmin(locale as Locale);
 
   const [existing] = await getDb()
-    .select({ id: categories.id })
+    .select({ id: categories.id, translations: categories.translations })
     .from(categories)
     .where(and(eq(categories.id, categoryId), isNull(categories.deletedAt)))
     .limit(1);
@@ -191,7 +202,12 @@ export async function updateCategoryFromDrawerAction(
     .update(categories)
     .set({
       parentId: parsed.data.parentId,
-      translations: buildTranslations(parsed.data.title, parsed.data.slug),
+      translations: mergeLocaleTranslation(
+        existing.translations,
+        locale as Locale,
+        parsed.data.title,
+        parsed.data.slug,
+      ),
       status: parsed.data.status,
       updatedAt: new Date(),
     })

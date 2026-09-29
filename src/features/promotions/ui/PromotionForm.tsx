@@ -221,10 +221,16 @@ export function PromotionForm({
             <span className={ADMIN_LABEL}>{t.discounts.form.discountValue}</span>
             <input
               name="discountValue"
-              type="number"
+              type="text"
+              inputMode="numeric"
               required
-              min={1}
               defaultValue={defaults?.discountValue ?? 10}
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(
+                  /\D/g,
+                  "",
+                );
+              }}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -236,9 +242,15 @@ export function PromotionForm({
             <span className={ADMIN_LABEL}>{t.discounts.form.maxDiscount}</span>
             <input
               name="maxDiscountAmount"
-              type="number"
-              min={1}
+              type="text"
+              inputMode="numeric"
               defaultValue={defaults?.maxDiscountAmount ?? ""}
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(
+                  /\D/g,
+                  "",
+                );
+              }}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -247,9 +259,15 @@ export function PromotionForm({
             <span className={ADMIN_LABEL}>{t.discounts.form.minOrder}</span>
             <input
               name="minimumOrderAmount"
-              type="number"
-              min={0}
+              type="text"
+              inputMode="numeric"
               defaultValue={defaults?.minimumOrderAmount ?? ""}
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(
+                  /\D/g,
+                  "",
+                );
+              }}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -261,9 +279,15 @@ export function PromotionForm({
             <span className={ADMIN_LABEL}>{t.discounts.form.totalUsage}</span>
             <input
               name="totalUsageLimit"
-              type="number"
-              min={1}
+              type="text"
+              inputMode="numeric"
               defaultValue={defaults?.totalUsageLimit ?? ""}
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(
+                  /\D/g,
+                  "",
+                );
+              }}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -272,9 +296,15 @@ export function PromotionForm({
             <span className={ADMIN_LABEL}>{t.discounts.form.perUser}</span>
             <input
               name="perUserUsageLimit"
-              type="number"
-              min={1}
+              type="text"
+              inputMode="numeric"
               defaultValue={defaults?.perUserUsageLimit ?? ""}
+              onInput={(event) => {
+                event.currentTarget.value = event.currentTarget.value.replace(
+                  /\D/g,
+                  "",
+                );
+              }}
               className={ADMIN_INPUT}
               disabled={isPending}
             />
@@ -308,9 +338,15 @@ export function PromotionForm({
           <span className={ADMIN_LABEL}>{t.discounts.form.priority}</span>
           <input
             name="priority"
-            type="number"
-            min={0}
+            type="text"
+            inputMode="numeric"
             defaultValue={defaults?.priority ?? 0}
+            onInput={(event) => {
+              event.currentTarget.value = event.currentTarget.value.replace(
+                /\D/g,
+                "",
+              );
+            }}
             className={ADMIN_INPUT}
             disabled={isPending}
           />

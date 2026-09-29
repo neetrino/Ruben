@@ -3,7 +3,7 @@
 import { useState } from "react";
 
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
-import { checkoutOptionClass } from "@/features/checkout/ui/checkout-option-styles";
+import { CheckoutOptionCard } from "@/features/checkout/ui/CheckoutOptionCard";
 import { CHECKOUT_PAYMENT_WALLET_LOGO_SRC } from "@/features/checkout/ui/checkout-payment-ui";
 import {
   CheckoutPaymentMethodIcons,
@@ -28,6 +28,8 @@ type CheckoutPaymentMethodsProps = {
   onChange: (method: CheckoutPaymentMethod) => void;
   disabled: boolean;
 };
+
+const PAYMENT_LAYOUT_ID = "checkout-payment-option-highlight";
 
 export function CheckoutPaymentMethods({
   title,
@@ -73,7 +75,11 @@ export function CheckoutPaymentMethods({
           const icons = renderIcons(option);
 
           return (
-            <label key={option.id} className={checkoutOptionClass(selected)}>
+            <CheckoutOptionCard
+              key={option.id}
+              selected={selected}
+              layoutId={PAYMENT_LAYOUT_ID}
+            >
               <CheckoutRadio
                 name="paymentMethod"
                 value={option.id}
@@ -93,7 +99,7 @@ export function CheckoutPaymentMethods({
                   ) : null}
                 </div>
               </div>
-            </label>
+            </CheckoutOptionCard>
           );
         })}
 
@@ -106,9 +112,10 @@ export function CheckoutPaymentMethods({
               const icons = renderIcons(option);
 
               return (
-                <label
+                <CheckoutOptionCard
                   key={option.id}
-                  className={checkoutOptionClass(selected)}
+                  selected={selected}
+                  layoutId={PAYMENT_LAYOUT_ID}
                 >
                   <CheckoutRadio
                     name="paymentMethod"
@@ -126,7 +133,7 @@ export function CheckoutPaymentMethods({
                       {icons}
                     </div>
                   </div>
-                </label>
+                </CheckoutOptionCard>
               );
             })}
           </div>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
+import { AdminIntegerInput } from "@/features/admin/ui/AdminIntegerInput";
 import { ADMIN_INPUT } from "@/features/admin/ui/admin-form-classes";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import type { DiscountBoardCategory } from "@/features/promotions/application/discounts-board";
@@ -132,18 +133,14 @@ export function CategoryDiscountsSection({
                 <label className="sr-only" htmlFor={`cat-discount-${category.id}`}>
                   Discount for {category.title}
                 </label>
-                <input
+                <AdminIntegerInput
                   id={`cat-discount-${category.id}`}
-                  type="number"
-                  min={0}
-                  max={100}
-                  inputMode="numeric"
                   disabled={isPending}
                   value={drafts[category.id] ?? ""}
-                  onChange={(event) =>
+                  onValueChange={(next) =>
                     setDrafts((prev) => ({
                       ...prev,
-                      [category.id]: event.target.value,
+                      [category.id]: next,
                     }))
                   }
                   className={`${ADMIN_INPUT} w-20`}

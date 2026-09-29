@@ -32,6 +32,10 @@ export async function HomePromotionsSection({
     getCurrentUser(),
   ]);
 
+  if (onSaleProducts.length === 0) {
+    return null;
+  }
+
   const productIds = onSaleProducts.map((product) => product.id);
   const [wishlistIds, compareIds, formatPrice, categoriesByProduct] =
     await Promise.all([
@@ -66,7 +70,6 @@ export async function HomePromotionsSection({
       title={dictionary.home.promotionsTitle}
       viewAllLabel={dictionary.home.viewAll}
       viewAllHref={`/${locale}/products`}
-      emptyLabel={dictionary.home.emptyPromotions}
       globalDiscountLabel={globalDiscountLabel}
       wishlistLabel={dictionary.nav.wishlist}
       compareLabel={dictionary.nav.compare}

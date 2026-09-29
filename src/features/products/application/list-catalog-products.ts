@@ -433,3 +433,26 @@ export async function listCatalogProducts(
     },
   )();
 }
+
+async function loadCatalogMaxListPriceAmd(): Promise<number> {
+  const [row] = await getDb()
+    .select({
+      maxPrice: sql<number>`coalesce(max(${products.priceAmount}), 0)::int`,
+    })
+    .from(products)
+    .where(and(eq(products.status, "ACTIVE"), isNull(products.deletedAt)));
+
+  return row?.maxPrice ?? 0;
+}
+
+/** Highest active product list price in AMD (catalog price slider ceiling). */
+export async function getCatalogMaxListPriceAmd(): Promise<number> {
+  return unstable_cache(
+    async () => loadCatalogMaxListPriceAmd(),
+    ["catalog-max-list-price-amd"],
+    {
+      tags: [CACHE_TAGS.products],
+      revalidate: PUBLIC_CACHE_REVALIDATE_SECONDS,
+    },
+  )();
+}
