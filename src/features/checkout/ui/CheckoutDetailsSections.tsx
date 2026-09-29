@@ -1,11 +1,13 @@
 "use client";
 
 import { Truck, User } from "lucide-react";
+import { AnimatePresence, m } from "motion/react";
 
+import { MOTION_EASE } from "@/components/motion/motion-config";
 import { Card } from "@/components/ui/Card";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import type { CheckoutPaymentMethod } from "@/features/checkout/domain/payment-methods";
-import { checkoutOptionClass } from "@/features/checkout/ui/checkout-option-styles";
+import { CheckoutOptionCard } from "@/features/checkout/ui/CheckoutOptionCard";
 import {
   CheckoutPaymentMethods,
   type CheckoutPaymentOption,
@@ -17,6 +19,12 @@ const FIELD_CLASS =
   "h-11 w-full rounded-[15px] border border-gray-200 px-4 text-gray-900 shadow-sm outline-none transition-colors hover:border-gray-300 focus:border-gray-300 disabled:bg-gray-50";
 
 const SHIPPING_ICON_CLASS = "h-6 w-6 shrink-0 self-center text-gray-700";
+const SHIPPING_LAYOUT_ID = "checkout-shipping-option-highlight";
+
+const PANEL_TRANSITION = {
+  duration: 0.28,
+  ease: MOTION_EASE,
+} as const;
 
 type CheckoutDetailsLabels = {
   contactInformation: string;
@@ -151,7 +159,10 @@ export function CheckoutDetailsSections({
           {labels.shippingMethod}
         </h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          <label className={checkoutOptionClass(shippingMethod === "pickup")}>
+          <CheckoutOptionCard
+            selected={shippingMethod === "pickup"}
+            layoutId={SHIPPING_LAYOUT_ID}
+          >
             <CheckoutRadio
               name="shippingMethod"
               value="pickup"
@@ -170,8 +181,11 @@ export function CheckoutDetailsSections({
                 </div>
               </div>
             </div>
-          </label>
-          <label className={checkoutOptionClass(shippingMethod === "delivery")}>
+          </CheckoutOptionCard>
+          <CheckoutOptionCard
+            selected={shippingMethod === "delivery"}
+            layoutId={SHIPPING_LAYOUT_ID}
+          >
             <CheckoutRadio
               name="shippingMethod"
               value="delivery"
@@ -190,54 +204,72 @@ export function CheckoutDetailsSections({
                 </div>
               </div>
             </div>
-          </label>
+          </CheckoutOptionCard>
         </div>
 
-        {shippingMethod === "pickup" ? (
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <SelectDropdown
-              name="pickupBranchId"
-              ariaLabel={labels.selectPickupLocation}
-              value={pickupBranchId}
-              allLabel={labels.selectPickupLocation}
-              options={pickupBranches}
-              disabled={pending || pickupBranches.length === 0}
-              onValueChange={onPickupBranchChange}
-            />
-          </div>
-        ) : null}
-
-        {shippingMethod === "delivery" ? (
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-            <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
-              {labels.deliveryLocation}
-              <SelectDropdown
-                name="deliveryRuleId"
-                ariaLabel={labels.deliveryLocation}
-                value={deliveryRuleId}
-                allLabel={labels.selectLocation}
-                options={deliveryOptions.map((option) => ({
-                  label: option.label,
-                  value: option.id,
-                }))}
-                disabled={pending || deliveryOptions.length === 0}
-                onValueChange={onDeliveryRuleChange}
-              />
-            </div>
-            <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
-              {labels.address}
-              <input
-                name="line1"
-                required
-                defaultValue={defaultLine1}
-                placeholder={labels.addressPlaceholder}
-                disabled={pending}
-                className={FIELD_CLASS}
-                autoComplete="street-address"
-              />
-            </label>
-          </div>
-        ) : null}
+        <AnimatePresence mode="wait" initial={false}>
+          {shippingMethod === "pickup" ? (
+            <m.div
+              key="pickup-fields"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={PANEL_TRANSITION}
+              className="overflow-hidden"
+            >
+              <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <SelectDropdown
+                  name="pickupBranchId"
+                  ariaLabel={labels.selectPickupLocation}
+                  value={pickupBranchId}
+                  allLabel={labels.selectPickupLocation}
+                  options={pickupBranches}
+                  disabled={pending || pickupBranches.length === 0}
+                  onValueChange={onPickupBranchChange}
+                />
+              </div>
+            </m.div>
+          ) : (
+            <m.div
+              key="delivery-fields"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={PANEL_TRANSITION}
+              className="overflow-hidden"
+            >
+              <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+                <div className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+                  {labels.deliveryLocation}
+                  <SelectDropdown
+                    name="deliveryRuleId"
+                    ariaLabel={labels.deliveryLocation}
+                    value={deliveryRuleId}
+                    allLabel={labels.selectLocation}
+                    options={deliveryOptions.map((option) => ({
+                      label: option.label,
+                      value: option.id,
+                    }))}
+                    disabled={pending || deliveryOptions.length === 0}
+                    onValueChange={onDeliveryRuleChange}
+                  />
+                </div>
+                <label className="flex flex-col gap-1.5 text-sm font-medium text-gray-700">
+                  {labels.address}
+                  <input
+                    name="line1"
+                    required
+                    defaultValue={defaultLine1}
+                    placeholder={labels.addressPlaceholder}
+                    disabled={pending}
+                    className={FIELD_CLASS}
+                    autoComplete="street-address"
+                  />
+                </label>
+              </div>
+            </m.div>
+          )}
+        </AnimatePresence>
       </Card>
 
       <CheckoutPaymentMethods
