@@ -75,6 +75,9 @@ export default async function HomePage({ params }: HomePageProps) {
       <div className="hidden lg:block">
         <LazyWhenVisible fallback={<HomeFeaturesSkeleton />}>
           <HomeFeatures
+            title={dictionary.home.whyTitle}
+            viewAllLabel={dictionary.home.viewAll}
+            viewAllHref={`/${locale}/about`}
             items={[
               {
                 icon: "warranty",

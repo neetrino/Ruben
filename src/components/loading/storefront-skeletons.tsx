@@ -162,13 +162,15 @@ export function HomeProductRailSkeleton() {
 export function HomeFeaturesSkeleton() {
   return (
     <div
-      className={`${pulse} min-h-[320px] bg-[#f5f5f5] py-16`}
+      className={`${pulse} min-h-[640px] rounded-t-[40px] bg-gradient-to-b from-[#111] to-[#987602] py-24`}
       aria-busy="true"
       aria-live="polite"
     >
-      <div className="mx-auto grid max-w-[1440px] gap-6 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <Block className="h-64 w-full rounded-2xl" />
-        <Block className="h-64 w-full rounded-2xl" />
+      <div className="mx-auto flex max-w-[1440px] flex-wrap justify-center gap-7 px-6 lg:px-[69px]">
+        <Block className="h-[402px] w-full max-w-[305px] rounded-[40px] bg-white/90" />
+        <Block className="h-[402px] w-full max-w-[305px] rounded-[40px] bg-white/90" />
+        <Block className="hidden h-[402px] w-full max-w-[305px] rounded-[40px] bg-white/90 lg:block" />
+        <Block className="hidden h-[402px] w-full max-w-[305px] rounded-[40px] bg-white/90 lg:block" />
       </div>
     </div>
   );
