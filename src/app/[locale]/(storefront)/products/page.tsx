@@ -159,6 +159,7 @@ export default async function ProductsPage({
           filters={filters}
           categories={categories}
           allLabel={dictionary.catalog.allChip}
+          closeLabel={dictionary.header.searchClose}
         />
       </div>
 
