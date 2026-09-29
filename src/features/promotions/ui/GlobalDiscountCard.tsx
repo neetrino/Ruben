@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Percent } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { AdminIntegerInput } from "@/features/admin/ui/AdminIntegerInput";
 import { ADMIN_INPUT } from "@/features/admin/ui/admin-form-classes";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
 import { setGlobalDiscountAction } from "@/features/promotions/application/manage-discounts";
@@ -84,16 +85,12 @@ export function GlobalDiscountCard({
           {t.discounts.global.inputAria}
         </label>
         <div className="relative min-w-[8rem] flex-1">
-          <input
+          <AdminIntegerInput
             id="global-discount-input"
-            type="number"
-            min={0}
-            max={100}
-            inputMode="numeric"
             placeholder="0"
             value={value}
             disabled={isPending}
-            onChange={(event) => setValue(event.target.value)}
+            onValueChange={setValue}
             className={`${ADMIN_INPUT} pr-8`}
           />
           <span className="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-gray-500">

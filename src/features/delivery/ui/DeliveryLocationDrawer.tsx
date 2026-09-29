@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { SideSheet } from "@/components/ui/SideSheet";
+import { AdminIntegerInput } from "@/features/admin/ui/AdminIntegerInput";
 import {
   ADMIN_INPUT,
   ADMIN_LABEL,
@@ -116,29 +117,21 @@ function DeliveryLocationForm({
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label>
             <span className={ADMIN_LABEL}>{t.delivery.fields.price}</span>
-            <input
-              type="number"
-              min={0}
-              step={1}
+            <AdminIntegerInput
               required
               value={priceAmount}
-              onChange={(event) => setPriceAmount(event.target.value)}
+              onValueChange={setPriceAmount}
               placeholder={t.delivery.placeholders.price}
-              className={ADMIN_INPUT}
               disabled={isPending}
             />
           </label>
 
           <label>
             <span className={ADMIN_LABEL}>{t.delivery.fields.freeFrom}</span>
-            <input
-              type="number"
-              min={0}
-              step={1}
+            <AdminIntegerInput
               value={freeThresholdAmount}
-              onChange={(event) => setFreeThresholdAmount(event.target.value)}
+              onValueChange={setFreeThresholdAmount}
               placeholder={t.delivery.placeholders.freeFrom}
-              className={ADMIN_INPUT}
               disabled={isPending}
             />
           </label>

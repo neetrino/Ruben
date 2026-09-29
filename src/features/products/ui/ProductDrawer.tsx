@@ -4,6 +4,7 @@ import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { SideSheet } from "@/components/ui/SideSheet";
+import { AdminIntegerInput } from "@/features/admin/ui/AdminIntegerInput";
 import {
   ADMIN_INPUT,
   ADMIN_LABEL,
@@ -115,7 +116,10 @@ export function ProductDrawer({
       setStockOnHand("");
       setError(null);
     }
-  }, [open, product, initialCategories]);
+    // Seed only when the drawer opens or the edited product changes — not on
+    // every parent re-render, or caret jumps and digits append at the end.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional
+  }, [open, product?.id]);
 
   function handleImagesChange(next: ProductDraftImage[]): void {
     const nextKeys = new Set(next.map((image) => image.key));
@@ -271,26 +275,20 @@ export function ProductDrawer({
                   {t.products.drawer.fields.price}{" "}
                   <span className="text-red-600">*</span>
                 </span>
-                <input
+                <AdminIntegerInput
                   required
-                  min={0}
-                  type="number"
                   value={priceAmount}
-                  onChange={(event) => setPriceAmount(event.target.value)}
+                  onValueChange={setPriceAmount}
                   placeholder={t.products.drawer.placeholders.price}
-                  className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
               <label>
                 <span className={ADMIN_LABEL}>{t.products.drawer.fields.compareAt}</span>
-                <input
-                  min={0}
-                  type="number"
+                <AdminIntegerInput
                   value={compareAtAmount}
-                  onChange={(event) => setCompareAtAmount(event.target.value)}
+                  onValueChange={setCompareAtAmount}
                   placeholder={t.products.drawer.placeholders.compareAt}
-                  className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>
@@ -316,14 +314,11 @@ export function ProductDrawer({
                   {t.products.drawer.fields.quantity}{" "}
                   <span className="text-red-600">*</span>
                 </span>
-                <input
+                <AdminIntegerInput
                   required
-                  min={0}
-                  type="number"
                   value={stockOnHand}
-                  onChange={(event) => setStockOnHand(event.target.value)}
+                  onValueChange={setStockOnHand}
                   placeholder={t.products.drawer.placeholders.quantity}
-                  className={ADMIN_INPUT}
                   disabled={isPending}
                 />
               </label>

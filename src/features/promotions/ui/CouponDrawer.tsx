@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { SideSheet } from "@/components/ui/SideSheet";
 import { AdminDateTimePickerField } from "@/features/admin/ui/AdminDateTimePickerField";
+import { AdminIntegerInput } from "@/features/admin/ui/AdminIntegerInput";
 import {
   ADMIN_INPUT,
   ADMIN_LABEL,
@@ -88,7 +89,8 @@ export function CouponDrawer({
       setExpiresAt("");
       setError(null);
     }
-  }, [open, coupon]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- seed on open / coupon id only
+  }, [open, coupon?.id]);
 
   return (
     <SideSheet
@@ -194,13 +196,10 @@ export function CouponDrawer({
               </div>
               <label>
                 <span className={ADMIN_LABEL}>{t.coupons.drawer.value}</span>
-                <input
-                  type="number"
-                  min={1}
+                <AdminIntegerInput
                   required
                   value={value}
-                  onChange={(event) => setValue(event.target.value)}
-                  className={ADMIN_INPUT}
+                  onValueChange={setValue}
                   disabled={isPending}
                 />
               </label>
@@ -209,12 +208,9 @@ export function CouponDrawer({
             <div className="grid gap-4 sm:grid-cols-2">
               <label>
                 <span className={ADMIN_LABEL}>{t.coupons.drawer.quantity}</span>
-                <input
-                  type="number"
-                  min={1}
+                <AdminIntegerInput
                   value={quantity}
-                  onChange={(event) => setQuantity(event.target.value)}
-                  className={ADMIN_INPUT}
+                  onValueChange={setQuantity}
                   disabled={isPending}
                 />
               </label>
