@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { IconDropdown } from "@/components/ui/IconDropdown";
@@ -13,7 +12,6 @@ export type CategoryNavItem = {
   label: string;
   slug: string;
   href: string;
-  imageUrl: string | null;
   parentId: string | null;
   sortOrder: number;
 };
@@ -22,8 +20,6 @@ type CategoryNavNode = {
   category: CategoryNavItem;
   children: CategoryNavItem[];
 };
-
-const THUMBNAIL_SIZE_PX = 32;
 
 type SiteHeaderCategoriesMenuProps = {
   label: string;
@@ -65,33 +61,10 @@ function buildCategoryTree(
   }));
 }
 
-function CategoryThumb({
-  imageUrl,
-  slug,
-  label,
-}: {
-  imageUrl: string | null;
-  slug: string;
-  label: string;
-}) {
+function CategoryThumb({ slug, label }: { slug: string; label: string }) {
   return (
     <span className={THUMBNAIL_CLASS}>
-      {imageUrl ? (
-        <Image
-          src={imageUrl}
-          alt=""
-          width={THUMBNAIL_SIZE_PX}
-          height={THUMBNAIL_SIZE_PX}
-          sizes={`${THUMBNAIL_SIZE_PX}px`}
-          className="size-full object-contain"
-        />
-      ) : (
-        <CategoryIcon
-          slug={slug}
-          title={label}
-          className="size-4 text-white/55"
-        />
-      )}
+      <CategoryIcon slug={slug} title={label} className="size-4 text-white/55" />
     </span>
   );
 }
@@ -149,11 +122,7 @@ export function SiteHeaderCategoriesMenu({
                   prefetchPolicy="intent"
                   className={ITEM_CLASS}
                 >
-                  <CategoryThumb
-                    imageUrl={category.imageUrl}
-                    slug={category.slug}
-                    label={category.label}
-                  />
+                  <CategoryThumb slug={category.slug} label={category.label} />
                   <span className="min-w-0 flex-1 truncate">{category.label}</span>
                 </AppLink>
                 {hasChildren ? (
@@ -193,11 +162,7 @@ export function SiteHeaderCategoriesMenu({
                         prefetchPolicy="intent"
                         className={ITEM_CLASS}
                       >
-                        <CategoryThumb
-                          imageUrl={child.imageUrl}
-                          slug={child.slug}
-                          label={child.label}
-                        />
+                        <CategoryThumb slug={child.slug} label={child.label} />
                         <span className="min-w-0 flex-1 truncate">
                           {child.label}
                         </span>
