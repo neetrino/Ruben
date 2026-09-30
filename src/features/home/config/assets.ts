@@ -31,5 +31,5 @@ export const HOME_MOBILE_ASSETS = {
   navHeart: "/assets/home/mobile/nav-heart.svg",
   navUser: "/assets/home/mobile/nav-user.svg",
   /** Figma 269:473 — yellow RUBEN kiosk for the “All” category card. */
-  categoriesAllKiosk: "/assets/home/mobile/categories/all-kiosk.png",
+  categoriesAllKiosk: "/assets/home/mobile/categories/all-kiosk.webp",
 } as const;

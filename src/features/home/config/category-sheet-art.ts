@@ -23,7 +23,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Paints — Figma 319:366
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/paints.png",
+      src: "/assets/home/mobile/categories/paints.webp",
       frameClassName:
         "absolute top-[-35px] right-[-15px] flex size-[189px] items-center justify-center",
       transformClassName: "-scale-y-100 rotate-[174.08deg]",
@@ -37,7 +37,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Wallpapers — Figma 342:342 inside card 269:571 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/wallpapers.png",
+      src: "/assets/home/mobile/categories/wallpapers.webp",
       frameClassName:
         "absolute top-[8px] right-[-13px] h-[189px] w-[204px] overflow-hidden",
       imageBoxClassName: "relative size-full",
@@ -51,7 +51,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Flooring — Figma 342:345 inside card 271:575 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/flooring.png",
+      src: "/assets/home/mobile/categories/flooring.webp",
       frameClassName:
         "absolute top-[-17px] right-[-43.46px] flex size-[216.456px] items-center justify-center",
       transformClassName: "rotate-[170.92deg]",
@@ -65,7 +65,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Tiles — Figma 342:3343 inside card 271:577 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/tiles.png",
+      src: "/assets/home/mobile/categories/tiles.webp",
       frameClassName: "absolute top-0 right-[1px] h-[274px] w-[153px]",
       imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",
@@ -77,7 +77,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Sanitaryware — Figma 319:350
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/sanitary.png",
+      src: "/assets/home/mobile/categories/sanitary.webp",
       frameClassName: "absolute top-[-70px] right-[-42px] size-[233px]",
       imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",
@@ -89,7 +89,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Heating — Figma 319:353
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/heating.png",
+      src: "/assets/home/mobile/categories/heating.webp",
       frameClassName:
         "absolute top-[9px] right-[-25px] flex h-[222px] w-[207px] items-center justify-center",
       transformClassName: "-scale-y-100 rotate-180",
@@ -103,7 +103,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Tools — Figma 319:356
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/tools.png",
+      src: "/assets/home/mobile/categories/tools.webp",
       frameClassName: "absolute top-[10px] right-0 h-[128px] w-[199px]",
       imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",
