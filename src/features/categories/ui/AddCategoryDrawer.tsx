@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
@@ -46,11 +46,12 @@ export function AddCategoryDrawer({
   const [removeExistingImage, setRemoveExistingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const categoryKey = category?.id ?? "new";
+  const [seed, setSeed] = useState({ open, categoryKey });
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (category) {
+  if (seed.open !== open || (open && seed.categoryKey !== categoryKey)) {
+    setSeed({ open, categoryKey });
+    if (open && category) {
       setTitle(category.title);
       setSlug(category.slug);
       setSlugTouched(true);
@@ -60,7 +61,7 @@ export function AddCategoryDrawer({
       setImagePreview(category.imageUrl);
       setRemoveExistingImage(false);
       setError(null);
-    } else {
+    } else if (open) {
       setTitle("");
       setSlug("");
       setSlugTouched(false);
@@ -71,7 +72,7 @@ export function AddCategoryDrawer({
       setRemoveExistingImage(false);
       setError(null);
     }
-  }, [open, category]);
+  }
 
   const displaySlug = slugTouched ? slug : slugifyCategoryTitle(title) || "---";
   const parentOptions = categories.filter((item) => item.id !== category?.id);
@@ -251,6 +252,8 @@ export function AddCategoryDrawer({
                 ) : null}
               </div>
               {imagePreview ? (
+                // Preview may be a blob URL from the file picker.
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={imagePreview}
                   alt=""

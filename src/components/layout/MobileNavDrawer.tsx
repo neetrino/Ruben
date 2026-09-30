@@ -17,6 +17,7 @@ import { MobileCurrencySwitcher } from "@/components/layout/MobileCurrencySwitch
 import { MobileLocaleSwitcher } from "@/components/layout/MobileLocaleSwitcher";
 import { AppLink } from "@/components/ui/AppLink";
 import type { Dictionary } from "@/lib/i18n/get-dictionary";
+import { useIsClient } from "@/lib/react/use-is-client";
 import type { Locale } from "@/lib/i18n/config";
 import type { Currency } from "@/lib/money/currency";
 
@@ -68,10 +69,27 @@ export function MobileNavDrawer({
   const renderedRef = useRef(false);
 
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [rendered, setRendered] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [panelTopPx, setPanelTopPx] = useState(72);
+  const [trackedPath, setTrackedPath] = useState(pathname);
+  const [trackedOpen, setTrackedOpen] = useState(open);
+
+  if (pathname !== trackedPath) {
+    setTrackedPath(pathname);
+    setOpen(false);
+  }
+
+  if (open !== trackedOpen) {
+    setTrackedOpen(open);
+    if (open) {
+      setRendered(true);
+      setExpanded(false);
+    } else if (rendered) {
+      setExpanded(false);
+    }
+  }
 
   const clearExitTimer = useCallback(() => {
     if (exitTimerRef.current !== null) {
@@ -93,66 +111,59 @@ export function MobileNavDrawer({
     setPanelTopPx(header.getBoundingClientRect().bottom);
   }, []);
 
-  const openMenu = useCallback(() => {
-    clearExitTimer();
-    measureHeader();
-    renderedRef.current = true;
-    setRendered(true);
-    setExpanded(false);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setExpanded(true);
-      });
-    });
-  }, [clearExitTimer, measureHeader]);
-
-  const closeMenu = useCallback(() => {
-    clearExitTimer();
-    setExpanded(false);
-    exitTimerRef.current = window.setTimeout(() => {
-      renderedRef.current = false;
-      setRendered(false);
-      exitTimerRef.current = null;
-    }, MENU_EXIT_MS);
-  }, [clearExitTimer]);
-
   const toggleMenu = useCallback(() => {
     setOpen((current) => !current);
   }, []);
 
   useEffect(() => {
-    setMounted(true);
-    return () => clearExitTimer();
-  }, [clearExitTimer]);
+    renderedRef.current = rendered;
+  }, [rendered]);
 
   useEffect(() => {
-    if (open) {
-      openMenu();
-      return;
-    }
-    if (!renderedRef.current) return;
-    closeMenu();
-  }, [open, openMenu, closeMenu]);
+    return () => clearExitTimer();
+  }, [clearExitTimer]);
 
   useEffect(() => {
     const media = window.matchMedia("(min-width: 768px)");
     function closeOnDesktop(): void {
       if (media.matches) setOpen(false);
     }
-    closeOnDesktop();
+    const frame = requestAnimationFrame(closeOnDesktop);
     media.addEventListener("change", closeOnDesktop);
-    return () => media.removeEventListener("change", closeOnDesktop);
+    return () => {
+      cancelAnimationFrame(frame);
+      media.removeEventListener("change", closeOnDesktop);
+    };
   }, []);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
+    if (open) {
+      let frame2 = 0;
+      const frame1 = requestAnimationFrame(() => {
+        measureHeader();
+        frame2 = requestAnimationFrame(() => setExpanded(true));
+      });
+      return () => {
+        cancelAnimationFrame(frame1);
+        cancelAnimationFrame(frame2);
+      };
+    }
+
+    if (!renderedRef.current) return;
+    const timer = window.setTimeout(() => {
+      setRendered(false);
+    }, MENU_EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [open, measureHeader]);
 
   useLayoutEffect(() => {
     if (!rendered) return;
-    measureHeader();
+    const frame = requestAnimationFrame(() => measureHeader());
     window.addEventListener("resize", measureHeader);
-    return () => window.removeEventListener("resize", measureHeader);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", measureHeader);
+    };
   }, [rendered, measureHeader]);
 
   useEffect(() => {

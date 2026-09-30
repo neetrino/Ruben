@@ -31,8 +31,10 @@ function formatMajorAmount(major: number, fractionDigits: number): string {
 export function formatMoneyAmount(
   amount: bigint | number,
   currency: Currency,
-  _locale: string,
+  locale: string,
 ): string {
+  // Callers pass locale; the symbol format stays the same for every locale.
+  void locale;
   const meta = getCurrencyMeta(currency);
   const raw = typeof amount === "bigint" ? Number(amount) : amount;
 

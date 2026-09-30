@@ -10,7 +10,7 @@ type SiteCopyrightProps = {
   linkClassName?: string;
   /** Puts the "Created by …" credit on its own line (narrow viewports). */
   createdByOnNewLine?: boolean;
-  /** Compact mobile line: `© {year} | CREATED BY NEETRINO`. */
+  /** Compact mobile line: `© {year} | Created by Neetrino`. */
   compact?: boolean;
 };
 
@@ -36,7 +36,7 @@ export function SiteCopyright({
     : footer.copyrightCompany;
 
   return (
-    <p className={`${compact ? "uppercase" : ""} ${className}`.trim()}>
+    <p className={className}>
       <span>{prefix} </span>
       <span className={!compact && createdByOnNewLine ? "block" : undefined}>
         <span>{footer.copyrightCreatedBy} </span>

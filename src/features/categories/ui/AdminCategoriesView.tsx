@@ -125,11 +125,12 @@ export function AdminCategoriesView({
   const orderedRef = useRef(ordered);
   const dragOriginRef = useRef<AdminCategoryListItem[] | null>(null);
   const persistedRef = useRef(false);
+  const [categoriesSnapshot, setCategoriesSnapshot] = useState(categories);
 
-  useEffect(() => {
+  if (categories !== categoriesSnapshot) {
+    setCategoriesSnapshot(categories);
     setOrdered(categories);
-    orderedRef.current = categories;
-  }, [categories]);
+  }
 
   useEffect(() => {
     orderedRef.current = ordered;

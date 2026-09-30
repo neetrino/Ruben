@@ -128,14 +128,19 @@ export function CartDrawer({
         backdropBlur
       >
         <div className="border-b border-gray-100 px-6 py-5">
-          <h2 className="text-xl font-bold tracking-tight text-gray-900">
-            {labels.title}
-          </h2>
-          {hasItems ? (
-            <p className="mt-1 text-sm text-gray-500">
-              {formatItemCount(badgeCount, labels)}
-            </p>
-          ) : null}
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-xl font-bold tracking-tight text-gray-900">
+              {labels.title}
+            </h2>
+            {badgeCount > 0 ? (
+              <span
+                className="inline-flex h-6 min-w-8 items-center justify-center rounded-full bg-[var(--brand)] px-2 text-sm font-bold text-black tabular-nums"
+                aria-label={formatItemCount(badgeCount, labels)}
+              >
+                {badgeCount}
+              </span>
+            ) : null}
+          </div>
         </div>
 
         <div
@@ -304,14 +309,8 @@ export function CartDrawer({
         </div>
 
         <div className="border-t border-gray-200 px-6 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
-          <dl className="space-y-2 text-sm">
-            <div className="flex items-center justify-between text-gray-600">
-              <dt>{labels.subtotal}</dt>
-              <dd className="tabular-nums text-gray-900">
-                {view?.subtotalFormatted ?? "—"}
-              </dd>
-            </div>
-            <div className="flex items-center justify-between pt-1 text-base font-bold text-gray-900">
+          <dl className="text-base font-bold text-gray-900">
+            <div className="flex items-center justify-between">
               <dt>{labels.total}</dt>
               <dd className="tabular-nums">{view?.totalFormatted ?? "—"}</dd>
             </div>

@@ -108,6 +108,8 @@ export function ProductDrawerImages({
               key={image.key}
               className="relative overflow-hidden rounded-xl border border-gray-200 bg-gray-50"
             >
+              {/* Preview is an object URL created from a local file. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={image.previewUrl}
                 alt=""

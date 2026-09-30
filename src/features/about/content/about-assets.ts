@@ -1,7 +1,7 @@
 /** Static storefront assets for the About page. */
 export const ABOUT_ASSETS = {
-  heroBack: "/assets/about/hero-back.jpg",
-  heroFront: "/assets/about/hero-front.png",
+  heroBack: "/assets/about/hero-back.webp",
+  heroFront: "/assets/about/hero-front.webp",
   heroWave: "/assets/about/hero-wave.svg",
   values: {
     quality: "/assets/about/values/quality.webp",

@@ -131,7 +131,10 @@ function CategorySheetArt({ art }: { art: HomeCategorySheetArt }) {
       <img
         src={art.src}
         alt=""
-        className={`absolute inset-0 size-full max-w-none pointer-events-none ${art.objectClassName ?? "object-cover"}`}
+        className={
+          art.imageClassName ??
+          `pointer-events-none absolute inset-0 size-full max-w-none ${art.objectClassName ?? "object-cover"}`
+        }
       />
     </div>
   );

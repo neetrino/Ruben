@@ -6,7 +6,7 @@ import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { IconDropdown } from "@/components/ui/IconDropdown";
-import { getCategoryIcon } from "@/features/categories/ui/category-icons";
+import { CategoryIcon } from "@/features/categories/ui/category-icons";
 
 export type CategoryNavItem = {
   id: string;
@@ -74,8 +74,6 @@ function CategoryThumb({
   slug: string;
   label: string;
 }) {
-  const FallbackIcon = getCategoryIcon(slug, label);
-
   return (
     <span className={THUMBNAIL_CLASS}>
       {imageUrl ? (
@@ -88,7 +86,11 @@ function CategoryThumb({
           className="size-full object-contain"
         />
       ) : (
-        <FallbackIcon className="size-4 text-white/55" aria-hidden />
+        <CategoryIcon
+          slug={slug}
+          title={label}
+          className="size-4 text-white/55"
+        />
       )}
     </span>
   );

@@ -100,12 +100,17 @@ export function AdminBrandsView({ locale, brands }: AdminBrandsViewProps) {
   const orderedRef = useRef(ordered);
   const dragOriginRef = useRef(ordered);
   const persistedRef = useRef(false);
+  const [brandsSnapshot, setBrandsSnapshot] = useState(brands);
 
-  useEffect(() => {
+  if (brands !== brandsSnapshot) {
+    setBrandsSnapshot(brands);
     const next = sortByOrder(brands);
     setOrdered(next);
-    orderedRef.current = next;
-  }, [brands]);
+  }
+
+  useEffect(() => {
+    orderedRef.current = ordered;
+  }, [ordered]);
 
   const isFiltering = query.trim().length > 0;
   const featuredCount = brands.filter((brand) => brand.isFeatured).length;

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Percent } from "lucide-react";
 
@@ -30,11 +30,13 @@ export function GlobalDiscountCard({
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [trackedPercent, setTrackedPercent] = useState(initialPercent);
 
-  useEffect(() => {
+  if (initialPercent !== trackedPercent) {
+    setTrackedPercent(initialPercent);
     setValue(initialPercent != null ? String(initialPercent) : "");
     setSaved(initialPercent);
-  }, [initialPercent]);
+  }
 
   function parseInput(): number | null | "invalid" {
     const trimmed = value.trim();

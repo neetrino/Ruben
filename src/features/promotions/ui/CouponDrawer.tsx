@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 
@@ -64,11 +64,12 @@ export function CouponDrawer({
   const [expiresAt, setExpiresAt] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const couponId = coupon?.id ?? null;
+  const [seed, setSeed] = useState({ open, couponId });
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (coupon) {
+  if (seed.open !== open || seed.couponId !== couponId) {
+    setSeed({ open, couponId });
+    if (open && coupon) {
       setName(coupon.code ?? "");
       setCode(coupon.code ?? "");
       setDiscountType(
@@ -80,7 +81,7 @@ export function CouponDrawer({
       );
       setExpiresAt(toDateTimeLocal(coupon.endsAt));
       setError(null);
-    } else {
+    } else if (open) {
       setName("");
       setCode("");
       setDiscountType("PERCENTAGE");
@@ -89,8 +90,7 @@ export function CouponDrawer({
       setExpiresAt("");
       setError(null);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- seed on open / coupon id only
-  }, [open, coupon?.id]);
+  }
 
   return (
     <SideSheet

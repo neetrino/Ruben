@@ -97,16 +97,24 @@ export function AdminInlineStatusSelect({
   const [mounted, setMounted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [displayValue, setDisplayValue] = useState(value);
+  const [trackedValue, setTrackedValue] = useState(value);
   const [menuPosition, setMenuPosition] = useState<MenuPosition | null>(null);
+  const [trackedMenuOpen, setTrackedMenuOpen] = useState(open);
+
+  if (value !== trackedValue) {
+    setTrackedValue(value);
+    setDisplayValue(value);
+  }
+
+  if (open !== trackedMenuOpen) {
+    setTrackedMenuOpen(open);
+    if (open) setMounted(true);
+  }
   const [isPending, startTransition] = useTransition();
   const rootRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const pendingChangeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const menuId = useId();
-
-  useEffect(() => {
-    setDisplayValue(value);
-  }, [value]);
 
   useEffect(() => {
     return () => {
@@ -117,10 +125,7 @@ export function AdminInlineStatusSelect({
   }, []);
 
   useEffect(() => {
-    if (open) {
-      setMounted(true);
-      return;
-    }
+    if (open) return;
     const timer = setTimeout(() => setMounted(false), DROPDOWN_ANIMATION_MS);
     return () => clearTimeout(timer);
   }, [open]);
@@ -159,12 +164,14 @@ export function AdminInlineStatusSelect({
     });
   }
 
+  if (!open && !mounted && menuPosition !== null) {
+    setMenuPosition(null);
+  }
+
   useLayoutEffect(() => {
-    if (!open && !mounted) {
-      setMenuPosition(null);
-      return;
-    }
-    updateMenuPosition();
+    if (!open && !mounted) return;
+    const frame = requestAnimationFrame(() => updateMenuPosition());
+    return () => cancelAnimationFrame(frame);
   }, [open, mounted]);
 
   useEffect(() => {

@@ -1,6 +1,6 @@
 /**
  * Figma category-card art for the mobile home categories sheet
- * (nodes 319:366, 307:383, 271:581, 319:343, 319:350, 319:353, 319:356).
+ * (nodes 319:366, 342:342, 342:345, 342:3343, 319:350, 319:353, 319:356).
  * Mapped by hy / en / ru root slugs.
  */
 export type HomeCategorySheetArt = {
@@ -12,13 +12,18 @@ export type HomeCategorySheetArt = {
   /** Sized box that holds the `<img>`. */
   imageBoxClassName: string;
   objectClassName?: string;
+  /**
+   * Replaces the default fill when Figma crops the photo inside the box
+   * instead of using object-cover.
+   */
+  imageClassName?: string;
 };
 
 const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Paints — Figma 319:366
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/paints.png",
+      src: "/assets/home/mobile/categories/paints.webp",
       frameClassName:
         "absolute top-[-35px] right-[-15px] flex size-[189px] items-center justify-center",
       transformClassName: "-scale-y-100 rotate-[174.08deg]",
@@ -29,42 +34,40 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
     "paints-and-coatings",
     "lakokrasochnye-materialy",
   ),
-  // Wallpapers — Figma 307:383
+  // Wallpapers — Figma 342:342 inside card 269:571 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/wallpapers.png",
+      src: "/assets/home/mobile/categories/wallpapers.webp",
       frameClassName:
-        "absolute top-[-19px] right-0 flex h-[147px] w-[146px] items-center justify-center",
-      transformClassName: "-scale-y-100 rotate-180",
-      imageBoxClassName: "relative h-[147px] w-[146px]",
-      objectClassName: "object-cover",
+        "absolute top-[8px] right-[-13px] h-[189px] w-[204px] overflow-hidden",
+      imageBoxClassName: "relative size-full",
+      imageClassName:
+        "pointer-events-none absolute top-[-43%] left-[-0.01%] h-[143%] w-[100.02%] max-w-none",
     },
     "պաստառներ-եւ-3d-պանելներ",
     "wallpapers-and-3d-panels",
     "oboi-i-3d-paneli",
   ),
-  // Flooring — Figma 271:581
+  // Flooring — Figma 342:345 inside card 271:575 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/flooring.png",
+      src: "/assets/home/mobile/categories/flooring.webp",
       frameClassName:
-        "absolute top-[-51px] right-[-62px] flex h-[264px] w-[264px] items-center justify-center",
-      transformClassName: "rotate-[-41.93deg]",
-      imageBoxClassName: "relative h-[184px] w-[190px]",
-      objectClassName: "object-bottom",
+        "absolute top-[-17px] right-[-43.46px] flex size-[216.456px] items-center justify-center",
+      transformClassName: "rotate-[170.92deg]",
+      imageBoxClassName: "relative size-[189px]",
+      objectClassName: "object-cover",
     },
     "հատակի-ծածկույթներ",
     "floor-coverings",
     "napolnye-pokrytiya",
   ),
-  // Tiles — Figma 319:343
+  // Tiles — Figma 342:3343 inside card 271:577 (347×110).
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/tiles.png",
-      frameClassName:
-        "absolute top-[-39px] right-[-59px] flex h-[264px] w-[264px] items-center justify-center",
-      transformClassName: "rotate-[-41.93deg]",
-      imageBoxClassName: "relative h-[184px] w-[190px]",
+      src: "/assets/home/mobile/categories/tiles.webp",
+      frameClassName: "absolute top-0 right-[1px] h-[274px] w-[153px]",
+      imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",
     },
     "սալիկներ",
@@ -74,7 +77,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Sanitaryware — Figma 319:350
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/sanitary.png",
+      src: "/assets/home/mobile/categories/sanitary.webp",
       frameClassName: "absolute top-[-70px] right-[-42px] size-[233px]",
       imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",
@@ -86,7 +89,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Heating — Figma 319:353
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/heating.png",
+      src: "/assets/home/mobile/categories/heating.webp",
       frameClassName:
         "absolute top-[9px] right-[-25px] flex h-[222px] w-[207px] items-center justify-center",
       transformClassName: "-scale-y-100 rotate-180",
@@ -100,7 +103,7 @@ const CATEGORY_SHEET_ART_BY_SLUG = new Map<string, HomeCategorySheetArt>([
   // Tools — Figma 319:356
   ...mapArt(
     {
-      src: "/assets/home/mobile/categories/tools.png",
+      src: "/assets/home/mobile/categories/tools.webp",
       frameClassName: "absolute top-[10px] right-0 h-[128px] w-[199px]",
       imageBoxClassName: "relative size-full",
       objectClassName: "object-cover",

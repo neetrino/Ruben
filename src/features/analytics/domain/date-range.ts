@@ -116,8 +116,9 @@ export function formatAnalyticsDisplayDate(isoDate: string): string {
 /** Formats a short chart/list date (e.g. Jul 13). */
 export function formatAnalyticsShortDate(
   isoDate: string,
-  _locale?: string,
+  locale?: string,
 ): string {
+  void locale;
   return new Date(`${isoDate}T00:00:00.000Z`).toLocaleDateString("en-US", {
     month: "short",
     day: "numeric",
@@ -143,8 +144,9 @@ const MONTH_NAMES_SHORT = [
 /** Formats a full month name for chart axis headers (e.g. July). */
 export function formatAnalyticsMonthShort(
   isoDate: string,
-  _locale?: string,
+  locale?: string,
 ): string {
+  void locale;
   const monthIndex = Number(isoDate.slice(5, 7)) - 1;
   return MONTH_NAMES_SHORT[monthIndex] ?? isoDate;
 }

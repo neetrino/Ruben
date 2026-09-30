@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -44,11 +44,12 @@ export function AddBrandDrawer({
   const [removeExistingImage, setRemoveExistingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const brandKey = brand?.id ?? "new";
+  const [seed, setSeed] = useState({ open, brandKey });
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (brand) {
+  if (seed.open !== open || (open && seed.brandKey !== brandKey)) {
+    setSeed({ open, brandKey });
+    if (open && brand) {
       setTitle(brand.title);
       setSlug(brand.slug);
       setSlugTouched(true);
@@ -57,7 +58,7 @@ export function AddBrandDrawer({
       setImagePreview(brand.imageUrl);
       setRemoveExistingImage(false);
       setError(null);
-    } else {
+    } else if (open) {
       setTitle("");
       setSlug("");
       setSlugTouched(false);
@@ -67,7 +68,7 @@ export function AddBrandDrawer({
       setRemoveExistingImage(false);
       setError(null);
     }
-  }, [open, brand]);
+  }
 
   const displaySlug = slugTouched ? slug : slugifyCategoryTitle(title) || "---";
 
