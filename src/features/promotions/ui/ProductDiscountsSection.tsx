@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -50,10 +50,12 @@ export function ProductDiscountsSection({
   const [drafts, setDrafts] = useState<Record<string, string>>(() =>
     draftsFromProducts(products),
   );
+  const [productsSnapshot, setProductsSnapshot] = useState(products);
 
-  useEffect(() => {
+  if (products !== productsSnapshot) {
+    setProductsSnapshot(products);
     setDrafts(draftsFromProducts(products));
-  }, [products]);
+  }
   const [savingId, setSavingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);

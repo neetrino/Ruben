@@ -1,6 +1,7 @@
 "use client";
 
 import { Copy, Pencil, Star, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 import {
   ADMIN_TABLE_ROW,
@@ -64,9 +65,11 @@ export function AdminProductRow({
         <div className="flex min-w-[200px] items-center gap-3">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded bg-gray-100">
             {product.imageUrl ? (
-              <img
+              <Image
                 src={product.imageUrl}
                 alt=""
+                width={40}
+                height={40}
                 className="h-full w-full object-cover"
               />
             ) : (

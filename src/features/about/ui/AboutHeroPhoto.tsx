@@ -37,6 +37,8 @@ export function AboutHeroPhoto({ alt }: AboutHeroPhotoProps) {
         }}
         aria-hidden
       >
+        {/* Native img: the Figma crop uses percentage offsets that next/image overrides. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={ABOUT_ASSETS.heroFront}
           alt=""

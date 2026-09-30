@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 import { DROPDOWN_ANIMATION_MS } from "@/components/ui/SelectDropdown";
@@ -65,10 +65,13 @@ export function LocaleCurrencySwitcher({
     setOpen(true);
   }
 
-  function closeMenu(): void {
-    clearCloseTimer();
+  const closeMenu = useCallback(() => {
+    if (closeTimerRef.current !== null) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setOpen(false);
-  }
+  }, []);
 
   function scheduleClose(): void {
     clearCloseTimer();
@@ -82,23 +85,31 @@ export function LocaleCurrencySwitcher({
     return () => clearCloseTimer();
   }, []);
 
-  useEffect(() => {
+  const [trackedOpen, setTrackedOpen] = useState(open);
+  if (open !== trackedOpen) {
+    setTrackedOpen(open);
     if (open) {
       setRendered(true);
       setEntered(false);
-      let frame2 = 0;
-      const frame1 = requestAnimationFrame(() => {
-        frame2 = requestAnimationFrame(() => setEntered(true));
-      });
-      return () => {
-        cancelAnimationFrame(frame1);
-        cancelAnimationFrame(frame2);
-      };
+    } else {
+      setEntered(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!open) {
+      const timer = setTimeout(() => setRendered(false), DROPDOWN_ANIMATION_MS);
+      return () => clearTimeout(timer);
     }
 
-    setEntered(false);
-    const timer = setTimeout(() => setRendered(false), DROPDOWN_ANIMATION_MS);
-    return () => clearTimeout(timer);
+    let frame2 = 0;
+    const frame1 = requestAnimationFrame(() => {
+      frame2 = requestAnimationFrame(() => setEntered(true));
+    });
+    return () => {
+      cancelAnimationFrame(frame1);
+      cancelAnimationFrame(frame2);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -124,7 +135,7 @@ export function LocaleCurrencySwitcher({
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [open]);
+  }, [open, closeMenu]);
 
   function handleCurrency(next: Currency): void {
     closeMenu();

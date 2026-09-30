@@ -37,10 +37,6 @@ type DeliveryLocationFormProps = {
 
 type LocaleDrafts = Record<Locale, string>;
 
-function emptyLocaleDrafts(): LocaleDrafts {
-  return { hy: "", en: "", ru: "" };
-}
-
 function draftsFromTranslations(
   translations: Partial<Record<Locale, string>> | undefined,
   fallback = "",

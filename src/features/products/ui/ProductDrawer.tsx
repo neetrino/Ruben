@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { SideSheet } from "@/components/ui/SideSheet";
@@ -84,10 +84,12 @@ export function ProductDrawer({
   const [stockOnHand, setStockOnHand] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const productId = product?.id ?? null;
+  const [seed, setSeed] = useState({ open, productId });
 
-  useEffect(() => {
-    if (!open) return;
-
+  if (seed.open !== open || seed.productId !== productId) {
+    setSeed({ open, productId });
+    if (open) {
     setCategories(initialCategories);
     if (product) {
       setTitle(product.title);
@@ -116,10 +118,8 @@ export function ProductDrawer({
       setStockOnHand("");
       setError(null);
     }
-    // Seed only when the drawer opens or the edited product changes — not on
-    // every parent re-render, or caret jumps and digits append at the end.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional
-  }, [open, product?.id]);
+    }
+  }
 
   function handleImagesChange(next: ProductDraftImage[]): void {
     const nextKeys = new Set(next.map((image) => image.key));

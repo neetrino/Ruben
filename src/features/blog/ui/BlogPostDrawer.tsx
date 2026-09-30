@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/Button";
 import { SelectDropdown } from "@/components/ui/SelectDropdown";
 import { SideSheet } from "@/components/ui/SideSheet";
@@ -115,11 +115,12 @@ export function BlogPostDrawer({
   const [removeExistingImage, setRemoveExistingImage] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const postKey = post?.id ?? "new";
+  const [seed, setSeed] = useState({ open, postKey });
 
-  useEffect(() => {
-    if (!open) return;
-
-    if (post) {
+  if (seed.open !== open || (open && seed.postKey !== postKey)) {
+    setSeed({ open, postKey });
+    if (open && post) {
       setActiveLocale(
         (locales.find((loc) => post.translations[loc]?.title) as
           | Locale
@@ -132,7 +133,7 @@ export function BlogPostDrawer({
       setImagePreview(post.coverUrl ?? null);
       setRemoveExistingImage(false);
       setError(null);
-    } else {
+    } else if (open) {
       setActiveLocale("en");
       setDrafts({
         hy: emptyDraft(),
@@ -146,7 +147,7 @@ export function BlogPostDrawer({
       setRemoveExistingImage(false);
       setError(null);
     }
-  }, [open, post]);
+  }
 
   const draft = drafts[activeLocale];
 

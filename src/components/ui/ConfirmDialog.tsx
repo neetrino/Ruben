@@ -8,6 +8,8 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 
+import { useIsClient } from "@/lib/react/use-is-client";
+
 /** Keep mounted through exit keyframes (Mobee dialog out is 280ms; fallback 320ms). */
 const CONFIRM_DIALOG_EXIT_MS = 320;
 
@@ -50,43 +52,44 @@ export function ConfirmDialog({
   onConfirm,
   onClose,
 }: ConfirmDialogProps) {
-  const [mounted, setMounted] = useState(false);
+  const mounted = useIsClient();
   const [rendered, setRendered] = useState(false);
   const [exiting, setExiting] = useState(false);
   const [displayTitle, setDisplayTitle] = useState(title);
   const [displayDescription, setDisplayDescription] = useState(description);
   const [displayConfirmLabel, setDisplayConfirmLabel] = useState(confirmLabel);
   const [displayCancelLabel, setDisplayCancelLabel] = useState(cancelLabel);
+  const [trackedOpen, setTrackedOpen] = useState(open);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!open) return;
-    setDisplayTitle(title);
-    setDisplayDescription(description);
-    setDisplayConfirmLabel(confirmLabel);
-    setDisplayCancelLabel(cancelLabel);
-  }, [open, title, description, confirmLabel, cancelLabel]);
-
-  useEffect(() => {
+  if (
+    trackedOpen !== open ||
+    (open &&
+      (displayTitle !== title ||
+        displayDescription !== description ||
+        displayConfirmLabel !== confirmLabel ||
+        displayCancelLabel !== cancelLabel))
+  ) {
+    setTrackedOpen(open);
     if (open) {
+      setDisplayTitle(title);
+      setDisplayDescription(description);
+      setDisplayConfirmLabel(confirmLabel);
+      setDisplayCancelLabel(cancelLabel);
       setExiting(false);
       setRendered(true);
-      return;
+    } else if (rendered) {
+      setExiting(true);
     }
+  }
 
-    if (!rendered) return;
-
-    setExiting(true);
+  useEffect(() => {
+    if (open || !exiting) return;
     const timer = window.setTimeout(() => {
       setRendered(false);
       setExiting(false);
     }, CONFIRM_DIALOG_EXIT_MS);
-
     return () => window.clearTimeout(timer);
-  }, [open, rendered]);
+  }, [open, exiting]);
 
   useEffect(() => {
     if (!rendered) return;

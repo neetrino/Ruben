@@ -77,15 +77,26 @@ export function CatalogFiltersSheet({
 }: CatalogFiltersSheetProps) {
   const pathname = usePathname() ?? "";
   const [open, setOpen] = useState(false);
+  const [trackedPath, setTrackedPath] = useState(pathname);
+
+  if (pathname !== trackedPath) {
+    setTrackedPath(pathname);
+    if (!pathname.includes("/products")) {
+      setOpen(false);
+    }
+  }
 
   useEffect(() => {
-    try {
-      if (sessionStorage.getItem(SHEET_OPEN_STORAGE_KEY) === "1") {
-        setOpen(true);
+    const timer = window.setTimeout(() => {
+      try {
+        if (sessionStorage.getItem(SHEET_OPEN_STORAGE_KEY) === "1") {
+          setOpen(true);
+        }
+      } catch {
+        // Ignore private-mode / unavailable storage.
       }
-    } catch {
-      // Ignore private-mode / unavailable storage.
-    }
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -105,13 +116,11 @@ export function CatalogFiltersSheet({
   }, []);
 
   useEffect(() => {
-    if (!pathname.includes("/products")) {
-      setOpen(false);
-      try {
-        sessionStorage.removeItem(SHEET_OPEN_STORAGE_KEY);
-      } catch {
-        // Ignore.
-      }
+    if (pathname.includes("/products")) return;
+    try {
+      sessionStorage.removeItem(SHEET_OPEN_STORAGE_KEY);
+    } catch {
+      // Ignore.
     }
   }, [pathname]);
 

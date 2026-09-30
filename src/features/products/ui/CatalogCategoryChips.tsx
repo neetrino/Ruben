@@ -220,18 +220,19 @@ export function CatalogCategoryChips({
           onPointerCancel={endDrag}
           onClickCapture={onClickCapture}
         >
+          <span role="listitem" className="contents lg:hidden">
           <button
             type="button"
             aria-haspopup="dialog"
             aria-expanded={categoriesOpen}
             aria-controls="home-categories-sheet"
             onClick={() => setCategoriesOpen(true)}
-            className={`inline-flex ${chipTone(allActive)} lg:hidden`}
-            role="listitem"
+            className={`inline-flex ${chipTone(allActive)}`}
           >
             <AllIcon className="size-5 shrink-0" aria-hidden />
             {allLabel}
           </button>
+          </span>
           <AppLink
             href={allHref}
             prefetchPolicy="intent"

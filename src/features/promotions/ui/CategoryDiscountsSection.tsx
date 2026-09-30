@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/Button";
@@ -42,8 +42,10 @@ export function CategoryDiscountsSection({
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [categoriesSnapshot, setCategoriesSnapshot] = useState(categories);
 
-  useEffect(() => {
+  if (categories !== categoriesSnapshot) {
+    setCategoriesSnapshot(categories);
     setDrafts(
       Object.fromEntries(
         categories.map((category) => [
@@ -54,7 +56,7 @@ export function CategoryDiscountsSection({
         ]),
       ),
     );
-  }, [categories]);
+  }
 
   const isDirty = useMemo(() => {
     return categories.some((category) => {

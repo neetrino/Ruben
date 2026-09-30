@@ -57,11 +57,12 @@ export function SelectDropdown({
     };
   }, []);
 
+  if (open && !elevated) {
+    setElevated(true);
+  }
+
   useEffect(() => {
-    if (open) {
-      setElevated(true);
-      return;
-    }
+    if (open) return;
     const timer = setTimeout(() => setElevated(false), DROPDOWN_ANIMATION_MS);
     return () => clearTimeout(timer);
   }, [open]);

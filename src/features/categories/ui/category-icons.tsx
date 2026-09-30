@@ -1,3 +1,4 @@
+import { createElement } from "react";
 import type { LucideIcon } from "lucide-react";
 import {
   AirVent,
@@ -271,6 +272,8 @@ export function CategoryIcon({
   title,
   className = "size-5 shrink-0",
 }: CategoryIconProps) {
-  const Icon = getCategoryIcon(slug, title);
-  return <Icon className={className} aria-hidden />;
+  return createElement(getCategoryIcon(slug, title), {
+    className,
+    "aria-hidden": true,
+  });
 }
