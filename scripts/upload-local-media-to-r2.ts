@@ -8,7 +8,16 @@ import { imageMimeForExtension } from "@/lib/media/image-file";
 
 loadEnv({ path: path.resolve(process.cwd(), ".env") });
 
-const UPLOADS_ROOT = path.resolve(process.cwd(), "public", "uploads");
+const PUBLIC_ROOT = path.resolve(process.cwd(), "public");
+const UPLOADS_ROOT = path.join(PUBLIC_ROOT, "uploads");
+const ASSETS_ROOT = path.join(PUBLIC_ROOT, "assets");
+const ASSET_IMAGE_EXTENSIONS = new Set([
+  ".webp",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".gif",
+]);
 
 type R2Config = {
   bucketName: string;
@@ -50,9 +59,22 @@ async function collectFiles(directory: string): Promise<string[]> {
   return files.flat();
 }
 
+function objectKeyFor(absolute: string): string {
+  return path.relative(PUBLIC_ROOT, absolute).split(path.sep).join("/");
+}
+
+async function collectMediaFiles(): Promise<string[]> {
+  const uploads = await collectFiles(UPLOADS_ROOT);
+  const assets = (await collectFiles(ASSETS_ROOT)).filter((absolute) =>
+    ASSET_IMAGE_EXTENSIONS.has(path.extname(absolute).toLowerCase()),
+  );
+  return [...uploads, ...assets];
+}
+
 /**
- * Uploads files written by the local stub storage adapter into R2 using the
- * same object keys stored in the database. Safe to re-run: puts are idempotent.
+ * Uploads local product files and static pictures into R2.
+ * Object keys match the path under `public/` (`uploads/...`, `assets/...`).
+ * Safe to re-run: puts are idempotent.
  */
 async function uploadLocalMedia(): Promise<void> {
   const config = readR2Config();
@@ -65,18 +87,14 @@ async function uploadLocalMedia(): Promise<void> {
     },
   });
 
-  const files = await collectFiles(UPLOADS_ROOT);
+  const files = await collectMediaFiles();
   if (files.length === 0) {
-    process.stdout.write("No local uploads found.\n");
+    process.stdout.write("No local media found.\n");
     return;
   }
 
   for (const absolute of files) {
-    const objectKey = path
-      .relative(path.resolve(process.cwd(), "public"), absolute)
-      .split(path.sep)
-      .join("/");
-
+    const objectKey = objectKeyFor(absolute);
     await client.send(
       new PutObjectCommand({
         Bucket: config.bucketName,
