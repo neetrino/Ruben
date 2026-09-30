@@ -21,7 +21,8 @@ type CatalogCategoryChipsProps = {
 };
 
 const SCROLL_EDGE_PX = 8;
-const DRAG_CLICK_THRESHOLD_PX = 6;
+/** Ignore click jitter. Capture and suppress navigation only after a real drag. */
+const DRAG_CLICK_THRESHOLD_PX = 10;
 
 /** Visual chip styles only — keep `display` out so hide/show utilities do not conflict. */
 function chipTone(active: boolean): string {
@@ -139,7 +140,6 @@ export function CatalogCategoryChips({
       startScrollLeft: el.scrollLeft,
       moved: false,
     };
-    el.setPointerCapture(event.pointerId);
   }, []);
 
   const onPointerMove = useCallback((event: ReactPointerEvent<HTMLDivElement>) => {
@@ -148,11 +148,14 @@ export function CatalogCategoryChips({
     if (!drag || !el || drag.pointerId !== event.pointerId) return;
 
     const deltaX = event.clientX - drag.startX;
-    if (!drag.moved && Math.abs(deltaX) >= DRAG_CLICK_THRESHOLD_PX) {
+    if (!drag.moved) {
+      if (Math.abs(deltaX) < DRAG_CLICK_THRESHOLD_PX) return;
       drag.moved = true;
       setIsDragging(true);
+      // Capture only after a drag starts. Capturing on pointerdown retargets
+      // the click away from the category link, so a tap never navigates.
+      el.setPointerCapture(event.pointerId);
     }
-    if (!drag.moved) return;
 
     el.scrollLeft = drag.startScrollLeft - deltaX;
     event.preventDefault();
@@ -163,8 +166,16 @@ export function CatalogCategoryChips({
     const el = scrollerRef.current;
     if (!drag || drag.pointerId !== event.pointerId) return;
 
-    if (drag.moved) {
-      suppressClickRef.current = true;
+    if (drag.moved && el) {
+      const scrolled = el.scrollLeft !== drag.startScrollLeft;
+      if (scrolled) {
+        suppressClickRef.current = true;
+        // Click is dispatched after pointerup. If the browser drops it, clear
+        // the flag so the next category tap is not swallowed.
+        window.setTimeout(() => {
+          suppressClickRef.current = false;
+        }, 0);
+      }
     }
     if (el?.hasPointerCapture(event.pointerId)) {
       el.releasePointerCapture(event.pointerId);
