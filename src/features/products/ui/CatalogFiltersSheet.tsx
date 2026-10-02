@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 import { SideSheet } from "@/components/ui/SideSheet";
+import type { CatalogFeatureOption } from "@/features/attributes/application/list-product-attribute-options";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
 import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 import type { CatalogCategoryOption } from "@/features/products/application/list-catalog-products";
@@ -53,6 +54,7 @@ type CatalogFiltersSheetProps = {
   filters: CatalogListFilter;
   categories: CatalogCategoryOption[];
   brands: readonly StorefrontBrandItem[];
+  features: readonly CatalogFeatureOption[];
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
@@ -69,6 +71,7 @@ export function CatalogFiltersSheet({
   filters,
   categories,
   brands,
+  features,
   priceBounds,
   totalCount,
   copy,
@@ -185,6 +188,7 @@ export function CatalogFiltersSheet({
             filters={filters}
             categories={categories}
             brands={brands}
+            features={features}
             priceBounds={priceBounds}
             totalCount={totalCount}
             copy={copy}

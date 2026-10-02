@@ -45,5 +45,6 @@
   "chipMinPrice": "Նվազ.",
   "chipMaxPrice": "Առավ.",
   "chipCategory": "Կատեգորիա",
-  "chipInStock": "Առկա է"
+  "chipInStock": "Առկա է",
+  "chipFeature": "Ատրիբուտ"
 }

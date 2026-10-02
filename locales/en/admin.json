@@ -11,6 +11,7 @@
     "orders": "Orders",
     "products": "Products",
     "categories": "Categories",
+    "attributes": "Attributes",
     "brands": "Brands",
     "delivery": "Delivery",
     "discounts": "Discounts",
@@ -70,6 +71,7 @@
     "entity": {
       "product": "product",
       "category": "category",
+      "attribute": "attribute",
       "brand": "brand",
       "deliveryLocation": "delivery location",
       "promoCode": "promo code",
@@ -329,6 +331,17 @@
       "mainBadge": "Main",
       "remove": "Remove image",
       "hint": "Drag to reorder. First image becomes the main image."
+    },
+    "attributes": {
+      "title": "Attributes",
+      "empty": "No attributes available. Add values in Attributes first.",
+      "add": "Add attribute",
+      "pickAttribute": "Choose attribute",
+      "choose": "Choose",
+      "selectedCount": "{count} selected",
+      "done": "Done",
+      "back": "Back",
+      "removeValue": "Remove value"
     }
   },
   "categories": {
@@ -407,6 +420,50 @@
       "uploadImage": "Upload logo",
       "remove": "Remove logo",
       "create": "Create brand"
+    },
+    "status": {
+      "published": "Published",
+      "archived": "Archived"
+    }
+  },
+  "attributes": {
+    "title": "Attributes",
+    "subtitle": "Manage global product attributes and their values.",
+    "add": "Add attribute",
+    "searchPlaceholder": "e.g. Color, Size, Material",
+    "searchAria": "Search attributes",
+    "empty": "No attributes yet.",
+    "emptySearch": "No attributes match your search.",
+    "filterableBadge": "Filterable",
+    "valuesCount": "{count} values",
+    "types": {
+      "text": "Text",
+      "color": "Color"
+    },
+    "aria": {
+      "edit": "Edit attribute",
+      "delete": "Delete attribute",
+      "toggleValues": "Show or hide attribute values"
+    },
+    "drawer": {
+      "editTitle": "Edit attribute",
+      "createTitle": "Create attribute",
+      "titleLabel": "Name",
+      "type": "Type",
+      "typeLockedHint": "Remove all values before changing the type.",
+      "status": "Status",
+      "filterable": "Filterable in the catalog",
+      "create": "Create attribute"
+    },
+    "values": {
+      "add": "Add",
+      "addLabel": "Add new value (e.g. Red, Blue, Large, Small)",
+      "placeholder": "e.g. M, S, L, XL",
+      "color": "Color",
+      "colorLabel": "Label (optional)",
+      "colorPlaceholder": "e.g. Red, Navy",
+      "empty": "No values yet. Add the first one above.",
+      "deleteAria": "Delete value"
     },
     "status": {
       "published": "Published",

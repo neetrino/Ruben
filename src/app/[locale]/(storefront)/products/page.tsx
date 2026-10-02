@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 
 import { Reveal } from "@/components/motion/Reveal";
+import { listCatalogFeatureOptions } from "@/features/attributes/application/list-product-attribute-options";
 import { listStorefrontBrands } from "@/features/brands/application/list-storefront-brands";
 import { listCatalogProducts, getCatalogMaxListPriceAmd } from "@/features/products/application/list-catalog-products";
 import { buildCatalogPriceSliderBounds } from "@/features/products/domain/catalog-price-ranges";
@@ -50,6 +51,7 @@ function parseCatalogFilters(
     minPrice: firstParam(raw.minPrice),
     maxPrice: firstParam(raw.maxPrice),
     category: firstParam(raw.category),
+    features: firstParam(raw.features),
     inStock: firstParam(raw.inStock),
     sort: firstParam(raw.sort),
     page: firstParam(raw.page),
@@ -72,12 +74,14 @@ export default async function ProductsPage({
 
   let filters = parseCatalogFilters(raw);
   const dictionary = getDictionary(rawLocale);
-  const [currency, user, brands, maxListPriceAmd] = await Promise.all([
-    getSelectedCurrency(),
-    getCurrentUser(),
-    listStorefrontBrands(rawLocale),
-    getCatalogMaxListPriceAmd(),
-  ]);
+  const [currency, user, brands, featureOptions, maxListPriceAmd] =
+    await Promise.all([
+      getSelectedCurrency(),
+      getCurrentUser(),
+      listStorefrontBrands(rawLocale),
+      listCatalogFeatureOptions(rawLocale),
+      getCatalogMaxListPriceAmd(),
+    ]);
   const rateQuote = await getCheckoutRateSnapshot(currency);
 
   let catalog = await listCatalogProducts(rawLocale, filters, currency);
@@ -200,6 +204,7 @@ export default async function ProductsPage({
                   filters={filters}
                   categories={categories}
                   brands={brands}
+                  features={featureOptions}
                   priceBounds={priceBounds}
                   totalCount={catalog.total}
                   copy={filterCopy}
@@ -216,6 +221,7 @@ export default async function ProductsPage({
               filters={filters}
               categories={categories}
               brands={brands}
+              features={featureOptions}
               priceBounds={priceBounds}
               totalCount={catalog.total}
               copy={filterCopy}
@@ -227,6 +233,7 @@ export default async function ProductsPage({
               locale={rawLocale}
               filters={filters}
               categoryTitle={categoryTitle}
+              featureOptions={featureOptions}
               currencyCode={currency}
               removeFilterLabel={dictionary.catalog.removeFilter}
               labels={{
@@ -234,6 +241,7 @@ export default async function ProductsPage({
                 minPrice: dictionary.catalog.chipMinPrice,
                 maxPrice: dictionary.catalog.chipMaxPrice,
                 category: dictionary.catalog.chipCategory,
+                feature: dictionary.catalog.chipFeature,
                 inStock: dictionary.catalog.chipInStock,
                 outOfStock: dictionary.catalog.outOfStock,
               }}

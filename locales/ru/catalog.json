@@ -45,5 +45,6 @@
   "chipMinPrice": "От",
   "chipMaxPrice": "До",
   "chipCategory": "Категория",
-  "chipInStock": "В наличии"
+  "chipInStock": "В наличии",
+  "chipFeature": "Атрибут"
 }

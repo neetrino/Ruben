@@ -11,6 +11,7 @@ import {
   ADMIN_TEXTAREA,
 } from "@/features/admin/ui/admin-form-classes";
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
+import type { ProductAttributeOptionGroup } from "@/features/attributes/application/list-product-attribute-options";
 import type {
   AdminCategoryOption,
   AdminProductListItem,
@@ -19,6 +20,7 @@ import {
   createProductFromDrawerAction,
   updateProductFromDrawerAction,
 } from "@/features/products/application/upsert-product";
+import { ProductDrawerAttributes } from "@/features/products/ui/ProductDrawerAttributes";
 import { ProductDrawerCategories } from "@/features/products/ui/ProductDrawerCategories";
 import {
   ProductDrawerImages,
@@ -37,6 +39,7 @@ type ProductDrawerProduct = Pick<
   | "stockOnHand"
   | "status"
   | "categoryIds"
+  | "attributeValueIds"
   | "images"
 >;
 
@@ -46,6 +49,7 @@ type ProductDrawerProps = {
   onClose: () => void;
   product?: ProductDrawerProduct | null;
   categories: AdminCategoryOption[];
+  attributeGroups: ProductAttributeOptionGroup[];
 };
 
 function imagesFromProduct(
@@ -66,6 +70,7 @@ export function ProductDrawer({
   onClose,
   product = null,
   categories: initialCategories,
+  attributeGroups,
 }: ProductDrawerProps) {
   const t = adminCopy(locale);
   const router = useRouter();
@@ -78,6 +83,7 @@ export function ProductDrawer({
   const [categories, setCategories] =
     useState<AdminCategoryOption[]>(initialCategories);
   const [categoryIds, setCategoryIds] = useState<string[]>([]);
+  const [attributeValueIds, setAttributeValueIds] = useState<string[]>([]);
   const [priceAmount, setPriceAmount] = useState("");
   const [compareAtAmount, setCompareAtAmount] = useState("");
   const [sku, setSku] = useState("");
@@ -90,34 +96,38 @@ export function ProductDrawer({
   if (seed.open !== open || seed.productId !== productId) {
     setSeed({ open, productId });
     if (open) {
-    setCategories(initialCategories);
-    if (product) {
-      setTitle(product.title);
-      setSlug(product.slug);
-      setDescription(product.description);
-      setImages(imagesFromProduct(product));
-      setRemovedImageIds([]);
-      setCategoryIds(product.categoryIds);
-      setPriceAmount(String(product.priceAmount));
-      setCompareAtAmount(
-        product.compareAtAmount != null ? String(product.compareAtAmount) : "",
-      );
-      setSku(product.sku);
-      setStockOnHand(String(product.stockOnHand));
-      setError(null);
-    } else {
-      setTitle("");
-      setSlug("");
-      setDescription("");
-      setImages([]);
-      setRemovedImageIds([]);
-      setCategoryIds([]);
-      setPriceAmount("");
-      setCompareAtAmount("");
-      setSku("");
-      setStockOnHand("");
-      setError(null);
-    }
+      setCategories(initialCategories);
+      if (product) {
+        setTitle(product.title);
+        setSlug(product.slug);
+        setDescription(product.description);
+        setImages(imagesFromProduct(product));
+        setRemovedImageIds([]);
+        setCategoryIds(product.categoryIds);
+        setAttributeValueIds(product.attributeValueIds);
+        setPriceAmount(String(product.priceAmount));
+        setCompareAtAmount(
+          product.compareAtAmount != null
+            ? String(product.compareAtAmount)
+            : "",
+        );
+        setSku(product.sku);
+        setStockOnHand(String(product.stockOnHand));
+        setError(null);
+      } else {
+        setTitle("");
+        setSlug("");
+        setDescription("");
+        setImages([]);
+        setRemovedImageIds([]);
+        setCategoryIds([]);
+        setAttributeValueIds([]);
+        setPriceAmount("");
+        setCompareAtAmount("");
+        setSku("");
+        setStockOnHand("");
+        setError(null);
+      }
     }
   }
 
@@ -171,6 +181,7 @@ export function ProductDrawer({
                 : null,
               stockOnHand: Number(stockOnHand),
               categoryIds,
+              attributeValueIds,
               status: (product?.status === "ACTIVE" ||
               product?.status === "ARCHIVED"
                 ? product.status
@@ -267,6 +278,14 @@ export function ProductDrawer({
               disabled={isPending}
               onCategoriesChange={setCategories}
               onSelectedChange={setCategoryIds}
+            />
+
+            <ProductDrawerAttributes
+              locale={locale}
+              groups={attributeGroups}
+              selectedValueIds={attributeValueIds}
+              disabled={isPending}
+              onSelectedChange={setAttributeValueIds}
             />
 
             <div className="grid gap-4 sm:grid-cols-2">

@@ -18,7 +18,11 @@ import {
   idColumn,
   updatedAtColumn,
 } from "@/db/schema/columns";
-import { categoryStatusEnum, productStatusEnum } from "@/db/schema/enums";
+import {
+  categoryStatusEnum,
+  productAttributeTypeEnum,
+  productStatusEnum,
+} from "@/db/schema/enums";
 
 export type LocaleTranslation = {
   title: string;
@@ -158,5 +162,85 @@ export const brands = pgTable(
     uniqueIndex("brands_slug_ru_uidx")
       .on(sql`(${table.translations}->'ru'->>'slug')`)
       .where(sql`${table.translations}->'ru'->>'slug' IS NOT NULL`),
+  ],
+);
+
+/**
+ * Global product attribute dictionary (Size, Color, …).
+ * Product assignment / storefront filters are a later step.
+ */
+export const productAttributes = pgTable(
+  "product_attributes",
+  {
+    id: idColumn(),
+    code: text("code").notNull(),
+    translations: jsonb("translations").$type<TranslationsJson>().notNull(),
+    type: productAttributeTypeEnum("type").notNull().default("TEXT"),
+    isFilterable: boolean("is_filterable").notNull().default(true),
+    sortOrder: integer("sort_order").notNull().default(0),
+    status: categoryStatusEnum("status").notNull().default("ACTIVE"),
+    createdAt: createdAtColumn(),
+    updatedAt: updatedAtColumn(),
+    deletedAt: deletedAtColumn(),
+  },
+  (table) => [
+    index("product_attributes_status_sort_idx").on(
+      table.status,
+      table.sortOrder,
+    ),
+    uniqueIndex("product_attributes_code_uidx")
+      .on(table.code)
+      .where(sql`${table.deletedAt} IS NULL`),
+  ],
+);
+
+/** Allowed values for a global product attribute (e.g. XL, #FF0000). */
+export const productAttributeValues = pgTable(
+  "product_attribute_values",
+  {
+    id: idColumn(),
+    attributeId: uuid("attribute_id")
+      .notNull()
+      .references(() => productAttributes.id, { onDelete: "restrict" }),
+    code: text("code").notNull(),
+    translations: jsonb("translations").$type<TranslationsJson>().notNull(),
+    /** Present for COLOR attributes; null for TEXT. */
+    swatchHex: text("swatch_hex"),
+    sortOrder: integer("sort_order").notNull().default(0),
+    createdAt: createdAtColumn(),
+    updatedAt: updatedAtColumn(),
+    deletedAt: deletedAtColumn(),
+  },
+  (table) => [
+    index("product_attribute_values_attribute_idx").on(table.attributeId),
+    uniqueIndex("product_attribute_values_code_uidx")
+      .on(table.attributeId, table.code)
+      .where(sql`${table.deletedAt} IS NULL`),
+    check(
+      "product_attribute_values_swatch_hex_chk",
+      sql`${table.swatchHex} IS NULL OR ${table.swatchHex} ~ '^#[0-9A-Fa-f]{6}$'`,
+    ),
+  ],
+);
+
+/** Product ↔ attribute value assignments for catalog filters. */
+export const productAttributeAssignments = pgTable(
+  "product_attribute_assignments",
+  {
+    id: idColumn(),
+    productId: uuid("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "restrict" }),
+    attributeValueId: uuid("attribute_value_id")
+      .notNull()
+      .references(() => productAttributeValues.id, { onDelete: "restrict" }),
+    createdAt: createdAtColumn(),
+  },
+  (table) => [
+    uniqueIndex("product_attribute_assignments_uidx").on(
+      table.productId,
+      table.attributeValueId,
+    ),
+    index("product_attribute_assignments_value_idx").on(table.attributeValueId),
   ],
 );

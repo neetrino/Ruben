@@ -167,6 +167,18 @@ Composite unique `(product_id, category_id)`, optional `is_primary`, sort metada
 
 Partner / manufacturer brands՝ `translations JSONB` (title/slug), sort order, active/archive state և timestamps։ Logo-ն resolve է լինում `media_assets.brand_id`-ով։ Product↔brand FK դեռ չկա։
 
+### 6.3b `product_attributes` / `product_attribute_values`
+
+Global product attribute dictionary (Size, Color, …)՝ admin CMS dictionary only։
+
+| Table | Fields/invariants |
+|---|---|
+| `product_attributes` | `code` unique among non-deleted, `translations JSONB`, `type` (`TEXT`/`COLOR`), `is_filterable`, sort, status, soft delete |
+| `product_attribute_values` | FK → attribute (`restrict`), `code` unique per attribute among non-deleted, `translations JSONB`, optional `swatch_hex` (`#RRGGBB`), sort, soft delete |
+| `product_attribute_assignments` | Composite unique `(product_id, attribute_value_id)` — product ↔ value for catalog Features filters |
+
+Image-ը resolve է լինում `media_assets.attribute_id`-ով։ Variant SKU tables դեռ deferred են։
+
 ### 6.4 `stock_movements`
 
 Immutable ledger՝ product, signed delta, reason (`ORDER`,`CANCEL`,`RETURN`,`ADMIN_ADJUSTMENT`,`IMPORT`...), optional order/actor, resulting balance, correlation ID և timestamp։
@@ -358,7 +370,7 @@ Actual indexes-ը validate են արվում representative data-ի `EXPLAIN (AN
 
 ## 18. Migration և seed acceptance criteria
 
-- [x] Fresh migration-ը ստեղծում է ճիշտ 25 application table։
+- [x] Fresh migration-ը ստեղծում է ճիշտ 29 application table։
 - [x] Յուրաքանչյուր FK ունի explicit delete behavior։
 - [ ] JSONB schemas/versioning և locale expression indexes tested են։
 - [ ] Money/range/exactly-one-owner/target constraints tested են։

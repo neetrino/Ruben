@@ -10,6 +10,7 @@ import {
 } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
 
+import type { CatalogFeatureOption } from "@/features/attributes/application/list-product-attribute-options";
 import type { StorefrontBrandItem } from "@/features/brands/application/list-storefront-brands";
 import {
   ALL_CATEGORIES_ICON,
@@ -27,7 +28,6 @@ import {
 import {
   CATALOG_BRAND_PREVIEW,
   CATALOG_CATEGORY_PREVIEW,
-  CATALOG_FEATURE_OPTIONS,
   CATALOG_FEATURE_PREVIEW,
 } from "@/features/products/ui/catalog-filter-options";
 import { CatalogPriceSlider } from "@/features/products/ui/CatalogPriceSlider";
@@ -50,6 +50,7 @@ type CatalogFiltersProps = {
   filters: CatalogListFilter;
   categories: CatalogCategoryOption[];
   brands: readonly StorefrontBrandItem[];
+  features: readonly CatalogFeatureOption[];
   priceBounds: CatalogPriceSliderBounds;
   totalCount: number;
   copy: CatalogFiltersCopy;
@@ -154,6 +155,7 @@ export function CatalogFilters({
   filters,
   categories,
   brands,
+  features,
   priceBounds,
   totalCount,
   copy,
@@ -168,12 +170,19 @@ export function CatalogFilters({
   );
   const [featureExpanded, setFeatureExpanded] = useState(false);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const selectedFeatures = filters.features ?? [];
 
   function navigate(overrides: Partial<CatalogListFilter>): void {
     const href = catalogHref(locale, filters, { ...overrides, page: 1 });
     startTransition(() => {
       router.push(href);
+    });
+  }
+
+  function toggleFeature(featureId: string): void {
+    const next = toggleLocal(selectedFeatures, featureId);
+    navigate({
+      features: next.length > 0 ? next : undefined,
     });
   }
 
@@ -186,11 +195,8 @@ export function CatalogFilters({
 
   const previewBrands = brands.slice(0, CATALOG_BRAND_PREVIEW);
   const extraBrands = brands.slice(CATALOG_BRAND_PREVIEW);
-  const previewFeatures = CATALOG_FEATURE_OPTIONS.slice(
-    0,
-    CATALOG_FEATURE_PREVIEW,
-  );
-  const extraFeatures = CATALOG_FEATURE_OPTIONS.slice(CATALOG_FEATURE_PREVIEW);
+  const previewFeatures = features.slice(0, CATALOG_FEATURE_PREVIEW);
+  const extraFeatures = features.slice(CATALOG_FEATURE_PREVIEW);
 
   function toggleCategoryNode(categoryId: string): void {
     setExpandedCategoryIds((current) => {
@@ -443,82 +449,94 @@ export function CatalogFilters({
         ) : null}
       </section>
 
-      <section className={PANEL}>
-        <h2 className={HEADING}>
-          <span className="relative inline-flex size-4 shrink-0 overflow-hidden">
-            <Image
-              src={CATALOG_ASSETS.filterFeatures}
-              alt=""
-              width={16}
-              height={16}
-              className="size-4"
-              aria-hidden
-            />
-          </span>
-          {copy.featuresLabel}
-        </h2>
-        <div className="mt-4 flex flex-col gap-[3px]">
-          {previewFeatures.map((feature) => {
-            const checked = selectedFeatures.includes(feature.id);
-            return (
-              <label
-                key={feature.id}
-                className="flex cursor-pointer items-center gap-3 py-1.5 first:py-0"
-              >
-                <input
-                  type="checkbox"
-                  className="size-5 shrink-0 appearance-none rounded-[6px] border-2 border-[#ccc] bg-transparent checked:border-black checked:bg-black"
-                  checked={checked}
-                  onChange={() =>
-                    setSelectedFeatures((prev) => toggleLocal(prev, feature.id))
-                  }
-                />
-                <span className="text-[13px] leading-[19.5px] text-black">
-                  {feature.label}
-                </span>
-              </label>
-            );
-          })}
+      {features.length > 0 ? (
+        <section className={PANEL}>
+          <h2 className={HEADING}>
+            <span className="relative inline-flex size-4 shrink-0 overflow-hidden">
+              <Image
+                src={CATALOG_ASSETS.filterFeatures}
+                alt=""
+                width={16}
+                height={16}
+                className="size-4"
+                aria-hidden
+              />
+            </span>
+            {copy.featuresLabel}
+          </h2>
+          <div className="mt-4 flex flex-col gap-[3px]">
+            {previewFeatures.map((feature) => {
+              const checked = selectedFeatures.includes(feature.id);
+              return (
+                <label
+                  key={feature.id}
+                  className="flex cursor-pointer items-center gap-3 py-1.5 first:py-0"
+                >
+                  <input
+                    type="checkbox"
+                    className="size-5 shrink-0 appearance-none rounded-[6px] border-2 border-[#ccc] bg-transparent checked:border-black checked:bg-black disabled:opacity-60"
+                    checked={checked}
+                    disabled={isPending}
+                    onChange={() => toggleFeature(feature.id)}
+                  />
+                  {feature.swatchHex ? (
+                    <span
+                      className="size-4 shrink-0 rounded border border-black/10"
+                      style={{ backgroundColor: feature.swatchHex }}
+                      aria-hidden
+                    />
+                  ) : null}
+                  <span className="text-[13px] leading-[19.5px] text-black">
+                    {feature.label}
+                  </span>
+                </label>
+              );
+            })}
+            {extraFeatures.length > 0 ? (
+              <CatalogFilterExpandable expanded={featureExpanded}>
+                <div className="flex flex-col gap-[3px]">
+                  {extraFeatures.map((feature) => {
+                    const checked = selectedFeatures.includes(feature.id);
+                    return (
+                      <label
+                        key={feature.id}
+                        className="flex cursor-pointer items-center gap-3 py-1.5"
+                      >
+                        <input
+                          type="checkbox"
+                          className="size-5 shrink-0 appearance-none rounded-[6px] border-2 border-[#ccc] bg-transparent checked:border-black checked:bg-black disabled:opacity-60"
+                          checked={checked}
+                          disabled={isPending}
+                          tabIndex={featureExpanded ? 0 : -1}
+                          onChange={() => toggleFeature(feature.id)}
+                        />
+                        {feature.swatchHex ? (
+                          <span
+                            className="size-4 shrink-0 rounded border border-black/10"
+                            style={{ backgroundColor: feature.swatchHex }}
+                            aria-hidden
+                          />
+                        ) : null}
+                        <span className="text-[13px] leading-[19.5px] text-black">
+                          {feature.label}
+                        </span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </CatalogFilterExpandable>
+            ) : null}
+          </div>
           {extraFeatures.length > 0 ? (
-            <CatalogFilterExpandable expanded={featureExpanded}>
-              <div className="flex flex-col gap-[3px]">
-                {extraFeatures.map((feature) => {
-                  const checked = selectedFeatures.includes(feature.id);
-                  return (
-                    <label
-                      key={feature.id}
-                      className="flex cursor-pointer items-center gap-3 py-1.5"
-                    >
-                      <input
-                        type="checkbox"
-                        className="size-5 shrink-0 appearance-none rounded-[6px] border-2 border-[#ccc] bg-transparent checked:border-black checked:bg-black"
-                        checked={checked}
-                        tabIndex={featureExpanded ? 0 : -1}
-                        onChange={() =>
-                          setSelectedFeatures((prev) =>
-                            toggleLocal(prev, feature.id),
-                          )
-                        }
-                      />
-                      <span className="text-[13px] leading-[19.5px] text-black">
-                        {feature.label}
-                      </span>
-                    </label>
-                  );
-                })}
-              </div>
-            </CatalogFilterExpandable>
+            <CatalogFilterMoreToggle
+              expanded={featureExpanded}
+              moreLabel={copy.moreLabel}
+              lessLabel={copy.lessLabel}
+              onToggle={() => setFeatureExpanded((value) => !value)}
+            />
           ) : null}
-        </div>
-        {extraFeatures.length > 0 ? (
-          <CatalogFilterMoreToggle
-            expanded={featureExpanded}
-            moreLabel={copy.moreLabel}
-            lessLabel={copy.lessLabel}
-            onToggle={() => setFeatureExpanded((value) => !value)}
-          />
-        ) : null}
-      </section>
+        </section>
+      ) : null}
     </aside>
   );
 }

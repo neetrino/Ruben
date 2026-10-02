@@ -10,7 +10,7 @@ describe("getDictionary", () => {
     expect(dictionary.nav.home).toBe("HOME");
     expect(dictionary.home.title).toBe("RUBEN");
     expect(dictionary.home.whyTitle).toBe("Why choose us");
-    expect(dictionary.home.partnersTitle).toBe("Our partners");
+    expect(dictionary.home.categoriesTitle).toBe("Categories");
     expect(dictionary.footer.social).toBe("Social");
     expect(dictionary.contact.title).toBe("Contact");
     expect(dictionary.cartDrawer.title).toBe("Shopping Cart");

@@ -20,6 +20,7 @@ import { getDb } from "@/db/client";
 import {
   categories,
   mediaAssets,
+  productAttributeAssignments,
   productCategories,
   products,
   type LocaleTranslation,
@@ -52,6 +53,7 @@ export type AdminProductListItem = {
   imageUrl: string | null;
   categoryIds: string[];
   categoryLabels: string[];
+  attributeValueIds: string[];
   images: AdminProductImage[];
 };
 
@@ -186,6 +188,28 @@ async function loadCategoryMeta(
   return map;
 }
 
+async function loadAttributeValueIds(
+  productIds: string[],
+): Promise<Map<string, string[]>> {
+  const map = new Map<string, string[]>();
+  if (productIds.length === 0) return map;
+
+  const rows = await getDb()
+    .select({
+      productId: productAttributeAssignments.productId,
+      attributeValueId: productAttributeAssignments.attributeValueId,
+    })
+    .from(productAttributeAssignments)
+    .where(inArray(productAttributeAssignments.productId, productIds));
+
+  for (const row of rows) {
+    const bucket = map.get(row.productId) ?? [];
+    bucket.push(row.attributeValueId);
+    map.set(row.productId, bucket);
+  }
+  return map;
+}
+
 /** Lists products for the admin catalog table with filters and sort. */
 export async function listAdminProducts(
   locale: Locale,
@@ -211,11 +235,13 @@ export async function listAdminProducts(
     .offset(offset);
 
   const ids = rows.map((row) => row.id);
-  const [primaryImages, categoryMap, galleryImages] = await Promise.all([
-    loadPrimaryImages(ids),
-    loadCategoryMeta(ids, locale),
-    loadProductImagesForAdmin(ids),
-  ]);
+  const [primaryImages, categoryMap, attributeMap, galleryImages] =
+    await Promise.all([
+      loadPrimaryImages(ids),
+      loadCategoryMeta(ids, locale),
+      loadAttributeValueIds(ids),
+      loadProductImagesForAdmin(ids),
+    ]);
 
   return {
     total,
@@ -238,6 +264,7 @@ export async function listAdminProducts(
         imageUrl: primaryImages.get(product.id) ?? null,
         categoryIds: categoryMeta?.ids ?? [],
         categoryLabels: categoryMeta?.labels ?? [],
+        attributeValueIds: attributeMap.get(product.id) ?? [],
         images: galleryImages.get(product.id) ?? [],
       };
     }),

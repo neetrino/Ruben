@@ -45,5 +45,6 @@
   "chipMinPrice": "Min",
   "chipMaxPrice": "Max",
   "chipCategory": "Category",
-  "chipInStock": "In stock"
+  "chipInStock": "In stock",
+  "chipFeature": "Feature"
 }

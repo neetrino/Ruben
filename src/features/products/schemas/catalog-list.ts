@@ -39,6 +39,22 @@ export const catalogListFilterSchema = z
       emptyToUndefined,
       z.string().trim().max(120).optional(),
     ),
+    features: z.preprocess((value) => {
+      if (value == null || value === "") return undefined;
+      if (Array.isArray(value)) {
+        return value
+          .flatMap((entry) => String(entry).split(","))
+          .map((entry) => entry.trim())
+          .filter(Boolean);
+      }
+      if (typeof value === "string") {
+        return value
+          .split(",")
+          .map((entry) => entry.trim())
+          .filter(Boolean);
+      }
+      return undefined;
+    }, z.array(z.string().uuid()).max(40).optional()),
     inStock: z.preprocess(emptyToUndefined, z.enum(["true", "false"]).optional()),
     sort: z.preprocess(
       emptyToUndefined,
@@ -69,6 +85,7 @@ export const catalogListFilterSchema = z
       minPrice: raw.minPrice,
       maxPrice: raw.maxPrice,
       category: raw.category,
+      features: raw.features?.length ? [...new Set(raw.features)] : undefined,
       inStock,
       sort: raw.sort ?? ("newest" as const),
       page: raw.page ?? 1,
@@ -97,6 +114,7 @@ export const DEFAULT_CATALOG_FILTERS: CatalogListFilter = {
   minPrice: undefined,
   maxPrice: undefined,
   category: undefined,
+  features: undefined,
   inStock: undefined,
   sort: "newest",
   page: 1,

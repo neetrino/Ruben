@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { listProductAttributeOptionGroups } from "@/features/attributes/application/list-product-attribute-options";
 import {
   listAdminCategoryOptions,
   listAdminProducts,
@@ -82,10 +83,12 @@ export default async function AdminProductsPage({
         categoryId: undefined,
       };
 
-  const [{ rows, total, pageSize }, categories] = await Promise.all([
-    listAdminProducts(locale, filters),
-    listAdminCategoryOptions(locale),
-  ]);
+  const [{ rows, total, pageSize }, categories, attributeGroups] =
+    await Promise.all([
+      listAdminProducts(locale, filters),
+      listAdminCategoryOptions(locale),
+      listProductAttributeOptionGroups(locale),
+    ]);
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   function sortHref(sort: "title" | "stock" | "price" | "created"): string {
@@ -127,6 +130,7 @@ export default async function AdminProductsPage({
         products={rows}
         sortLinks={sortLinks}
         categories={categories}
+        attributeGroups={attributeGroups}
       />
 
       {totalPages > 1 ? (
