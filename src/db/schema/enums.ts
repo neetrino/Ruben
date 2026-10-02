@@ -19,6 +19,12 @@ export const categoryStatusEnum = pgEnum("category_status", [
   "ARCHIVED",
 ]);
 
+/** Global product attribute dictionary value input kind. */
+export const productAttributeTypeEnum = pgEnum("product_attribute_type", [
+  "TEXT",
+  "COLOR",
+]);
+
 export const mediaUploadStatusEnum = pgEnum("media_upload_status", [
   "PENDING",
   "READY",

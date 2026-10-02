@@ -7,6 +7,8 @@ import { z } from "zod";
 import { getDb } from "@/db/client";
 import {
   categories,
+  productAttributeAssignments,
+  productAttributeValues,
   productCategories,
   products,
   stockMovements,
@@ -28,6 +30,7 @@ const productUpsertSchema = z.object({
   compareAtAmount: z.number().int().nonnegative().nullable(),
   stockOnHand: z.number().int().nonnegative(),
   categoryIds: z.array(z.string().uuid()),
+  attributeValueIds: z.array(z.string().uuid()).default([]),
   status: z.enum(["DRAFT", "ACTIVE", "ARCHIVED"]),
   primaryExistingId: z.string().uuid().nullable(),
   primaryNewIndex: z.number().int().nullable(),
@@ -125,6 +128,43 @@ async function syncProductCategories(
   return null;
 }
 
+async function syncProductAttributeValues(
+  productId: string,
+  attributeValueIds: string[],
+): Promise<string | null> {
+  const uniqueIds = [...new Set(attributeValueIds)];
+  if (uniqueIds.length > 0) {
+    const found = await getDb()
+      .select({ id: productAttributeValues.id })
+      .from(productAttributeValues)
+      .where(
+        and(
+          inArray(productAttributeValues.id, uniqueIds),
+          isNull(productAttributeValues.deletedAt),
+        ),
+      );
+    if (found.length !== uniqueIds.length) {
+      return "One or more attribute values were not found.";
+    }
+  }
+
+  await getDb()
+    .delete(productAttributeAssignments)
+    .where(eq(productAttributeAssignments.productId, productId));
+
+  if (uniqueIds.length === 0) return null;
+
+  await getDb().insert(productAttributeAssignments).values(
+    uniqueIds.map((attributeValueId) => ({
+      id: createId(),
+      productId,
+      attributeValueId,
+    })),
+  );
+
+  return null;
+}
+
 /** Creates a product from the admin drawer (fields + optional images). */
 export async function createProductFromDrawerAction(
   locale: string,
@@ -166,6 +206,14 @@ export async function createProductFromDrawerAction(
   const categoryError = await syncProductCategories(id, data.categoryIds);
   if (categoryError) {
     return err("VALIDATION_ERROR", categoryError);
+  }
+
+  const attributeError = await syncProductAttributeValues(
+    id,
+    data.attributeValueIds,
+  );
+  if (attributeError) {
+    return err("VALIDATION_ERROR", attributeError);
   }
 
   if (data.stockOnHand > 0) {
@@ -260,6 +308,14 @@ export async function updateProductFromDrawerAction(
   );
   if (categoryError) {
     return err("VALIDATION_ERROR", categoryError);
+  }
+
+  const attributeError = await syncProductAttributeValues(
+    existing.id,
+    data.attributeValueIds,
+  );
+  if (attributeError) {
+    return err("VALIDATION_ERROR", attributeError);
   }
 
   const delta = data.stockOnHand - existing.stockOnHand;

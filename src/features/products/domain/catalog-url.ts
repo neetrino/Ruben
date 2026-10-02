@@ -9,6 +9,7 @@ export const CATALOG_FILTER_PARAM_KEYS = [
   "minPrice",
   "maxPrice",
   "category",
+  "features",
   "inStock",
   "sort",
   "page",
@@ -30,6 +31,9 @@ export function buildCatalogQuery(
   if (merged.minPrice != null) params.set("minPrice", String(merged.minPrice));
   if (merged.maxPrice != null) params.set("maxPrice", String(merged.maxPrice));
   if (merged.category) params.set("category", merged.category);
+  if (merged.features?.length) {
+    params.set("features", merged.features.join(","));
+  }
   if (merged.inStock === true) params.set("inStock", "true");
   if (merged.inStock === false) params.set("inStock", "false");
   if (merged.sort !== "newest") params.set("sort", merged.sort);

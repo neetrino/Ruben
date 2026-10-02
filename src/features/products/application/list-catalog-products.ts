@@ -21,6 +21,7 @@ import {
   categories,
   mediaAssets,
   orderItems,
+  productAttributeAssignments,
   productCategories,
   products,
 } from "@/db/schema";
@@ -158,7 +159,8 @@ async function resolveCategoryIds(
   return [row.id, ...children.map((child) => child.id)];
 }
 
-async function loadCatalogCategoryOptions(
+/** Active catalog categories for storefront filters and home category strip. */
+export async function listCatalogCategoryOptions(
   locale: Locale,
 ): Promise<CatalogCategoryOption[]> {
   const rows = await getDb()
@@ -279,6 +281,19 @@ function buildWhere(
     );
   }
 
+  if (filters.features?.length) {
+    // AND semantics: product must have every selected attribute value.
+    for (const valueId of filters.features) {
+      conditions.push(
+        sql`exists (
+          select 1 from ${productAttributeAssignments}
+          where ${productAttributeAssignments.productId} = ${products.id}
+            and ${productAttributeAssignments.attributeValueId} = ${valueId}::uuid
+        )`,
+      );
+    }
+  }
+
   return and(...conditions);
 }
 
@@ -314,7 +329,7 @@ async function loadCatalogProductsPage(
   const [{ minAmd, maxAmd }, categoryIds, categoryOptions] = await Promise.all([
     resolvePriceBoundsAmd(filters, displayCurrency),
     resolveCategoryIds(locale, filters.category),
-    loadCatalogCategoryOptions(locale),
+    listCatalogCategoryOptions(locale),
   ]);
 
   // Invalid category slug → empty result set (safe normalize).
@@ -411,6 +426,7 @@ function cacheKeyForFilters(
     String(filters.minPrice ?? ""),
     String(filters.maxPrice ?? ""),
     filters.category ?? "",
+    (filters.features ?? []).slice().sort().join(","),
     String(filters.inStock ?? ""),
     filters.sort,
     String(filters.page),

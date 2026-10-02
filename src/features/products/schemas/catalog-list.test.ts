@@ -11,13 +11,14 @@ describe("catalogListFilterSchema", () => {
     expect(catalogListFilterSchema.parse({})).toEqual(DEFAULT_CATALOG_FILTERS);
   });
 
-  it("parses sort, price, category, and stock filters", () => {
+  it("parses sort, price, category, features, and stock filters", () => {
     expect(
       catalogListFilterSchema.parse({
         q: "  earbuds ",
         minPrice: "1000",
         maxPrice: "5000",
         category: "electronics",
+        features: "01999999-9999-7999-9999-999999999999,01999999-9999-7999-9999-999999999998",
         inStock: "true",
         sort: "price_asc",
         page: "2",
@@ -28,6 +29,10 @@ describe("catalogListFilterSchema", () => {
       minPrice: 1000,
       maxPrice: 5000,
       category: "electronics",
+      features: [
+        "01999999-9999-7999-9999-999999999999",
+        "01999999-9999-7999-9999-999999999998",
+      ],
       inStock: true,
       sort: "price_asc",
       page: 2,

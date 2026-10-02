@@ -83,6 +83,16 @@ export function getAdminMenuItems(
       ),
     },
     {
+      id: "attributes",
+      label: nav.attributes,
+      href: `${base}/attributes`,
+      isSubCategory: true,
+      parentGroupId: "products",
+      icon: (
+        <MenuIcon d="M4 6h16M4 12h10M4 18h7" />
+      ),
+    },
+    {
       id: "brands",
       label: nav.brands,
       href: `${base}/brands`,

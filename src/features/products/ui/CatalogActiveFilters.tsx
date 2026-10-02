@@ -1,4 +1,5 @@
 import { AppLink } from "@/components/ui/AppLink";
+import type { CatalogFeatureOption } from "@/features/attributes/application/list-product-attribute-options";
 import { catalogHref } from "@/features/products/domain/catalog-url";
 import type { CatalogListFilter } from "@/features/products/schemas/catalog-list";
 
@@ -12,6 +13,7 @@ type CatalogActiveFiltersProps = {
   locale: string;
   filters: CatalogListFilter;
   categoryTitle: string | null;
+  featureOptions: readonly CatalogFeatureOption[];
   currencyCode: string;
   removeFilterLabel: string;
   labels: {
@@ -19,6 +21,7 @@ type CatalogActiveFiltersProps = {
     minPrice: string;
     maxPrice: string;
     category: string;
+    feature: string;
     inStock: string;
     outOfStock: string;
   };
@@ -28,11 +31,15 @@ export function CatalogActiveFilters({
   locale,
   filters,
   categoryTitle,
+  featureOptions,
   currencyCode,
   removeFilterLabel,
   labels,
 }: CatalogActiveFiltersProps) {
   const chips: Chip[] = [];
+  const featureLabelById = new Map(
+    featureOptions.map((option) => [option.id, option.label]),
+  );
 
   if (filters.q) {
     chips.push({
@@ -60,6 +67,17 @@ export function CatalogActiveFilters({
       key: "category",
       label: `${labels.category}: ${categoryTitle ?? filters.category}`,
       href: catalogHref(locale, filters, { category: undefined, page: 1 }),
+    });
+  }
+  for (const featureId of filters.features ?? []) {
+    const remaining = (filters.features ?? []).filter((id) => id !== featureId);
+    chips.push({
+      key: `feature-${featureId}`,
+      label: `${labels.feature}: ${featureLabelById.get(featureId) ?? featureId}`,
+      href: catalogHref(locale, filters, {
+        features: remaining.length > 0 ? remaining : undefined,
+        page: 1,
+      }),
     });
   }
   if (filters.inStock === true) {

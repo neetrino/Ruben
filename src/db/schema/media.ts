@@ -12,7 +12,12 @@ import {
 } from "drizzle-orm/pg-core";
 
 import { blogPosts, heroSlides } from "@/db/schema/content";
-import { brands, categories, products } from "@/db/schema/catalog";
+import {
+  brands,
+  categories,
+  productAttributes,
+  products,
+} from "@/db/schema/catalog";
 import {
   createdAtColumn,
   idColumn,
@@ -49,6 +54,9 @@ export const mediaAssets = pgTable(
     brandId: uuid("brand_id").references(() => brands.id, {
       onDelete: "restrict",
     }),
+    attributeId: uuid("attribute_id").references(() => productAttributes.id, {
+      onDelete: "restrict",
+    }),
     heroSlideId: uuid("hero_slide_id").references(() => heroSlides.id, {
       onDelete: "restrict",
     }),
@@ -63,6 +71,7 @@ export const mediaAssets = pgTable(
     index("media_assets_product_idx").on(table.productId),
     index("media_assets_category_idx").on(table.categoryId),
     index("media_assets_brand_idx").on(table.brandId),
+    index("media_assets_attribute_idx").on(table.attributeId),
     index("media_assets_hero_idx").on(table.heroSlideId),
     index("media_assets_blog_idx").on(table.blogPostId),
     uniqueIndex("media_assets_product_primary_uidx")
@@ -90,6 +99,7 @@ export const mediaAssets = pgTable(
           AND ${table.productId} IS NULL
           AND ${table.categoryId} IS NULL
           AND ${table.brandId} IS NULL
+          AND ${table.attributeId} IS NULL
           AND ${table.heroSlideId} IS NULL
           AND ${table.blogPostId} IS NULL)
         OR (${table.role} = 'BRANDING' AND ${table.purpose} IS NOT NULL)
@@ -97,6 +107,7 @@ export const mediaAssets = pgTable(
           (${table.productId} IS NOT NULL)::int
           + (${table.categoryId} IS NOT NULL)::int
           + (${table.brandId} IS NOT NULL)::int
+          + (${table.attributeId} IS NOT NULL)::int
           + (${table.heroSlideId} IS NOT NULL)::int
           + (${table.blogPostId} IS NOT NULL)::int
         ) = 1

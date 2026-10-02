@@ -2,6 +2,9 @@ export { appMeta } from "@/db/schema/app-meta";
 export {
   brands,
   categories,
+  productAttributeAssignments,
+  productAttributeValues,
+  productAttributes,
   productCategories,
   products,
   type LocaleTranslation,

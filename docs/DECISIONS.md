@@ -42,7 +42,7 @@
 | OPEN-004 | Tax | Open | Prices tax-inclusive՞ են, tax zones/rates և invoice behavior | Tax amount 0, բայց schema/summary field-ը նախատեսված է |
 | OPEN-005 | Order status model | Open | Allowed statuses և revenue-generating status-ներ | Draft set՝ pending/confirmed/processing/shipped/delivered/cancelled/refunded |
 | OPEN-006 | Product category cardinality | Open | Product-ը մեկ primary category՞, թե multiple | Multiple categories + մեկ optional primary category |
-| OPEN-007 | Variants | Open | Color/size variants launch-ին ակտիվ են, թե extension point | Schema extension point, UI deferred |
+| OPEN-007 | Variants | Partial | Color/size variants launch-ին ակտիվ են, թե extension point | Global attribute dictionary CMS approved; product↔attribute assignment և SKU variants դեռ deferred |
 | OPEN-008 | Coupon stacking | Open | Coupon-ը կարող է stack լինել automatic discount-ի հետ | Settings-ով, default՝ false |
 | OPEN-009 | Customer deletion | Open | Retention duration և legal/audit պահանջներ | PII anonymization, order snapshots retained |
 | OPEN-010 | Content editor | Open | Blog rich-text editor և canonical sanitized format | Sanitized HTML կամ structured JSON՝ adapter boundary-ով |

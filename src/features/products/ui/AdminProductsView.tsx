@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 
 import { adminCopy } from "@/features/admin/ui/resolve-admin-locale";
+import type { ProductAttributeOptionGroup } from "@/features/attributes/application/list-product-attribute-options";
 import type {
   AdminCategoryOption,
   AdminProductListItem,
@@ -23,6 +24,7 @@ type AdminProductsViewProps = {
   products: AdminProductListItem[];
   sortLinks: AdminProductsSortLinks;
   categories: AdminCategoryOption[];
+  attributeGroups: ProductAttributeOptionGroup[];
 };
 
 export function AdminProductsView({
@@ -30,6 +32,7 @@ export function AdminProductsView({
   products,
   sortLinks,
   categories,
+  attributeGroups,
 }: AdminProductsViewProps) {
   const t = adminCopy(locale);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -75,6 +78,7 @@ export function AdminProductsView({
         onClose={closeDrawer}
         product={editingProduct}
         categories={categories}
+        attributeGroups={attributeGroups}
       />
     </>
   );
