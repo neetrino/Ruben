@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState, useTransition } from "react";
-import { X } from "lucide-react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { ChevronLeft, ChevronRight, X } from "lucide-react";
 
 import { adjustLocalCartItemCount } from "@/features/cart/cart-client-sync";
 import { removeItem } from "@/features/cart/cart";
@@ -22,9 +22,54 @@ type CheckoutProductsInOrderProps = {
   itemsOneLabel: string;
   itemsManyLabel: string;
   removeItemLabel: string;
+  scrollPreviousLabel: string;
+  scrollNextLabel: string;
   locale: Locale;
   onCartChanged?: () => void;
 };
+
+const SCROLL_EDGE_PX = 1;
+
+function useProductScroller(itemCount: number) {
+  const scrollerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    function update(): void {
+      const node = scrollerRef.current;
+      if (!node) return;
+      const maxScroll = node.scrollWidth - node.clientWidth;
+      setCanScrollLeft(node.scrollLeft > SCROLL_EDGE_PX);
+      setCanScrollRight(
+        maxScroll > SCROLL_EDGE_PX && node.scrollLeft < maxScroll - SCROLL_EDGE_PX,
+      );
+    }
+
+    const frame = requestAnimationFrame(update);
+    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      cancelAnimationFrame(frame);
+      el.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
+  }, [itemCount]);
+
+  function scrollByCard(direction: -1 | 1): void {
+    const el = scrollerRef.current;
+    if (!el) return;
+    const card = el.querySelector("article");
+    const gap = Number.parseFloat(getComputedStyle(el).columnGap) || 12;
+    const distance = (card?.getBoundingClientRect().width ?? el.clientWidth) + gap;
+    el.scrollBy({ left: direction * distance, behavior: "smooth" });
+  }
+
+  return { scrollerRef, canScrollLeft, canScrollRight, scrollByCard };
+}
 
 function formatItemCount(
   count: number,
@@ -119,6 +164,8 @@ export function CheckoutProductsInOrder({
   itemsOneLabel,
   itemsManyLabel,
   removeItemLabel,
+  scrollPreviousLabel,
+  scrollNextLabel,
   locale,
   onCartChanged,
 }: CheckoutProductsInOrderProps) {
@@ -133,6 +180,8 @@ export function CheckoutProductsInOrder({
   }
 
   const itemCount = products.reduce((sum, product) => sum + product.quantity, 0);
+  const { scrollerRef, canScrollLeft, canScrollRight, scrollByCard } =
+    useProductScroller(products.length);
 
   if (products.length === 0) {
     return null;
@@ -170,12 +219,37 @@ export function CheckoutProductsInOrder({
         >
           {title}
         </h2>
-        <p className="shrink-0 text-sm text-gray-500">
-          {formatItemCount(itemCount, itemsOneLabel, itemsManyLabel)}
-        </p>
+        <div className="flex shrink-0 items-center gap-3">
+          <p className="text-sm text-gray-500">
+            {formatItemCount(itemCount, itemsOneLabel, itemsManyLabel)}
+          </p>
+          <div className="hidden items-center gap-1.5 lg:flex">
+            <button
+              type="button"
+              aria-label={scrollPreviousLabel}
+              disabled={!canScrollLeft}
+              onClick={() => scrollByCard(-1)}
+              className="inline-flex size-8 items-center justify-center rounded-full border border-gray-300 text-gray-700 transition hover:bg-gray-50 disabled:cursor-default disabled:opacity-40"
+            >
+              <ChevronLeft className="size-4" aria-hidden />
+            </button>
+            <button
+              type="button"
+              aria-label={scrollNextLabel}
+              disabled={!canScrollRight}
+              onClick={() => scrollByCard(1)}
+              className="inline-flex size-8 items-center justify-center rounded-full border border-gray-300 text-gray-700 transition hover:bg-gray-50 disabled:cursor-default disabled:opacity-40"
+            >
+              <ChevronRight className="size-4" aria-hidden />
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="flex gap-3 overflow-x-auto overscroll-x-contain pt-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div
+        ref={scrollerRef}
+        className="flex gap-3 overflow-x-auto overscroll-x-contain pt-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
         {products.map((product) => (
           <CheckoutOrderItemCard
             key={product.id}
