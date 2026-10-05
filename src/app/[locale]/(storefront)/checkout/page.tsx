@@ -79,6 +79,8 @@ export default async function CheckoutPage({ params }: CheckoutPageProps) {
         itemsOne: copy.itemsOne,
         itemsMany: copy.itemsMany,
         removeItem: copy.removeItem,
+        scrollPrevious: copy.scrollPrevious,
+        scrollNext: copy.scrollNext,
         contactInformation: copy.contactInformation,
         shippingMethod: copy.shippingMethod,
         shippingAddress: copy.shippingAddress,
