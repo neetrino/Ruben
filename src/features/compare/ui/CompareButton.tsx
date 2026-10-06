@@ -1,11 +1,12 @@
 "use client";
 
-import type { MouseEvent } from "react";
+import { useCallback, useState, type MouseEvent } from "react";
 import { GitCompareArrows } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { ProductCardCompareIcon } from "@/components/icons/product-card-icons";
 import { toggleCompareAction } from "@/features/compare/actions";
+import { CompareLimitNotice } from "@/features/compare/ui/CompareLimitNotice";
 import {
   adjustCompareCountDelta,
   setCompareOverride,
@@ -28,6 +29,7 @@ type CompareButtonProps = {
 };
 
 export function CompareButton({
+  locale,
   productId,
   initialInCompare,
   label,
@@ -38,6 +40,10 @@ export function CompareButton({
 }: CompareButtonProps) {
   const router = useRouter();
   const inCompare = useCompareMembership(productId, initialInCompare);
+  const [limitNoticeOpen, setLimitNoticeOpen] = useState(false);
+  const closeLimitNotice = useCallback(() => {
+    setLimitNoticeOpen(false);
+  }, []);
   const iconClass = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   const productCardIconClass = size === "sm" ? "h-5 w-[15px]" : "h-6 w-[18px]";
 
@@ -48,7 +54,7 @@ export function CompareButton({
       setCompareOverride(productId, !next);
       adjustCompareCountDelta(next ? -1 : 1);
       if (result.error.code === "COMPARE_LIMIT" && limitReachedLabel) {
-        window.alert(limitReachedLabel);
+        setLimitNoticeOpen(true);
       }
       return;
     }
@@ -71,28 +77,38 @@ export function CompareButton({
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      aria-label={label}
-      aria-pressed={inCompare}
-      className={`inline-flex items-center justify-center rounded-full transition ${className}`}
-    >
-      {iconVariant === "productCard" ? (
-        <ProductCardCompareIcon
-          className={`${productCardIconClass} ${
-            inCompare ? "text-[var(--brand)]" : "text-[#1A1C1C]"
-          }`}
+    <>
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={label}
+        aria-pressed={inCompare}
+        className={`inline-flex items-center justify-center rounded-full transition ${className}`}
+      >
+        {iconVariant === "productCard" ? (
+          <ProductCardCompareIcon
+            className={`${productCardIconClass} ${
+              inCompare ? "text-[var(--brand)]" : "text-[#1A1C1C]"
+            }`}
+          />
+        ) : (
+          <GitCompareArrows
+            className={`${iconClass} ${
+              inCompare ? "text-[var(--brand)]" : "text-gray-700"
+            }`}
+            strokeWidth={inCompare ? 2.5 : 1.75}
+            aria-hidden
+          />
+        )}
+      </button>
+      {limitReachedLabel ? (
+        <CompareLimitNotice
+          open={limitNoticeOpen}
+          locale={locale}
+          message={limitReachedLabel}
+          onClose={closeLimitNotice}
         />
-      ) : (
-        <GitCompareArrows
-          className={`${iconClass} ${
-            inCompare ? "text-[var(--brand)]" : "text-gray-700"
-          }`}
-          strokeWidth={inCompare ? 2.5 : 1.75}
-          aria-hidden
-        />
-      )}
-    </button>
+      ) : null}
+    </>
   );
 }

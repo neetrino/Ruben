@@ -2,6 +2,7 @@ import Image from "next/image";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { AddToCartButton } from "@/features/cart/ui/AddToCartButton";
+import { CompareDragScroller } from "@/features/compare/ui/CompareDragScroller";
 import { RemoveFromCompareButton } from "@/features/compare/ui/RemoveFromCompareButton";
 import type { CompareProduct } from "@/features/compare/types";
 import type { Locale } from "@/lib/i18n/config";
@@ -66,7 +67,7 @@ function RowLabel({ children }: { children: React.ReactNode }) {
 
 export function CompareTable({ locale, items, labels }: CompareTableProps) {
   return (
-    <div className="-mx-4 overflow-x-auto [scrollbar-width:none] sm:mx-0 [&::-webkit-scrollbar]:hidden">
+    <CompareDragScroller>
       <div className="inline-block min-w-full overflow-hidden rounded-[15px] border border-[#e8e8e8]">
         <table className="w-full min-w-max border-collapse text-left">
         <thead>
@@ -215,6 +216,6 @@ export function CompareTable({ locale, items, labels }: CompareTableProps) {
         </tbody>
       </table>
       </div>
-    </div>
+    </CompareDragScroller>
   );
 }

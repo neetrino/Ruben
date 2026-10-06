@@ -36,7 +36,7 @@ export function WishlistEmptyState({
         <h2 className="text-2xl font-bold tracking-tight whitespace-nowrap text-black">
           {title}
         </h2>
-        <p className="mt-3 w-0 min-w-full text-sm leading-relaxed text-[#888]">
+        <p className="mt-3 hidden w-0 min-w-full text-sm leading-relaxed text-[#888] lg:block">
           {description}
         </p>
         <AppLink

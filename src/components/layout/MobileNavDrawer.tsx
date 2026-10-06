@@ -35,7 +35,7 @@ type MobileNavDrawerProps = {
   currency: Currency;
   dictionary: Dictionary;
   navItems: readonly NavItem[];
-  /** Account CTA rendered at the drawer end; depends on the server session. */
+  /** Login CTA at the drawer end when signed out. Hidden when signed in. */
   accountSlot: ReactNode;
   appearance?: "default" | "navbar" | "mobile-top";
 };
@@ -344,7 +344,7 @@ export function MobileNavDrawer({
                     />
                   </div>
 
-                  <div className="border-t border-gray-100 py-4">
+                  <div className="border-t border-gray-100 py-4 empty:hidden">
                     {accountSlot}
                   </div>
                 </nav>

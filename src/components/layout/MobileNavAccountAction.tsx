@@ -14,19 +14,23 @@ type MobileNavAccountLinkProps = {
   isSignedIn: boolean;
 };
 
-/** Burger drawer CTA: profile once signed in, login otherwise. */
+/** Burger drawer CTA: login only. Profile lives in the bottom nav when signed in. */
 export function MobileNavAccountLink({
   locale,
   dictionary,
   isSignedIn,
 }: MobileNavAccountLinkProps) {
+  if (isSignedIn) {
+    return null;
+  }
+
   return (
     <AppLink
-      href={isSignedIn ? `/${locale}/profile` : `/${locale}/login`}
+      href={`/${locale}/login`}
       prefetchPolicy="intent"
       className={ACTION_CLASS}
     >
-      {isSignedIn ? dictionary.header.profile : dictionary.header.login}
+      {dictionary.header.login}
     </AppLink>
   );
 }
