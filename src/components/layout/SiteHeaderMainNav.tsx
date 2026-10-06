@@ -151,11 +151,13 @@ export function SiteHeaderMainNav({
               dictionary={dictionary}
               navItems={navItems}
               accountSlot={
-                <MobileNavAccountLink
-                  locale={locale}
-                  dictionary={dictionary}
-                  isSignedIn={Boolean(user)}
-                />
+                user ? null : (
+                  <MobileNavAccountLink
+                    locale={locale}
+                    dictionary={dictionary}
+                    isSignedIn={false}
+                  />
+                )
               }
               appearance="navbar"
             />
