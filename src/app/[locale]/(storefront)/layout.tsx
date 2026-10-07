@@ -51,6 +51,7 @@ export default async function StorefrontLayout({
         }
         compareSlot={
           <Suspense
+            key="compare"
             fallback={
               <span
                 className="inline-flex size-12 shrink-0 rounded-full bg-[var(--brand)]"
