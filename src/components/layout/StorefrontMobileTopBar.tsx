@@ -20,6 +20,8 @@ type StorefrontMobileTopBarProps = {
   dictionary: Dictionary;
   /** Server-rendered account CTA for the burger drawer. */
   accountSlot: ReactNode;
+  /** Compare shortcut rendered next to the search field. */
+  compareSlot: ReactNode;
 };
 
 /**
@@ -32,6 +34,7 @@ export function StorefrontMobileTopBar({
   currency,
   dictionary,
   accountSlot,
+  compareSlot,
 }: StorefrontMobileTopBarProps) {
   const pathname = usePathname();
   const homeHref = `/${locale}`;
@@ -156,6 +159,7 @@ export function StorefrontMobileTopBar({
           searchPlaceholder={dictionary.header.searchPlaceholder}
           searchSubmitLabel={dictionary.header.search}
           filtersLabel={dictionary.catalog.filtersTitle}
+          compareSlot={compareSlot}
         />
       </div>
     </div>
