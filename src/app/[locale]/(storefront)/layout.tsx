@@ -51,6 +51,7 @@ export default async function StorefrontLayout({
         }
         compareSlot={
           <Suspense
+            key="compare"
             fallback={
               <span
                 className="inline-flex size-12 shrink-0 rounded-full bg-[var(--brand)]"
@@ -70,7 +71,7 @@ export default async function StorefrontLayout({
         currency={currency}
         dictionary={dictionary}
       />
-      <main className="storefront-main mx-auto w-full max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
+      <main className="storefront-main mx-auto w-full min-w-0 max-w-7xl flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <MaintenanceGate>
           <StorefrontPageAppear>{children}</StorefrontPageAppear>
         </MaintenanceGate>
