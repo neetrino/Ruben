@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { useId, useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
 
 import { AppLink } from "@/components/ui/AppLink";
 import { HOME_MOBILE_ASSETS } from "@/features/home/config/assets";
@@ -16,6 +16,7 @@ type StorefrontMobileSearchBarProps = {
   searchPlaceholder: string;
   searchSubmitLabel: string;
   filtersLabel: string;
+  compareSlot: ReactNode;
 };
 
 /**
@@ -27,6 +28,7 @@ export function StorefrontMobileSearchBar({
   searchPlaceholder,
   searchSubmitLabel,
   filtersLabel,
+  compareSlot,
 }: StorefrontMobileSearchBarProps) {
   const router = useRouter();
   const pathname = usePathname() ?? "";
@@ -54,7 +56,7 @@ export function StorefrontMobileSearchBar({
   return (
     <form
       onSubmit={onSearchSubmit}
-      className="flex items-center gap-3"
+      className="flex items-center gap-[5px]"
       role="search"
     >
       <label
@@ -81,6 +83,8 @@ export function StorefrontMobileSearchBar({
         />
         <span className="sr-only">{searchSubmitLabel}</span>
       </label>
+
+      {compareSlot}
 
       {onShopPage ? (
         <button

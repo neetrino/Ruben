@@ -13,6 +13,8 @@ type CompareHeaderLinkProps = {
   count: number;
   className?: string;
   iconSrc?: string;
+  iconClassName?: string;
+  badgeClassName?: string;
 };
 
 export function CompareHeaderLink({
@@ -21,6 +23,8 @@ export function CompareHeaderLink({
   count,
   className = "relative inline-flex h-11 w-11 items-center justify-center rounded-lg text-gray-700 transition-colors duration-150 hover:text-gray-900",
   iconSrc,
+  iconClassName = "size-[35px]",
+  badgeClassName = "absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-semibold text-black",
 }: CompareHeaderLinkProps) {
   const badgeCount = useCompareCount(count);
 
@@ -37,14 +41,14 @@ export function CompareHeaderLink({
           alt=""
           width={35}
           height={35}
-          className="size-[35px]"
+          className={iconClassName}
           aria-hidden
         />
       ) : (
         <GitCompareArrows className="h-5 w-5" aria-hidden="true" />
       )}
       {badgeCount > 0 ? (
-        <span className="absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--brand)] px-1 text-[10px] font-semibold text-black">
+        <span className={badgeClassName}>
           {badgeCount > 99 ? "99+" : badgeCount}
         </span>
       ) : null}

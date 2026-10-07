@@ -1,8 +1,10 @@
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 import { StorefrontPageAppear } from "@/components/motion/StorefrontPageAppear";
 import { MobileBottomNavIsland } from "@/components/layout/MobileBottomNavIsland";
+import { MobileCompareSearchLink } from "@/components/layout/MobileCompareSearchLink";
 import { MobileNavAccountAction } from "@/components/layout/MobileNavAccountAction";
 import { SiteCopyright } from "@/components/layout/SiteCopyright";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -46,6 +48,21 @@ export default async function StorefrontLayout({
         dictionary={dictionary}
         accountSlot={
           <MobileNavAccountAction locale={locale} dictionary={dictionary} />
+        }
+        compareSlot={
+          <Suspense
+            fallback={
+              <span
+                className="inline-flex size-12 shrink-0 rounded-full bg-[var(--brand)]"
+                aria-hidden
+              />
+            }
+          >
+            <MobileCompareSearchLink
+              locale={locale}
+              label={dictionary.nav.compare}
+            />
+          </Suspense>
         }
       />
       <SiteHeader
