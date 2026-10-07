@@ -106,7 +106,7 @@ export function CompareDragScroller({ children }: CompareDragScrollerProps) {
       onPointerCancel={endDrag}
       onClickCapture={onClickCapture}
       onDragStart={onDragStart}
-      className={`-mx-1 overflow-x-auto [scrollbar-width:none] sm:mx-0 [&::-webkit-scrollbar]:hidden ${
+      className={`-mx-1 w-full min-w-0 overflow-x-auto overscroll-x-contain [scrollbar-width:none] sm:mx-0 [&::-webkit-scrollbar]:hidden ${
         isDragging ? "cursor-grabbing select-none" : "cursor-grab"
       }`}
     >

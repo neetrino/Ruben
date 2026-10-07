@@ -47,7 +47,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
   });
 
   return (
-    <section className="flex flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
+    <section className="flex min-w-0 flex-col gap-8 pt-6 sm:pt-8 lg:pt-10">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="flex h-[42px] items-center text-[28px] leading-none font-black tracking-[0.7px] text-black uppercase">
@@ -79,7 +79,7 @@ export default async function ComparePage({ params }: ComparePageProps) {
           </Link>
         </p>
       ) : (
-        <Reveal>
+        <Reveal className="min-w-0">
           <CompareTable
             locale={rawLocale}
             items={priced}
